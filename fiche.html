@@ -1,0 +1,848 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>EXPLORE — Fiche lieu</title>
+  <meta name="theme-color" content="#06130f" />
+  <meta
+    name="description"
+    content="DIGIY EXPLORE — fiche publique d’un lieu, spot ou activité."
+  />
+
+  <script>
+    window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
+    window.DIGIY_SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
+    window.DIGIY_SUPABASE_ANON = window.DIGIY_SUPABASE_ANON_KEY;
+    window.DIGIY_MODULE = "EXPLORE";
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root{
+      --bg:#06130f;
+      --bg2:#0a1f18;
+      --card:#0b241b;
+      --card2:#102b22;
+      --line:rgba(255,255,255,.08);
+      --ink:#f8fafc;
+      --muted:rgba(248,250,252,.72);
+      --soft:rgba(248,250,252,.52);
+      --gold:#d4af37;
+      --gold2:#f3d46b;
+      --ok:#22c55e;
+      --bad:#ef4444;
+      --radius:22px;
+      --shadow:0 24px 60px rgba(0,0,0,.28);
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      min-height:100vh;
+      color:var(--ink);
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(212,175,55,.09), transparent 26%),
+        linear-gradient(180deg, #071510 0%, #06130f 48%, #04100c 100%);
+    }
+
+    a{color:inherit;text-decoration:none}
+    button{font:inherit}
+
+    .wrap{
+      width:min(100%, 1160px);
+      margin:0 auto;
+      padding:16px 14px 40px;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:16px;
+    }
+
+    .brand{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      min-width:0;
+    }
+
+    .logo{
+      width:46px;
+      height:46px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg, rgba(212,175,55,.24), rgba(212,175,55,.06));
+      border:1px solid rgba(212,175,55,.22);
+      box-shadow:0 10px 28px rgba(0,0,0,.18);
+      font-size:23px;
+      flex:0 0 auto;
+    }
+
+    .brandText{min-width:0}
+    .kicker{
+      color:var(--gold2);
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      margin-bottom:3px;
+      white-space:nowrap;
+    }
+
+    .title{
+      font-size:clamp(18px, 2vw, 28px);
+      font-weight:900;
+      line-height:1.08;
+      letter-spacing:-.03em;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .sub{
+      margin-top:4px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .topActions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .btn{
+      min-height:44px;
+      border:none;
+      border-radius:14px;
+      padding:0 14px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      font-weight:800;
+      cursor:pointer;
+      white-space:nowrap;
+      transition:filter .18s ease, transform .04s ease;
+    }
+
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{
+      background:linear-gradient(135deg, var(--gold), var(--gold2));
+      color:#13200d;
+      box-shadow:0 14px 30px rgba(212,175,55,.22);
+    }
+
+    .btn.secondary{
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      color:var(--ink);
+    }
+
+    .btn.ghost{
+      background:transparent;
+      border:1px solid var(--line);
+      color:var(--ink);
+    }
+
+    .msg{
+      margin-bottom:16px;
+      border-radius:18px;
+      padding:14px 16px;
+      font-size:14px;
+      line-height:1.5;
+      font-weight:700;
+      display:none;
+    }
+
+    .msg.show{display:block}
+    .msg.info{
+      color:#dbeafe;
+      border:1px solid rgba(96,165,250,.18);
+      background:rgba(59,130,246,.08);
+    }
+    .msg.bad{
+      color:#fecaca;
+      border:1px solid rgba(239,68,68,.18);
+      background:rgba(239,68,68,.08);
+    }
+    .msg.ok{
+      color:#bbf7d0;
+      border:1px solid rgba(34,197,94,.18);
+      background:rgba(34,197,94,.08);
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:16px;
+      margin-bottom:16px;
+    }
+
+    .panel{
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .cover{
+      position:relative;
+      min-height:380px;
+      background:#0d1914 center/cover no-repeat;
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+
+    .coverFallback{
+      display:grid;
+      place-items:center;
+      min-height:380px;
+      color:var(--muted);
+      font-size:15px;
+      background:
+        radial-gradient(circle at top, rgba(212,175,55,.08), transparent 30%),
+        linear-gradient(180deg, #10231b, #0a1712);
+    }
+
+    .coverShade{
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.12) 25%, rgba(0,0,0,.58));
+    }
+
+    .coverContent{
+      position:absolute;
+      left:0;
+      right:0;
+      bottom:0;
+      padding:22px;
+      z-index:2;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(212,175,55,.22);
+      background:rgba(212,175,55,.08);
+      color:var(--gold2);
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      margin-bottom:12px;
+    }
+
+    .heroTitle{
+      margin:0 0 10px;
+      font-size:clamp(28px, 4vw, 44px);
+      line-height:1.02;
+      letter-spacing:-.04em;
+      text-shadow:0 6px 20px rgba(0,0,0,.24);
+    }
+
+    .heroLead{
+      margin:0;
+      color:#eef6f2;
+      font-size:15px;
+      line-height:1.65;
+      max-width:62ch;
+      text-shadow:0 4px 16px rgba(0,0,0,.24);
+    }
+
+    .sideCard{
+      padding:20px;
+      display:grid;
+      gap:12px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015)),
+        linear-gradient(180deg, #0a1c16, #0d241c);
+    }
+
+    .miniStat{
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      padding:14px;
+      background:rgba(255,255,255,.03);
+    }
+
+    .miniLabel{
+      color:var(--soft);
+      font-size:12px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      margin-bottom:8px;
+    }
+
+    .miniValue{
+      font-size:20px;
+      font-weight:900;
+      line-height:1.15;
+      letter-spacing:-.03em;
+      word-break:break-word;
+    }
+
+    .miniHint{
+      margin-top:6px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.45;
+    }
+
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:4px;
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:16px;
+      margin-bottom:16px;
+    }
+
+    .cardBody{
+      padding:20px;
+    }
+
+    .sectionTitle{
+      margin:0 0 14px;
+      font-size:20px;
+      font-weight:900;
+      letter-spacing:-.02em;
+    }
+
+    .sectionSub{
+      margin:-4px 0 14px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    .text{
+      color:#eef6f2;
+      font-size:15px;
+      line-height:1.8;
+      word-break:break-word;
+    }
+
+    .muted{
+      color:var(--muted);
+    }
+
+    .grid{
+      display:grid;
+      gap:12px;
+    }
+
+    .infoRow{
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+      border-radius:18px;
+      padding:14px;
+    }
+
+    .infoRow strong{
+      display:block;
+      font-size:13px;
+      margin-bottom:6px;
+      color:#eef6f2;
+      text-transform:uppercase;
+      letter-spacing:.05em;
+    }
+
+    .infoRow span{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.55;
+      word-break:break-word;
+    }
+
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+
+    .chip{
+      min-height:34px;
+      padding:0 12px;
+      border-radius:999px;
+      display:inline-flex;
+      align-items:center;
+      background:rgba(212,175,55,.08);
+      border:1px solid rgba(212,175,55,.18);
+      color:var(--gold2);
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.04em;
+    }
+
+    .gallery{
+      display:grid;
+      grid-template-columns:repeat(2, 1fr);
+      gap:12px;
+    }
+
+    .photo{
+      position:relative;
+      display:block;
+      border-radius:18px;
+      overflow:hidden;
+      min-height:180px;
+      background:#102019 center/cover no-repeat;
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .photo::after{
+      content:"↗ Ouvrir";
+      position:absolute;
+      right:10px;
+      bottom:10px;
+      min-height:28px;
+      padding:0 10px;
+      border-radius:999px;
+      display:inline-flex;
+      align-items:center;
+      background:rgba(0,0,0,.46);
+      color:#fff;
+      font-size:12px;
+      font-weight:800;
+      border:1px solid rgba(255,255,255,.12);
+    }
+
+    .empty{
+      border:1px dashed rgba(255,255,255,.12);
+      border-radius:18px;
+      padding:18px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.6;
+      background:rgba(255,255,255,.02);
+    }
+
+    .foot{
+      margin-top:18px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.6;
+      text-align:center;
+    }
+
+    @media (max-width: 1040px){
+      .hero, .layout{grid-template-columns:1fr}
+    }
+
+    @media (max-width: 760px){
+      .gallery{grid-template-columns:1fr}
+    }
+
+    @media (max-width: 640px){
+      .wrap{padding:14px 12px 34px}
+      .topbar{flex-direction:column}
+      .topActions{width:100%;justify-content:flex-start}
+      .cover, .coverFallback{min-height:300px}
+      .cardBody, .sideCard{padding:18px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">🧭</div>
+        <div class="brandText">
+          <div class="kicker">DIGIY EXPLORE</div>
+          <div class="title">Fiche publique lieu</div>
+          <div class="sub" id="subline">Lecture claire d’un lieu, spot ou activité.</div>
+        </div>
+      </div>
+
+      <div class="topActions">
+        <a class="btn ghost" href="./index.html">Retour vitrine</a>
+        <a class="btn secondary" href="./pin.html">Entrée PIN</a>
+        <a class="btn secondary" id="editBtn" href="./submit.html">Éditer</a>
+      </div>
+    </header>
+
+    <div id="msg" class="msg info"></div>
+
+    <section class="hero">
+      <article class="panel">
+        <div id="cover" class="coverFallback">Chargement de la fiche…</div>
+      </article>
+
+      <aside class="panel sideCard">
+        <div class="miniStat">
+          <div class="miniLabel">Catégorie</div>
+          <div class="miniValue" id="categoryBox">—</div>
+          <div class="miniHint">Famille terrain du lieu.</div>
+        </div>
+
+        <div class="miniStat">
+          <div class="miniLabel">Ville / zone</div>
+          <div class="miniValue" id="locationBox">—</div>
+          <div class="miniHint">Lecture territoriale du point.</div>
+        </div>
+
+        <div class="miniStat">
+          <div class="miniLabel">Contact direct</div>
+          <div class="miniValue" id="contactBox">—</div>
+          <div class="miniHint">Téléphone ou WhatsApp si disponible.</div>
+        </div>
+
+        <div class="miniStat">
+          <div class="miniLabel">Indice</div>
+          <div class="miniValue" id="priceBox">—</div>
+          <div class="miniHint">Lecture simple du prix ou de l’accès.</div>
+        </div>
+
+        <div class="actions">
+          <a id="callBtn" class="btn primary" href="./index.html">Appeler</a>
+          <a id="waBtn" class="btn secondary" href="./index.html">WhatsApp</a>
+          <a id="mapsBtn" class="btn ghost" href="./index.html" target="_blank" rel="noopener">Carte</a>
+        </div>
+      </aside>
+    </section>
+
+    <section class="layout">
+      <article class="panel">
+        <div class="cardBody">
+          <h2 class="sectionTitle">À propos</h2>
+          <p class="sectionSub">Description courte puis lecture complète du lieu.</p>
+
+          <div class="grid">
+            <div class="infoRow">
+              <strong>Résumé</strong>
+              <span id="shortDescriptionBox">—</span>
+            </div>
+
+            <div class="text" id="fullDescriptionBox">
+              —
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <aside class="panel">
+        <div class="cardBody">
+          <h2 class="sectionTitle">Infos clés</h2>
+          <p class="sectionSub">Repères utiles pour lire vite le lieu.</p>
+
+          <div class="grid">
+            <div class="infoRow">
+              <strong>Adresse / repère</strong>
+              <span id="addressBox">—</span>
+            </div>
+
+            <div class="infoRow">
+              <strong>Slug public</strong>
+              <span id="slugBox">—</span>
+            </div>
+
+            <div class="infoRow">
+              <strong>Tags</strong>
+              <span id="tagsBox">
+                <span class="muted">Aucun tag.</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="panel">
+      <div class="cardBody">
+        <h2 class="sectionTitle">Galerie</h2>
+        <p class="sectionSub">Les photos aident la lecture. Pas besoin de cinéma, juste du concret.</p>
+
+        <div id="gallery" class="gallery">
+          <div class="empty">Aucune photo disponible pour le moment.</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="foot">
+      DIGIY EXPLORE • fiche publique • contact direct • lecture mobile simple
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      "use strict";
+
+      const supabase = window.supabase.createClient(
+        window.DIGIY_SUPABASE_URL,
+        window.DIGIY_SUPABASE_ANON_KEY
+      );
+
+      const $ = (id) => document.getElementById(id);
+
+      const msg = $("msg");
+      const subline = $("subline");
+      const cover = $("cover");
+      const categoryBox = $("categoryBox");
+      const locationBox = $("locationBox");
+      const contactBox = $("contactBox");
+      const priceBox = $("priceBox");
+      const shortDescriptionBox = $("shortDescriptionBox");
+      const fullDescriptionBox = $("fullDescriptionBox");
+      const addressBox = $("addressBox");
+      const slugBox = $("slugBox");
+      const tagsBox = $("tagsBox");
+      const gallery = $("gallery");
+
+      const callBtn = $("callBtn");
+      const waBtn = $("waBtn");
+      const mapsBtn = $("mapsBtn");
+      const editBtn = $("editBtn");
+
+      function setMsg(text, type){
+        if(!text){
+          msg.className = "msg";
+          msg.textContent = "";
+          return;
+        }
+        msg.className = "msg show " + (type || "info");
+        msg.textContent = text;
+      }
+
+      function escapeHtml(value){
+        return String(value ?? "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      function getSlug(){
+        const url = new URL(window.location.href);
+        return String(url.searchParams.get("slug") || "").trim();
+      }
+
+      function normalizePhone(v){
+        return String(v || "").replace(/[^\d]/g, "");
+      }
+
+      function buildPhoneHref(phone){
+        const clean = normalizePhone(phone);
+        return clean ? "tel:+" + clean : "./index.html";
+      }
+
+      function buildWaHref(phone, label){
+        const clean = normalizePhone(phone);
+        if(!clean) return "./index.html";
+        const text = encodeURIComponent("Bonjour, je vous contacte depuis DIGIY EXPLORE pour : " + (label || "ce lieu"));
+        return "https://wa.me/" + clean + "?text=" + text;
+      }
+
+      function buildMapsHref(lat, lng, address){
+        const hasCoords = lat !== null && lat !== undefined && lng !== null && lng !== undefined && lat !== "" && lng !== "";
+        if(hasCoords){
+          return "https://www.google.com/maps?q=" + encodeURIComponent(String(lat) + "," + String(lng));
+        }
+        if(address){
+          return "https://www.google.com/maps?q=" + encodeURIComponent(address);
+        }
+        return "./index.html";
+      }
+
+      function renderCover(place){
+        const coverUrl = place?.cover_url || "";
+        const categoryLabel = place?.category_label || place?.category_code || "Lieu";
+        const title = place?.public_name || "Lieu";
+        const shortText = place?.short_description || "Lecture publique d’un lieu DIGIY EXPLORE.";
+
+        if(coverUrl){
+          cover.className = "cover";
+          cover.style.backgroundImage = `url("${coverUrl.replaceAll('"', '\\"')}")`;
+          cover.innerHTML = `
+            <div class="coverShade"></div>
+            <div class="coverContent">
+              <div class="badge">${escapeHtml(categoryLabel)}</div>
+              <h1 class="heroTitle">${escapeHtml(title)}</h1>
+              <p class="heroLead">${escapeHtml(shortText)}</p>
+            </div>
+          `;
+        } else {
+          cover.className = "coverFallback";
+          cover.innerHTML = `
+            <div style="padding:22px; width:100%;">
+              <div class="badge">${escapeHtml(categoryLabel)}</div>
+              <h1 class="heroTitle" style="margin-bottom:10px;">${escapeHtml(title)}</h1>
+              <p class="heroLead" style="color:var(--muted); text-shadow:none;">${escapeHtml(shortText)}</p>
+            </div>
+          `;
+        }
+
+        document.title = (title ? title + " — " : "") + "DIGIY EXPLORE";
+        subline.textContent = title ? ("Lecture publique : " + title) : "Lecture claire d’un lieu, spot ou activité.";
+      }
+
+      function renderTags(tags){
+        if(!Array.isArray(tags) || !tags.length){
+          tagsBox.innerHTML = `<span class="muted">Aucun tag.</span>`;
+          return;
+        }
+
+        tagsBox.innerHTML = `
+          <div class="chips">
+            ${tags.map(tag => `<span class="chip">${escapeHtml(tag)}</span>`).join("")}
+          </div>
+        `;
+      }
+
+      function renderGallery(place){
+        const photos = [];
+        if(place?.cover_url) photos.push(place.cover_url);
+        if(Array.isArray(place?.photo_urls)){
+          place.photo_urls.forEach(function(url){
+            if(url && !photos.includes(url)) photos.push(url);
+          });
+        }
+
+        if(!photos.length){
+          gallery.innerHTML = `<div class="empty">Aucune photo disponible pour le moment.</div>`;
+          return;
+        }
+
+        gallery.innerHTML = photos.map(function(url){
+          const safe = escapeHtml(url);
+          return `
+            <a class="photo" href="${safe}" target="_blank" rel="noopener" style="background-image:url('${safe}')"></a>
+          `;
+        }).join("");
+      }
+
+      function renderPlace(place, slug){
+        const categoryText = [place?.category_icon, place?.category_label || place?.category_code].filter(Boolean).join(" ");
+        const locationText = [place?.city, place?.zone].filter(Boolean).join(" — ");
+        const contactText = place?.whatsapp || place?.phone || "Non renseigné";
+        const priceText = place?.price_hint || "Non précisé";
+
+        renderCover(place);
+
+        categoryBox.textContent = categoryText || "—";
+        locationBox.textContent = locationText || "—";
+        contactBox.textContent = contactText;
+        priceBox.textContent = priceText;
+
+        shortDescriptionBox.textContent = place?.short_description || "Aucun résumé disponible.";
+        fullDescriptionBox.textContent = place?.full_description || "Aucune description complète disponible.";
+        addressBox.textContent = place?.address_text || "Adresse non précisée.";
+        slugBox.textContent = slug || "—";
+
+        renderTags(place?.tags);
+        renderGallery(place);
+
+        callBtn.href = buildPhoneHref(place?.phone || place?.whatsapp);
+        waBtn.href = buildWaHref(place?.whatsapp || place?.phone, place?.public_name || "ce lieu");
+        mapsBtn.href = buildMapsHref(place?.latitude, place?.longitude, place?.address_text);
+
+        if(!(place?.phone || place?.whatsapp)){
+          callBtn.textContent = "Pas de numéro";
+          callBtn.className = "btn ghost";
+        } else {
+          callBtn.textContent = "Appeler";
+          callBtn.className = "btn primary";
+        }
+
+        if(!(place?.whatsapp || place?.phone)){
+          waBtn.textContent = "Pas de WhatsApp";
+          waBtn.className = "btn ghost";
+        } else {
+          waBtn.textContent = "WhatsApp";
+          waBtn.className = "btn secondary";
+        }
+
+        if(!(place?.latitude || place?.longitude || place?.address_text)){
+          mapsBtn.textContent = "Pas de repère";
+        } else {
+          mapsBtn.textContent = "Carte";
+        }
+
+        editBtn.href = "./submit.html?slug=" + encodeURIComponent(slug || "");
+      }
+
+      async function loadPlace(slug){
+        const { data, error } = await supabase.rpc("digiy_explore_public_place_by_slug", {
+          p_slug: slug
+        });
+        if(error) throw error;
+        return data;
+      }
+
+      async function boot(){
+        const slug = getSlug();
+
+        if(!slug){
+          setMsg("Aucun slug trouvé dans l’URL. Retourne à la vitrine EXPLORE.", "bad");
+          cover.className = "coverFallback";
+          cover.textContent = "Slug manquant.";
+          return;
+        }
+
+        setMsg("Chargement de la fiche publique…", "info");
+
+        try{
+          const payload = await loadPlace(slug);
+
+          if(!payload || payload.ok !== true || !payload.place){
+            throw new Error("PLACE_NOT_FOUND");
+          }
+
+          renderPlace(payload.place, slug);
+          setMsg("Fiche publique chargée.", "ok");
+        }catch(err){
+          console.error("[PRO-EXPLORE fiche] error:", err);
+          setMsg("Ce lien n’existe pas ou le lieu n’est pas publié.", "bad");
+
+          cover.className = "coverFallback";
+          cover.innerHTML = `
+            <div style="padding:22px;">
+              <div class="badge">Introuvable</div>
+              <h1 class="heroTitle" style="margin-bottom:10px;">Lieu introuvable</h1>
+              <p class="heroLead" style="color:var(--muted); text-shadow:none;">
+                Ce lien n’existe pas ou la fiche n’est pas actuellement publiée.
+              </p>
+            </div>
+          `;
+
+          categoryBox.textContent = "—";
+          locationBox.textContent = "—";
+          contactBox.textContent = "—";
+          priceBox.textContent = "—";
+          shortDescriptionBox.textContent = "Aucune fiche publique disponible.";
+          fullDescriptionBox.textContent = "Retourne à la vitrine publique ou vérifie le slug.";
+          addressBox.textContent = "—";
+          slugBox.textContent = slug || "—";
+          tagsBox.innerHTML = `<span class="muted">Aucun tag.</span>`;
+          gallery.innerHTML = `<div class="empty">Aucune photo disponible.</div>`;
+          callBtn.href = "./index.html";
+          waBtn.href = "./index.html";
+          mapsBtn.href = "./index.html";
+          editBtn.href = "./submit.html?slug=" + encodeURIComponent(slug || "");
+        }
+      }
+
+      boot();
+    })();
+  </script>
+</body>
+</html>
