@@ -1,0 +1,192 @@
+# DIGIY EXPLORE — PRO MODULE 🌍
+
+## 🧭 Vision
+
+DIGIY EXPLORE est la porte tourisme de l’écosystème DIGIYLYFE.
+
+Objectif :
+
+* Donner une **présence réelle** aux pros du tourisme
+* Offrir une **lecture claire côté client**
+* Garder un **contact direct sans commission**
+
+> Ici, le client découvre → contacte → traite directement avec le professionnel.
+
+---
+
+## ⚙️ Architecture
+
+### 🔗 Front (GitHub Pages)
+
+* `index.html` → Vitrine / abonnement
+* `explore.html` → Liste publique des spots
+* `fiche.html` → Fiche publique d’un spot
+* `submit.html` → Ajout / édition d’un spot (PRO)
+* `cockpit.html` → Cockpit PRO (gestion)
+* `pin.html` → Entrée sécurisée PRO
+
+---
+
+### 🧠 Backend (Supabase)
+
+⚠️ DOCTRINE : **NE PAS REFAIRE LE SQL si déjà validé**
+
+Fonctions utilisées :
+
+* `digiy_explore_upsert_place`
+* `digiy_explore_public_list`
+* `digiy_explore_public_place_by_slug`
+* `digiy_explore_get_cockpit`
+* `explore_admin_pin_check`
+
+---
+
+## 🔐 Accès PRO
+
+### PIN FLOW
+
+1. Entrée via `pin.html`
+2. Vérification via :
+
+```sql
+explore_admin_pin_check(p_phone, p_pin)
+```
+
+3. Session stockée en localStorage
+4. Accès cockpit autorisé
+
+---
+
+## 🧩 RAIL RÉEL UTILISATEUR
+
+### 👤 Côté client
+
+```
+explore.html
+   ↓
+fiche.html?slug=xxx
+   ↓
+WhatsApp / téléphone direct
+```
+
+---
+
+### 👨🏾‍💼 Côté pro
+
+```
+pin.html
+   ↓
+cockpit.html
+   ↓
+submit.html
+   ↓
+digiy_explore_upsert_place
+```
+
+---
+
+## 📦 Structure des données (place)
+
+```json
+{
+  "public_name": "Nom du spot",
+  "slug": "unique",
+  "city": "Saly",
+  "zone": "Centre",
+  "category_code": "activity",
+  "category_label": "Activité",
+  "category_icon": "🎯",
+  "short_description": "Description courte",
+  "full_description": "Description complète",
+  "address_text": "Adresse",
+  "phone": "22177...",
+  "whatsapp": "22177...",
+  "latitude": 14.444,
+  "longitude": -17.001,
+  "cover_url": "...",
+  "photo_urls": [],
+  "price_hint": "Entrée libre",
+  "tags": [],
+  "is_featured": false
+}
+```
+
+---
+
+## 🎯 Doctrine DIGIY (à respecter)
+
+* ❌ Zéro démo si backend réel existe
+
+* ❌ Ne pas mélanger anciens et nouveaux rails
+
+* ❌ Ne pas casser les fonctions validées
+
+* ✅ Toujours utiliser le slug
+
+* ✅ Toujours contact direct (WhatsApp / phone)
+
+* ✅ Toujours lecture simple côté client
+
+---
+
+## 💳 Activation
+
+Lien unique :
+
+```
+https://commencer-a-payer.digiylyfe.com/?module=EXPLORE
+```
+
+Paramètres :
+
+* module = EXPLORE
+* plan = essentiel / pro / premium
+
+---
+
+## 🔗 Intégration DIGIYLYFE
+
+EXPLORE est connecté à :
+
+* DIGIY DRIVER → transport
+* DIGIY LOC → hébergement
+* DIGIY PAY → lecture financière
+* DIGIY MARKET → commerce local
+
+---
+
+## 🚀 État actuel
+
+✅ Backend validé
+✅ Upsert OK
+✅ Public list OK
+✅ Fiche publique OK
+✅ Cockpit OK
+
+🎯 Prochain cran :
+
+* UX cockpit
+* navigation croisée
+* montée premium EXPLORE
+
+---
+
+## 🧠 Esprit DIGIY
+
+DIGIY EXPLORE n’est pas une plateforme vide.
+
+C’est :
+
+* du terrain
+* des vrais pros
+* du lien humain
+* de la valeur locale
+
+---
+
+## ♾️ Signature
+
+DIGIYLYFE
+Présence réelle • Contact direct • 0% commission
+
+---
