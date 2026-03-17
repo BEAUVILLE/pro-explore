@@ -1,0 +1,1037 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>PRO-EXPLORE — Lieux</title>
+  <meta name="theme-color" content="#06130f" />
+  <meta
+    name="description"
+    content="PRO-EXPLORE — gestion des lieux, publication, archivage et lecture terrain."
+  />
+
+  <script>
+    window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
+    window.DIGIY_SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
+    window.DIGIY_SUPABASE_ANON = window.DIGIY_SUPABASE_ANON_KEY;
+    window.DIGIY_MODULE = "EXPLORE";
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root{
+      --bg:#06130f;
+      --bg2:#0a1f18;
+      --card:#0b241b;
+      --card2:#102b22;
+      --line:rgba(255,255,255,.08);
+      --ink:#f8fafc;
+      --muted:rgba(248,250,252,.72);
+      --soft:rgba(248,250,252,.52);
+      --gold:#d4af37;
+      --gold2:#f3d46b;
+      --ok:#22c55e;
+      --warn:#f59e0b;
+      --bad:#ef4444;
+      --radius:22px;
+      --shadow:0 24px 60px rgba(0,0,0,.28);
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      min-height:100vh;
+      color:var(--ink);
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(212,175,55,.09), transparent 26%),
+        linear-gradient(180deg, #071510 0%, #06130f 48%, #04100c 100%);
+    }
+
+    a{color:inherit;text-decoration:none}
+    button,input,select{font:inherit}
+
+    .wrap{
+      width:min(100%, 1240px);
+      margin:0 auto;
+      padding:18px 14px 42px;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:16px;
+    }
+
+    .brand{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      min-width:0;
+    }
+
+    .logo{
+      width:46px;
+      height:46px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg, rgba(212,175,55,.24), rgba(212,175,55,.06));
+      border:1px solid rgba(212,175,55,.22);
+      box-shadow:0 10px 28px rgba(0,0,0,.18);
+      font-size:23px;
+      flex:0 0 auto;
+    }
+
+    .brandText{min-width:0}
+    .kicker{
+      color:var(--gold2);
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      margin-bottom:3px;
+      white-space:nowrap;
+    }
+
+    .title{
+      font-size:clamp(18px, 2vw, 28px);
+      font-weight:900;
+      line-height:1.08;
+      letter-spacing:-.03em;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .sub{
+      margin-top:4px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .topActions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .btn{
+      min-height:44px;
+      border:none;
+      border-radius:14px;
+      padding:0 14px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      font-weight:800;
+      cursor:pointer;
+      transition:filter .18s ease, transform .04s ease, opacity .18s ease;
+      white-space:nowrap;
+    }
+
+    .btn:active{transform:translateY(1px)}
+    .btn[disabled]{opacity:.6;cursor:not-allowed}
+
+    .btn.primary{
+      background:linear-gradient(135deg, var(--gold), var(--gold2));
+      color:#13200d;
+      box-shadow:0 14px 30px rgba(212,175,55,.22);
+    }
+
+    .btn.secondary{
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      color:var(--ink);
+    }
+
+    .btn.ghost{
+      background:transparent;
+      border:1px solid var(--line);
+      color:var(--ink);
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:16px;
+      margin-bottom:16px;
+    }
+
+    .panel{
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .heroMain{
+      padding:22px;
+      background:
+        linear-gradient(180deg, rgba(212,175,55,.06), transparent 28%),
+        linear-gradient(180deg, var(--card), var(--card2));
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(212,175,55,.22);
+      background:rgba(212,175,55,.08);
+      color:var(--gold2);
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      margin-bottom:14px;
+    }
+
+    .heroTitle{
+      margin:0 0 10px;
+      font-size:clamp(26px, 4vw, 42px);
+      line-height:1.02;
+      letter-spacing:-.04em;
+    }
+
+    .heroLead{
+      margin:0;
+      color:var(--muted);
+      font-size:16px;
+      line-height:1.65;
+      max-width:60ch;
+    }
+
+    .heroSide{
+      padding:20px;
+      display:grid;
+      gap:12px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015)),
+        linear-gradient(180deg, #0a1c16, #0d241c);
+    }
+
+    .miniStat{
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      padding:14px;
+      background:rgba(255,255,255,.03);
+    }
+
+    .miniLabel{
+      color:var(--soft);
+      font-size:12px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      margin-bottom:8px;
+    }
+
+    .miniValue{
+      font-size:22px;
+      font-weight:900;
+      line-height:1.1;
+      letter-spacing:-.03em;
+      word-break:break-word;
+    }
+
+    .miniHint{
+      margin-top:6px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.45;
+    }
+
+    .nav{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .nav a{
+      min-height:42px;
+      display:inline-flex;
+      align-items:center;
+      padding:0 14px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+      color:#eef4f1;
+      font-size:13px;
+      font-weight:800;
+    }
+
+    .msg{
+      margin-bottom:16px;
+      border-radius:18px;
+      padding:14px 16px;
+      font-size:14px;
+      line-height:1.5;
+      font-weight:700;
+      display:none;
+    }
+
+    .msg.show{display:block}
+    .msg.info{
+      color:#dbeafe;
+      border:1px solid rgba(96,165,250,.18);
+      background:rgba(59,130,246,.08);
+    }
+    .msg.bad{
+      color:#fecaca;
+      border:1px solid rgba(239,68,68,.18);
+      background:rgba(239,68,68,.08);
+    }
+    .msg.ok{
+      color:#bbf7d0;
+      border:1px solid rgba(34,197,94,.18);
+      background:rgba(34,197,94,.08);
+    }
+
+    .toolbar{
+      display:grid;
+      grid-template-columns:1fr auto auto;
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .searchWrap,.filterWrap{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:16px;
+      min-height:52px;
+      display:flex;
+      align-items:center;
+      padding:0 14px;
+    }
+
+    .input,.select{
+      width:100%;
+      border:none;
+      background:transparent;
+      color:var(--ink);
+      outline:none;
+      font-size:15px;
+    }
+
+    .select option{
+      background:#0d1f19;
+      color:var(--ink);
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:14px;
+      margin-bottom:16px;
+    }
+
+    .statCard{
+      padding:18px;
+      border-radius:22px;
+      border:1px solid var(--line);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      box-shadow:var(--shadow);
+    }
+
+    .statLabel{
+      color:var(--soft);
+      font-size:12px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.09em;
+      margin-bottom:10px;
+    }
+
+    .statValue{
+      font-size:32px;
+      line-height:1;
+      font-weight:900;
+      letter-spacing:-.04em;
+    }
+
+    .statFoot{
+      margin-top:10px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.45;
+    }
+
+    .list{
+      display:grid;
+      gap:12px;
+    }
+
+    .card{
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:22px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .cardInner{
+      padding:18px;
+      display:grid;
+      gap:14px;
+    }
+
+    .cardTop{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:flex-start;
+    }
+
+    .cardMain{
+      min-width:0;
+      flex:1 1 auto;
+    }
+
+    .cardTitle{
+      font-size:20px;
+      line-height:1.2;
+      font-weight:900;
+      letter-spacing:-.02em;
+      margin:0 0 6px;
+      word-break:break-word;
+    }
+
+    .meta{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.55;
+      word-break:break-word;
+    }
+
+    .meta b{color:#eef6f2}
+
+    .statusRow{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+    }
+
+    .status{
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      padding:7px 11px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+    }
+
+    .status.ok{
+      color:#86efac;
+      border-color:rgba(34,197,94,.25);
+      background:rgba(34,197,94,.08);
+    }
+
+    .status.warn{
+      color:#fde68a;
+      border-color:rgba(245,158,11,.22);
+      background:rgba(245,158,11,.08);
+    }
+
+    .status.bad{
+      color:#fca5a5;
+      border-color:rgba(239,68,68,.22);
+      background:rgba(239,68,68,.08);
+    }
+
+    .slug{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:7px 11px;
+      border-radius:999px;
+      border:1px solid rgba(212,175,55,.18);
+      background:rgba(212,175,55,.08);
+      color:var(--gold2);
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.03em;
+    }
+
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .actions .btn{
+      min-height:40px;
+      border-radius:12px;
+      padding:0 12px;
+      font-size:13px;
+    }
+
+    .empty{
+      border:1px dashed rgba(255,255,255,.12);
+      border-radius:18px;
+      padding:18px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.6;
+      background:rgba(255,255,255,.02);
+    }
+
+    .loading{
+      padding:18px;
+      color:var(--muted);
+      font-size:14px;
+    }
+
+    .foot{
+      margin-top:18px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.6;
+      text-align:center;
+    }
+
+    @media (max-width: 1080px){
+      .stats{grid-template-columns:repeat(2,1fr)}
+      .hero{grid-template-columns:1fr}
+    }
+
+    @media (max-width: 760px){
+      .toolbar{grid-template-columns:1fr}
+    }
+
+    @media (max-width: 640px){
+      .wrap{padding:14px 12px 34px}
+      .topbar{flex-direction:column}
+      .topActions{width:100%;justify-content:flex-start}
+      .stats{grid-template-columns:1fr}
+      .heroMain,.heroSide{padding:18px}
+      .cardTop{flex-direction:column}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">📍</div>
+        <div class="brandText">
+          <div class="kicker">DIGIYLYFE — Quartier Général</div>
+          <div class="title">PRO-EXPLORE • Gestion des lieux</div>
+          <div class="sub" id="subline">Lecture, publication et archivage des fiches terrain.</div>
+        </div>
+      </div>
+
+      <div class="topActions">
+        <a class="btn ghost" href="./index.html">Vitrine</a>
+        <a class="btn secondary" href="./pin.html">PIN</a>
+        <a class="btn secondary" href="./cockpit.html">Cockpit</a>
+        <a class="btn primary" href="./submit.html">+ Ajouter un lieu</a>
+      </div>
+    </header>
+
+    <section class="hero">
+      <article class="panel heroMain">
+        <div class="badge">Pilotage terrain</div>
+        <h1 class="heroTitle">Tes lieux, sans brouillard.</h1>
+        <p class="heroLead">
+          Ici tu vois les fiches PRO-EXPLORE liées à ton numéro, leur état,
+          leur statut de publication et les actions directes pour faire avancer le terrain.
+        </p>
+      </article>
+
+      <aside class="panel heroSide">
+        <div class="miniStat">
+          <div class="miniLabel">Téléphone pilote</div>
+          <div class="miniValue" id="heroPhone">—</div>
+          <div class="miniHint">Base de gestion rattachée au numéro actif.</div>
+        </div>
+
+        <div class="miniStat">
+          <div class="miniLabel">État du rail</div>
+          <div class="miniValue" id="heroStatus">Chargement…</div>
+          <div class="miniHint" id="heroStatusHint">Connexion à la liste réelle des lieux.</div>
+        </div>
+      </aside>
+    </section>
+
+    <nav class="nav">
+      <a href="./cockpit.html">Cockpit</a>
+      <a href="./lieux.html">Lieux</a>
+      <a href="./submit.html">Ajouter / éditer</a>
+      <a href="./index.html">Vitrine publique</a>
+      <a href="./pin.html">Entrée PIN</a>
+    </nav>
+
+    <div id="msg" class="msg info"></div>
+
+    <section class="toolbar">
+      <div class="searchWrap">
+        <input id="searchInput" class="input" type="text" placeholder="Rechercher un lieu, une ville, une zone, une catégorie…" />
+      </div>
+
+      <div class="filterWrap">
+        <select id="statusFilter" class="select">
+          <option value="all">Tous les états</option>
+          <option value="published">Publiés</option>
+          <option value="draft">Brouillons</option>
+          <option value="archived">Archivés</option>
+        </select>
+      </div>
+
+      <button id="reloadBtn" class="btn secondary" type="button">Actualiser</button>
+    </section>
+
+    <section class="stats">
+      <article class="statCard">
+        <div class="statLabel">Total lieux</div>
+        <div class="statValue" id="statTotal">—</div>
+        <div class="statFoot">Toutes les fiches du numéro actif.</div>
+      </article>
+
+      <article class="statCard">
+        <div class="statLabel">Publiés</div>
+        <div class="statValue" id="statPublished">—</div>
+        <div class="statFoot">Déjà visibles côté public.</div>
+      </article>
+
+      <article class="statCard">
+        <div class="statLabel">Brouillons</div>
+        <div class="statValue" id="statDraft">—</div>
+        <div class="statFoot">À retravailler ou publier.</div>
+      </article>
+
+      <article class="statCard">
+        <div class="statLabel">Archivés</div>
+        <div class="statValue" id="statArchived">—</div>
+        <div class="statFoot">Sortis de la lecture active.</div>
+      </article>
+    </section>
+
+    <section id="list" class="list">
+      <div class="card">
+        <div class="loading">Chargement des lieux…</div>
+      </div>
+    </section>
+
+    <div class="foot">
+      PRO-EXPLORE • gestion réelle des lieux • publish / archive / lecture publique
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      "use strict";
+
+      const SESSION_KEY = "digiy_explore_session";
+      const MAX_AGE_MS = 8 * 60 * 60 * 1000;
+
+      const supabase = window.supabase.createClient(
+        window.DIGIY_SUPABASE_URL,
+        window.DIGIY_SUPABASE_ANON_KEY
+      );
+
+      const $ = (id) => document.getElementById(id);
+
+      const msg = $("msg");
+      const heroPhone = $("heroPhone");
+      const heroStatus = $("heroStatus");
+      const heroStatusHint = $("heroStatusHint");
+      const subline = $("subline");
+
+      const statTotal = $("statTotal");
+      const statPublished = $("statPublished");
+      const statDraft = $("statDraft");
+      const statArchived = $("statArchived");
+
+      const searchInput = $("searchInput");
+      const statusFilter = $("statusFilter");
+      const reloadBtn = $("reloadBtn");
+      const list = $("list");
+
+      let ALL_ITEMS = [];
+      let CURRENT_PHONE = "";
+
+      function setMsg(text, type){
+        if(!text){
+          msg.className = "msg";
+          msg.textContent = "";
+          return;
+        }
+        msg.className = "msg show " + (type || "info");
+        msg.textContent = text;
+      }
+
+      function normalizePhone(v){
+        return String(v || "").replace(/[^\d]/g, "");
+      }
+
+      function safeJsonParse(raw){
+        try{ return JSON.parse(raw); }catch(_){ return null; }
+      }
+
+      function getSession(){
+        try{
+          const raw = localStorage.getItem(SESSION_KEY);
+          if(!raw) return null;
+          const parsed = safeJsonParse(raw);
+          if(!parsed || !parsed.phone || !parsed.ts) return null;
+          if((Date.now() - parsed.ts) > MAX_AGE_MS){
+            localStorage.removeItem(SESSION_KEY);
+            return null;
+          }
+          return parsed;
+        }catch(_){
+          return null;
+        }
+      }
+
+      function getPhone(){
+        const url = new URL(window.location.href);
+        const fromUrl = normalizePhone(url.searchParams.get("phone"));
+        if(fromUrl) return fromUrl;
+        const session = getSession();
+        if(session?.phone) return normalizePhone(session.phone);
+        return "";
+      }
+
+      function fmtDate(v){
+        try{
+          if(!v) return "—";
+          return new Date(v).toLocaleString("fr-FR", {
+            year:"numeric",
+            month:"2-digit",
+            day:"2-digit",
+            hour:"2-digit",
+            minute:"2-digit"
+          });
+        }catch(_){
+          return String(v || "—");
+        }
+      }
+
+      function escapeHtml(value){
+        return String(value ?? "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      function publicUrlFromSlug(slug){
+        const url = new URL("./fiche.html", window.location.href);
+        url.searchParams.set("slug", slug);
+        return url.toString();
+      }
+
+      function editUrlFromSlug(slug){
+        const url = new URL("./submit.html", window.location.href);
+        url.searchParams.set("slug", slug);
+        if(CURRENT_PHONE) url.searchParams.set("phone", CURRENT_PHONE);
+        return url.toString();
+      }
+
+      function cockpitUrl(){
+        const url = new URL("./cockpit.html", window.location.href);
+        if(CURRENT_PHONE) url.searchParams.set("phone", CURRENT_PHONE);
+        return url.toString();
+      }
+
+      function computeStats(items){
+        const total = items.length;
+        const published = items.filter(x => x?.is_published === true && x?.status === "published").length;
+        const archived = items.filter(x => x?.status === "archived").length;
+        const draft = items.filter(x => x?.status === "draft" || (x?.is_published !== true && x?.status !== "archived")).length;
+
+        statTotal.textContent = String(total);
+        statPublished.textContent = String(published);
+        statDraft.textContent = String(draft);
+        statArchived.textContent = String(archived);
+      }
+
+      function getFilteredItems(){
+        const q = String(searchInput.value || "").trim().toLowerCase();
+        const status = statusFilter.value || "all";
+
+        return ALL_ITEMS.filter(function(item){
+          const hay = [
+            item?.public_name,
+            item?.slug,
+            item?.category_code,
+            item?.city,
+            item?.zone
+          ].join(" ").toLowerCase();
+
+          const matchSearch = !q || hay.includes(q);
+
+          let matchStatus = true;
+          if(status === "published"){
+            matchStatus = item?.is_published === true && item?.status === "published";
+          } else if(status === "draft"){
+            matchStatus = item?.status === "draft" || (item?.is_published !== true && item?.status !== "archived");
+          } else if(status === "archived"){
+            matchStatus = item?.status === "archived";
+          }
+
+          return matchSearch && matchStatus;
+        });
+      }
+
+      function renderList(){
+        const items = getFilteredItems();
+
+        if(!items.length){
+          list.innerHTML = `
+            <div class="card">
+              <div class="cardInner">
+                <div class="empty">
+                  Aucun lieu ne correspond au filtre actuel. Essaie un autre filtre, ou ajoute une nouvelle fiche dans <b>submit.html</b>.
+                </div>
+              </div>
+            </div>
+          `;
+          return;
+        }
+
+        list.innerHTML = items.map(function(item){
+          const isPublished = item?.is_published === true && item?.status === "published";
+          const isArchived = item?.status === "archived";
+
+          let statusClass = "warn";
+          let statusText = item?.status || "draft";
+
+          if(isPublished){
+            statusClass = "ok";
+            statusText = "Publié";
+          } else if(isArchived){
+            statusClass = "bad";
+            statusText = "Archivé";
+          } else {
+            statusText = "Brouillon";
+          }
+
+          const zoneLine = [item?.city, item?.zone].filter(Boolean).join(" — ");
+          const featured = item?.is_featured ? '<span class="slug">Mis en avant</span>' : "";
+
+          return `
+            <article class="card">
+              <div class="cardInner">
+                <div class="cardTop">
+                  <div class="cardMain">
+                    <h2 class="cardTitle">${escapeHtml(item?.public_name || "Lieu sans nom")}</h2>
+                    <div class="meta">
+                      <b>Lieu :</b> ${escapeHtml(zoneLine || "Zone non précisée")}<br>
+                      <b>Catégorie :</b> ${escapeHtml(item?.category_code || "—")}<br>
+                      <b>Slug :</b> ${escapeHtml(item?.slug || "—")}<br>
+                      <b>Mise à jour :</b> ${escapeHtml(fmtDate(item?.updated_at))}
+                    </div>
+                  </div>
+
+                  <div class="statusRow">
+                    <div class="status ${statusClass}">${escapeHtml(statusText)}</div>
+                    <div class="slug">${escapeHtml(item?.slug || "—")}</div>
+                    ${featured}
+                  </div>
+                </div>
+
+                <div class="actions">
+                  <a class="btn secondary" href="${escapeHtml(editUrlFromSlug(item?.slug || ""))}">Éditer</a>
+                  <a class="btn ghost" href="${escapeHtml(cockpitUrl())}">Cockpit</a>
+                  <a class="btn ghost" href="${escapeHtml(publicUrlFromSlug(item?.slug || ""))}" target="_blank" rel="noopener">Voir fiche publique</a>
+                  ${
+                    isPublished
+                      ? `<button class="btn secondary js-unpublish" data-slug="${escapeHtml(item?.slug || "")}">Dépublier</button>`
+                      : `<button class="btn primary js-publish" data-slug="${escapeHtml(item?.slug || "")}">Publier</button>`
+                  }
+                  <button class="btn ghost js-archive" data-slug="${escapeHtml(item?.slug || "")}">Archiver</button>
+                </div>
+              </div>
+            </article>
+          `;
+        }).join("");
+
+        bindActions();
+      }
+
+      function bindActions(){
+        list.querySelectorAll(".js-publish").forEach(function(btn){
+          btn.addEventListener("click", async function(){
+            const slug = btn.getAttribute("data-slug") || "";
+            await publishSlug(slug, true);
+          });
+        });
+
+        list.querySelectorAll(".js-unpublish").forEach(function(btn){
+          btn.addEventListener("click", async function(){
+            const slug = btn.getAttribute("data-slug") || "";
+            await publishSlug(slug, false);
+          });
+        });
+
+        list.querySelectorAll(".js-archive").forEach(function(btn){
+          btn.addEventListener("click", async function(){
+            const slug = btn.getAttribute("data-slug") || "";
+            await archiveSlug(slug);
+          });
+        });
+      }
+
+      async function loadPlaces(phone){
+        const { data, error } = await supabase.rpc("digiy_explore_list_places_by_phone", {
+          p_owner_phone: phone
+        });
+        if(error) throw error;
+        return Array.isArray(data) ? data : [];
+      }
+
+      async function rpcSetPublish(phone, slug, publish){
+        const { data, error } = await supabase.rpc("digiy_explore_set_publish", {
+          p_owner_phone: phone,
+          p_slug: slug,
+          p_publish: publish
+        });
+        if(error) throw error;
+        return data;
+      }
+
+      async function rpcArchive(phone, slug){
+        const { data, error } = await supabase.rpc("digiy_explore_archive_place", {
+          p_owner_phone: phone,
+          p_slug: slug
+        });
+        if(error) throw error;
+        return data;
+      }
+
+      async function refresh(){
+        if(!CURRENT_PHONE) return;
+
+        heroStatus.textContent = "Chargement";
+        heroStatusHint.textContent = "Lecture des lieux en cours...";
+        setMsg("Chargement des lieux PRO-EXPLORE...", "info");
+        reloadBtn.disabled = true;
+
+        try{
+          const items = await loadPlaces(CURRENT_PHONE);
+          ALL_ITEMS = items;
+          computeStats(items);
+          renderList();
+
+          heroStatus.textContent = "Rail actif";
+          heroStatusHint.textContent = items.length
+            ? items.length + " lieu(x) chargé(s) sur le backend réel."
+            : "Aucun lieu encore remonté pour ce numéro.";
+          setMsg("Liste réelle des lieux chargée.", "ok");
+        }catch(err){
+          console.error("[PRO-EXPLORE lieux] load error:", err);
+          heroStatus.textContent = "Erreur";
+          heroStatusHint.textContent = "Impossible de lire la liste réelle.";
+          list.innerHTML = `
+            <div class="card">
+              <div class="cardInner">
+                <div class="empty">
+                  La liste n’a pas pu être chargée. Vérifie la session PIN ou le RPC <b>digiy_explore_list_places_by_phone</b>.
+                </div>
+              </div>
+            </div>
+          `;
+          setMsg("Lecture des lieux impossible pour le moment.", "bad");
+        }finally{
+          reloadBtn.disabled = false;
+        }
+      }
+
+      async function publishSlug(slug, publish){
+        if(!CURRENT_PHONE || !slug) return;
+
+        setMsg((publish ? "Publication" : "Dépublication") + " en cours pour " + slug + "...", "info");
+
+        try{
+          const res = await rpcSetPublish(CURRENT_PHONE, slug, publish);
+          if(!res || res.ok !== true){
+            throw new Error("RPC publish invalide");
+          }
+          setMsg(
+            publish
+              ? "Lieu publié avec succès."
+              : "Lieu repassé en brouillon.",
+            "ok"
+          );
+          await refresh();
+        }catch(err){
+          console.error("[PRO-EXPLORE lieux] publish error:", err);
+          setMsg("L’action de publication a échoué.", "bad");
+        }
+      }
+
+      async function archiveSlug(slug){
+        if(!CURRENT_PHONE || !slug) return;
+
+        const confirmed = window.confirm("Archiver ce lieu ? Il sera retiré de la lecture active.");
+        if(!confirmed) return;
+
+        setMsg("Archivage en cours pour " + slug + "...", "info");
+
+        try{
+          const res = await rpcArchive(CURRENT_PHONE, slug);
+          if(!res || res.ok !== true){
+            throw new Error("RPC archive invalide");
+          }
+          setMsg("Lieu archivé avec succès.", "ok");
+          await refresh();
+        }catch(err){
+          console.error("[PRO-EXPLORE lieux] archive error:", err);
+          setMsg("L’archivage a échoué.", "bad");
+        }
+      }
+
+      function boot(){
+        CURRENT_PHONE = getPhone();
+
+        if(!CURRENT_PHONE){
+          heroPhone.textContent = "—";
+          heroStatus.textContent = "Accès manquant";
+          heroStatusHint.textContent = "Passe d’abord par pin.html pour ouvrir la session.";
+          setMsg("Aucun téléphone trouvé. Ouvre d’abord pin.html.", "bad");
+          list.innerHTML = `
+            <div class="card">
+              <div class="cardInner">
+                <div class="empty">
+                  Pas de session active. Reviens sur <b>pin.html</b> pour entrer dans le module PRO-EXPLORE.
+                </div>
+              </div>
+            </div>
+          `;
+          return;
+        }
+
+        heroPhone.textContent = CURRENT_PHONE;
+        subline.textContent = "Gestion des lieux rattachés au téléphone " + CURRENT_PHONE + ".";
+        searchInput.addEventListener("input", renderList);
+        statusFilter.addEventListener("change", renderList);
+        reloadBtn.addEventListener("click", refresh);
+
+        refresh();
+      }
+
+      boot();
+    })();
+  </script>
+</body>
+</html>
