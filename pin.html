@@ -1,0 +1,689 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>PRO-EXPLORE — Entrée PIN</title>
+  <meta name="theme-color" content="#06130f" />
+  <meta
+    name="description"
+    content="PRO-EXPLORE — entrée sécurisée par PIN pour accéder au cockpit terrain DIGIY."
+  />
+
+  <script>
+    window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
+    window.DIGIY_SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root{
+      --bg:#06130f;
+      --bg2:#0b1f18;
+      --card:#0c241c;
+      --card2:#102b22;
+      --line:rgba(255,255,255,.08);
+      --ink:#f8fafc;
+      --muted:rgba(248,250,252,.72);
+      --gold:#d4af37;
+      --gold2:#f3d46b;
+      --ok:#22c55e;
+      --bad:#ef4444;
+      --focus:rgba(212,175,55,.35);
+      --radius:22px;
+      --shadow:0 20px 60px rgba(0,0,0,.34);
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(212,175,55,.12), transparent 28%),
+        linear-gradient(180deg, var(--bg), #04100c 52%, #030b08 100%);
+      color:var(--ink);
+      min-height:100vh;
+    }
+
+    a{color:inherit;text-decoration:none}
+
+    .wrap{
+      width:min(100%, 1120px);
+      margin:0 auto;
+      padding:24px 16px 48px;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:22px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+
+    .logo{
+      width:44px;
+      height:44px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg, rgba(212,175,55,.2), rgba(212,175,55,.06));
+      border:1px solid rgba(212,175,55,.22);
+      box-shadow:0 10px 24px rgba(0,0,0,.18);
+      font-size:22px;
+    }
+
+    .brandText{
+      min-width:0;
+    }
+
+    .kicker{
+      font-size:12px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      color:var(--gold2);
+      white-space:nowrap;
+    }
+
+    .title{
+      font-size:18px;
+      font-weight:800;
+      line-height:1.1;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .homeBtn{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      color:var(--ink);
+      border-radius:999px;
+      padding:10px 14px;
+      font-weight:700;
+      font-size:14px;
+      white-space:nowrap;
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:18px;
+      align-items:stretch;
+    }
+
+    .panel{
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .heroCard{
+      padding:24px;
+      background:
+        linear-gradient(180deg, rgba(212,175,55,.06), transparent 30%),
+        linear-gradient(180deg, var(--card), var(--card2));
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 12px;
+      border-radius:999px;
+      border:1px solid rgba(212,175,55,.22);
+      background:rgba(212,175,55,.08);
+      color:var(--gold2);
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      margin-bottom:14px;
+    }
+
+    h1{
+      margin:0 0 12px;
+      font-size:clamp(28px, 4vw, 46px);
+      line-height:1.02;
+      letter-spacing:-.03em;
+    }
+
+    .lead{
+      margin:0;
+      color:var(--muted);
+      font-size:16px;
+      line-height:1.65;
+      max-width:58ch;
+    }
+
+    .bullets{
+      display:grid;
+      gap:10px;
+      margin:18px 0 0;
+    }
+
+    .bullet{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      color:var(--muted);
+      font-size:15px;
+      line-height:1.5;
+    }
+
+    .dot{
+      width:9px;
+      height:9px;
+      border-radius:999px;
+      background:var(--gold);
+      box-shadow:0 0 0 6px rgba(212,175,55,.08);
+      margin-top:7px;
+      flex:0 0 auto;
+    }
+
+    .pinCard{
+      padding:22px;
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+      background:
+        linear-gradient(180deg, rgba(212,175,55,.05), transparent 22%),
+        linear-gradient(180deg, #0a1c16, #0d241c);
+    }
+
+    .pinHead{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .pinTitle{
+      font-size:22px;
+      font-weight:900;
+      letter-spacing:-.02em;
+      margin:0;
+    }
+
+    .badge{
+      border:1px solid rgba(212,175,55,.22);
+      color:var(--gold2);
+      background:rgba(212,175,55,.08);
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:12px;
+      font-weight:800;
+      white-space:nowrap;
+    }
+
+    .hint{
+      margin:0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.55;
+    }
+
+    .grid{
+      display:grid;
+      gap:14px;
+    }
+
+    .field{
+      display:grid;
+      gap:8px;
+    }
+
+    .label{
+      font-size:13px;
+      font-weight:800;
+      color:#edf4f0;
+      letter-spacing:.02em;
+    }
+
+    .inputWrap{
+      position:relative;
+    }
+
+    .input{
+      width:100%;
+      min-height:54px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+      color:var(--ink);
+      padding:0 16px;
+      font-size:16px;
+      outline:none;
+      transition:border-color .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+
+    .input:focus{
+      border-color:rgba(212,175,55,.45);
+      box-shadow:0 0 0 5px var(--focus);
+      background:rgba(255,255,255,.05);
+    }
+
+    .input::placeholder{
+      color:rgba(248,250,252,.38);
+    }
+
+    .pinRow{
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:10px;
+      align-items:center;
+    }
+
+    .ghostBtn,.mainBtn{
+      min-height:54px;
+      border:none;
+      border-radius:16px;
+      padding:0 16px;
+      font-weight:900;
+      cursor:pointer;
+      transition:transform .04s ease, opacity .18s ease, filter .18s ease;
+    }
+
+    .ghostBtn:active,.mainBtn:active{transform:translateY(1px)}
+    .ghostBtn[disabled],.mainBtn[disabled]{cursor:not-allowed;opacity:.6}
+
+    .ghostBtn{
+      background:rgba(255,255,255,.05);
+      color:var(--ink);
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .mainBtn{
+      background:linear-gradient(135deg, var(--gold), var(--gold2));
+      color:#15210f;
+      box-shadow:0 14px 34px rgba(212,175,55,.24);
+    }
+
+    .mainBtn:hover,.ghostBtn:hover{
+      filter:brightness(1.04);
+    }
+
+    .actions{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+    }
+
+    .msg{
+      min-height:22px;
+      font-size:14px;
+      font-weight:700;
+      line-height:1.4;
+    }
+
+    .msg.ok{color:#86efac}
+    .msg.bad{color:#fca5a5}
+    .msg.info{color:#cbd5e1}
+
+    .mini{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.5;
+    }
+
+    .foot{
+      margin-top:20px;
+      display:grid;
+      gap:10px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.55;
+    }
+
+    .links{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:10px;
+    }
+
+    .linkBtn{
+      padding:10px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+      font-weight:800;
+      font-size:13px;
+    }
+
+    @media (max-width: 920px){
+      .hero{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width: 560px){
+      .wrap{padding:16px 12px 36px}
+      .heroCard,.pinCard{padding:18px}
+      .pinRow{grid-template-columns:1fr}
+      .topbar{align-items:flex-start;flex-direction:column}
+      .homeBtn{width:100%;text-align:center}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">🧭</div>
+        <div class="brandText">
+          <div class="kicker">DIGIYLYFE — Quartier Général</div>
+          <div class="title">PRO-EXPLORE • Entrée PIN</div>
+        </div>
+      </div>
+      <a class="homeBtn" href="./index.html">← Retour EXPLORE</a>
+    </div>
+
+    <section class="hero">
+      <article class="panel heroCard">
+        <div class="eyebrow">Centre de vision terrain</div>
+        <h1>Observer. Comprendre. Agir.</h1>
+        <p class="lead">
+          PRO-EXPLORE ouvre un cockpit simple pour lire le terrain, publier des spots,
+          voir les zones, comprendre les catégories et faire remonter une vraie vision locale.
+        </p>
+
+        <div class="bullets">
+          <div class="bullet">
+            <span class="dot"></span>
+            <span>Lecture rapide du territoire, pensée pour mobile et usage terrain.</span>
+          </div>
+          <div class="bullet">
+            <span class="dot"></span>
+            <span>Publication et pilotage des lieux sans usine à gaz ni écran de laboratoire.</span>
+          </div>
+          <div class="bullet">
+            <span class="dot"></span>
+            <span>Base prête à se relier ensuite à DRIVER, MARKET, PAY et RESA.</span>
+          </div>
+        </div>
+
+        <div class="links">
+          <a class="linkBtn" href="./index.html">Vitrine publique</a>
+          <a class="linkBtn" href="./cockpit.html">Cockpit pro</a>
+        </div>
+      </article>
+
+      <aside class="panel pinCard">
+        <div class="pinHead">
+          <h2 class="pinTitle">Accès protégé</h2>
+          <div class="badge">PIN PRO</div>
+        </div>
+
+        <p class="hint">
+          Entre ton numéro et ton code PIN pour ouvrir le cockpit PRO-EXPLORE.
+        </p>
+
+        <form id="pinForm" class="grid" novalidate>
+          <div class="field">
+            <label class="label" for="phoneInput">Téléphone</label>
+            <div class="inputWrap">
+              <input
+                id="phoneInput"
+                class="input"
+                type="tel"
+                inputmode="numeric"
+                autocomplete="tel"
+                placeholder="221771342889"
+                maxlength="20"
+              />
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="pinInput">PIN</label>
+            <div class="pinRow">
+              <div class="inputWrap">
+                <input
+                  id="pinInput"
+                  class="input"
+                  type="password"
+                  inputmode="numeric"
+                  autocomplete="one-time-code"
+                  placeholder="••••"
+                  maxlength="10"
+                />
+              </div>
+              <button id="togglePinBtn" class="ghostBtn" type="button">Afficher</button>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button id="submitBtn" class="mainBtn" type="submit">Ouvrir mon cockpit</button>
+            <div id="msg" class="msg info">Entre ton numéro et ton PIN.</div>
+            <div class="mini">
+              Le module vérifie d’abord le rail EXPLORE existant. Si besoin, il tente aussi le rail PIN DIGIY générique.
+            </div>
+          </div>
+        </form>
+
+        <div class="foot">
+          <div>Module : <strong>EXPLORE</strong></div>
+          <div>Redirection après accès : <strong>cockpit.html</strong></div>
+        </div>
+      </aside>
+    </section>
+  </div>
+
+  <script>
+    (function(){
+      "use strict";
+
+      const MODULE = "EXPLORE";
+      const SESSION_KEY = "digiy_explore_session";
+      const MAX_AGE_MS = 8 * 60 * 60 * 1000;
+      const supabase = window.supabase.createClient(
+        window.DIGIY_SUPABASE_URL,
+        window.DIGIY_SUPABASE_ANON_KEY
+      );
+
+      const $ = (id) => document.getElementById(id);
+      const phoneInput = $("phoneInput");
+      const pinInput = $("pinInput");
+      const msg = $("msg");
+      const form = $("pinForm");
+      const submitBtn = $("submitBtn");
+      const togglePinBtn = $("togglePinBtn");
+
+      function normalizePhone(v){
+        return String(v || "").replace(/[^\d]/g, "");
+      }
+
+      function normalizePin(v){
+        return String(v || "").replace(/[^\d]/g, "");
+      }
+
+      function setMsg(text, type){
+        msg.textContent = text || "";
+        msg.className = "msg " + (type || "info");
+      }
+
+      function setBusy(busy){
+        submitBtn.disabled = !!busy;
+        phoneInput.disabled = !!busy;
+        pinInput.disabled = !!busy;
+        togglePinBtn.disabled = !!busy;
+        submitBtn.textContent = busy ? "Vérification..." : "Ouvrir mon cockpit";
+      }
+
+      function saveSession(phone, payload){
+        const cleanPhone = normalizePhone(phone);
+        const session = {
+          module: MODULE,
+          phone: cleanPhone,
+          ts: Date.now(),
+          access_ok: true,
+          source: payload?.source || null,
+          raw: payload || null
+        };
+        try{
+          localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+        }catch(_){}
+        return session;
+      }
+
+      function getSession(){
+        try{
+          const raw = localStorage.getItem(SESSION_KEY);
+          if(!raw) return null;
+          const parsed = JSON.parse(raw);
+          if(!parsed || !parsed.phone || !parsed.ts) return null;
+          if((Date.now() - parsed.ts) > MAX_AGE_MS){
+            localStorage.removeItem(SESSION_KEY);
+            return null;
+          }
+          return parsed;
+        }catch(_){
+          return null;
+        }
+      }
+
+      function redirectToCockpit(phone){
+        const url = new URL("./cockpit.html", window.location.href);
+        if(phone) url.searchParams.set("phone", phone);
+        window.location.href = url.toString();
+      }
+
+      async function tryExploreAdminPinCheck(phone, pin){
+        const { data, error } = await supabase.rpc("explore_admin_pin_check", {
+          p_phone: phone,
+          p_pin: pin
+        });
+
+        if(error) throw error;
+
+        if(data && typeof data === "object"){
+          if(data.ok === true) return { ok:true, source:"explore_admin_pin_check", data };
+          if(data.success === true) return { ok:true, source:"explore_admin_pin_check", data };
+        }
+
+        if(data === true) return { ok:true, source:"explore_admin_pin_check", data:{ ok:true } };
+
+        return { ok:false, source:"explore_admin_pin_check", data };
+      }
+
+      async function tryGenericDigiyVerifyPin(phone, pin){
+        const candidates = [
+          { p_phone: phone, p_module: MODULE, p_pin: pin },
+          { phone: phone, module: MODULE, pin: pin }
+        ];
+
+        let lastError = null;
+
+        for(const params of candidates){
+          try{
+            const { data, error } = await supabase.rpc("digiy_verify_pin", params);
+            if(error){
+              lastError = error;
+              continue;
+            }
+
+            if(data && typeof data === "object"){
+              if(data.ok === true || data.access_ok === true){
+                return { ok:true, source:"digiy_verify_pin", data };
+              }
+            }
+
+            if(data === true){
+              return { ok:true, source:"digiy_verify_pin", data:{ ok:true } };
+            }
+          }catch(err){
+            lastError = err;
+          }
+        }
+
+        if(lastError) throw lastError;
+        return { ok:false, source:"digiy_verify_pin", data:null };
+      }
+
+      async function verifyAccess(phone, pin){
+        try{
+          const a = await tryExploreAdminPinCheck(phone, pin);
+          if(a.ok) return a;
+        }catch(_){}
+
+        try{
+          const b = await tryGenericDigiyVerifyPin(phone, pin);
+          if(b.ok) return b;
+        }catch(_){}
+
+        return { ok:false };
+      }
+
+      form.addEventListener("submit", async function(e){
+        e.preventDefault();
+
+        const phone = normalizePhone(phoneInput.value);
+        const pin = normalizePin(pinInput.value);
+
+        if(!phone || phone.length < 8){
+          setMsg("Entre un numéro valide.", "bad");
+          phoneInput.focus();
+          return;
+        }
+
+        if(!pin || pin.length < 4){
+          setMsg("Entre un PIN valide.", "bad");
+          pinInput.focus();
+          return;
+        }
+
+        setBusy(true);
+        setMsg("Vérification de l’accès PRO-EXPLORE...", "info");
+
+        try{
+          const result = await verifyAccess(phone, pin);
+
+          if(!result || result.ok !== true){
+            setMsg("Accès refusé. Vérifie ton numéro ou ton PIN.", "bad");
+            setBusy(false);
+            return;
+          }
+
+          saveSession(phone, result);
+          setMsg("Accès validé. Ouverture du cockpit...", "ok");
+
+          setTimeout(function(){
+            redirectToCockpit(phone);
+          }, 350);
+        }catch(err){
+          console.error("[PRO-EXPLORE PIN] error:", err);
+          setMsg("La vérification a échoué. Rail PIN introuvable ou réponse non valide.", "bad");
+          setBusy(false);
+        }
+      });
+
+      togglePinBtn.addEventListener("click", function(){
+        const reveal = pinInput.type === "password";
+        pinInput.type = reveal ? "text" : "password";
+        togglePinBtn.textContent = reveal ? "Masquer" : "Afficher";
+      });
+
+      (function boot(){
+        const url = new URL(window.location.href);
+        const phoneFromUrl = normalizePhone(url.searchParams.get("phone"));
+        const existing = getSession();
+
+        if(phoneFromUrl) phoneInput.value = phoneFromUrl;
+        else if(existing?.phone) phoneInput.value = existing.phone;
+
+        setMsg("Entre ton numéro et ton PIN.", "info");
+      })();
+    })();
+  </script>
+</body>
+</html>
