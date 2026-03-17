@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>PRO-EXPLORE — Portail Pro</title>
+  <meta name="theme-color" content="#06130f" />
+  <meta
+    name="description"
+    content="PRO-EXPLORE — portail professionnel DIGIY pour piloter les lieux, zones et lectures terrain."
+  />
+
+  <script>
+    window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
+    window.DIGIY_SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
+    window.DIGIY_SUPABASE_ANON = window.DIGIY_SUPABASE_ANON_KEY;
+    window.DIGIY_MODULE = "EXPLORE";
+  </script>
+
+  <style>
+    :root{
+      --bg:#06130f;
+      --bg2:#0a1f18;
+      --card:#0b241b;
+      --card2:#102b22;
+      --line:rgba(255,255,255,.08);
+      --line2:rgba(212,175,55,.18);
+      --ink:#f8fafc;
+      --muted:rgba(248,250,252,.72);
+      --soft:rgba(248,250,252,.54);
+      --gold:#d4af37;
+      --gold2:#f3d46b;
+      --ok:#22c55e;
+      --warn:#f59e0b;
+      --bad:#ef4444;
+      --radius:24px;
+      --shadow:0 24px 60px rgba(0,0,0,.30);
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      min-height:100vh;
+      color:var(--ink);
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(212,175,55,.10), transparent 26%),
+        linear-gradient(180deg, #071510 0%, #06130f 48%, #04100c 100%);
+    }
+
+    a{color:inherit;text-decoration:none}
+
+    .wrap{
+      width:min(100%, 1220px);
+      margin:0 auto;
+      padding:18px 14px 40px;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:18px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+
+    .logo{
+      width:48px;
+      height:48px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg, rgba(212,175,55,.24), rgba(212,175,55,.06));
+      border:1px solid rgba(212,175,55,.22);
+      box-shadow:0 10px 28px rgba(0,0,0,.18);
+      font-size:24px;
+      flex:0 0 auto;
+    }
+
+    .brandText{min-width:0}
+    .kicker{
+      color:var(--gold2);
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      margin-bottom:4px;
+      white-space:nowrap;
+    }
+
+    .title{
+      font-size:clamp(18px, 2vw, 28px);
+      font-weight:900;
+      line-height:1.08;
+      letter-spacing:-.03em;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .sub{
+      margin-top:4px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.45;
+    }
+
+    .topActions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      justify-content:flex-end;
+    }
+
+    .btn{
+      min-height:44px;
+      border:none;
+      border-radius:14px;
+      padding:0 14px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      font-weight:800;
+      cursor:pointer;
+      transition:filter .18s ease, transform .04s ease;
+      white-space:nowrap;
+    }
+
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{
+      background:linear-gradient(135deg, var(--gold), var(--gold2));
+      color:#13200d;
+      box-shadow:0 14px 30px rgba(212,175,55,.22);
+    }
+
+    .btn.secondary{
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      color:var(--ink);
+    }
+
+    .btn.ghost{
+      background:transparent;
+      border:1px solid var(--line);
+      color:var(--ink);
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns:1.15fr .85fr;
+      gap:16px;
+      margin-bottom:16px;
+    }
+
+    .panel{
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+    }
+
+    .heroMain{
+      padding:24px;
+      background:
+        linear-gradient(180deg, rgba(212,175,55,.06), transparent 28%),
+        linear-gradient(180deg, var(--card), var(--card2));
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(212,175,55,.22);
+      background:rgba(212,175,55,.08);
+      color:var(--gold2);
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      margin-bottom:14px;
+    }
+
+    h1{
+      margin:0 0 12px;
+      font-size:clamp(30px, 4vw, 50px);
+      line-height:1.02;
+      letter-spacing:-.04em;
+    }
+
+    .lead{
+      margin:0;
+      color:var(--muted);
+      font-size:16px;
+      line-height:1.7;
+      max-width:60ch;
+    }
+
+    .heroTags{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:18px;
+    }
+
+    .pill{
+      min-height:38px;
+      padding:0 13px;
+      border-radius:999px;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      color:#eef6f2;
+      font-weight:700;
+      font-size:13px;
+    }
+
+    .heroSide{
+      padding:20px;
+      display:grid;
+      gap:12px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015)),
+        linear-gradient(180deg, #0a1c16, #0d241c);
+    }
+
+    .miniStat{
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      padding:14px;
+      background:rgba(255,255,255,.03);
+    }
+
+    .miniLabel{
+      color:var(--soft);
+      font-size:12px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      margin-bottom:8px;
+    }
+
+    .miniValue{
+      font-size:21px;
+      font-weight:900;
+      line-height:1.15;
+      letter-spacing:-.03em;
+    }
+
+    .miniHint{
+      margin-top:6px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.45;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:14px;
+      margin-bottom:16px;
+    }
+
+    .tile{
+      border:1px solid var(--line);
+      border-radius:22px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      box-shadow:var(--shadow);
+      padding:18px;
+      display:grid;
+      gap:14px;
+      min-height:210px;
+    }
+
+    .tileTop{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:flex-start;
+    }
+
+    .tileIcon{
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      font-size:20px;
+      background:rgba(212,175,55,.10);
+      border:1px solid rgba(212,175,55,.18);
+      color:var(--gold2);
+    }
+
+    .tileLabel{
+      color:var(--soft);
+      font-size:12px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+
+    .tileTitle{
+      font-size:21px;
+      font-weight:900;
+      line-height:1.15;
+      letter-spacing:-.03em;
+    }
+
+    .tileText{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.65;
+    }
+
+    .tileActions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:auto;
+    }
+
+    .tileActions .btn{
+      min-height:40px;
+      border-radius:12px;
+      padding:0 12px;
+      font-size:13px;
+    }
+
+    .grid2{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+      margin-bottom:16px;
+    }
+
+    .cardBody{
+      padding:20px;
+    }
+
+    .cardTitle{
+      margin:0 0 12px;
+      font-size:20px;
+      font-weight:900;
+      letter-spacing:-.02em;
+    }
+
+    .cardSub{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.55;
+      margin-bottom:14px;
+    }
+
+    .list{
+      display:grid;
+      gap:10px;
+    }
+
+    .item{
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+      border-radius:18px;
+      padding:14px;
+    }
+
+    .item strong{
+      display:block;
+      font-size:14px;
+      margin-bottom:6px;
+    }
+
+    .item span{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.55;
+    }
+
+    .doctrine{
+      display:grid;
+      gap:10px;
+    }
+
+    .rule{
+      border-left:3px solid rgba(212,175,55,.45);
+      padding:10px 12px;
+      background:rgba(255,255,255,.03);
+      border-radius:12px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.6;
+    }
+
+    .footerNote{
+      margin-top:18px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.6;
+      text-align:center;
+    }
+
+    @media (max-width: 1120px){
+      .grid{grid-template-columns:repeat(2, 1fr)}
+      .hero{grid-template-columns:1fr}
+      .grid2{grid-template-columns:1fr}
+    }
+
+    @media (max-width: 640px){
+      .wrap{padding:14px 12px 34px}
+      .topbar{flex-direction:column}
+      .topActions{width:100%;justify-content:flex-start}
+      .grid{grid-template-columns:1fr}
+      .heroMain,.heroSide,.cardBody{padding:18px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">🧭</div>
+        <div class="brandText">
+          <div class="kicker">DIGIYLYFE — Quartier Général</div>
+          <div class="title">PRO-EXPLORE • Portail Pro</div>
+          <div class="sub">Porte d’entrée du module pro pour lire le terrain, gérer les lieux et publier proprement.</div>
+        </div>
+      </div>
+
+      <div class="topActions">
+        <a class="btn ghost" href="../index.html">Retour EXPLORE public</a>
+        <a class="btn secondary" href="./pin.html">Entrée PIN</a>
+        <a class="btn primary" href="./cockpit.html">Ouvrir le cockpit</a>
+      </div>
+    </header>
+
+    <section class="hero">
+      <article class="panel heroMain">
+        <div class="badge">Centre de vision terrain</div>
+        <h1>Le poste de pilotage PRO-EXPLORE.</h1>
+        <p class="lead">
+          Ce dossier regroupe les portes pro du module EXPLORE. Ici, tu entres, tu vois le terrain,
+          tu gères les lieux, tu crées les fiches et tu gardes une lecture simple, utile, DIGIY.
+        </p>
+
+        <div class="heroTags">
+          <div class="pill">📍 Lieux</div>
+          <div class="pill">🧠 Lecture terrain</div>
+          <div class="pill">🔐 PIN PRO</div>
+          <div class="pill">🛠️ Publication</div>
+        </div>
+      </article>
+
+      <aside class="panel heroSide">
+        <div class="miniStat">
+          <div class="miniLabel">Backend</div>
+          <div class="miniValue">Rail réel posé</div>
+          <div class="miniHint">RPC SQL validées : upsert, cockpit, liste, fiche publique, publish.</div>
+        </div>
+
+        <div class="miniStat">
+          <div class="miniLabel">Front pro</div>
+          <div class="miniValue">Portes prêtes</div>
+          <div class="miniHint">PIN, cockpit, lieux, submit recousus sur le backend réel.</div>
+        </div>
+
+        <div class="miniStat">
+          <div class="miniLabel">Doctrine</div>
+          <div class="miniValue">Terrain d’abord</div>
+          <div class="miniHint">Pas de démo inutile, pas de mélange ancien rail / nouveau rail.</div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="grid">
+      <article class="tile">
+        <div class="tileTop">
+          <div>
+            <div class="tileLabel">Accès sécurisé</div>
+            <div class="tileTitle">PIN</div>
+          </div>
+          <div class="tileIcon">🔐</div>
+        </div>
+        <div class="tileText">
+          Porte d’entrée sécurisée du module. Vérifie le numéro et le PIN avant d’ouvrir le cockpit.
+        </div>
+        <div class="tileActions">
+          <a class="btn primary" href="./pin.html">Ouvrir PIN</a>
+        </div>
+      </article>
+
+      <article class="tile">
+        <div class="tileTop">
+          <div>
+            <div class="tileLabel">Lecture rapide</div>
+            <div class="tileTitle">Cockpit</div>
+          </div>
+          <div class="tileIcon">📊</div>
+        </div>
+        <div class="tileText">
+          Vue d’ensemble du terrain : lieux, zones, catégories, derniers mouvements et synthèse locale.
+        </div>
+        <div class="tileActions">
+          <a class="btn primary" href="./cockpit.html">Ouvrir cockpit</a>
+        </div>
+      </article>
+
+      <article class="tile">
+        <div class="tileTop">
+          <div>
+            <div class="tileLabel">Gestion réelle</div>
+            <div class="tileTitle">Lieux</div>
+          </div>
+          <div class="tileIcon">📍</div>
+        </div>
+        <div class="tileText">
+          Liste des lieux rattachés au numéro actif, avec publication, dépublication, archivage et accès aux fiches.
+        </div>
+        <div class="tileActions">
+          <a class="btn primary" href="./lieux.html">Gérer les lieux</a>
+        </div>
+      </article>
+
+      <article class="tile">
+        <div class="tileTop">
+          <div>
+            <div class="tileLabel">Création / édition</div>
+            <div class="tileTitle">Submit</div>
+          </div>
+          <div class="tileIcon">🛠️</div>
+        </div>
+        <div class="tileText">
+          Formulaire de création et d’édition pour construire des fiches propres, publiables et lisibles côté public.
+        </div>
+        <div class="tileActions">
+          <a class="btn primary" href="./submit.html">Ajouter un lieu</a>
+        </div>
+      </article>
+    </section>
+
+    <section class="grid2">
+      <article class="panel">
+        <div class="cardBody">
+          <h2 class="cardTitle">Ordre de circulation conseillé</h2>
+          <div class="cardSub">Chemin simple pour travailler proprement sans se disperser.</div>
+
+          <div class="list">
+            <div class="item">
+              <strong>1. Entrée PIN</strong>
+              <span>Passer par <b>pin.html</b> pour ouvrir la session pro.</span>
+            </div>
+            <div class="item">
+              <strong>2. Cockpit</strong>
+              <span>Lire l’état du terrain dans <b>cockpit.html</b>.</span>
+            </div>
+            <div class="item">
+              <strong>3. Lieux</strong>
+              <span>Vérifier les fiches existantes dans <b>lieux.html</b>.</span>
+            </div>
+            <div class="item">
+              <strong>4. Submit</strong>
+              <span>Créer ou corriger une fiche dans <b>submit.html</b>.</span>
+            </div>
+            <div class="item">
+              <strong>5. Vérification publique</strong>
+              <span>Contrôler la lecture finale dans la vitrine publique et <b>fiche.html</b>.</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="cardBody">
+          <h2 class="cardTitle">Doctrine DIGIY</h2>
+          <div class="cardSub">Le moule maître à garder pour éviter les dérapages.</div>
+
+          <div class="doctrine">
+            <div class="rule">Toujours partir du rail réel validé. Ne pas inventer un backend parallèle.</div>
+            <div class="rule">Zéro démo si le backend existe déjà.</div>
+            <div class="rule">Ne pas mélanger ancien rail et nouveau rail dans un même fichier.</div>
+            <div class="rule">Navigation croisée visible entre les portes principales du module.</div>
+            <div class="rule">Lecture simple côté terrain, pas d’interface laboratoire.</div>
+            <div class="rule">Travailler fichier par fichier, proprement, sans casser le reste.</div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="panel">
+      <div class="cardBody">
+        <h2 class="cardTitle">Accès rapides</h2>
+        <div class="cardSub">Raccourcis utiles pour bosser sans tourner en rond.</div>
+
+        <div class="topActions" style="justify-content:flex-start;">
+          <a class="btn secondary" href="./pin.html">🔐 PIN</a>
+          <a class="btn secondary" href="./cockpit.html">📊 Cockpit</a>
+          <a class="btn secondary" href="./lieux.html">📍 Lieux</a>
+          <a class="btn secondary" href="./submit.html">🛠️ Submit</a>
+          <a class="btn ghost" href="../index.html#spots">🌍 Spots publics</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="footerNote">
+      PRO-EXPLORE • portail pro • backend réel branché • lecture terrain simple • doctrine DIGIY respectée
+    </div>
+  </div>
+</body>
+</html>
