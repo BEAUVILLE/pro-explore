@@ -1,0 +1,1116 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>PRO-EXPLORE — Cockpit</title>
+  <meta name="theme-color" content="#06130f" />
+  <meta
+    name="description"
+    content="PRO-EXPLORE — cockpit terrain DIGIY pour lire les lieux, les zones et les catégories."
+  />
+
+  <script>
+    window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
+    window.DIGIY_SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
+    window.DIGIY_SUPABASE_ANON = window.DIGIY_SUPABASE_ANON_KEY;
+    window.DIGIY_MODULE = "EXPLORE";
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root{
+      --bg:#06130f;
+      --bg2:#0a1f18;
+      --card:#0b241b;
+      --card2:#102b22;
+      --line:rgba(255,255,255,.08);
+      --line2:rgba(212,175,55,.16);
+      --ink:#f8fafc;
+      --muted:rgba(248,250,252,.72);
+      --soft:rgba(248,250,252,.52);
+      --gold:#d4af37;
+      --gold2:#f3d46b;
+      --ok:#22c55e;
+      --warn:#f59e0b;
+      --bad:#ef4444;
+      --radius:24px;
+      --shadow:0 24px 60px rgba(0,0,0,.28);
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      min-height:100vh;
+      color:var(--ink);
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(212,175,55,.09), transparent 26%),
+        linear-gradient(180deg, #071510 0%, #06130f 48%, #04100c 100%);
+    }
+
+    a{color:inherit;text-decoration:none}
+    button,input,select{font:inherit}
+
+    .wrap{
+      width:min(100%, 1220px);
+      margin:0 auto;
+      padding:18px 14px 42px;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:18px;
+    }
+
+    .brand{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      min-width:0;
+    }
+
+    .logo{
+      width:46px;
+      height:46px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg, rgba(212,175,55,.24), rgba(212,175,55,.06));
+      border:1px solid rgba(212,175,55,.22);
+      box-shadow:0 10px 28px rgba(0,0,0,.18);
+      font-size:23px;
+      flex:0 0 auto;
+    }
+
+    .brandText{min-width:0}
+    .kicker{
+      color:var(--gold2);
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      margin-bottom:3px;
+      white-space:nowrap;
+    }
+
+    .title{
+      font-size:clamp(18px, 2vw, 28px);
+      font-weight:900;
+      line-height:1.08;
+      letter-spacing:-.03em;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .sub{
+      margin-top:4px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .topActions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .btn{
+      min-height:44px;
+      border:none;
+      border-radius:14px;
+      padding:0 14px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      font-weight:800;
+      cursor:pointer;
+      transition:filter .18s ease, transform .04s ease, opacity .18s ease;
+      white-space:nowrap;
+    }
+
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{
+      background:linear-gradient(135deg, var(--gold), var(--gold2));
+      color:#13200d;
+      box-shadow:0 14px 30px rgba(212,175,55,.22);
+    }
+
+    .btn.secondary{
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      color:var(--ink);
+    }
+
+    .btn.ghost{
+      background:transparent;
+      border:1px solid var(--line);
+      color:var(--ink);
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns:1.25fr .75fr;
+      gap:16px;
+      margin-bottom:16px;
+    }
+
+    .panel{
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .heroMain{
+      padding:22px;
+      background:
+        linear-gradient(180deg, rgba(212,175,55,.06), transparent 28%),
+        linear-gradient(180deg, var(--card), var(--card2));
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(212,175,55,.22);
+      background:rgba(212,175,55,.08);
+      color:var(--gold2);
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      margin-bottom:14px;
+    }
+
+    .heroTitle{
+      margin:0 0 10px;
+      font-size:clamp(28px, 4vw, 46px);
+      line-height:1.02;
+      letter-spacing:-.04em;
+    }
+
+    .heroLead{
+      margin:0;
+      color:var(--muted);
+      font-size:16px;
+      line-height:1.65;
+      max-width:60ch;
+    }
+
+    .heroTags{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:18px;
+    }
+
+    .pill{
+      min-height:38px;
+      border-radius:999px;
+      padding:0 13px;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      color:#eef6f2;
+      font-weight:700;
+      font-size:13px;
+    }
+
+    .heroSide{
+      padding:20px;
+      display:grid;
+      gap:12px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015)),
+        linear-gradient(180deg, #0a1c16, #0d241c);
+    }
+
+    .miniStat{
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      padding:14px;
+      background:rgba(255,255,255,.03);
+    }
+
+    .miniLabel{
+      color:var(--soft);
+      font-size:12px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      margin-bottom:8px;
+    }
+
+    .miniValue{
+      font-size:22px;
+      font-weight:900;
+      line-height:1.1;
+      letter-spacing:-.03em;
+    }
+
+    .miniHint{
+      margin-top:6px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.45;
+    }
+
+    .nav{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .nav a{
+      min-height:42px;
+      display:inline-flex;
+      align-items:center;
+      padding:0 14px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+      color:#eef4f1;
+      font-size:13px;
+      font-weight:800;
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4, 1fr);
+      gap:14px;
+      margin-bottom:16px;
+    }
+
+    .statCard{
+      padding:18px;
+      border-radius:22px;
+      border:1px solid var(--line);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      box-shadow:var(--shadow);
+    }
+
+    .statLabel{
+      color:var(--soft);
+      font-size:12px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.09em;
+      margin-bottom:10px;
+    }
+
+    .statValue{
+      font-size:34px;
+      line-height:1;
+      font-weight:900;
+      letter-spacing:-.04em;
+    }
+
+    .statFoot{
+      margin-top:10px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.45;
+      min-height:18px;
+    }
+
+    .grid2{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:16px;
+      margin-bottom:16px;
+    }
+
+    .cardHead{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:14px;
+    }
+
+    .cardTitle{
+      font-size:20px;
+      font-weight:900;
+      letter-spacing:-.02em;
+      margin:0;
+    }
+
+    .cardSub{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.45;
+      margin-top:4px;
+    }
+
+    .cardBody{
+      padding:20px;
+    }
+
+    .insightBox{
+      display:grid;
+      gap:10px;
+    }
+
+    .insight{
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      padding:14px;
+      background:rgba(255,255,255,.03);
+    }
+
+    .insight strong{
+      display:block;
+      font-size:14px;
+      margin-bottom:6px;
+    }
+
+    .insight span{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.5;
+    }
+
+    .list{
+      display:grid;
+      gap:10px;
+    }
+
+    .rowItem{
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      justify-content:space-between;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+      border-radius:18px;
+      padding:14px;
+    }
+
+    .rowMain{
+      min-width:0;
+      flex:1 1 auto;
+    }
+
+    .rowTitle{
+      font-size:15px;
+      font-weight:900;
+      line-height:1.3;
+      margin-bottom:5px;
+      word-break:break-word;
+    }
+
+    .rowMeta{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.45;
+      word-break:break-word;
+    }
+
+    .tag{
+      flex:0 0 auto;
+      min-height:34px;
+      padding:0 12px;
+      border-radius:999px;
+      display:inline-flex;
+      align-items:center;
+      background:rgba(212,175,55,.08);
+      border:1px solid rgba(212,175,55,.18);
+      color:var(--gold2);
+      font-size:12px;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+    }
+
+    .status{
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+    }
+
+    .status.ok{
+      color:#86efac;
+      border-color:rgba(34,197,94,.25);
+      background:rgba(34,197,94,.08);
+    }
+
+    .status.warn{
+      color:#fde68a;
+      border-color:rgba(245,158,11,.22);
+      background:rgba(245,158,11,.08);
+    }
+
+    .status.bad{
+      color:#fca5a5;
+      border-color:rgba(239,68,68,.22);
+      background:rgba(239,68,68,.08);
+    }
+
+    .actionsGrid{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:10px;
+    }
+
+    .actionTile{
+      min-height:110px;
+      border-radius:20px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+      padding:16px;
+      display:grid;
+      align-content:space-between;
+    }
+
+    .actionTile strong{
+      font-size:16px;
+      line-height:1.25;
+    }
+
+    .actionTile span{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.45;
+    }
+
+    .empty{
+      border:1px dashed rgba(255,255,255,.12);
+      border-radius:18px;
+      padding:18px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.6;
+      background:rgba(255,255,255,.02);
+    }
+
+    .msg{
+      margin-bottom:16px;
+      border-radius:18px;
+      padding:14px 16px;
+      font-size:14px;
+      line-height:1.5;
+      font-weight:700;
+      display:none;
+    }
+
+    .msg.show{display:block}
+    .msg.info{
+      color:#dbeafe;
+      border:1px solid rgba(96,165,250,.18);
+      background:rgba(59,130,246,.08);
+    }
+
+    .msg.bad{
+      color:#fecaca;
+      border:1px solid rgba(239,68,68,.18);
+      background:rgba(239,68,68,.08);
+    }
+
+    .msg.ok{
+      color:#bbf7d0;
+      border:1px solid rgba(34,197,94,.18);
+      background:rgba(34,197,94,.08);
+    }
+
+    .foot{
+      margin-top:18px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.6;
+      text-align:center;
+    }
+
+    @media (max-width: 1080px){
+      .stats{grid-template-columns:repeat(2, 1fr)}
+      .grid2{grid-template-columns:1fr}
+      .hero{grid-template-columns:1fr}
+    }
+
+    @media (max-width: 640px){
+      .wrap{padding:14px 12px 34px}
+      .topbar{flex-direction:column}
+      .topActions{width:100%;justify-content:flex-start}
+      .stats{grid-template-columns:1fr}
+      .actionsGrid{grid-template-columns:1fr}
+      .heroMain,.heroSide,.cardBody{padding:18px}
+      .rowItem{flex-direction:column;align-items:flex-start}
+      .tag{align-self:flex-start}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">🧭</div>
+        <div class="brandText">
+          <div class="kicker">DIGIYLYFE — Quartier Général</div>
+          <div class="title">PRO-EXPLORE • Cockpit terrain</div>
+          <div class="sub" id="subline">Lecture des lieux, zones et catégories.</div>
+        </div>
+      </div>
+
+      <div class="topActions">
+        <a class="btn ghost" href="./index.html">Vitrine</a>
+        <a class="btn secondary" href="./pin.html">PIN</a>
+        <a class="btn secondary" href="./lieux.html">Lieux</a>
+        <a class="btn primary" href="./submit.html">+ Ajouter un lieu</a>
+      </div>
+    </header>
+
+    <div id="msg" class="msg info"></div>
+
+    <section class="hero">
+      <article class="panel heroMain">
+        <div class="badge">Centre de vision terrain</div>
+        <h1 class="heroTitle">Voir vite. Lire juste. Décider mieux.</h1>
+        <p class="heroLead">
+          Ce cockpit te montre l’état du terrain PRO-EXPLORE : volume de lieux,
+          zones suivies, catégorie dominante, dernières mises à jour et premiers signaux de lecture locale.
+        </p>
+
+        <div class="heroTags">
+          <div class="pill">📍 Zones</div>
+          <div class="pill">🎯 Catégories</div>
+          <div class="pill">🧱 Lieux publiés</div>
+          <div class="pill">🛠️ Pilotage simple</div>
+        </div>
+      </article>
+
+      <aside class="panel heroSide">
+        <div class="miniStat">
+          <div class="miniLabel">Téléphone pilote</div>
+          <div class="miniValue" id="heroPhone">—</div>
+          <div class="miniHint">Identifiant de pilotage PRO-EXPLORE.</div>
+        </div>
+
+        <div class="miniStat">
+          <div class="miniLabel">État du rail</div>
+          <div class="miniValue" id="heroStatus">Chargement…</div>
+          <div class="miniHint" id="heroStatusHint">Connexion au backend réel en cours.</div>
+        </div>
+      </aside>
+    </section>
+
+    <nav class="nav">
+      <a href="./cockpit.html">Cockpit</a>
+      <a href="./lieux.html">Lieux</a>
+      <a href="./submit.html">Ajouter / éditer</a>
+      <a href="./index.html">Vitrine publique</a>
+      <a href="./pin.html">Entrée PIN</a>
+    </nav>
+
+    <section class="stats">
+      <article class="statCard">
+        <div class="statLabel">Lieux totaux</div>
+        <div class="statValue" id="totalPlaces">—</div>
+        <div class="statFoot">Tous les lieux liés à ce numéro.</div>
+      </article>
+
+      <article class="statCard">
+        <div class="statLabel">Lieux publiés</div>
+        <div class="statValue" id="totalPublished">—</div>
+        <div class="statFoot">Visibles côté public.</div>
+      </article>
+
+      <article class="statCard">
+        <div class="statLabel">Villes suivies</div>
+        <div class="statValue" id="totalCities">—</div>
+        <div class="statFoot">Territoires déjà touchés.</div>
+      </article>
+
+      <article class="statCard">
+        <div class="statLabel">Zones suivies</div>
+        <div class="statValue" id="totalZones">—</div>
+        <div class="statFoot">Zones ou sous-zones enregistrées.</div>
+      </article>
+    </section>
+
+    <section class="grid2">
+      <article class="panel">
+        <div class="cardBody">
+          <div class="cardHead">
+            <div>
+              <h2 class="cardTitle">Lecture terrain</h2>
+              <div class="cardSub">Synthèse directe depuis le rail réel PRO-EXPLORE.</div>
+            </div>
+            <div id="accessBadge" class="status warn">Chargement</div>
+          </div>
+
+          <div class="insightBox" id="insightBox">
+            <div class="empty">Lecture du terrain en cours…</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="cardBody">
+          <div class="cardHead">
+            <div>
+              <h2 class="cardTitle">Actions rapides</h2>
+              <div class="cardSub">Navigation croisée pour éviter les pages orphelines.</div>
+            </div>
+          </div>
+
+          <div class="actionsGrid">
+            <a class="actionTile" href="./submit.html">
+              <strong>Ajouter un lieu</strong>
+              <span>Créer une nouvelle fiche terrain.</span>
+            </a>
+
+            <a class="actionTile" href="./lieux.html">
+              <strong>Gérer les lieux</strong>
+              <span>Voir, publier, corriger, archiver.</span>
+            </a>
+
+            <a class="actionTile" href="./index.html">
+              <strong>Voir la vitrine</strong>
+              <span>Contrôler ce qui est visible côté public.</span>
+            </a>
+
+            <a class="actionTile" href="./pin.html">
+              <strong>Retour PIN</strong>
+              <span>Revenir à l’entrée sécurisée du module.</span>
+            </a>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="grid2">
+      <article class="panel">
+        <div class="cardBody">
+          <div class="cardHead">
+            <div>
+              <h2 class="cardTitle">Derniers lieux</h2>
+              <div class="cardSub">Les 8 dernières fiches remontées par le cockpit.</div>
+            </div>
+            <a class="btn secondary" href="./lieux.html">Ouvrir lieux</a>
+          </div>
+
+          <div id="lastPlacesList" class="list">
+            <div class="empty">Aucun lieu chargé pour le moment.</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="cardBody">
+          <div class="cardHead">
+            <div>
+              <h2 class="cardTitle">Top zones</h2>
+              <div class="cardSub">Lecture simple des zones actuellement connues.</div>
+            </div>
+          </div>
+
+          <div id="zoneList" class="list">
+            <div class="empty">Zones en cours de chargement…</div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="grid2">
+      <article class="panel">
+        <div class="cardBody">
+          <div class="cardHead">
+            <div>
+              <h2 class="cardTitle">Top catégories</h2>
+              <div class="cardSub">Vue rapide sur les catégories présentes.</div>
+            </div>
+          </div>
+
+          <div id="categoryList" class="list">
+            <div class="empty">Catégories en cours de chargement…</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="cardBody">
+          <div class="cardHead">
+            <div>
+              <h2 class="cardTitle">État du module</h2>
+              <div class="cardSub">Lecture opérationnelle du rail PRO-EXPLORE.</div>
+            </div>
+          </div>
+
+          <div class="insightBox" id="moduleStateBox">
+            <div class="insight">
+              <strong>Backend réel branché</strong>
+              <span>Le cockpit lit directement les RPC SQL posées et validées en réel.</span>
+            </div>
+            <div class="insight">
+              <strong>Doctrime DIGIY respectée</strong>
+              <span>Lecture simple, terrain d’abord, sans tableau décoratif inutile.</span>
+            </div>
+            <div class="insight">
+              <strong>Suite logique</strong>
+              <span>Après ce cockpit, les prochains rails naturels sont <b>lieux.html</b> puis <b>submit.html</b>.</span>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <div class="foot">
+      PRO-EXPLORE • cockpit terrain DIGIY • lecture locale simple • backend réel branché
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      "use strict";
+
+      const MODULE = "EXPLORE";
+      const SESSION_KEY = "digiy_explore_session";
+      const MAX_AGE_MS = 8 * 60 * 60 * 1000;
+
+      const supabase = window.supabase.createClient(
+        window.DIGIY_SUPABASE_URL,
+        window.DIGIY_SUPABASE_ANON_KEY
+      );
+
+      const $ = (id) => document.getElementById(id);
+
+      const msg = $("msg");
+      const heroPhone = $("heroPhone");
+      const heroStatus = $("heroStatus");
+      const heroStatusHint = $("heroStatusHint");
+      const subline = $("subline");
+      const accessBadge = $("accessBadge");
+
+      const totalPlaces = $("totalPlaces");
+      const totalPublished = $("totalPublished");
+      const totalCities = $("totalCities");
+      const totalZones = $("totalZones");
+
+      const insightBox = $("insightBox");
+      const lastPlacesList = $("lastPlacesList");
+      const zoneList = $("zoneList");
+      const categoryList = $("categoryList");
+
+      function setMsg(text, type){
+        if(!text){
+          msg.className = "msg";
+          msg.textContent = "";
+          return;
+        }
+        msg.className = "msg show " + (type || "info");
+        msg.textContent = text;
+      }
+
+      function normalizePhone(v){
+        return String(v || "").replace(/[^\d]/g, "");
+      }
+
+      function safeJsonParse(raw){
+        try{ return JSON.parse(raw); }catch(_){ return null; }
+      }
+
+      function getSession(){
+        try{
+          const raw = localStorage.getItem(SESSION_KEY);
+          if(!raw) return null;
+          const parsed = safeJsonParse(raw);
+          if(!parsed || !parsed.phone || !parsed.ts) return null;
+          if((Date.now() - parsed.ts) > MAX_AGE_MS){
+            localStorage.removeItem(SESSION_KEY);
+            return null;
+          }
+          return parsed;
+        }catch(_){
+          return null;
+        }
+      }
+
+      function getPhone(){
+        const url = new URL(window.location.href);
+        const fromUrl = normalizePhone(url.searchParams.get("phone"));
+        if(fromUrl) return fromUrl;
+
+        const session = getSession();
+        if(session?.phone) return normalizePhone(session.phone);
+
+        return "";
+      }
+
+      function fmtDate(v){
+        try{
+          if(!v) return "—";
+          return new Date(v).toLocaleString("fr-FR", {
+            year:"numeric",
+            month:"2-digit",
+            day:"2-digit",
+            hour:"2-digit",
+            minute:"2-digit"
+          });
+        }catch(_){
+          return String(v || "—");
+        }
+      }
+
+      function escapeHtml(value){
+        return String(value ?? "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      function renderInsights(cockpit){
+        const total = Number(cockpit?.total_places || 0);
+        const pub = Number(cockpit?.total_published || 0);
+        const cities = Number(cockpit?.total_cities || 0);
+        const zones = Number(cockpit?.total_zones || 0);
+        const topCategory = cockpit?.top_category || "—";
+        const topZone = cockpit?.top_zone || "—";
+
+        const insights = [];
+
+        if(total === 0){
+          insights.push({
+            title: "Terrain encore vide",
+            text: "Aucun lieu n’est encore enregistré. Le premier cran utile est d’ajouter une fiche terrain."
+          });
+        } else {
+          insights.push({
+            title: "Base terrain posée",
+            text: total === 1
+              ? "Un premier lieu existe déjà dans le module. Le rail commence à vivre."
+              : total + " lieux sont déjà enregistrés dans PRO-EXPLORE."
+          });
+        }
+
+        if(pub === 0){
+          insights.push({
+            title: "Rien n’est encore visible côté public",
+            text: "Publie au moins un lieu pour faire respirer la vitrine et nourrir la lecture publique."
+          });
+        } else {
+          insights.push({
+            title: "Lecture publique active",
+            text: pub === 1
+              ? "Un lieu publié remonte déjà côté public."
+              : pub + " lieux publiés alimentent déjà la lecture publique."
+          });
+        }
+
+        insights.push({
+          title: "Catégorie dominante",
+          text: topCategory === "—" ? "Pas encore de catégorie dominante publiée." : "La catégorie dominante actuelle est " + topCategory + "."
+        });
+
+        insights.push({
+          title: "Zone forte",
+          text: topZone === "—" ? "Aucune zone publiée ne ressort encore." : "La zone qui ressort pour le moment est " + topZone + "."
+        });
+
+        if(cities > 1 || zones > 1){
+          insights.push({
+            title: "Lecture territoriale en croissance",
+            text: "Le module couvre déjà " + cities + " ville(s) et " + zones + " zone(s)."
+          });
+        }
+
+        insightBox.innerHTML = insights.map(function(item){
+          return `
+            <div class="insight">
+              <strong>${escapeHtml(item.title)}</strong>
+              <span>${escapeHtml(item.text)}</span>
+            </div>
+          `;
+        }).join("");
+      }
+
+      function renderLastPlaces(items){
+        if(!Array.isArray(items) || items.length === 0){
+          lastPlacesList.innerHTML = `
+            <div class="empty">
+              Aucun lieu récent pour le moment. Le prochain mouvement logique est d’ajouter une fiche dans <b>submit.html</b>.
+            </div>
+          `;
+          return;
+        }
+
+        lastPlacesList.innerHTML = items.map(function(item){
+          const published = item?.is_published === true;
+          const statusClass = published ? "ok" : "warn";
+          const statusText = published ? "Publié" : (item?.status || "Brouillon");
+          const zoneLine = [item?.city, item?.zone].filter(Boolean).join(" — ");
+          return `
+            <div class="rowItem">
+              <div class="rowMain">
+                <div class="rowTitle">${escapeHtml(item?.public_name || "Lieu sans nom")}</div>
+                <div class="rowMeta">
+                  ${escapeHtml(zoneLine || "Zone non précisée")} •
+                  ${escapeHtml(item?.category_code || "catégorie inconnue")} •
+                  Mis à jour le ${escapeHtml(fmtDate(item?.updated_at))}
+                </div>
+              </div>
+              <div class="status ${statusClass}">${escapeHtml(statusText)}</div>
+            </div>
+          `;
+        }).join("");
+      }
+
+      function renderZones(items){
+        if(!Array.isArray(items) || items.length === 0){
+          zoneList.innerHTML = `<div class="empty">Aucune zone remontée pour le moment.</div>`;
+          return;
+        }
+
+        zoneList.innerHTML = items.slice(0, 6).map(function(item){
+          const zoneName = [item?.city, item?.zone].filter(Boolean).join(" — ");
+          return `
+            <div class="rowItem">
+              <div class="rowMain">
+                <div class="rowTitle">${escapeHtml(zoneName || "Zone non précisée")}</div>
+                <div class="rowMeta">
+                  ${escapeHtml(String(item?.total_places ?? 0))} lieu(x) •
+                  ${escapeHtml(String(item?.total_categories ?? 0))} catégorie(s) •
+                  Dernière activité : ${escapeHtml(fmtDate(item?.last_update))}
+                </div>
+              </div>
+              <div class="tag">${escapeHtml(String(item?.featured_places ?? 0))} mis en avant</div>
+            </div>
+          `;
+        }).join("");
+      }
+
+      function renderCategories(items){
+        if(!Array.isArray(items) || items.length === 0){
+          categoryList.innerHTML = `<div class="empty">Aucune catégorie remontée pour le moment.</div>`;
+          return;
+        }
+
+        categoryList.innerHTML = items.slice(0, 6).map(function(item){
+          const label = item?.category_label || item?.category_code || "Catégorie";
+          const icon = item?.category_icon || "•";
+          return `
+            <div class="rowItem">
+              <div class="rowMain">
+                <div class="rowTitle">${escapeHtml(icon)} ${escapeHtml(label)}</div>
+                <div class="rowMeta">
+                  ${escapeHtml(String(item?.total_places ?? 0))} lieu(x) •
+                  ${escapeHtml(String(item?.total_cities ?? 0))} ville(s) •
+                  ${escapeHtml(String(item?.total_zones ?? 0))} zone(s)
+                </div>
+              </div>
+              <div class="tag">${escapeHtml(item?.category_code || "code")}</div>
+            </div>
+          `;
+        }).join("");
+      }
+
+      async function loadCockpit(phone){
+        const { data, error } = await supabase.rpc("digiy_explore_get_cockpit", {
+          p_owner_phone: phone
+        });
+        if(error) throw error;
+        return data;
+      }
+
+      async function loadZones(phone){
+        const { data, error } = await supabase.rpc("digiy_explore_get_zone_stats", {
+          p_owner_phone: phone
+        });
+        if(error) throw error;
+        return data;
+      }
+
+      async function loadCategories(phone){
+        const { data, error } = await supabase.rpc("digiy_explore_get_category_stats", {
+          p_owner_phone: phone
+        });
+        if(error) throw error;
+        return data;
+      }
+
+      async function boot(){
+        const phone = getPhone();
+
+        if(!phone){
+          accessBadge.className = "status bad";
+          accessBadge.textContent = "Accès manquant";
+          heroPhone.textContent = "—";
+          heroStatus.textContent = "Aucun accès";
+          heroStatusHint.textContent = "Passe d’abord par pin.html pour ouvrir une session.";
+          setMsg("Aucun téléphone de session trouvé. Ouvre d’abord pin.html.", "bad");
+          return;
+        }
+
+        heroPhone.textContent = phone;
+        subline.textContent = "Cockpit rattaché au téléphone " + phone + ".";
+        heroStatus.textContent = "Connexion au rail";
+        heroStatusHint.textContent = "Chargement des lectures cockpit, zones et catégories…";
+        accessBadge.className = "status warn";
+        accessBadge.textContent = "Chargement";
+        setMsg("Lecture du cockpit PRO-EXPLORE en cours…", "info");
+
+        try{
+          const [cockpit, zones, categories] = await Promise.all([
+            loadCockpit(phone),
+            loadZones(phone),
+            loadCategories(phone)
+          ]);
+
+          if(!cockpit || cockpit.ok !== true){
+            throw new Error("Cockpit invalide");
+          }
+
+          totalPlaces.textContent = String(cockpit.total_places ?? 0);
+          totalPublished.textContent = String(cockpit.total_published ?? 0);
+          totalCities.textContent = String(cockpit.total_cities ?? 0);
+          totalZones.textContent = String(cockpit.total_zones ?? 0);
+
+          heroStatus.textContent = "Rail actif";
+          heroStatusHint.textContent = "Backend réel branché et cockpit chargé.";
+          accessBadge.className = "status ok";
+          accessBadge.textContent = "Actif";
+
+          renderInsights(cockpit);
+          renderLastPlaces(cockpit.last_places || []);
+          renderZones(zones?.items || []);
+          renderCategories(categories?.items || []);
+
+          setMsg("Cockpit chargé sur le backend réel PRO-EXPLORE.", "ok");
+        }catch(err){
+          console.error("[PRO-EXPLORE cockpit] error:", err);
+          accessBadge.className = "status bad";
+          accessBadge.textContent = "Erreur";
+          heroStatus.textContent = "Lecture interrompue";
+          heroStatusHint.textContent = "Le backend n’a pas renvoyé la lecture attendue.";
+          setMsg("Le cockpit n’a pas pu charger les données réelles. Vérifie les RPC PRO-EXPLORE ou la session PIN.", "bad");
+        }
+      }
+
+      boot();
+    })();
+  </script>
+</body>
+</html>
