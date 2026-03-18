@@ -486,6 +486,7 @@
       const MODULE = "EXPLORE";
       const SESSION_KEY = "digiy_explore_session";
       const MAX_AGE_MS = 8 * 60 * 60 * 1000;
+
       const supabase = window.supabase.createClient(
         window.DIGIY_SUPABASE_URL,
         window.DIGIY_SUPABASE_ANON_KEY
@@ -520,19 +521,74 @@
         submitBtn.textContent = busy ? "Vérification..." : "Ouvrir mon cockpit";
       }
 
+      function digiyRpcLooksOk(data){
+        if (data == null) return false;
+
+        if (data === true) return true;
+
+        if (Array.isArray(data)) {
+          if (!data.length) return false;
+          return data.some(digiyRpcLooksOk);
+        }
+
+        if (typeof data === "object") {
+          if (data.ok === true || data.access_ok === true) return true;
+
+          const values = Object.values(data);
+          if (values.includes(true)) return true;
+          if (values.includes("t")) return true;
+
+          return false;
+        }
+
+        if (typeof data === "string") {
+          const s = data.trim().toLowerCase();
+          return s === "true" || s.startsWith("(t,") || s.includes('"ok":true');
+        }
+
+        return false;
+      }
+
+      function extractSlug(data){
+        if (!data) return null;
+
+        if (Array.isArray(data)) {
+          for (const item of data) {
+            const found = extractSlug(item);
+            if (found) return found;
+          }
+          return null;
+        }
+
+        if (typeof data === "object") {
+          return data.slug || data.p_slug || data.subscription_slug || null;
+        }
+
+        if (typeof data === "string") {
+          const m = data.match(/([a-z0-9]+-\d{6,})/i);
+          return m ? m[1].toLowerCase() : null;
+        }
+
+        return null;
+      }
+
       function saveSession(phone, payload){
         const cleanPhone = normalizePhone(phone);
+        const raw = payload?.data || null;
         const session = {
           module: MODULE,
           phone: cleanPhone,
+          slug: extractSlug(raw) || null,
           ts: Date.now(),
           access_ok: true,
           source: payload?.source || null,
-          raw: payload || null
+          raw: raw || null
         };
+
         try{
           localStorage.setItem(SESSION_KEY, JSON.stringify(session));
         }catch(_){}
+
         return session;
       }
 
@@ -542,19 +598,22 @@
           if(!raw) return null;
           const parsed = JSON.parse(raw);
           if(!parsed || !parsed.phone || !parsed.ts) return null;
+
           if((Date.now() - parsed.ts) > MAX_AGE_MS){
             localStorage.removeItem(SESSION_KEY);
             return null;
           }
+
           return parsed;
         }catch(_){
           return null;
         }
       }
 
-      function redirectToCockpit(phone){
+      function redirectToCockpit(phone, slug){
         const url = new URL("./cockpit.html", window.location.href);
-        if(phone) url.searchParams.set("phone", phone);
+        if (slug) url.searchParams.set("slug", slug);
+        if (phone) url.searchParams.set("phone", phone);
         window.location.href = url.toString();
       }
 
@@ -566,12 +625,9 @@
 
         if(error) throw error;
 
-        if(data && typeof data === "object"){
-          if(data.ok === true) return { ok:true, source:"explore_admin_pin_check", data };
-          if(data.success === true) return { ok:true, source:"explore_admin_pin_check", data };
+        if (digiyRpcLooksOk(data)) {
+          return { ok:true, source:"explore_admin_pin_check", data };
         }
-
-        if(data === true) return { ok:true, source:"explore_admin_pin_check", data:{ ok:true } };
 
         return { ok:false, source:"explore_admin_pin_check", data };
       }
@@ -587,19 +643,14 @@
         for(const params of candidates){
           try{
             const { data, error } = await supabase.rpc("digiy_verify_pin", params);
+
             if(error){
               lastError = error;
               continue;
             }
 
-            if(data && typeof data === "object"){
-              if(data.ok === true || data.access_ok === true){
-                return { ok:true, source:"digiy_verify_pin", data };
-              }
-            }
-
-            if(data === true){
-              return { ok:true, source:"digiy_verify_pin", data:{ ok:true } };
+            if (digiyRpcLooksOk(data)) {
+              return { ok:true, source:"digiy_verify_pin", data };
             }
           }catch(err){
             lastError = err;
@@ -654,11 +705,12 @@
             return;
           }
 
-          saveSession(phone, result);
+          const session = saveSession(phone, result);
+
           setMsg("Accès validé. Ouverture du cockpit...", "ok");
 
           setTimeout(function(){
-            redirectToCockpit(phone);
+            redirectToCockpit(phone, session?.slug || null);
           }, 350);
         }catch(err){
           console.error("[PRO-EXPLORE PIN] error:", err);
