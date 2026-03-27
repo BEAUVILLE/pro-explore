@@ -17,7 +17,8 @@
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="./guad.js?v=explore-cockpit-guard-2"></script>
+  <!-- ─── FIX : guad.js → guard.js (typo corrigée) ─── -->
+  <script src="./guard.js?v=explore-cockpit-guard-3"></script>
 
   <style>
     :root{
@@ -642,7 +643,7 @@
       </div>
 
       <div class="topActions">
-        <a class="btn ghost" id="btnAccessTop" href="https://explore.digiylyfe.com/">Vitrine</a>
+        <a class="btn ghost" id="btnAccessTop" href="https://beauville.github.io/digiy-explore/">Vitrine</a>
         <a class="btn secondary" id="btnLieuxTop" href="./lieux.html">Lieux</a>
         <a class="btn secondary" id="btnSubmitTop" href="./submit.html">Ajouter / éditer</a>
         <a class="btn info" id="btnClawTop" href="./claw.html">CLAW</a>
@@ -651,7 +652,7 @@
     </header>
 
     <nav class="nav" aria-label="Navigation PRO EXPLORE">
-      <a id="navAccess" href="https://explore.digiylyfe.com/">Vitrine</a>
+      <a id="navAccess" href="https://beauville.github.io/digiy-explore/">Vitrine</a>
       <a id="navCockpit" class="active" href="./cockpit.html">Cockpit</a>
       <a id="navLieux" href="./lieux.html">Lieux</a>
       <a id="navSubmit" href="./submit.html">Ajouter / éditer</a>
@@ -685,7 +686,7 @@
         <div class="miniStat">
           <div class="miniLabel">Slug actif</div>
           <div class="miniValue" id="heroSlug">—</div>
-          <div class="miniHint">Le slug EXPLORE lu dans l’URL, le guard ou le stockage.</div>
+          <div class="miniHint">Le slug EXPLORE lu dans l'URL, le guard ou le stockage.</div>
         </div>
 
         <div class="miniStat">
@@ -729,7 +730,7 @@
 
           <div class="box">
             <strong id="mainPlaceName">Aucun lieu lu</strong>
-            <span id="mainPlaceText">Le slug ou la liste des lieux n’a pas encore donné de lecture utile.</span>
+            <span id="mainPlaceText">Le slug ou la liste des lieux n'a pas encore donné de lecture utile.</span>
           </div>
 
           <div class="box">
@@ -739,7 +740,7 @@
 
           <div class="placeActions" style="margin-bottom:14px">
             <a class="btn secondary" id="btnEditCurrent" href="./submit.html">Éditer ce lieu</a>
-            <a class="btn secondary" id="btnViewCurrent" href="https://explore.digiylyfe.com/">Voir la vitrine</a>
+            <a class="btn secondary" id="btnViewCurrent" href="https://beauville.github.io/digiy-explore/">Voir la vitrine</a>
             <a class="btn info" id="btnClawCurrent" href="./claw.html">Lire avec CLAW</a>
           </div>
 
@@ -796,7 +797,7 @@
             </div>
 
             <div class="clawText" id="clawSummary">
-              CLAW attend le slug, l’accès et le lieu principal pour te pousser le bon cran.
+              CLAW attend le slug, l'accès et le lieu principal pour te pousser le bon cran.
             </div>
 
             <div class="clawPills" id="clawPills"></div>
@@ -828,10 +829,11 @@
       const SESSION_KEY = "digiy_explore_session";
       const MAX_AGE_MS = 8 * 60 * 60 * 1000;
 
-      const PUBLIC_BASE = "https://explore.digiylyfe.com";
+      /* ─── FIX : vitrine pointe vers digiy-explore ─── */
+      const PUBLIC_VITRINE_BASE = "https://beauville.github.io/digiy-explore/";
 
       const PATHS = {
-        access: `${PUBLIC_BASE}/`,
+        access: PUBLIC_VITRINE_BASE,
         cockpit: "./cockpit.html",
         lieux: "./lieux.html",
         submit: "./submit.html",
@@ -966,7 +968,9 @@
 
       function buildPublicFicheHref(slug = ""){
         const cleanSlug = normalizeSlug(slug);
-        return cleanSlug ? `./fiche.html?slug=${encodeURIComponent(cleanSlug)}` : "./index.html";
+        return cleanSlug
+          ? PUBLIC_VITRINE_BASE + "?slug=" + encodeURIComponent(cleanSlug)
+          : PUBLIC_VITRINE_BASE;
       }
 
       function placeName(place){
@@ -1060,7 +1064,7 @@
       function setClawPreview(message){
         setClaw(
           "Aperçu",
-          "CLAW voit une coquille propre, mais l’accès ou l’identité restent à confirmer.",
+          "CLAW voit une coquille propre, mais l'accès ou l'identité restent à confirmer.",
           [
             CURRENT_SLUG ? `Slug : ${CURRENT_SLUG}` : "Slug absent",
             CURRENT_PHONE ? `Téléphone : ${CURRENT_PHONE}` : "Téléphone absent",
@@ -1069,7 +1073,7 @@
           [
             {
               title:"État actuel",
-              text: message || "Le cockpit reste en aperçu tant que le rail n’est pas ouvert."
+              text: message || "Le cockpit reste en aperçu tant que le rail n'est pas ouvert."
             },
             {
               title:"Action utile",
@@ -1094,7 +1098,7 @@
               title:"Lecture du rail",
               text: place
                 ? `${placeName(place)} est le point principal lu par le cockpit.`
-                : "Le cockpit est vivant mais aucun lieu principal n’a encore été lu."
+                : "Le cockpit est vivant mais aucun lieu principal n'a encore été lu."
             },
             {
               title:"Action utile",
@@ -1221,6 +1225,7 @@
 
         if(error) throw error;
 
+        /* ─── FIX : extraire data.place si réponse { ok, place } ─── */
         if(data?.ok === true && data.place){
           return data.place;
         }
@@ -1269,8 +1274,8 @@
 
         if(!CURRENT_STATE?.access_ok){
           $("heroBadge").textContent = "Mode aperçu";
-          $("heroTitle").textContent = "Le rail EXPLORE existe, mais l’accès reste à confirmer.";
-          $("heroLead").textContent = "Le cockpit reste propre : aucune démo inutile, juste la bonne porte vers le PIN ou l’activation si besoin.";
+          $("heroTitle").textContent = "Le rail EXPLORE existe, mais l'accès reste à confirmer.";
+          $("heroLead").textContent = "Le cockpit reste propre : aucune démo inutile, juste la bonne porte vers le PIN ou l'activation si besoin.";
           $("btnPrimaryAction").textContent = "Entrer par PIN";
           $("btnPrimaryAction").href = $("navPinRescue").href;
           return;
@@ -1285,7 +1290,7 @@
           $("btnPrimaryAction").href = buildInternalHref("./submit.html", place.slug || CURRENT_SLUG, CURRENT_PHONE);
         }else{
           $("heroTitle").textContent = "Cockpit EXPLORE actif";
-          $("heroLead").textContent = "Le rail est ouvert, mais aucun lieu n’est encore visible dans le cockpit. Ajoute ou recharge une fiche terrain.";
+          $("heroLead").textContent = "Le rail est ouvert, mais aucun lieu n'est encore visible dans le cockpit. Ajoute ou recharge une fiche terrain.";
           $("btnPrimaryAction").textContent = "Ajouter un lieu";
           $("btnPrimaryAction").href = $("navSubmit").href;
         }
@@ -1294,18 +1299,17 @@
       function renderMainPlace(place){
         if(!place){
           $("mainPlaceName").textContent = "Aucun lieu lu";
-          $("mainPlaceText").textContent = "Le cockpit n’a pas trouvé de fiche principale. Passe par Ajouter / éditer ou relis lieux.html.";
+          $("mainPlaceText").textContent = "Le cockpit n'a pas trouvé de fiche principale. Passe par Ajouter / éditer ou relis lieux.html.";
           $("boxCity").textContent = "—";
           $("boxZone").textContent = "—";
           $("boxCategory").textContent = "—";
           $("boxPublished").textContent = "—";
           $("boxAction").textContent = CURRENT_STATE?.access_ok
             ? "Ajoute un lieu ou recharge une fiche existante."
-            : "Ouvre d’abord le rail par PIN.";
+            : "Ouvre d'abord le rail par PIN.";
 
           $("btnEditCurrent").href = $("navSubmit").href;
-          $("btnViewCurrent").href = PATHS.access;
-          $("btnViewCurrent").textContent = "Voir la vitrine";
+          $("btnViewCurrent").href = PUBLIC_VITRINE_BASE;
           $("btnClawCurrent").href = $("navClaw").href;
           $("linksText").textContent = "Le cockpit garde la couture vers vitrine, lieux, édition et CLAW. Le PIN reste un secours.";
 
@@ -1326,7 +1330,6 @@
 
         $("btnEditCurrent").href = buildInternalHref("./submit.html", place.slug || CURRENT_SLUG, CURRENT_PHONE);
         $("btnViewCurrent").href = buildPublicFicheHref(place.slug || CURRENT_SLUG);
-        $("btnViewCurrent").textContent = "Voir la fiche";
         $("btnClawCurrent").href = buildInternalHref("./claw.html", place.slug || CURRENT_SLUG, CURRENT_PHONE);
         $("linksText").textContent =
           `Rail utile : cockpit → lieux → édition du slug ${place.slug || CURRENT_SLUG || "—"} → CLAW.`;
@@ -1339,7 +1342,7 @@
         if(!rows.length){
           box.innerHTML = `
             <div class="empty">
-              Aucun lieu n’est remonté pour le téléphone actif. Passe par <strong>Ajouter / éditer</strong> pour poser une première fiche.
+              Aucun lieu n'est remonté pour le téléphone actif. Passe par <strong>Ajouter / éditer</strong> pour poser une première fiche.
             </div>
           `;
           return;
@@ -1444,7 +1447,7 @@
             );
             setClawPreview(
               CURRENT_SLUG
-                ? `Le slug ${CURRENT_SLUG} est visible, mais l’accès EXPLORE n’est pas encore confirmé.`
+                ? `Le slug ${CURRENT_SLUG} est visible, mais l'accès EXPLORE n'est pas encore confirmé.`
                 : "Le cockpit attend une identité ou une session valide."
             );
           } else {
@@ -1458,7 +1461,7 @@
           }
         } catch (err){
           console.error("[EXPLORE cockpit] boot error:", err);
-          setStatus("Le cockpit n’a pas pu charger le rail EXPLORE pour le moment.", "bad");
+          setStatus("Le cockpit n'a pas pu charger le rail EXPLORE pour le moment.", "bad");
           setRescueVisibility(true);
           renderHero(null);
           renderMainPlace(null);
@@ -1474,7 +1477,7 @@
             [
               {
                 title:"Blocage principal",
-                text:"Le cockpit n’a pas pu lire correctement le guard ou les RPC du rail EXPLORE."
+                text:"Le cockpit n'a pas pu lire correctement le guard ou les RPC du rail EXPLORE."
               },
               {
                 title:"Action utile",
