@@ -643,7 +643,7 @@
       </div>
 
       <div class="topActions">
-        <a class="btn ghost" id="btnAccessTop" href="./submit.html">+ Ajouter un lieu</a>
+        <a class="btn primary" id="btnAccessTop" href="./submit.html">+ Ajouter un lieu</a>
         <a class="btn secondary" id="btnLieuxTop" href="./lieux.html">Lieux</a>
         <a class="btn secondary" id="btnSubmitTop" href="./submit.html">Ajouter / éditer</a>
         <a class="btn info" id="btnClawTop" href="./claw.html">CLAW</a>
@@ -652,7 +652,7 @@
     </header>
 
     <nav class="nav" aria-label="Navigation PRO EXPLORE">
-      <a id="navAccess" href="./submit.html">Ajouter un lieu</a>
+      
       <a id="navCockpit" class="active" href="./cockpit.html">Cockpit</a>
       <a id="navLieux" href="./lieux.html">Lieux</a>
       <a id="navSubmit" href="./submit.html">Ajouter / éditer</a>
@@ -833,7 +833,7 @@
       const PUBLIC_VITRINE_BASE = "https://explore.digiylyfe.com/";
 
       const PATHS = {
-        access: './submit.html',
+        access: './submit.html', /* PRO only */
         cockpit: "./cockpit.html",
         lieux: "./lieux.html",
         submit: "./submit.html",
@@ -1141,7 +1141,6 @@
         const clawHref = buildInternalHref(PATHS.claw, slug, phone);
         const pinHref = buildPinHref(slug, phone);
 
-        $("navAccess").href = PATHS.submit;
         $("navCockpit").href = cockpitHref;
         $("navLieux").href = lieuxHref;
         $("navSubmit").href = submitHref;
