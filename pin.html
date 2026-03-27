@@ -7,12 +7,14 @@
   <meta name="theme-color" content="#06130f" />
   <meta
     name="description"
-    content="PRO-EXPLORE — entrée sécurisée par PIN pour accéder au cockpit terrain DIGIY."
+    content="PRO-EXPLORE — entrée sécurisée par PIN pour accéder au rail interne DIGIY."
   />
 
   <script>
     window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
     window.DIGIY_SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
+    window.DIGIY_SUPABASE_ANON = window.DIGIY_SUPABASE_ANON_KEY;
+    window.DIGIY_MODULE = "EXPLORE";
   </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -27,8 +29,10 @@
       --muted:rgba(248,250,252,.72);
       --gold:#d4af37;
       --gold2:#f3d46b;
+      --blue:#38bdf8;
       --ok:#22c55e;
       --bad:#ef4444;
+      --warn:#f59e0b;
       --focus:rgba(212,175,55,.35);
       --radius:22px;
       --shadow:0 20px 60px rgba(0,0,0,.34);
@@ -40,15 +44,17 @@
       font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
         radial-gradient(circle at top, rgba(212,175,55,.12), transparent 28%),
+        radial-gradient(circle at right bottom, rgba(56,189,248,.07), transparent 24%),
         linear-gradient(180deg, var(--bg), #04100c 52%, #030b08 100%);
       color:var(--ink);
       min-height:100vh;
     }
 
     a{color:inherit;text-decoration:none}
+    button,input,select{font:inherit}
 
     .wrap{
-      width:min(100%, 1120px);
+      width:min(100%, 1180px);
       margin:0 auto;
       padding:24px 16px 48px;
     }
@@ -59,6 +65,7 @@
       justify-content:space-between;
       gap:12px;
       margin-bottom:22px;
+      flex-wrap:wrap;
     }
 
     .brand{
@@ -78,18 +85,17 @@
       border:1px solid rgba(212,175,55,.22);
       box-shadow:0 10px 24px rgba(0,0,0,.18);
       font-size:22px;
+      flex:0 0 auto;
     }
 
-    .brandText{
-      min-width:0;
-    }
-
+    .brandText{min-width:0}
     .kicker{
       font-size:12px;
       letter-spacing:.18em;
       text-transform:uppercase;
       color:var(--gold2);
       white-space:nowrap;
+      margin-bottom:3px;
     }
 
     .title{
@@ -101,20 +107,42 @@
       text-overflow:ellipsis;
     }
 
-    .homeBtn{
+    .topActions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .topBtn{
       border:1px solid var(--line);
       background:rgba(255,255,255,.04);
       color:var(--ink);
       border-radius:999px;
       padding:10px 14px;
-      font-weight:700;
+      font-weight:800;
       font-size:14px;
       white-space:nowrap;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:42px;
+    }
+
+    .topBtn.info{
+      border-color:rgba(56,189,248,.24);
+      background:rgba(56,189,248,.08);
+      color:#d8f2ff;
+    }
+
+    .topBtn.warn{
+      border-color:rgba(245,158,11,.26);
+      background:rgba(245,158,11,.10);
+      color:#fde68a;
     }
 
     .hero{
       display:grid;
-      grid-template-columns:1.1fr .9fr;
+      grid-template-columns:1.05fr .95fr;
       gap:18px;
       align-items:stretch;
     }
@@ -190,7 +218,27 @@
       flex:0 0 auto;
     }
 
-    .pinCard{
+    .railBox{
+      margin-top:18px;
+      padding:14px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+      display:grid;
+      gap:8px;
+    }
+
+    .railBox strong{
+      font-size:14px;
+    }
+
+    .railBox span{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.55;
+    }
+
+    .sessionCard{
       padding:22px;
       display:flex;
       flex-direction:column;
@@ -205,6 +253,7 @@
       align-items:center;
       justify-content:space-between;
       gap:12px;
+      flex-wrap:wrap;
     }
 
     .pinTitle{
@@ -328,12 +377,76 @@
     .msg.ok{color:#86efac}
     .msg.bad{color:#fca5a5}
     .msg.info{color:#cbd5e1}
+    .msg.warn{color:#fde68a}
 
     .mini{
       color:var(--muted);
       font-size:12px;
       line-height:1.5;
     }
+
+    .sessionBox{
+      margin-top:2px;
+      padding:14px;
+      border-radius:18px;
+      border:1px solid rgba(56,189,248,.18);
+      background:rgba(56,189,248,.08);
+      display:grid;
+      gap:8px;
+    }
+
+    .sessionHead{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .sessionState{
+      font-size:12px;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      color:#d8f2ff;
+    }
+
+    .sessionText{
+      color:#d8f2ff;
+      font-size:13px;
+      line-height:1.55;
+      font-weight:700;
+    }
+
+    .sessionLinks{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .sessionLink{
+      padding:10px 14px;
+      border-radius:999px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      font-weight:800;
+      font-size:13px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .sessionLink.info{
+      border-color:rgba(56,189,248,.24);
+      background:rgba(56,189,248,.10);
+      color:#d8f2ff;
+    }
+
+    .hidden{display:none !important}
 
     .foot{
       margin-top:20px;
@@ -358,6 +471,9 @@
       border:1px solid rgba(255,255,255,.08);
       font-weight:800;
       font-size:13px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
     }
 
     @media (max-width: 920px){
@@ -368,10 +484,13 @@
 
     @media (max-width: 560px){
       .wrap{padding:16px 12px 36px}
-      .heroCard,.pinCard{padding:18px}
+      .heroCard,.sessionCard{padding:18px}
       .pinRow{grid-template-columns:1fr}
       .topbar{align-items:flex-start;flex-direction:column}
-      .homeBtn{width:100%;text-align:center}
+      .topActions{width:100%}
+      .topActions > *{flex:1 1 auto}
+      .sessionLinks{width:100%}
+      .sessionLinks > *{flex:1 1 auto}
     }
   </style>
 </head>
@@ -385,16 +504,24 @@
           <div class="title">PRO-EXPLORE • Entrée PIN</div>
         </div>
       </div>
-      <a class="homeBtn" href="./index.html">← Retour EXPLORE</a>
+
+      <div class="topActions">
+        <a class="topBtn" id="btnPublicTop" href="./index.html">Vitrine publique</a>
+        <a class="topBtn hidden" id="btnCockpitTop" href="./cockpit.html">Cockpit</a>
+        <a class="topBtn hidden" id="btnLieuxTop" href="./lieux.html">Lieux</a>
+        <a class="topBtn hidden" id="btnSubmitTop" href="./submit.html">Ajouter / éditer</a>
+        <a class="topBtn info hidden" id="btnClawTop" href="./claw.html">CLAW</a>
+      </div>
     </div>
 
     <section class="hero">
       <article class="panel heroCard">
-        <div class="eyebrow">Centre de vision terrain</div>
+        <div class="eyebrow">Porte d’entrée / secours</div>
         <h1>Observer. Comprendre. Agir.</h1>
         <p class="lead">
-          PRO-EXPLORE ouvre un cockpit simple pour lire le terrain, publier des spots,
-          voir les zones, comprendre les catégories et faire remonter une vraie vision locale.
+          Cette page ne sert pas à te faire tourner en rond. Elle ouvre le rail PRO-EXPLORE,
+          pose la session proprement, puis te renvoie vers le bon intérieur : cockpit, lieux,
+          édition ou CLAW.
         </p>
 
         <div class="bullets">
@@ -404,28 +531,35 @@
           </div>
           <div class="bullet">
             <span class="dot"></span>
-            <span>Publication et pilotage des lieux sans usine à gaz ni écran de laboratoire.</span>
+            <span>Le PIN sert d’entrée extérieure ou de secours. Une fois dedans, on circule sans le retaper partout.</span>
           </div>
           <div class="bullet">
             <span class="dot"></span>
-            <span>Base prête à se relier ensuite à DRIVER, MARKET, PAY et RESA.</span>
+            <span>Le contexte garde le numéro et le slug pour nourrir cockpit, lieux, submit et CLAW.</span>
           </div>
+        </div>
+
+        <div class="railBox">
+          <strong>Direction après ouverture</strong>
+          <span id="targetText">Cockpit EXPLORE</span>
         </div>
 
         <div class="links">
           <a class="linkBtn" href="./index.html">Vitrine publique</a>
-          <a class="linkBtn" href="./cockpit.html">Cockpit pro</a>
+          <a class="linkBtn" id="linkDefaultCockpit" href="./cockpit.html">Cockpit pro</a>
+          <a class="linkBtn" id="linkDefaultLieux" href="./lieux.html">Lieux</a>
+          <a class="linkBtn" id="linkDefaultClaw" href="./claw.html">CLAW</a>
         </div>
       </article>
 
-      <aside class="panel pinCard">
+      <aside class="panel sessionCard">
         <div class="pinHead">
           <h2 class="pinTitle">Accès protégé</h2>
           <div class="badge">PIN PRO</div>
         </div>
 
         <p class="hint">
-          Entre ton numéro et ton code PIN pour ouvrir le cockpit PRO-EXPLORE.
+          Entre ton numéro et ton code PIN pour ouvrir le rail interne PRO-EXPLORE.
         </p>
 
         <form id="pinForm" class="grid" novalidate>
@@ -462,18 +596,47 @@
             </div>
           </div>
 
+          <div class="field">
+            <label class="label" for="nextSelect">Ouvrir ensuite</label>
+            <div class="inputWrap">
+              <select id="nextSelect" class="input">
+                <option value="cockpit">Cockpit</option>
+                <option value="lieux">Lieux</option>
+                <option value="submit">Ajouter / éditer</option>
+                <option value="claw">CLAW</option>
+              </select>
+            </div>
+          </div>
+
           <div class="actions">
-            <button id="submitBtn" class="mainBtn" type="submit">Ouvrir mon cockpit</button>
+            <button id="submitBtn" class="mainBtn" type="submit">Ouvrir mon rail</button>
             <div id="msg" class="msg info">Entre ton numéro et ton PIN.</div>
             <div class="mini">
-              Le module vérifie d’abord le rail EXPLORE existant. Si besoin, il tente aussi le rail PIN DIGIY générique.
+              Vérification réelle d’abord sur le rail EXPLORE, puis tentative de secours sur le rail PIN DIGIY générique.
             </div>
           </div>
         </form>
 
+        <div id="sessionBox" class="sessionBox hidden">
+          <div class="sessionHead">
+            <strong>Session détectée</strong>
+            <span class="sessionState" id="sessionState">Active</span>
+          </div>
+          <div class="sessionText" id="sessionText">
+            Une session EXPLORE existe déjà sur cet appareil.
+          </div>
+          <div class="sessionLinks">
+            <a class="sessionLink" id="sessionCockpit" href="./cockpit.html">Cockpit</a>
+            <a class="sessionLink" id="sessionLieux" href="./lieux.html">Lieux</a>
+            <a class="sessionLink" id="sessionSubmit" href="./submit.html">Ajouter / éditer</a>
+            <a class="sessionLink info" id="sessionClaw" href="./claw.html">CLAW</a>
+          </div>
+        </div>
+
         <div class="foot">
           <div>Module : <strong>EXPLORE</strong></div>
-          <div>Redirection après accès : <strong>cockpit.html</strong></div>
+          <div>Stockage session : <strong>localStorage + sessionStorage</strong></div>
+          <div>Redirection par défaut : <strong id="footTarget">cockpit.html</strong></div>
         </div>
       </aside>
     </section>
@@ -487,18 +650,32 @@
       const SESSION_KEY = "digiy_explore_session";
       const MAX_AGE_MS = 8 * 60 * 60 * 1000;
 
+      const ROUTES = {
+        cockpit: "./cockpit.html",
+        lieux: "./lieux.html",
+        submit: "./submit.html",
+        claw: "./claw.html",
+        public: "./index.html"
+      };
+
       const supabase = window.supabase.createClient(
         window.DIGIY_SUPABASE_URL,
         window.DIGIY_SUPABASE_ANON_KEY
       );
 
       const $ = (id) => document.getElementById(id);
+
       const phoneInput = $("phoneInput");
       const pinInput = $("pinInput");
       const msg = $("msg");
       const form = $("pinForm");
       const submitBtn = $("submitBtn");
       const togglePinBtn = $("togglePinBtn");
+      const nextSelect = $("nextSelect");
+      const targetText = $("targetText");
+      const footTarget = $("footTarget");
+      const sessionBox = $("sessionBox");
+      const sessionText = $("sessionText");
 
       function normalizePhone(v){
         return String(v || "").replace(/[^\d]/g, "");
@@ -506,6 +683,24 @@
 
       function normalizePin(v){
         return String(v || "").replace(/[^\d]/g, "");
+      }
+
+      function normalizeSlug(v){
+        return String(v || "")
+          .trim()
+          .toLowerCase()
+          .replace(/\s+/g, "-")
+          .replace(/[^a-z0-9-]/g, "")
+          .replace(/-+/g, "-")
+          .replace(/^-|-$/g, "");
+      }
+
+      function safeJsonParse(raw){
+        try{
+          return JSON.parse(raw);
+        }catch(_){
+          return null;
+        }
       }
 
       function setMsg(text, type){
@@ -518,7 +713,8 @@
         phoneInput.disabled = !!busy;
         pinInput.disabled = !!busy;
         togglePinBtn.disabled = !!busy;
-        submitBtn.textContent = busy ? "Vérification..." : "Ouvrir mon cockpit";
+        nextSelect.disabled = !!busy;
+        submitBtn.textContent = busy ? "Vérification..." : "Ouvrir mon rail";
       }
 
       function digiyRpcLooksOk(data){
@@ -561,60 +757,202 @@
         }
 
         if (typeof data === "object") {
-          return data.slug || data.p_slug || data.subscription_slug || null;
+          return normalizeSlug(
+            data.slug ||
+            data.p_slug ||
+            data.subscription_slug ||
+            data.owner_slug ||
+            ""
+          ) || null;
         }
 
         if (typeof data === "string") {
           const m = data.match(/([a-z0-9]+-\d{6,})/i);
-          return m ? m[1].toLowerCase() : null;
+          return m ? normalizeSlug(m[1]) : null;
         }
 
         return null;
       }
 
-      function saveSession(phone, payload){
+      function getRouteName(raw){
+        const allowed = ["cockpit", "lieux", "submit", "claw"];
+        return allowed.includes(raw) ? raw : "cockpit";
+      }
+
+      function routeLabel(route){
+        if(route === "lieux") return "Lieux EXPLORE";
+        if(route === "submit") return "Ajouter / éditer";
+        if(route === "claw") return "CLAW";
+        return "Cockpit EXPLORE";
+      }
+
+      function buildQuery(phone, slug){
+        const q = new URLSearchParams();
+        const cleanPhone = normalizePhone(phone);
+        const cleanSlug = normalizeSlug(slug);
+
+        if(cleanSlug) q.set("slug", cleanSlug);
+        if(cleanPhone) q.set("phone", cleanPhone);
+
+        const str = q.toString();
+        return str ? ("?" + str) : "";
+      }
+
+      function buildInternalHref(route, phone, slug){
+        const path = ROUTES[route] || ROUTES.cockpit;
+        return path + buildQuery(phone, slug);
+      }
+
+      function updateTargetUi(){
+        const route = getRouteName(nextSelect.value);
+        targetText.textContent = routeLabel(route);
+        footTarget.textContent = (ROUTES[route] || ROUTES.cockpit).replace("./", "");
+      }
+
+      function setTopLinks(phone, slug){
+        const hasSession = !!(normalizePhone(phone) || normalizeSlug(slug));
+
+        const btnCockpitTop = $("btnCockpitTop");
+        const btnLieuxTop = $("btnLieuxTop");
+        const btnSubmitTop = $("btnSubmitTop");
+        const btnClawTop = $("btnClawTop");
+
+        btnCockpitTop.href = buildInternalHref("cockpit", phone, slug);
+        btnLieuxTop.href = buildInternalHref("lieux", phone, slug);
+        btnSubmitTop.href = buildInternalHref("submit", phone, slug);
+        btnClawTop.href = buildInternalHref("claw", phone, slug);
+
+        btnCockpitTop.classList.toggle("hidden", !hasSession);
+        btnLieuxTop.classList.toggle("hidden", !hasSession);
+        btnSubmitTop.classList.toggle("hidden", !hasSession);
+        btnClawTop.classList.toggle("hidden", !hasSession);
+
+        $("linkDefaultCockpit").href = buildInternalHref("cockpit", phone, slug);
+        $("linkDefaultLieux").href = buildInternalHref("lieux", phone, slug);
+        $("linkDefaultClaw").href = buildInternalHref("claw", phone, slug);
+      }
+
+      function setSessionVisibility(show){
+        sessionBox.classList.toggle("hidden", !show);
+      }
+
+      function saveSession(phone, payload, preferredSlug){
         const cleanPhone = normalizePhone(phone);
         const raw = payload?.data || null;
+        const resolvedSlug = normalizeSlug(extractSlug(raw) || preferredSlug || "");
         const session = {
           module: MODULE,
           phone: cleanPhone,
-          slug: extractSlug(raw) || null,
+          slug: resolvedSlug || null,
           ts: Date.now(),
           access_ok: true,
           source: payload?.source || null,
           raw: raw || null
         };
 
-        try{
-          localStorage.setItem(SESSION_KEY, JSON.stringify(session));
-        }catch(_){}
+        const rawSession = JSON.stringify(session);
+
+        try{ localStorage.setItem(SESSION_KEY, rawSession); }catch(_){}
+        try{ sessionStorage.setItem(SESSION_KEY, rawSession); }catch(_){}
+
+        try{ localStorage.setItem("digiy_explore_phone", cleanPhone); }catch(_){}
+        try{ localStorage.setItem("digiy_explore_slug", resolvedSlug || ""); }catch(_){}
+        try{ localStorage.setItem("digiy_last_phone", cleanPhone); }catch(_){}
+        try{ localStorage.setItem("digiy_last_slug", resolvedSlug || ""); }catch(_){}
+        try{ localStorage.setItem("DIGIY_PHONE", cleanPhone); }catch(_){}
+        try{ localStorage.setItem("DIGIY_SLUG", resolvedSlug || ""); }catch(_){}
+        try{ sessionStorage.setItem("digiy_explore_phone", cleanPhone); }catch(_){}
+        try{ sessionStorage.setItem("digiy_explore_slug", resolvedSlug || ""); }catch(_){}
 
         return session;
       }
 
       function getSession(){
-        try{
-          const raw = localStorage.getItem(SESSION_KEY);
-          if(!raw) return null;
-          const parsed = JSON.parse(raw);
-          if(!parsed || !parsed.phone || !parsed.ts) return null;
+        const sources = [
+          () => sessionStorage.getItem(SESSION_KEY),
+          () => localStorage.getItem(SESSION_KEY)
+        ];
 
-          if((Date.now() - parsed.ts) > MAX_AGE_MS){
-            localStorage.removeItem(SESSION_KEY);
-            return null;
-          }
+        for(const read of sources){
+          try{
+            const raw = read();
+            if(!raw) continue;
 
-          return parsed;
-        }catch(_){
-          return null;
+            const parsed = safeJsonParse(raw);
+            if(!parsed || !parsed.phone || !parsed.ts) continue;
+
+            if((Date.now() - Number(parsed.ts)) > MAX_AGE_MS){
+              continue;
+            }
+
+            return parsed;
+          }catch(_){}
         }
+
+        return null;
       }
 
-      function redirectToCockpit(phone, slug){
-        const url = new URL("./cockpit.html", window.location.href);
-        if (slug) url.searchParams.set("slug", slug);
-        if (phone) url.searchParams.set("phone", phone);
-        window.location.href = url.toString();
+      function readSeedPhone(){
+        const url = new URL(window.location.href);
+        const fromUrl = normalizePhone(url.searchParams.get("phone"));
+        if(fromUrl) return fromUrl;
+
+        const session = getSession();
+        if(session?.phone) return normalizePhone(session.phone);
+
+        try{
+          const saved = normalizePhone(localStorage.getItem("digiy_explore_phone"));
+          if(saved) return saved;
+        }catch(_){}
+
+        return "";
+      }
+
+      function readSeedSlug(){
+        const url = new URL(window.location.href);
+        const fromUrl = normalizeSlug(url.searchParams.get("slug"));
+        if(fromUrl) return fromUrl;
+
+        const session = getSession();
+        if(session?.slug) return normalizeSlug(session.slug);
+
+        try{
+          const saved = normalizeSlug(localStorage.getItem("digiy_explore_slug"));
+          if(saved) return saved;
+        }catch(_){}
+
+        return "";
+      }
+
+      function readTargetRoute(){
+        const url = new URL(window.location.href);
+        return getRouteName(url.searchParams.get("next"));
+      }
+
+      function redirectToRoute(route, phone, slug){
+        window.location.href = buildInternalHref(route, phone, slug);
+      }
+
+      function renderSessionBox(session){
+        if(!session?.phone){
+          setSessionVisibility(false);
+          return;
+        }
+
+        const cleanPhone = normalizePhone(session.phone);
+        const cleanSlug = normalizeSlug(session.slug || "");
+
+        $("sessionCockpit").href = buildInternalHref("cockpit", cleanPhone, cleanSlug);
+        $("sessionLieux").href = buildInternalHref("lieux", cleanPhone, cleanSlug);
+        $("sessionSubmit").href = buildInternalHref("submit", cleanPhone, cleanSlug);
+        $("sessionClaw").href = buildInternalHref("claw", cleanPhone, cleanSlug);
+
+        sessionText.textContent =
+          cleanSlug
+            ? `Session EXPLORE détectée pour ${cleanPhone}, slug ${cleanSlug}.`
+            : `Session EXPLORE détectée pour ${cleanPhone}.`;
+
+        setSessionVisibility(true);
       }
 
       async function tryExploreAdminPinCheck(phone, pin){
@@ -680,6 +1018,8 @@
 
         const phone = normalizePhone(phoneInput.value);
         const pin = normalizePin(pinInput.value);
+        const route = getRouteName(nextSelect.value);
+        const preferredSlug = readSeedSlug();
 
         if(!phone || phone.length < 8){
           setMsg("Entre un numéro valide.", "bad");
@@ -705,13 +1045,14 @@
             return;
           }
 
-          const session = saveSession(phone, result);
-
-          setMsg("Accès validé. Ouverture du cockpit...", "ok");
+          const session = saveSession(phone, result, preferredSlug);
+          renderSessionBox(session);
+          setTopLinks(session.phone, session.slug || "");
+          setMsg("Accès validé. Ouverture du rail...", "ok");
 
           setTimeout(function(){
-            redirectToCockpit(phone, session?.slug || null);
-          }, 350);
+            redirectToRoute(route, session.phone, session.slug || preferredSlug || null);
+          }, 320);
         }catch(err){
           console.error("[PRO-EXPLORE PIN] error:", err);
           setMsg("La vérification a échoué. Rail PIN introuvable ou réponse non valide.", "bad");
@@ -725,15 +1066,26 @@
         togglePinBtn.textContent = reveal ? "Masquer" : "Afficher";
       });
 
+      nextSelect.addEventListener("change", updateTargetUi);
+
       (function boot(){
-        const url = new URL(window.location.href);
-        const phoneFromUrl = normalizePhone(url.searchParams.get("phone"));
-        const existing = getSession();
+        const session = getSession();
+        const seedPhone = readSeedPhone();
+        const seedSlug = readSeedSlug();
+        const target = readTargetRoute();
 
-        if(phoneFromUrl) phoneInput.value = phoneFromUrl;
-        else if(existing?.phone) phoneInput.value = existing.phone;
+        if(seedPhone) phoneInput.value = seedPhone;
+        nextSelect.value = target;
+        updateTargetUi();
+        setTopLinks(seedPhone, seedSlug);
 
-        setMsg("Entre ton numéro et ton PIN.", "info");
+        if(session?.phone){
+          renderSessionBox(session);
+          setMsg("Une session active existe déjà sur cet appareil.", "warn");
+        }else{
+          setSessionVisibility(false);
+          setMsg("Entre ton numéro et ton PIN.", "info");
+        }
       })();
     })();
   </script>
