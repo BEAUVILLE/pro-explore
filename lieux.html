@@ -19,7 +19,8 @@
     document.documentElement.style.visibility = "hidden";
   </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="./guad.js?v=explore-lieux-claw-2"></script>
+  <!-- FIX : guad.js → guard.js -->
+  <script src="./guard.js?v=explore-lieux-guard-3"></script>
 
   <style>
     :root{
@@ -685,7 +686,8 @@
       </div>
 
       <div class="topActions">
-        <a class="btn ghost" id="btnAccessTop" href="./index.html">Vitrine</a>
+        <!-- FIX : Vitrine → explore.digiylyfe.com -->
+        <a class="btn ghost" id="btnAccessTop" href="./submit.html">+ Ajouter un lieu</a>
         <a class="btn secondary" id="btnCockpitTop" href="./cockpit.html">Cockpit</a>
         <a class="btn info" id="btnClawTop" href="./claw.html">CLAW</a>
         <a class="btn primary" id="btnSubmitTop" href="./submit.html">+ Ajouter un lieu</a>
@@ -736,7 +738,7 @@
       <a id="navLieux" class="active" href="./lieux.html">Lieux</a>
       <a id="navSubmit" href="./submit.html">Ajouter / éditer</a>
       <a id="navClaw" href="./claw.html">CLAW</a>
-      <a id="navAccess" href="./index.html">Vitrine publique</a>
+      <!-- FIX : navAccess retiré — pas de lien vitrine dans le rail PRO -->
       <a id="navPinRescue" class="hidden" href="./pin.html">PIN secours</a>
     </nav>
 
@@ -748,19 +750,16 @@
         <div class="statValue" id="statTotal">—</div>
         <div class="statFoot">Toutes les fiches du numéro actif.</div>
       </article>
-
       <article class="statCard">
         <div class="statLabel">Publiés</div>
         <div class="statValue" id="statPublished">—</div>
         <div class="statFoot">Déjà visibles côté public.</div>
       </article>
-
       <article class="statCard">
         <div class="statLabel">Brouillons</div>
         <div class="statValue" id="statDraft">—</div>
         <div class="statFoot">À retravailler ou publier.</div>
       </article>
-
       <article class="statCard">
         <div class="statLabel">Archivés</div>
         <div class="statValue" id="statArchived">—</div>
@@ -777,11 +776,9 @@
           </div>
           <div class="clawMode" id="clawMode">Analyse légère</div>
         </div>
-
         <div class="clawText" id="clawSummary">
-          CLAW lit l’état de tes lieux, la publication et la prochaine action simple.
+          CLAW lit l'état de tes lieux, la publication et la prochaine action simple.
         </div>
-
         <div class="clawPills" id="clawPills"></div>
       </article>
 
@@ -799,7 +796,6 @@
       <div class="searchWrap">
         <input id="searchInput" class="input" type="text" placeholder="Rechercher un lieu, une ville, une zone, une catégorie…" />
       </div>
-
       <div class="filterWrap">
         <select id="statusFilter" class="select">
           <option value="all">Tous les états</option>
@@ -808,7 +804,6 @@
           <option value="archived">Archivés</option>
         </select>
       </div>
-
       <button id="reloadBtn" class="btn secondary" type="button">Actualiser</button>
     </section>
 
@@ -826,6 +821,9 @@
   <script>
     (function(){
       "use strict";
+
+      /* ─── FIX : URL vitrine publique ─── */
+      const PUBLIC_VITRINE_BASE = "https://explore.digiylyfe.com/";
 
       const SESSION_KEY = "digiy_explore_session";
       const MAX_AGE_MS = 8 * 60 * 60 * 1000;
@@ -895,14 +893,8 @@
           "CLAW attend le téléphone pilote, la lecture du guard et la liste réelle des lieux.",
           ["Module : EXPLORE", "Page : lieux.html", "Rail réel"],
           [
-            {
-              title:"Lecture attendue",
-              text:"CLAW relit ici le nombre de lieux, leur publication et l’action la plus utile."
-            },
-            {
-              title:"Direction utile",
-              text:"Quand le rail est ouvert, on passe vers submit.html, cockpit.html ou claw.html selon le besoin."
-            }
+            { title:"Lecture attendue", text:"CLAW relit ici le nombre de lieux, leur publication et l'action la plus utile." },
+            { title:"Direction utile", text:"Quand le rail est ouvert, on passe vers submit.html, cockpit.html ou claw.html selon le besoin." }
           ]
         );
       }
@@ -913,14 +905,8 @@
           "CLAW garde une lecture sobre : pas de session valide, donc pas de liste réelle à lire.",
           ["PIN secours", "Session absente"],
           [
-            {
-              title:"Blocage principal",
-              text:"Le module attend une session PIN active pour relier les lieux au bon numéro."
-            },
-            {
-              title:"Action utile",
-              text:"Passe d’abord par pin.html, puis reviens sur lieux.html."
-            }
+            { title:"Blocage principal", text:"Le module attend une session PIN active pour relier les lieux au bon numéro." },
+            { title:"Action utile", text:"Passe d'abord par pin.html, puis reviens sur lieux.html." }
           ]
         );
       }
@@ -992,9 +978,7 @@
           module: "EXPLORE",
           ts: Date.now()
         };
-
         const raw = JSON.stringify(payload);
-
         try{ sessionStorage.setItem(SESSION_KEY, raw); }catch(_){}
         try{ localStorage.setItem(SESSION_KEY, raw); }catch(_){}
       }
@@ -1012,13 +996,10 @@
         const url = new URL(window.location.href);
         const fromUrl = normalizePhone(url.searchParams.get("phone"));
         if(fromUrl) return fromUrl;
-
         const guard = getGuardState();
         if(guard.phone) return guard.phone;
-
         const session = getSession();
         if(session?.phone) return normalizePhone(session.phone);
-
         return "";
       }
 
@@ -1026,13 +1007,10 @@
         const url = new URL(window.location.href);
         const fromUrl = normalizeSlug(url.searchParams.get("slug"));
         if(fromUrl) return fromUrl;
-
         const guard = getGuardState();
         if(guard.slug) return guard.slug;
-
         const session = getSession();
         if(session?.slug) return normalizeSlug(session.slug);
-
         return "";
       }
 
@@ -1041,15 +1019,8 @@
         const urlPhone = normalizePhone(url.searchParams.get("phone"));
         const guard = getGuardState();
         const session = getSession();
-
-        if(typeof guard.access_ok === "boolean"){
-          return guard.access_ok;
-        }
-
-        if(typeof session?.access_ok === "boolean"){
-          return session.access_ok;
-        }
-
+        if(typeof guard.access_ok === "boolean") return guard.access_ok;
+        if(typeof session?.access_ok === "boolean") return session.access_ok;
         return !!(urlPhone || guard.phone || session?.phone);
       }
 
@@ -1057,15 +1028,10 @@
         try{
           if(!v) return "—";
           return new Date(v).toLocaleString("fr-FR", {
-            year:"numeric",
-            month:"2-digit",
-            day:"2-digit",
-            hour:"2-digit",
-            minute:"2-digit"
+            year:"numeric", month:"2-digit", day:"2-digit",
+            hour:"2-digit", minute:"2-digit"
           });
-        }catch(_){
-          return String(v || "—");
-        }
+        }catch(_){ return String(v || "—"); }
       }
 
       function escapeHtml(value){
@@ -1081,10 +1047,8 @@
         const q = new URLSearchParams();
         const safePhone = normalizePhone(params.phone ?? CURRENT_PHONE);
         const safeSlug = normalizeSlug(params.slug ?? CURRENT_SLUG);
-
         if(safeSlug) q.set("slug", safeSlug);
         if(safePhone) q.set("phone", safePhone);
-
         const s = q.toString();
         return s ? ("?" + s) : "";
       }
@@ -1093,13 +1057,17 @@
         return path + buildQuery(params);
       }
 
+      /* ─── FIX : Voir fiche publique → explore.digiylyfe.com/?slug=... ─── */
       function buildPublicFicheHref(slug){
         const safeSlug = normalizeSlug(slug);
-        return safeSlug ? `./fiche.html?slug=${encodeURIComponent(safeSlug)}` : "./index.html";
+        return safeSlug
+          ? PUBLIC_VITRINE_BASE + "?slug=" + encodeURIComponent(safeSlug)
+          : PUBLIC_VITRINE_BASE;
       }
 
       function refreshNavLinks(){
-        $("btnAccessTop").href = "./index.html";
+        /* FIX : btnAccessTop → submit (pas de vitrine dans le rail PRO) */
+        $("btnAccessTop").href = buildInternalHref("./submit.html");
         $("btnCockpitTop").href = buildInternalHref("./cockpit.html");
         $("btnClawTop").href = buildInternalHref("./claw.html");
         $("btnSubmitTop").href = buildInternalHref("./submit.html");
@@ -1114,7 +1082,6 @@
         $("navLieux").href = buildInternalHref("./lieux.html");
         $("navSubmit").href = buildInternalHref("./submit.html");
         $("navClaw").href = buildInternalHref("./claw.html");
-        $("navAccess").href = "./index.html";
         $("navPinRescue").href = buildInternalHref("./pin.html");
       }
 
@@ -1129,7 +1096,6 @@
         const published = items.filter(x => x?.is_published === true && x?.status === "published").length;
         const archived = items.filter(x => x?.status === "archived").length;
         const draft = items.filter(x => x?.status === "draft" || (x?.is_published !== true && x?.status !== "archived")).length;
-
         statTotal.textContent = String(total);
         statPublished.textContent = String(published);
         statDraft.textContent = String(draft);
@@ -1141,25 +1107,12 @@
         const status = statusFilter.value || "all";
 
         return ALL_ITEMS.filter(function(item){
-          const hay = [
-            item?.public_name,
-            item?.slug,
-            item?.category_code,
-            item?.city,
-            item?.zone
-          ].join(" ").toLowerCase();
-
+          const hay = [item?.public_name, item?.slug, item?.category_code, item?.city, item?.zone].join(" ").toLowerCase();
           const matchSearch = !q || hay.includes(q);
-
           let matchStatus = true;
-          if(status === "published"){
-            matchStatus = item?.is_published === true && item?.status === "published";
-          } else if(status === "draft"){
-            matchStatus = item?.status === "draft" || (item?.is_published !== true && item?.status !== "archived");
-          } else if(status === "archived"){
-            matchStatus = item?.status === "archived";
-          }
-
+          if(status === "published") matchStatus = item?.is_published === true && item?.status === "published";
+          else if(status === "draft") matchStatus = item?.status === "draft" || (item?.is_published !== true && item?.status !== "archived");
+          else if(status === "archived") matchStatus = item?.status === "archived";
           return matchSearch && matchStatus;
         });
       }
@@ -1175,32 +1128,21 @@
 
         if(!CURRENT_ACCESS_OK || !CURRENT_PHONE){
           heroAction.textContent = "Entrer par PIN";
-          heroStatusHint.textContent = "Passe d’abord par pin.html pour ouvrir la session.";
+          heroStatusHint.textContent = "Passe d'abord par pin.html pour ouvrir la session.";
           setClawMissingAccess();
           return;
         }
 
         if(!total){
           heroAction.textContent = "Ajouter un lieu";
-          heroStatusHint.textContent = "Le rail est actif mais aucun lieu n’est encore remonté.";
+          heroStatusHint.textContent = "Le rail est actif mais aucun lieu n'est encore remonté.";
           setClaw(
             "Rail vivant",
-            "Le numéro pilote est reconnu, mais aucun lieu n’est encore visible. Le prochain cran logique est d’ajouter une première fiche terrain.",
+            "Le numéro pilote est reconnu, mais aucun lieu n'est encore visible.",
+            [`Téléphone : ${CURRENT_PHONE}`, CURRENT_SLUG ? `Slug : ${CURRENT_SLUG}` : "", "0 lieu", "Action : ajouter"].filter(Boolean),
             [
-              `Téléphone : ${CURRENT_PHONE}`,
-              CURRENT_SLUG ? `Slug : ${CURRENT_SLUG}` : "",
-              "0 lieu",
-              "Action : ajouter"
-            ].filter(Boolean),
-            [
-              {
-                title:"Lecture du rail",
-                text:"Le backend répond, mais la liste est vide pour ce numéro."
-              },
-              {
-                title:"Action utile",
-                text:"Passe par submit.html pour poser une première fiche EXPLORE."
-              }
+              { title:"Lecture du rail", text:"Le backend répond, mais la liste est vide pour ce numéro." },
+              { title:"Action utile", text:"Passe par submit.html pour poser une première fiche EXPLORE." }
             ]
           );
           return;
@@ -1218,7 +1160,7 @@
 
         setClaw(
           "Lecture vivante",
-          "CLAW relit ici la densité du rail EXPLORE : combien de lieux, combien de publiés, combien de brouillons, et quelle action pousse le terrain.",
+          "CLAW relit la densité du rail EXPLORE : lieux, publiés, brouillons et prochaine action terrain.",
           [
             `Téléphone : ${CURRENT_PHONE}`,
             CURRENT_SLUG ? `Slug actif : ${CURRENT_SLUG}` : "",
@@ -1228,20 +1170,14 @@
             archived ? `${archived} archivé(s)` : ""
           ].filter(Boolean),
           [
-            {
-              title:"Lieu pilote",
-              text:`${firstName}${firstSlug ? " (" + firstSlug + ")" : ""} ouvre la marche de la liste actuelle.`
-            },
+            { title:"Lieu pilote", text:`${firstName}${firstSlug ? " (" + firstSlug + ")" : ""} ouvre la marche de la liste actuelle.` },
             {
               title:"Action utile",
               text: published
                 ? "Passe par CLAW ou submit.html pour renforcer la lecture publique des lieux déjà publiés."
                 : "Le cran logique est de publier au moins une fiche propre pour rendre le rail visible."
             },
-            {
-              title:"Navigation utile",
-              text:"Tu peux passer de lieux.html à cockpit.html, submit.html ou claw.html sans quitter le même rail."
-            }
+            { title:"Navigation utile", text:"Tu peux passer de lieux.html à cockpit.html, submit.html ou claw.html sans quitter le même rail." }
           ]
         );
       }
@@ -1270,18 +1206,15 @@
           let statusClass = "warn";
           let statusText = item?.status || "draft";
 
-          if(isPublished){
-            statusClass = "ok";
-            statusText = "Publié";
-          } else if(isArchived){
-            statusClass = "bad";
-            statusText = "Archivé";
-          } else {
-            statusText = "Brouillon";
-          }
+          if(isPublished){ statusClass = "ok"; statusText = "Publié"; }
+          else if(isArchived){ statusClass = "bad"; statusText = "Archivé"; }
+          else { statusText = "Brouillon"; }
 
           const zoneLine = [item?.city, item?.zone].filter(Boolean).join(" — ");
           const featured = item?.is_featured ? '<span class="slug">Mis en avant</span>' : "";
+
+          /* FIX : Voir fiche publique → explore.digiylyfe.com/?slug=... */
+          const publicHref = buildPublicFicheHref(safeSlug);
 
           return `
             <article class="card">
@@ -1296,7 +1229,6 @@
                       <b>Mise à jour :</b> ${escapeHtml(fmtDate(item?.updated_at))}
                     </div>
                   </div>
-
                   <div class="statusRow">
                     <div class="status ${statusClass}">${escapeHtml(statusText)}</div>
                     <div class="slug">${escapeHtml(safeSlug || "—")}</div>
@@ -1308,11 +1240,10 @@
                   <a class="btn secondary" href="${escapeHtml(buildInternalHref('./submit.html', { slug: safeSlug }))}">Éditer</a>
                   <a class="btn ghost" href="${escapeHtml(buildInternalHref('./cockpit.html', { slug: safeSlug }))}">Cockpit</a>
                   <a class="btn info" href="${escapeHtml(buildInternalHref('./claw.html', { slug: safeSlug }))}">CLAW</a>
-                  <a class="btn ghost" href="${escapeHtml(buildPublicFicheHref(safeSlug))}" target="_blank" rel="noopener">Voir fiche publique</a>
-                  ${
-                    isPublished
-                      ? `<button class="btn secondary js-unpublish" data-slug="${escapeHtml(safeSlug)}">Dépublier</button>`
-                      : `<button class="btn primary js-publish" data-slug="${escapeHtml(safeSlug)}">Publier</button>`
+                  <a class="btn ghost" href="${escapeHtml(publicHref)}" target="_blank" rel="noopener">🌍 Voir fiche publique</a>
+                  ${isPublished
+                    ? `<button class="btn secondary js-unpublish" data-slug="${escapeHtml(safeSlug)}">Dépublier</button>`
+                    : `<button class="btn primary js-publish" data-slug="${escapeHtml(safeSlug)}">Publier</button>`
                   }
                   <button class="btn ghost js-archive" data-slug="${escapeHtml(safeSlug)}">Archiver</button>
                 </div>
@@ -1327,22 +1258,17 @@
       function bindActions(){
         list.querySelectorAll(".js-publish").forEach(function(btn){
           btn.addEventListener("click", async function(){
-            const slug = btn.getAttribute("data-slug") || "";
-            await publishSlug(slug, true);
+            await publishSlug(btn.getAttribute("data-slug") || "", true);
           });
         });
-
         list.querySelectorAll(".js-unpublish").forEach(function(btn){
           btn.addEventListener("click", async function(){
-            const slug = btn.getAttribute("data-slug") || "";
-            await publishSlug(slug, false);
+            await publishSlug(btn.getAttribute("data-slug") || "", false);
           });
         });
-
         list.querySelectorAll(".js-archive").forEach(function(btn){
           btn.addEventListener("click", async function(){
-            const slug = btn.getAttribute("data-slug") || "";
-            await archiveSlug(slug);
+            await archiveSlug(btn.getAttribute("data-slug") || "");
           });
         });
       }
@@ -1379,17 +1305,9 @@
           heroPhone.textContent = CURRENT_PHONE || "—";
           heroSlug.textContent = CURRENT_SLUG || "—";
           heroAction.textContent = "Entrer par PIN";
-          heroStatusHint.textContent = "Passe d’abord par pin.html pour ouvrir la session.";
-          setMsg("Aucune session valide trouvée. Ouvre d’abord pin.html.", "bad");
-          list.innerHTML = `
-            <div class="card">
-              <div class="cardInner">
-                <div class="empty">
-                  Pas de session active. Reviens sur <b>pin.html</b> pour entrer dans le module PRO-EXPLORE.
-                </div>
-              </div>
-            </div>
-          `;
+          heroStatusHint.textContent = "Passe d'abord par pin.html pour ouvrir la session.";
+          setMsg("Aucune session valide trouvée. Ouvre d'abord pin.html.", "bad");
+          list.innerHTML = `<div class="card"><div class="cardInner"><div class="empty">Pas de session active. Reviens sur <b>pin.html</b> pour entrer dans le module PRO-EXPLORE.</div></div></div>`;
           setClawMissingAccess();
           return;
         }
@@ -1414,39 +1332,18 @@
           computeStats(items);
           renderList();
           updateHeroAndClaw(items);
-
           setMsg("Liste réelle des lieux chargée.", "ok");
         }catch(err){
           console.error("[PRO-EXPLORE lieux] load error:", err);
           heroAction.textContent = "Vérifier le rail";
           heroStatusHint.textContent = "Impossible de lire la liste réelle.";
-          list.innerHTML = `
-            <div class="card">
-              <div class="cardInner">
-                <div class="empty">
-                  La liste n’a pas pu être chargée. Vérifie la session PIN ou le RPC <b>digiy_explore_list_places_by_phone</b>.
-                </div>
-              </div>
-            </div>
-          `;
+          list.innerHTML = `<div class="card"><div class="cardInner"><div class="empty">La liste n'a pas pu être chargée. Vérifie la session PIN ou le RPC <b>digiy_explore_list_places_by_phone</b>.</div></div></div>`;
           setMsg("Lecture des lieux impossible pour le moment.", "bad");
-          setClaw(
-            "Erreur",
-            "CLAW a détecté un blocage sur la lecture des lieux EXPLORE.",
+          setClaw("Erreur", "CLAW a détecté un blocage sur la lecture des lieux EXPLORE.",
+            [CURRENT_PHONE ? `Téléphone : ${CURRENT_PHONE}` : "Téléphone : —", CURRENT_SLUG ? `Slug : ${CURRENT_SLUG}` : "", "Contrôle à faire"].filter(Boolean),
             [
-              CURRENT_PHONE ? `Téléphone : ${CURRENT_PHONE}` : "Téléphone : —",
-              CURRENT_SLUG ? `Slug : ${CURRENT_SLUG}` : "",
-              "Contrôle à faire"
-            ].filter(Boolean),
-            [
-              {
-                title:"Blocage principal",
-                text:"Le cockpit lieux n’a pas pu relire la liste réelle du pilote."
-              },
-              {
-                title:"Action utile",
-                text:"Recharge la page, puis repasse par pin.html si la session est tombée."
-              }
+              { title:"Blocage principal", text:"Le cockpit lieux n'a pas pu relire la liste réelle du pilote." },
+              { title:"Action utile", text:"Recharge la page, puis repasse par pin.html si la session est tombée." }
             ]
           );
         }finally{
@@ -1456,52 +1353,36 @@
 
       async function publishSlug(slug, publish){
         if(!CURRENT_PHONE || !slug) return;
-
         setMsg((publish ? "Publication" : "Dépublication") + " en cours pour " + slug + "...", "info");
-
         try{
           const res = await rpcSetPublish(CURRENT_PHONE, slug, publish);
-          if(!res || res.ok !== true){
-            throw new Error("RPC publish invalide");
-          }
-
+          if(!res || res.ok !== true) throw new Error("RPC publish invalide");
           if(!CURRENT_SLUG){
             CURRENT_SLUG = normalizeSlug(slug);
             saveSession({ phone: CURRENT_PHONE, slug: CURRENT_SLUG });
             refreshNavLinks();
           }
-
-          setMsg(
-            publish
-              ? "Lieu publié avec succès."
-              : "Lieu repassé en brouillon.",
-            "ok"
-          );
+          setMsg(publish ? "Lieu publié avec succès." : "Lieu repassé en brouillon.", "ok");
           await refresh();
         }catch(err){
           console.error("[PRO-EXPLORE lieux] publish error:", err);
-          setMsg("L’action de publication a échoué.", "bad");
+          setMsg("L'action de publication a échoué.", "bad");
         }
       }
 
       async function archiveSlug(slug){
         if(!CURRENT_PHONE || !slug) return;
-
         const confirmed = window.confirm("Archiver ce lieu ? Il sera retiré de la lecture active.");
         if(!confirmed) return;
-
         setMsg("Archivage en cours pour " + slug + "...", "info");
-
         try{
           const res = await rpcArchive(CURRENT_PHONE, slug);
-          if(!res || res.ok !== true){
-            throw new Error("RPC archive invalide");
-          }
+          if(!res || res.ok !== true) throw new Error("RPC archive invalide");
           setMsg("Lieu archivé avec succès.", "ok");
           await refresh();
         }catch(err){
           console.error("[PRO-EXPLORE lieux] archive error:", err);
-          setMsg("L’archivage a échoué.", "bad");
+          setMsg("L'archivage a échoué.", "bad");
         }
       }
 
@@ -1514,10 +1395,7 @@
         CURRENT_ACCESS_OK = resolveAccess();
 
         if(CURRENT_PHONE || CURRENT_SLUG){
-          saveSession({
-            phone: CURRENT_PHONE,
-            slug: CURRENT_SLUG
-          });
+          saveSession({ phone: CURRENT_PHONE, slug: CURRENT_SLUG });
         }
 
         refreshNavLinks();
@@ -1527,18 +1405,10 @@
           heroPhone.textContent = CURRENT_PHONE || "—";
           heroSlug.textContent = CURRENT_SLUG || "—";
           heroAction.textContent = "Entrer par PIN";
-          heroStatusHint.textContent = "Passe d’abord par pin.html pour ouvrir la session.";
+          heroStatusHint.textContent = "Passe d'abord par pin.html pour ouvrir la session.";
           subline.textContent = "Aucune session active détectée.";
-          setMsg("Aucun téléphone trouvé. Ouvre d’abord pin.html.", "bad");
-          list.innerHTML = `
-            <div class="card">
-              <div class="cardInner">
-                <div class="empty">
-                  Pas de session active. Reviens sur <b>pin.html</b> pour entrer dans le module PRO-EXPLORE.
-                </div>
-              </div>
-            </div>
-          `;
+          setMsg("Aucun téléphone trouvé. Ouvre d'abord pin.html.", "bad");
+          list.innerHTML = `<div class="card"><div class="cardInner"><div class="empty">Pas de session active. Reviens sur <b>pin.html</b> pour entrer dans le module PRO-EXPLORE.</div></div></div>`;
           setClawMissingAccess();
           document.documentElement.style.visibility = "";
           return;
