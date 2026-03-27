@@ -1,22 +1,23 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <meta name="theme-color" content="#06130f"/>
+  <meta name="description" content="PRO-EXPLORE — cockpit terrain DIGIY avec navigation CLAW."/>
   <title>PRO-EXPLORE — Cockpit</title>
-  <meta name="theme-color" content="#06130f" />
-  <meta
-    name="description"
-    content="PRO-EXPLORE — cockpit terrain DIGIY pour lire les lieux, les zones et les catégories."
-  />
 
   <script>
     window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
     window.DIGIY_SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
     window.DIGIY_SUPABASE_ANON = window.DIGIY_SUPABASE_ANON_KEY;
     window.DIGIY_MODULE = "EXPLORE";
+    window.DIGIY_LOGIN_URL = "./pin.html";
+    document.documentElement.style.visibility = "hidden";
   </script>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./guad.js?v=explore-cockpit-guard-1"></script>
 
   <style>
     :root{
@@ -25,17 +26,19 @@
       --card:#0b241b;
       --card2:#102b22;
       --line:rgba(255,255,255,.08);
-      --line2:rgba(212,175,55,.16);
       --ink:#f8fafc;
       --muted:rgba(248,250,252,.72);
       --soft:rgba(248,250,252,.52);
       --gold:#d4af37;
       --gold2:#f3d46b;
+      --blue:#38bdf8;
+      --blue2:#7dd3fc;
       --ok:#22c55e;
       --warn:#f59e0b;
       --bad:#ef4444;
-      --radius:24px;
+      --radius:22px;
       --shadow:0 24px 60px rgba(0,0,0,.28);
+      --focus:rgba(212,175,55,.32);
     }
 
     *{box-sizing:border-box}
@@ -45,15 +48,16 @@
       color:var(--ink);
       font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
-        radial-gradient(circle at top, rgba(212,175,55,.09), transparent 26%),
+        radial-gradient(circle at top, rgba(212,175,55,.08), transparent 24%),
+        radial-gradient(circle at right bottom, rgba(56,189,248,.08), transparent 22%),
         linear-gradient(180deg, #071510 0%, #06130f 48%, #04100c 100%);
     }
 
     a{color:inherit;text-decoration:none}
-    button,input,select{font:inherit}
+    button{font:inherit}
 
     .wrap{
-      width:min(100%, 1220px);
+      width:min(100%, 1240px);
       margin:0 auto;
       padding:18px 14px 42px;
     }
@@ -63,7 +67,8 @@
       align-items:flex-start;
       justify-content:space-between;
       gap:14px;
-      margin-bottom:18px;
+      flex-wrap:wrap;
+      margin-bottom:16px;
     }
 
     .brand{
@@ -98,8 +103,8 @@
     }
 
     .title{
-      font-size:clamp(18px, 2vw, 28px);
-      font-weight:900;
+      font-size:clamp(18px, 2vw, 30px);
+      font-weight:1000;
       line-height:1.08;
       letter-spacing:-.03em;
       white-space:nowrap;
@@ -111,6 +116,7 @@
       margin-top:4px;
       color:var(--muted);
       font-size:13px;
+      line-height:1.45;
     }
 
     .topActions{
@@ -136,27 +142,90 @@
     }
 
     .btn:active{transform:translateY(1px)}
+    .btn[disabled]{opacity:.6;cursor:not-allowed}
     .btn.primary{
       background:linear-gradient(135deg, var(--gold), var(--gold2));
       color:#13200d;
       box-shadow:0 14px 30px rgba(212,175,55,.22);
     }
-
     .btn.secondary{
       background:rgba(255,255,255,.05);
       border:1px solid rgba(255,255,255,.08);
       color:var(--ink);
     }
-
     .btn.ghost{
       background:transparent;
       border:1px solid var(--line);
       color:var(--ink);
     }
+    .btn.info{
+      background:rgba(56,189,248,.10);
+      border:1px solid rgba(56,189,248,.22);
+      color:#d8f2ff;
+    }
+
+    .nav{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .nav a{
+      min-height:42px;
+      display:inline-flex;
+      align-items:center;
+      padding:0 14px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+      color:#eef4f1;
+      font-size:13px;
+      font-weight:800;
+    }
+
+    .nav a.active{
+      border-color:rgba(212,175,55,.22);
+      background:rgba(212,175,55,.08);
+      color:var(--gold2);
+    }
+
+    .status{
+      margin-bottom:16px;
+      border-radius:18px;
+      padding:14px 16px;
+      font-size:14px;
+      line-height:1.5;
+      font-weight:700;
+      display:block;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+    }
+
+    .status.info{
+      color:#dbeafe;
+      border-color:rgba(96,165,250,.18);
+      background:rgba(59,130,246,.08);
+    }
+    .status.ok{
+      color:#bbf7d0;
+      border-color:rgba(34,197,94,.18);
+      background:rgba(34,197,94,.08);
+    }
+    .status.warn{
+      color:#fde68a;
+      border-color:rgba(245,158,11,.18);
+      background:rgba(245,158,11,.08);
+    }
+    .status.bad{
+      color:#fecaca;
+      border-color:rgba(239,68,68,.18);
+      background:rgba(239,68,68,.08);
+    }
 
     .hero{
       display:grid;
-      grid-template-columns:1.25fr .75fr;
+      grid-template-columns:1.05fr .95fr;
       gap:16px;
       margin-bottom:16px;
     }
@@ -177,7 +246,7 @@
         linear-gradient(180deg, var(--card), var(--card2));
     }
 
-    .badge{
+    .heroBadge{
       display:inline-flex;
       align-items:center;
       gap:8px;
@@ -195,7 +264,7 @@
 
     .heroTitle{
       margin:0 0 10px;
-      font-size:clamp(28px, 4vw, 46px);
+      font-size:clamp(26px, 4vw, 42px);
       line-height:1.02;
       letter-spacing:-.04em;
     }
@@ -208,25 +277,33 @@
       max-width:60ch;
     }
 
-    .heroTags{
+    .heroPills{
       display:flex;
       flex-wrap:wrap;
-      gap:10px;
-      margin-top:18px;
+      gap:8px;
+      margin-top:14px;
     }
 
     .pill{
-      min-height:38px;
-      border-radius:999px;
-      padding:0 13px;
       display:inline-flex;
       align-items:center;
       gap:8px;
-      background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.08);
-      color:#eef6f2;
-      font-weight:700;
-      font-size:13px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.04);
+      color:var(--ink);
+      font-size:12px;
+      font-weight:900;
+      max-width:100%;
+      word-break:break-word;
+    }
+
+    .heroActions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:16px;
     }
 
     .heroSide{
@@ -255,10 +332,11 @@
     }
 
     .miniValue{
-      font-size:22px;
+      font-size:20px;
       font-weight:900;
-      line-height:1.1;
+      line-height:1.15;
       letter-spacing:-.03em;
+      word-break:break-word;
     }
 
     .miniHint{
@@ -268,271 +346,254 @@
       line-height:1.45;
     }
 
-    .nav{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-bottom:16px;
-    }
-
-    .nav a{
-      min-height:42px;
-      display:inline-flex;
-      align-items:center;
-      padding:0 14px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.04);
-      color:#eef4f1;
-      font-size:13px;
-      font-weight:800;
-    }
-
     .stats{
       display:grid;
-      grid-template-columns:repeat(4, 1fr);
-      gap:14px;
+      grid-template-columns:repeat(4,1fr);
+      gap:12px;
       margin-bottom:16px;
     }
 
-    .statCard{
-      padding:18px;
-      border-radius:22px;
-      border:1px solid var(--line);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+    .stat{
+      padding:16px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
       box-shadow:var(--shadow);
     }
 
     .statLabel{
-      color:var(--soft);
+      color:var(--muted);
       font-size:12px;
       font-weight:800;
       text-transform:uppercase;
-      letter-spacing:.09em;
-      margin-bottom:10px;
+      letter-spacing:.08em;
+      margin-bottom:8px;
     }
 
     .statValue{
-      font-size:34px;
+      font-size:28px;
+      font-weight:1000;
       line-height:1;
-      font-weight:900;
       letter-spacing:-.04em;
     }
 
-    .statFoot{
-      margin-top:10px;
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.45;
-      min-height:18px;
-    }
-
-    .grid2{
+    .layout{
       display:grid;
       grid-template-columns:1.1fr .9fr;
       gap:16px;
-      margin-bottom:16px;
     }
 
-    .cardHead{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom:14px;
-    }
-
-    .cardTitle{
+    .cardBody{padding:20px}
+    .sectionTitle{
+      margin:0 0 14px;
       font-size:20px;
       font-weight:900;
       letter-spacing:-.02em;
-      margin:0;
     }
 
-    .cardSub{
+    .sectionSub{
+      margin:-4px 0 14px;
       color:var(--muted);
       font-size:13px;
-      line-height:1.45;
-      margin-top:4px;
-    }
-
-    .cardBody{
-      padding:20px;
-    }
-
-    .insightBox{
-      display:grid;
-      gap:10px;
-    }
-
-    .insight{
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:18px;
-      padding:14px;
-      background:rgba(255,255,255,.03);
-    }
-
-    .insight strong{
-      display:block;
-      font-size:14px;
-      margin-bottom:6px;
-    }
-
-    .insight span{
-      color:var(--muted);
-      font-size:14px;
       line-height:1.5;
     }
 
-    .list{
-      display:grid;
-      gap:10px;
-    }
-
-    .rowItem{
-      display:flex;
-      gap:12px;
-      align-items:flex-start;
-      justify-content:space-between;
+    .box{
       border:1px solid rgba(255,255,255,.08);
       background:rgba(255,255,255,.03);
       border-radius:18px;
       padding:14px;
+      display:grid;
+      gap:8px;
+      margin-bottom:12px;
     }
 
-    .rowMain{
-      min-width:0;
-      flex:1 1 auto;
+    .box strong{
+      font-size:14px;
     }
 
-    .rowTitle{
-      font-size:15px;
-      font-weight:900;
-      line-height:1.3;
-      margin-bottom:5px;
-      word-break:break-word;
-    }
-
-    .rowMeta{
+    .box span{
       color:var(--muted);
       font-size:13px;
-      line-height:1.45;
+      line-height:1.55;
       word-break:break-word;
     }
 
-    .tag{
-      flex:0 0 auto;
-      min-height:34px;
-      padding:0 12px;
-      border-radius:999px;
-      display:inline-flex;
-      align-items:center;
-      background:rgba(212,175,55,.08);
-      border:1px solid rgba(212,175,55,.18);
-      color:var(--gold2);
-      font-size:12px;
-      font-weight:900;
-      text-transform:uppercase;
-      letter-spacing:.04em;
-    }
-
-    .status{
-      display:inline-flex;
-      align-items:center;
-      gap:7px;
-      padding:6px 10px;
-      border-radius:999px;
-      font-size:12px;
-      font-weight:900;
-      letter-spacing:.04em;
-      text-transform:uppercase;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.04);
-    }
-
-    .status.ok{
-      color:#86efac;
-      border-color:rgba(34,197,94,.25);
-      background:rgba(34,197,94,.08);
-    }
-
-    .status.warn{
-      color:#fde68a;
-      border-color:rgba(245,158,11,.22);
-      background:rgba(245,158,11,.08);
-    }
-
-    .status.bad{
-      color:#fca5a5;
-      border-color:rgba(239,68,68,.22);
-      background:rgba(239,68,68,.08);
-    }
-
-    .actionsGrid{
+    .places{
       display:grid;
-      grid-template-columns:repeat(2,1fr);
+      gap:12px;
+    }
+
+    .placeCard{
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+      border-radius:18px;
+      padding:14px;
+      display:grid;
       gap:10px;
     }
 
-    .actionTile{
-      min-height:110px;
-      border-radius:20px;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.03);
-      padding:16px;
-      display:grid;
-      align-content:space-between;
+    .placeTop{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:flex-start;
     }
 
-    .actionTile strong{
-      font-size:16px;
-      line-height:1.25;
+    .placeName{
+      font-size:17px;
+      font-weight:1000;
+      line-height:1.2;
     }
 
-    .actionTile span{
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.45;
+    .placeMeta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
     }
 
-    .empty{
-      border:1px dashed rgba(255,255,255,.12);
-      border-radius:18px;
-      padding:18px;
+    .metaTag{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.04);
+      color:var(--ink);
+      font-size:11px;
+      font-weight:900;
+    }
+
+    .placeDesc{
       color:var(--muted);
       font-size:14px;
       line-height:1.6;
+    }
+
+    .placeActions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .empty{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.6;
+      border:1px dashed rgba(255,255,255,.12);
+      border-radius:18px;
+      padding:18px;
       background:rgba(255,255,255,.02);
     }
 
-    .msg{
-      margin-bottom:16px;
-      border-radius:18px;
-      padding:14px 16px;
-      font-size:14px;
-      line-height:1.5;
-      font-weight:700;
-      display:none;
+    .clawGrid{
+      display:grid;
+      gap:14px;
+      margin-top:16px;
+      grid-template-columns:1.08fr .92fr;
     }
 
-    .msg.show{display:block}
-    .msg.info{
-      color:#dbeafe;
+    .clawCard{
+      padding:18px;
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      background:linear-gradient(180deg, rgba(96,165,250,.08), rgba(34,197,94,.05));
+      box-shadow:var(--shadow);
+    }
+
+    .clawHead{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+
+    .clawKicker{
+      font-size:11px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:#b7ecff;
+      font-weight:1000;
+      margin-bottom:6px;
+    }
+
+    .clawTitle{
+      margin:0;
+      font-size:20px;
+      font-weight:1000;
+    }
+
+    .clawMode{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:9px 12px;
+      border-radius:999px;
       border:1px solid rgba(96,165,250,.18);
-      background:rgba(59,130,246,.08);
+      background:rgba(96,165,250,.08);
+      color:#d7efff;
+      font-size:12px;
+      font-weight:950;
     }
 
-    .msg.bad{
-      color:#fecaca;
-      border:1px solid rgba(239,68,68,.18);
-      background:rgba(239,68,68,.08);
+    .clawText{
+      color:var(--muted);
+      font-size:14px;
+      font-weight:800;
+      line-height:1.65;
     }
 
-    .msg.ok{
-      color:#bbf7d0;
-      border:1px solid rgba(34,197,94,.18);
-      background:rgba(34,197,94,.08);
+    .clawPills{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:12px;
+    }
+
+    .clawPill{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.16);
+      color:var(--ink);
+      font-size:12px;
+      font-weight:950;
+    }
+
+    .clawList{
+      display:grid;
+      gap:10px;
+      margin-top:12px;
+    }
+
+    .clawItem{
+      padding:14px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.16);
+    }
+
+    .clawItem strong{
+      display:block;
+      margin-bottom:6px;
+      font-size:14px;
+      font-weight:1000;
+      color:#ecfff4;
+    }
+
+    .clawItem span{
+      color:var(--muted);
+      font-size:13px;
+      font-weight:800;
+      line-height:1.55;
+      display:block;
     }
 
     .foot{
@@ -544,20 +605,20 @@
     }
 
     @media (max-width: 1080px){
-      .stats{grid-template-columns:repeat(2, 1fr)}
-      .grid2{grid-template-columns:1fr}
-      .hero{grid-template-columns:1fr}
+      .hero, .layout, .clawGrid{grid-template-columns:1fr}
+      .stats{grid-template-columns:1fr 1fr}
+    }
+
+    @media (max-width: 760px){
+      .stats{grid-template-columns:1fr}
     }
 
     @media (max-width: 640px){
       .wrap{padding:14px 12px 34px}
       .topbar{flex-direction:column}
       .topActions{width:100%;justify-content:flex-start}
-      .stats{grid-template-columns:1fr}
-      .actionsGrid{grid-template-columns:1fr}
-      .heroMain,.heroSide,.cardBody{padding:18px}
-      .rowItem{flex-direction:column;align-items:flex-start}
-      .tag{align-self:flex-start}
+      .heroMain,.heroSide,.cardBody,.clawCard{padding:18px}
+      .topActions > *, .heroActions > *, .nav > *{flex:1 1 auto}
     }
   </style>
 </head>
@@ -569,543 +630,829 @@
         <div class="brandText">
           <div class="kicker">DIGIYLYFE — Quartier Général</div>
           <div class="title">PRO-EXPLORE • Cockpit terrain</div>
-          <div class="sub" id="subline">Lecture des lieux, zones et catégories.</div>
+          <div class="sub" id="subline">Lecture simple des lieux, publication, et navigation CLAW sur le rail réel.</div>
         </div>
       </div>
 
       <div class="topActions">
-        <a class="btn ghost" href="./index.html">Vitrine</a>
-        <a class="btn secondary" href="./pin.html">PIN</a>
-        <a class="btn secondary" href="./lieux.html">Lieux</a>
-        <a class="btn primary" href="./submit.html">+ Ajouter un lieu</a>
+        <a class="btn ghost" id="btnAccessTop" href="./index.html">Vitrine</a>
+        <a class="btn secondary" id="btnLieuxTop" href="./lieux.html">Lieux</a>
+        <a class="btn secondary" id="btnSubmitTop" href="./submit.html">Ajouter / éditer</a>
+        <a class="btn info" id="btnClawTop" href="./claw.html">CLAW</a>
       </div>
     </header>
 
-    <div id="msg" class="msg info"></div>
+    <nav class="nav" aria-label="Navigation PRO EXPLORE">
+      <a id="navAccess" href="./index.html">Vitrine</a>
+      <a id="navCockpit" class="active" href="./cockpit.html">Cockpit</a>
+      <a id="navLieux" href="./lieux.html">Lieux</a>
+      <a id="navSubmit" href="./submit.html">Ajouter / éditer</a>
+      <a id="navPin" href="./pin.html">PIN</a>
+      <a id="navClaw" href="./claw.html">CLAW</a>
+    </nav>
+
+    <div id="status" class="status info">Préparation du cockpit EXPLORE…</div>
 
     <section class="hero">
       <article class="panel heroMain">
-        <div class="badge">Centre de vision terrain</div>
-        <h1 class="heroTitle">Voir vite. Lire juste. Décider mieux.</h1>
-        <p class="heroLead">
-          Ce cockpit te montre l’état du terrain PRO-EXPLORE : volume de lieux,
-          zones suivies, catégorie dominante, dernières mises à jour et premiers signaux de lecture locale.
+        <div class="heroBadge" id="heroBadge">Lecture terrain</div>
+        <h1 class="heroTitle" id="heroTitle">Voir les lieux, sans usine à gaz.</h1>
+        <p class="heroLead" id="heroLead">
+          Ici tu lis rapidement le rail EXPLORE : accès, slug, lieux rattachés, publication et prochaine action simple.
         </p>
 
-        <div class="heroTags">
-          <div class="pill">📍 Zones</div>
-          <div class="pill">🎯 Catégories</div>
-          <div class="pill">🧱 Lieux publiés</div>
-          <div class="pill">🛠️ Pilotage simple</div>
+        <div class="heroPills" id="heroPills">
+          <div class="pill">Module : EXPLORE</div>
+        </div>
+
+        <div class="heroActions">
+          <a class="btn primary" id="btnPrimaryAction" href="./submit.html">Ajouter un lieu</a>
+          <a class="btn secondary" id="btnOpenLieux" href="./lieux.html">Voir les lieux</a>
+          <a class="btn secondary" id="btnOpenClaw" href="./claw.html">Ouvrir CLAW</a>
+          <a class="btn ghost" id="btnOpenPin" href="./pin.html">Entrer par PIN</a>
         </div>
       </article>
 
       <aside class="panel heroSide">
         <div class="miniStat">
-          <div class="miniLabel">Téléphone pilote</div>
-          <div class="miniValue" id="heroPhone">—</div>
-          <div class="miniHint">Identifiant de pilotage PRO-EXPLORE.</div>
+          <div class="miniLabel">Slug actif</div>
+          <div class="miniValue" id="heroSlug">—</div>
+          <div class="miniHint">Le slug EXPLORE lu dans l’URL, le guard ou le stockage.</div>
         </div>
 
         <div class="miniStat">
-          <div class="miniLabel">État du rail</div>
-          <div class="miniValue" id="heroStatus">Chargement…</div>
-          <div class="miniHint" id="heroStatusHint">Connexion au backend réel en cours.</div>
+          <div class="miniLabel">Téléphone pilote</div>
+          <div class="miniValue" id="heroPhone">—</div>
+          <div class="miniHint">Le numéro relié à la session ouverte.</div>
+        </div>
+
+        <div class="miniStat">
+          <div class="miniLabel">Lieu sélectionné</div>
+          <div class="miniValue" id="heroPlace">—</div>
+          <div class="miniHint">Le lieu principal lu via slug ou la première fiche du pilote.</div>
         </div>
       </aside>
     </section>
 
-    <nav class="nav">
-      <a href="./cockpit.html">Cockpit</a>
-      <a href="./lieux.html">Lieux</a>
-      <a href="./submit.html">Ajouter / éditer</a>
-      <a href="./index.html">Vitrine publique</a>
-      <a href="./pin.html">Entrée PIN</a>
-    </nav>
-
     <section class="stats">
-      <article class="statCard">
-        <div class="statLabel">Lieux totaux</div>
-        <div class="statValue" id="totalPlaces">—</div>
-        <div class="statFoot">Tous les lieux liés à ce numéro.</div>
+      <article class="stat">
+        <div class="statLabel">Lieux</div>
+        <div class="statValue" id="sPlaces">0</div>
       </article>
-
-      <article class="statCard">
-        <div class="statLabel">Lieux publiés</div>
-        <div class="statValue" id="totalPublished">—</div>
-        <div class="statFoot">Visibles côté public.</div>
+      <article class="stat">
+        <div class="statLabel">Publiés</div>
+        <div class="statValue" id="sPublished">0</div>
       </article>
-
-      <article class="statCard">
-        <div class="statLabel">Villes suivies</div>
-        <div class="statValue" id="totalCities">—</div>
-        <div class="statFoot">Territoires déjà touchés.</div>
+      <article class="stat">
+        <div class="statLabel">Brouillons</div>
+        <div class="statValue" id="sDrafts">0</div>
       </article>
-
-      <article class="statCard">
-        <div class="statLabel">Zones suivies</div>
-        <div class="statValue" id="totalZones">—</div>
-        <div class="statFoot">Zones ou sous-zones enregistrées.</div>
+      <article class="stat">
+        <div class="statLabel">Mis en avant</div>
+        <div class="statValue" id="sFeatured">0</div>
       </article>
     </section>
 
-    <section class="grid2">
+    <section class="layout">
       <article class="panel">
         <div class="cardBody">
-          <div class="cardHead">
-            <div>
-              <h2 class="cardTitle">Lecture terrain</h2>
-              <div class="cardSub">Synthèse directe depuis le rail réel PRO-EXPLORE.</div>
-            </div>
-            <div id="accessBadge" class="status warn">Chargement</div>
+          <h2 class="sectionTitle">Lieu pilote</h2>
+          <p class="sectionSub">Le cockpit met en avant le lieu lu par le slug, sinon le premier lieu du pilote.</p>
+
+          <div class="box">
+            <strong id="mainPlaceName">Aucun lieu lu</strong>
+            <span id="mainPlaceText">Le slug ou la liste des lieux n’a pas encore donné de lecture utile.</span>
           </div>
 
-          <div class="insightBox" id="insightBox">
-            <div class="empty">Lecture du terrain en cours…</div>
+          <div class="box">
+            <strong>Navigation utile</strong>
+            <span id="linksText">Le cockpit recoud vitrine, lieux, édition, pin et CLAW sur le même contexte.</span>
+          </div>
+
+          <div class="placeActions" style="margin-bottom:14px">
+            <a class="btn secondary" id="btnEditCurrent" href="./submit.html">Éditer ce lieu</a>
+            <a class="btn secondary" id="btnViewCurrent" href="./index.html">Voir la vitrine</a>
+            <a class="btn info" id="btnClawCurrent" href="./claw.html">Lire avec CLAW</a>
+          </div>
+
+          <h2 class="sectionTitle">Lieux du pilote</h2>
+          <p class="sectionSub">Lecture directe des lieux rattachés au téléphone actif.</p>
+
+          <div class="places" id="placesBox">
+            <div class="empty">Chargement des lieux…</div>
           </div>
         </div>
       </article>
 
-      <article class="panel">
-        <div class="cardBody">
-          <div class="cardHead">
-            <div>
-              <h2 class="cardTitle">Actions rapides</h2>
-              <div class="cardSub">Navigation croisée pour éviter les pages orphelines.</div>
+      <aside>
+        <section class="panel">
+          <div class="cardBody">
+            <h2 class="sectionTitle">Repères cockpit</h2>
+            <p class="sectionSub">Le cockpit lit le terrain et pousse la prochaine action logique.</p>
+
+            <div class="box">
+              <strong>Ville</strong>
+              <span id="boxCity">—</span>
+            </div>
+
+            <div class="box">
+              <strong>Zone</strong>
+              <span id="boxZone">—</span>
+            </div>
+
+            <div class="box">
+              <strong>Catégorie</strong>
+              <span id="boxCategory">—</span>
+            </div>
+
+            <div class="box">
+              <strong>Publication</strong>
+              <span id="boxPublished">—</span>
+            </div>
+
+            <div class="box">
+              <strong>Action simple</strong>
+              <span id="boxAction">—</span>
             </div>
           </div>
+        </section>
 
-          <div class="actionsGrid">
-            <a class="actionTile" href="./submit.html">
-              <strong>Ajouter un lieu</strong>
-              <span>Créer une nouvelle fiche terrain.</span>
-            </a>
-
-            <a class="actionTile" href="./lieux.html">
-              <strong>Gérer les lieux</strong>
-              <span>Voir, publier, corriger, archiver.</span>
-            </a>
-
-            <a class="actionTile" href="./index.html">
-              <strong>Voir la vitrine</strong>
-              <span>Contrôler ce qui est visible côté public.</span>
-            </a>
-
-            <a class="actionTile" href="./pin.html">
-              <strong>Retour PIN</strong>
-              <span>Revenir à l’entrée sécurisée du module.</span>
-            </a>
-          </div>
-        </div>
-      </article>
-    </section>
-
-    <section class="grid2">
-      <article class="panel">
-        <div class="cardBody">
-          <div class="cardHead">
-            <div>
-              <h2 class="cardTitle">Derniers lieux</h2>
-              <div class="cardSub">Les 8 dernières fiches remontées par le cockpit.</div>
+        <section class="clawGrid" id="clawSection">
+          <article class="clawCard">
+            <div class="clawHead">
+              <div>
+                <div class="clawKicker">CLAW DIGIY</div>
+                <h2 class="clawTitle">Lecture légère du cockpit</h2>
+              </div>
+              <div class="clawMode" id="clawMode">Analyse légère</div>
             </div>
-            <a class="btn secondary" href="./lieux.html">Ouvrir lieux</a>
-          </div>
 
-          <div id="lastPlacesList" class="list">
-            <div class="empty">Aucun lieu chargé pour le moment.</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="panel">
-        <div class="cardBody">
-          <div class="cardHead">
-            <div>
-              <h2 class="cardTitle">Top zones</h2>
-              <div class="cardSub">Lecture simple des zones actuellement connues.</div>
+            <div class="clawText" id="clawSummary">
+              CLAW attend le slug, l’accès et le lieu principal pour te pousser le bon cran.
             </div>
-          </div>
 
-          <div id="zoneList" class="list">
-            <div class="empty">Zones en cours de chargement…</div>
-          </div>
-        </div>
-      </article>
-    </section>
+            <div class="clawPills" id="clawPills"></div>
+          </article>
 
-    <section class="grid2">
-      <article class="panel">
-        <div class="cardBody">
-          <div class="cardHead">
-            <div>
-              <h2 class="cardTitle">Top catégories</h2>
-              <div class="cardSub">Vue rapide sur les catégories présentes.</div>
+          <article class="clawCard">
+            <div class="clawList" id="clawList">
+              <div class="clawItem">
+                <strong>Chargement</strong>
+                <span>CLAW prépare la lecture terrain de ce cockpit.</span>
+              </div>
             </div>
-          </div>
-
-          <div id="categoryList" class="list">
-            <div class="empty">Catégories en cours de chargement…</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="panel">
-        <div class="cardBody">
-          <div class="cardHead">
-            <div>
-              <h2 class="cardTitle">État du module</h2>
-              <div class="cardSub">Lecture opérationnelle du rail PRO-EXPLORE.</div>
-            </div>
-          </div>
-
-          <div class="insightBox" id="moduleStateBox">
-            <div class="insight">
-              <strong>Backend réel branché</strong>
-              <span>Le cockpit lit directement les RPC SQL posées et validées en réel.</span>
-            </div>
-            <div class="insight">
-              <strong>Doctrime DIGIY respectée</strong>
-              <span>Lecture simple, terrain d’abord, sans tableau décoratif inutile.</span>
-            </div>
-            <div class="insight">
-              <strong>Suite logique</strong>
-              <span>Après ce cockpit, les prochains rails naturels sont <b>lieux.html</b> puis <b>submit.html</b>.</span>
-            </div>
-          </div>
-        </div>
-      </article>
+          </article>
+        </section>
+      </aside>
     </section>
 
     <div class="foot">
-      PRO-EXPLORE • cockpit terrain DIGIY • lecture locale simple • backend réel branché
+      PRO-EXPLORE • cockpit terrain • lecture simple • nav CLAW recousue
     </div>
   </div>
 
   <script>
-    (function(){
+    (() => {
       "use strict";
 
       const MODULE = "EXPLORE";
+      const MODULE_PREFIX = "digiy_explore";
       const SESSION_KEY = "digiy_explore_session";
       const MAX_AGE_MS = 8 * 60 * 60 * 1000;
 
+      const PATHS = {
+        access: "./index.html",
+        cockpit: "./cockpit.html",
+        lieux: "./lieux.html",
+        submit: "./submit.html",
+        pin: "./pin.html",
+        claw: "./claw.html"
+      };
+
       const supabase = window.supabase.createClient(
         window.DIGIY_SUPABASE_URL,
-        window.DIGIY_SUPABASE_ANON_KEY
+        window.DIGIY_SUPABASE_ANON_KEY || window.DIGIY_SUPABASE_ANON
       );
 
       const $ = (id) => document.getElementById(id);
 
-      const msg = $("msg");
-      const heroPhone = $("heroPhone");
-      const heroStatus = $("heroStatus");
-      const heroStatusHint = $("heroStatusHint");
-      const subline = $("subline");
-      const accessBadge = $("accessBadge");
+      let CURRENT_STATE = null;
+      let CURRENT_PHONE = "";
+      let CURRENT_SLUG = "";
+      let CURRENT_PLACES = [];
+      let CURRENT_MAIN = null;
 
-      const totalPlaces = $("totalPlaces");
-      const totalPublished = $("totalPublished");
-      const totalCities = $("totalCities");
-      const totalZones = $("totalZones");
-
-      const insightBox = $("insightBox");
-      const lastPlacesList = $("lastPlacesList");
-      const zoneList = $("zoneList");
-      const categoryList = $("categoryList");
-
-      function setMsg(text, type){
-        if(!text){
-          msg.className = "msg";
-          msg.textContent = "";
-          return;
-        }
-        msg.className = "msg show " + (type || "info");
-        msg.textContent = text;
+      function normalizeSlug(v){
+        return String(v || "")
+          .trim()
+          .toLowerCase()
+          .replace(/\\s+/g, "-")
+          .replace(/[^a-z0-9-]/g, "")
+          .replace(/-+/g, "-")
+          .replace(/^-|-$/g, "");
       }
 
       function normalizePhone(v){
-        return String(v || "").replace(/[^\d]/g, "");
+        return String(v || "").replace(/[^\\d]/g, "");
       }
 
       function safeJsonParse(raw){
         try{ return JSON.parse(raw); }catch(_){ return null; }
       }
 
-      function getSession(){
+      function storageGet(key){
         try{
-          const raw = localStorage.getItem(SESSION_KEY);
-          if(!raw) return null;
-          const parsed = safeJsonParse(raw);
-          if(!parsed || !parsed.phone || !parsed.ts) return null;
-          if((Date.now() - parsed.ts) > MAX_AGE_MS){
-            localStorage.removeItem(SESSION_KEY);
-            return null;
-          }
-          return parsed;
-        }catch(_){
-          return null;
-        }
-      }
-
-      function getPhone(){
-        const url = new URL(window.location.href);
-        const fromUrl = normalizePhone(url.searchParams.get("phone"));
-        if(fromUrl) return fromUrl;
-
-        const session = getSession();
-        if(session?.phone) return normalizePhone(session.phone);
-
+          const s = sessionStorage.getItem(key);
+          if(s) return s;
+        }catch(_){}
+        try{
+          const l = localStorage.getItem(key);
+          if(l) return l;
+        }catch(_){}
         return "";
       }
 
-      function fmtDate(v){
+      function storageSet(key, value){
+        try{ sessionStorage.setItem(key, String(value ?? "")); }catch(_){}
+        try{ localStorage.setItem(key, String(value ?? "")); }catch(_){}
+      }
+
+      function getSession(){
+        const direct = safeJsonParse(storageGet(SESSION_KEY));
+        if(direct?.phone && direct?.ts && (Date.now() - direct.ts) <= MAX_AGE_MS){
+          return direct;
+        }
+
+        const guardSession = window.DIGIY_GUARD?.getSession?.();
+        if(guardSession?.phone){
+          return guardSession;
+        }
+
+        return null;
+      }
+
+      function getFallbackSlug(){
+        const qs = new URLSearchParams(location.search);
+        const saved = getSession();
+
+        return normalizeSlug(
+          qs.get("slug") ||
+          window.DIGIY_GUARD?.state?.slug ||
+          storageGet(`${MODULE_PREFIX}_slug`) ||
+          storageGet(`${MODULE_PREFIX}_last_slug`) ||
+          storageGet("digiy_last_slug") ||
+          storageGet("DIGIY_SLUG") ||
+          saved?.slug ||
+          ""
+        );
+      }
+
+      function getFallbackPhone(){
+        const qs = new URLSearchParams(location.search);
+        const saved = getSession();
+
+        return normalizePhone(
+          qs.get("phone") ||
+          window.DIGIY_GUARD?.state?.phone ||
+          storageGet(`${MODULE_PREFIX}_phone`) ||
+          storageGet("digiy_last_phone") ||
+          storageGet("DIGIY_PHONE") ||
+          saved?.phone ||
+          ""
+        );
+      }
+
+      function withSlug(path, slug = "", extra = {}){
+        const clean = normalizeSlug(slug);
+        const url = new URL(path, location.href);
+
+        if(clean) url.searchParams.set("slug", clean);
+
+        Object.entries(extra || {}).forEach(([key, value]) => {
+          if(value !== null && value !== undefined && String(value).trim() !== ""){
+            url.searchParams.set(key, String(value));
+          }
+        });
+
+        const sameOrigin = url.origin === location.origin;
+        return sameOrigin ? `${url.pathname.split("/").pop()}${url.search}` : url.toString();
+      }
+
+      function withPhone(path, phone = "", extra = {}){
+        const clean = normalizePhone(phone);
+        const url = new URL(path, location.href);
+
+        if(clean) url.searchParams.set("phone", clean);
+
+        Object.entries(extra || {}).forEach(([key, value]) => {
+          if(value !== null && value !== undefined && String(value).trim() !== ""){
+            url.searchParams.set(key, String(value));
+          }
+        });
+
+        const sameOrigin = url.origin === location.origin;
+        return sameOrigin ? `${url.pathname.split("/").pop()}${url.search}` : url.toString();
+      }
+
+      function placeName(place){
+        return (
+          place?.public_name ||
+          place?.name ||
+          place?.title ||
+          "Lieu sans nom"
+        );
+      }
+
+      function placeCategory(place){
+        return (
+          place?.category_label ||
+          place?.category_name ||
+          place?.category_code ||
+          place?.subcategory ||
+          "Catégorie non précisée"
+        );
+      }
+
+      function placeCity(place){
+        return place?.city || "Ville non précisée";
+      }
+
+      function placeZone(place){
+        return place?.zone || place?.district || "Zone non précisée";
+      }
+
+      function placeShort(place){
+        return (
+          place?.short_description ||
+          place?.full_description ||
+          place?.description ||
+          "Lecture légère indisponible pour ce lieu."
+        );
+      }
+
+      function isPublished(place){
+        return place?.is_published === true || place?.published === true || place?.status === "published";
+      }
+
+      function isFeatured(place){
+        return place?.is_featured === true;
+      }
+
+      function setStatus(text, type = "info"){
+        const box = $("status");
+        box.textContent = text || "";
+        box.className = `status ${type}`;
+      }
+
+      function setClaw(mode, summary, pills = [], items = []){
+        $("clawMode").textContent = mode || "Analyse légère";
+        $("clawSummary").textContent = summary || "CLAW lit le rail sans bavarder.";
+
+        $("clawPills").innerHTML = (Array.isArray(pills) ? pills : [])
+          .filter(Boolean)
+          .map(p => `<div class="clawPill">${escapeHtml(p)}</div>`)
+          .join("");
+
+        $("clawList").innerHTML = (Array.isArray(items) ? items : [])
+          .filter(Boolean)
+          .map(item => `
+            <div class="clawItem">
+              <strong>${escapeHtml(item.title || "Point utile")}</strong>
+              <span>${escapeHtml(item.text || "—")}</span>
+            </div>
+          `)
+          .join("");
+      }
+
+      function setClawLoading(){
+        setClaw(
+          "Chargement",
+          "CLAW attend le guard, le téléphone actif et le lieu principal pour pousser la prochaine action utile.",
+          ["Module : EXPLORE", "Cockpit terrain", "Rail en préparation"],
+          [
+            {
+              title:"Lecture du cockpit",
+              text:"Le cockpit doit rester simple : accès, lieux, publication et direction utile."
+            },
+            {
+              title:"Navigation utile",
+              text:"Vitrine, lieux, édition, PIN et CLAW doivent suivre le même contexte."
+            }
+          ]
+        );
+      }
+
+      function setClawPreview(message){
+        setClaw(
+          "Aperçu",
+          "CLAW voit une coquille propre, mais l’accès ou l’identité restent à confirmer.",
+          [
+            CURRENT_SLUG ? `Slug : ${CURRENT_SLUG}` : "Slug absent",
+            CURRENT_PHONE ? `Téléphone : ${CURRENT_PHONE}` : "Téléphone absent",
+            "PIN conseillé"
+          ],
+          [
+            {
+              title:"État actuel",
+              text: message || "Le cockpit reste en aperçu tant que le rail n’est pas ouvert."
+            },
+            {
+              title:"Action utile",
+              text:"Passe par pin.html pour ouvrir proprement la session EXPLORE."
+            }
+          ]
+        );
+      }
+
+      function setClawLive(place){
+        setClaw(
+          "Lecture vivante",
+          "CLAW lit le cockpit EXPLORE sans créer une usine : nombre de lieux, état de publication et prochaine action terrain.",
+          [
+            CURRENT_SLUG ? `Slug : ${CURRENT_SLUG}` : "Slug : —",
+            CURRENT_PHONE ? `Téléphone : ${CURRENT_PHONE}` : "Téléphone : —",
+            `${CURRENT_PLACES.length} lieu(x)`,
+            isPublished(place) ? "Lieu publié" : "Lieu à publier"
+          ],
+          [
+            {
+              title:"Lecture du rail",
+              text: place
+                ? `${placeName(place)} est le point principal lu par le cockpit.`
+                : "Le cockpit est vivant mais aucun lieu principal n’a encore été lu."
+            },
+            {
+              title:"Action utile",
+              text: !place
+                ? "Ajoute un lieu ou ouvre lieux.html pour enrichir le rail."
+                : isPublished(place)
+                  ? "Passe par CLAW ou submit.html pour affiner la micro-copy et la lecture publique."
+                  : "Le cran logique est la vérification puis la publication du lieu."
+            },
+            {
+              title:"Navigation interne",
+              text:"Tu peux circuler entre cockpit, lieux, submit, pin et CLAW sans changer de rail."
+            }
+          ]
+        );
+      }
+
+      function escapeHtml(v){
+        return String(v ?? "")
+          .replaceAll("&","&amp;")
+          .replaceAll("<","&lt;")
+          .replaceAll(">","&gt;")
+          .replaceAll('"',"&quot;")
+          .replaceAll("'","&#39;");
+      }
+
+      function buildLinks(){
+        const slug = CURRENT_SLUG;
+        const phone = CURRENT_PHONE;
+
+        const cockpitHref = slug ? withSlug(PATHS.cockpit, slug, phone ? { phone } : {}) : withPhone(PATHS.cockpit, phone);
+        const lieuxHref = phone ? withPhone(PATHS.lieux, phone, slug ? { slug } : {}) : withSlug(PATHS.lieux, slug);
+        const submitHref = phone ? withPhone(PATHS.submit, phone, slug ? { slug } : {}) : withSlug(PATHS.submit, slug);
+        const pinHref = slug ? withSlug(PATHS.pin, slug, phone ? { phone } : {}) : withPhone(PATHS.pin, phone);
+        const clawHref = slug ? withSlug(PATHS.claw, slug, phone ? { phone } : {}) : withPhone(PATHS.claw, phone);
+
+        $("navAccess").href = PATHS.access;
+        $("navCockpit").href = cockpitHref;
+        $("navLieux").href = lieuxHref;
+        $("navSubmit").href = submitHref;
+        $("navPin").href = pinHref;
+        $("navClaw").href = clawHref;
+
+        $("btnAccessTop").href = PATHS.access;
+        $("btnLieuxTop").href = lieuxHref;
+        $("btnSubmitTop").href = submitHref;
+        $("btnClawTop").href = clawHref;
+
+        $("btnOpenLieux").href = lieuxHref;
+        $("btnOpenClaw").href = clawHref;
+        $("btnOpenPin").href = pinHref;
+      }
+
+      async function resolveGuardState(){
+        const fallbackSlug = getFallbackSlug();
+        const fallbackPhone = getFallbackPhone();
+
+        if(!window.DIGIY_GUARD || typeof window.DIGIY_GUARD.ready !== "function"){
+          return {
+            preview:true,
+            access_ok:false,
+            slug:fallbackSlug,
+            phone:fallbackPhone,
+            reason:"guard_missing"
+          };
+        }
+
         try{
-          if(!v) return "—";
-          return new Date(v).toLocaleString("fr-FR", {
-            year:"numeric",
-            month:"2-digit",
-            day:"2-digit",
-            hour:"2-digit",
-            minute:"2-digit"
-          });
-        }catch(_){
-          return String(v || "—");
+          await window.DIGIY_GUARD.ready();
+        }catch{
+          return {
+            preview:true,
+            access_ok:false,
+            slug:fallbackSlug,
+            phone:fallbackPhone,
+            reason:"guard_error"
+          };
         }
+
+        const st = window.DIGIY_GUARD?.state || null;
+        if(!st){
+          return {
+            preview:true,
+            access_ok:false,
+            slug:fallbackSlug,
+            phone:fallbackPhone,
+            reason:"guard_empty"
+          };
+        }
+
+        return {
+          ...st,
+          slug: normalizeSlug(st.slug || fallbackSlug || ""),
+          phone: normalizePhone(st.phone || fallbackPhone || "")
+        };
       }
 
-      function escapeHtml(value){
-        return String(value ?? "")
-          .replaceAll("&", "&amp;")
-          .replaceAll("<", "&lt;")
-          .replaceAll(">", "&gt;")
-          .replaceAll('"', "&quot;")
-          .replaceAll("'", "&#039;");
-      }
+      async function loadPlacesByPhone(phone){
+        const clean = normalizePhone(phone);
+        if(!clean) return [];
 
-      function renderInsights(cockpit){
-        const total = Number(cockpit?.total_places || 0);
-        const pub = Number(cockpit?.total_published || 0);
-        const cities = Number(cockpit?.total_cities || 0);
-        const zones = Number(cockpit?.total_zones || 0);
-        const topCategory = cockpit?.top_category || "—";
-        const topZone = cockpit?.top_zone || "—";
-
-        const insights = [];
-
-        if(total === 0){
-          insights.push({
-            title: "Terrain encore vide",
-            text: "Aucun lieu n’est encore enregistré. Le premier cran utile est d’ajouter une fiche terrain."
-          });
-        } else {
-          insights.push({
-            title: "Base terrain posée",
-            text: total === 1
-              ? "Un premier lieu existe déjà dans le module. Le rail commence à vivre."
-              : total + " lieux sont déjà enregistrés dans PRO-EXPLORE."
-          });
-        }
-
-        if(pub === 0){
-          insights.push({
-            title: "Rien n’est encore visible côté public",
-            text: "Publie au moins un lieu pour faire respirer la vitrine et nourrir la lecture publique."
-          });
-        } else {
-          insights.push({
-            title: "Lecture publique active",
-            text: pub === 1
-              ? "Un lieu publié remonte déjà côté public."
-              : pub + " lieux publiés alimentent déjà la lecture publique."
-          });
-        }
-
-        insights.push({
-          title: "Catégorie dominante",
-          text: topCategory === "—" ? "Pas encore de catégorie dominante publiée." : "La catégorie dominante actuelle est " + topCategory + "."
+        const { data, error } = await supabase.rpc("digiy_explore_list_places_by_phone", {
+          p_owner_phone: clean
         });
 
-        insights.push({
-          title: "Zone forte",
-          text: topZone === "—" ? "Aucune zone publiée ne ressort encore." : "La zone qui ressort pour le moment est " + topZone + "."
-        });
-
-        if(cities > 1 || zones > 1){
-          insights.push({
-            title: "Lecture territoriale en croissance",
-            text: "Le module couvre déjà " + cities + " ville(s) et " + zones + " zone(s)."
-          });
+        if(error){
+          throw error;
         }
 
-        insightBox.innerHTML = insights.map(function(item){
-          return `
-            <div class="insight">
-              <strong>${escapeHtml(item.title)}</strong>
-              <span>${escapeHtml(item.text)}</span>
-            </div>
-          `;
-        }).join("");
+        return Array.isArray(data) ? data : [];
       }
 
-      function renderLastPlaces(items){
-        if(!Array.isArray(items) || items.length === 0){
-          lastPlacesList.innerHTML = `
+      async function loadPublicPlaceBySlug(slug){
+        const clean = normalizeSlug(slug);
+        if(!clean) return null;
+
+        const { data, error } = await supabase.rpc("digiy_explore_public_place_by_slug", {
+          p_slug: clean
+        });
+
+        if(error){
+          throw error;
+        }
+
+        if(data?.ok === true && data.place){
+          return data.place;
+        }
+
+        if(data && typeof data === "object" && data.slug){
+          return data;
+        }
+
+        return null;
+      }
+
+      function pickMainPlace(places, slugPlace){
+        if(slugPlace) return slugPlace;
+        if(Array.isArray(places) && places.length) return places[0];
+        return null;
+      }
+
+      function renderStats(){
+        const rows = CURRENT_PLACES || [];
+        $("sPlaces").textContent = String(rows.length);
+        $("sPublished").textContent = String(rows.filter(isPublished).length);
+        $("sDrafts").textContent = String(rows.filter(r => !isPublished(r)).length);
+        $("sFeatured").textContent = String(rows.filter(isFeatured).length);
+      }
+
+      function renderHero(place){
+        $("heroSlug").textContent = CURRENT_SLUG || "—";
+        $("heroPhone").textContent = CURRENT_PHONE || "—";
+        $("heroPlace").textContent = place ? placeName(place) : "Aucun lieu lu";
+
+        const pills = [
+          "Module : EXPLORE",
+          CURRENT_SLUG ? `Slug : ${CURRENT_SLUG}` : "Slug absent",
+          CURRENT_PHONE ? `Téléphone : ${CURRENT_PHONE}` : "Téléphone absent",
+          place ? `Ville : ${placeCity(place)}` : "",
+          place ? `Catégorie : ${placeCategory(place)}` : ""
+        ].filter(Boolean);
+
+        $("heroPills").innerHTML = pills.map(p => `<div class="pill">${escapeHtml(p)}</div>`).join("");
+
+        if(!CURRENT_STATE?.access_ok){
+          $("heroBadge").textContent = "Mode aperçu";
+          $("heroTitle").textContent = "Le rail EXPLORE existe, mais l’accès reste à confirmer.";
+          $("heroLead").textContent = "Le cockpit reste propre : aucune démo inutile, juste la bonne porte vers le PIN ou l’activation si besoin.";
+          $("btnPrimaryAction").textContent = "Entrer par PIN";
+          $("btnPrimaryAction").href = $("navPin").href;
+          return;
+        }
+
+        $("heroBadge").textContent = "Cockpit vivant";
+
+        if(place){
+          $("heroTitle").textContent = placeName(place);
+          $("heroLead").textContent = placeShort(place);
+          $("btnPrimaryAction").textContent = "Éditer ce lieu";
+          $("btnPrimaryAction").href = withPhone("./submit.html", CURRENT_PHONE, { slug: place.slug || CURRENT_SLUG });
+        } else {
+          $("heroTitle").textContent = "Cockpit EXPLORE actif";
+          $("heroLead").textContent = "Le rail est ouvert, mais aucun lieu n’est encore visible dans le cockpit. Ajoute ou recharge une fiche terrain.";
+          $("btnPrimaryAction").textContent = "Ajouter un lieu";
+          $("btnPrimaryAction").href = $("navSubmit").href;
+        }
+      }
+
+      function renderMainPlace(place){
+        if(!place){
+          $("mainPlaceName").textContent = "Aucun lieu lu";
+          $("mainPlaceText").textContent = "Le cockpit n’a pas trouvé de fiche principale. Passe par Ajouter / éditer ou relis lieux.html.";
+          $("boxCity").textContent = "—";
+          $("boxZone").textContent = "—";
+          $("boxCategory").textContent = "—";
+          $("boxPublished").textContent = "—";
+          $("boxAction").textContent = CURRENT_STATE?.access_ok
+            ? "Ajoute un lieu ou recharge une fiche existante."
+            : "Ouvre d’abord le rail par PIN.";
+
+          $("btnEditCurrent").href = $("navSubmit").href;
+          $("btnViewCurrent").href = "./index.html";
+          $("btnClawCurrent").href = $("navClaw").href;
+          $("linksText").textContent = "Le cockpit garde la couture vers vitrine, lieux, édition, pin et CLAW.";
+
+          return;
+        }
+
+        $("mainPlaceName").textContent = placeName(place);
+        $("mainPlaceText").textContent =
+          `${placeShort(place)} • ${placeCity(place)} • ${placeZone(place)} • ${placeCategory(place)}.`;
+
+        $("boxCity").textContent = placeCity(place);
+        $("boxZone").textContent = placeZone(place);
+        $("boxCategory").textContent = placeCategory(place);
+        $("boxPublished").textContent = isPublished(place) ? "Publié" : "Brouillon / à publier";
+        $("boxAction").textContent = isPublished(place)
+          ? "Affiner la lecture publique ou passer par CLAW pour améliorer la micro-copy."
+          : "Contrôler la fiche puis publier quand la lecture est propre.";
+
+        $("btnEditCurrent").href = withPhone("./submit.html", CURRENT_PHONE, { slug: place.slug || CURRENT_SLUG });
+        $("btnViewCurrent").href = place.slug ? `./fiche.html?slug=${encodeURIComponent(place.slug)}` : "./index.html";
+        $("btnClawCurrent").href = $("navClaw").href;
+        $("linksText").textContent =
+          `Rail utile : cockpit → lieux → édition du slug ${place.slug || CURRENT_SLUG || "—"} → CLAW.`;
+      }
+
+      function renderPlaces(){
+        const box = $("placesBox");
+        const rows = CURRENT_PLACES || [];
+
+        if(!rows.length){
+          box.innerHTML = `
             <div class="empty">
-              Aucun lieu récent pour le moment. Le prochain mouvement logique est d’ajouter une fiche dans <b>submit.html</b>.
+              Aucun lieu n’est remonté pour le téléphone actif. Passe par <strong>Ajouter / éditer</strong> pour poser une première fiche.
             </div>
           `;
           return;
         }
 
-        lastPlacesList.innerHTML = items.map(function(item){
-          const published = item?.is_published === true;
-          const statusClass = published ? "ok" : "warn";
-          const statusText = published ? "Publié" : (item?.status || "Brouillon");
-          const zoneLine = [item?.city, item?.zone].filter(Boolean).join(" — ");
+        box.innerHTML = rows.map((place) => {
+          const slug = normalizeSlug(place.slug || "");
+          const editHref = withPhone("./submit.html", CURRENT_PHONE, slug ? { slug } : {});
+          const publicHref = slug ? `./fiche.html?slug=${encodeURIComponent(slug)}` : "./index.html";
+          const clawHref = slug ? withSlug("./claw.html", slug, CURRENT_PHONE ? { phone: CURRENT_PHONE } : {}) : $("navClaw").href;
+
           return `
-            <div class="rowItem">
-              <div class="rowMain">
-                <div class="rowTitle">${escapeHtml(item?.public_name || "Lieu sans nom")}</div>
-                <div class="rowMeta">
-                  ${escapeHtml(zoneLine || "Zone non précisée")} •
-                  ${escapeHtml(item?.category_code || "catégorie inconnue")} •
-                  Mis à jour le ${escapeHtml(fmtDate(item?.updated_at))}
+            <article class="placeCard">
+              <div class="placeTop">
+                <div>
+                  <div class="placeName">${escapeHtml(placeName(place))}</div>
+                  <div class="placeMeta">
+                    <span class="metaTag">${escapeHtml(placeCategory(place))}</span>
+                    <span class="metaTag">${escapeHtml(placeCity(place))}</span>
+                    <span class="metaTag">${escapeHtml(placeZone(place))}</span>
+                    <span class="metaTag">${escapeHtml(slug || "slug absent")}</span>
+                  </div>
+                </div>
+                <div class="placeMeta">
+                  <span class="metaTag">${isPublished(place) ? "Publié" : "Brouillon"}</span>
+                  ${isFeatured(place) ? `<span class="metaTag">Mis en avant</span>` : ``}
                 </div>
               </div>
-              <div class="status ${statusClass}">${escapeHtml(statusText)}</div>
-            </div>
-          `;
-        }).join("");
-      }
 
-      function renderZones(items){
-        if(!Array.isArray(items) || items.length === 0){
-          zoneList.innerHTML = `<div class="empty">Aucune zone remontée pour le moment.</div>`;
-          return;
-        }
+              <div class="placeDesc">${escapeHtml(placeShort(place))}</div>
 
-        zoneList.innerHTML = items.slice(0, 6).map(function(item){
-          const zoneName = [item?.city, item?.zone].filter(Boolean).join(" — ");
-          return `
-            <div class="rowItem">
-              <div class="rowMain">
-                <div class="rowTitle">${escapeHtml(zoneName || "Zone non précisée")}</div>
-                <div class="rowMeta">
-                  ${escapeHtml(String(item?.total_places ?? 0))} lieu(x) •
-                  ${escapeHtml(String(item?.total_categories ?? 0))} catégorie(s) •
-                  Dernière activité : ${escapeHtml(fmtDate(item?.last_update))}
-                </div>
+              <div class="placeActions">
+                <a class="btn secondary" href="${escapeHtml(editHref)}">Éditer</a>
+                <a class="btn ghost" href="${escapeHtml(publicHref)}">Voir</a>
+                <a class="btn info" href="${escapeHtml(clawHref)}">CLAW</a>
               </div>
-              <div class="tag">${escapeHtml(String(item?.featured_places ?? 0))} mis en avant</div>
-            </div>
+            </article>
           `;
         }).join("");
-      }
-
-      function renderCategories(items){
-        if(!Array.isArray(items) || items.length === 0){
-          categoryList.innerHTML = `<div class="empty">Aucune catégorie remontée pour le moment.</div>`;
-          return;
-        }
-
-        categoryList.innerHTML = items.slice(0, 6).map(function(item){
-          const label = item?.category_label || item?.category_code || "Catégorie";
-          const icon = item?.category_icon || "•";
-          return `
-            <div class="rowItem">
-              <div class="rowMain">
-                <div class="rowTitle">${escapeHtml(icon)} ${escapeHtml(label)}</div>
-                <div class="rowMeta">
-                  ${escapeHtml(String(item?.total_places ?? 0))} lieu(x) •
-                  ${escapeHtml(String(item?.total_cities ?? 0))} ville(s) •
-                  ${escapeHtml(String(item?.total_zones ?? 0))} zone(s)
-                </div>
-              </div>
-              <div class="tag">${escapeHtml(item?.category_code || "code")}</div>
-            </div>
-          `;
-        }).join("");
-      }
-
-      async function loadCockpit(phone){
-        const { data, error } = await supabase.rpc("digiy_explore_get_cockpit", {
-          p_owner_phone: phone
-        });
-        if(error) throw error;
-        return data;
-      }
-
-      async function loadZones(phone){
-        const { data, error } = await supabase.rpc("digiy_explore_get_zone_stats", {
-          p_owner_phone: phone
-        });
-        if(error) throw error;
-        return data;
-      }
-
-      async function loadCategories(phone){
-        const { data, error } = await supabase.rpc("digiy_explore_get_category_stats", {
-          p_owner_phone: phone
-        });
-        if(error) throw error;
-        return data;
       }
 
       async function boot(){
-        const phone = getPhone();
-
-        if(!phone){
-          accessBadge.className = "status bad";
-          accessBadge.textContent = "Accès manquant";
-          heroPhone.textContent = "—";
-          heroStatus.textContent = "Aucun accès";
-          heroStatusHint.textContent = "Passe d’abord par pin.html pour ouvrir une session.";
-          setMsg("Aucun téléphone de session trouvé. Ouvre d’abord pin.html.", "bad");
-          return;
-        }
-
-        heroPhone.textContent = phone;
-        subline.textContent = "Cockpit rattaché au téléphone " + phone + ".";
-        heroStatus.textContent = "Connexion au rail";
-        heroStatusHint.textContent = "Chargement des lectures cockpit, zones et catégories…";
-        accessBadge.className = "status warn";
-        accessBadge.textContent = "Chargement";
-        setMsg("Lecture du cockpit PRO-EXPLORE en cours…", "info");
+        setClawLoading();
 
         try{
-          const [cockpit, zones, categories] = await Promise.all([
-            loadCockpit(phone),
-            loadZones(phone),
-            loadCategories(phone)
-          ]);
+          CURRENT_STATE = await resolveGuardState();
+          CURRENT_SLUG = normalizeSlug(CURRENT_STATE?.slug || getFallbackSlug());
+          CURRENT_PHONE = normalizePhone(CURRENT_STATE?.phone || getFallbackPhone());
 
-          if(!cockpit || cockpit.ok !== true){
-            throw new Error("Cockpit invalide");
+          if(CURRENT_SLUG){
+            storageSet(`${MODULE_PREFIX}_slug`, CURRENT_SLUG);
+            storageSet(`${MODULE_PREFIX}_last_slug`, CURRENT_SLUG);
+            storageSet("digiy_last_slug", CURRENT_SLUG);
+            storageSet("DIGIY_SLUG", CURRENT_SLUG);
           }
 
-          totalPlaces.textContent = String(cockpit.total_places ?? 0);
-          totalPublished.textContent = String(cockpit.total_published ?? 0);
-          totalCities.textContent = String(cockpit.total_cities ?? 0);
-          totalZones.textContent = String(cockpit.total_zones ?? 0);
+          if(CURRENT_PHONE){
+            storageSet(`${MODULE_PREFIX}_phone`, CURRENT_PHONE);
+            storageSet("digiy_last_phone", CURRENT_PHONE);
+            storageSet("DIGIY_PHONE", CURRENT_PHONE);
+          }
 
-          heroStatus.textContent = "Rail actif";
-          heroStatusHint.textContent = "Backend réel branché et cockpit chargé.";
-          accessBadge.className = "status ok";
-          accessBadge.textContent = "Actif";
+          buildLinks();
 
-          renderInsights(cockpit);
-          renderLastPlaces(cockpit.last_places || []);
-          renderZones(zones?.items || []);
-          renderCategories(categories?.items || []);
+          let places = [];
+          if(CURRENT_PHONE){
+            try{
+              places = await loadPlacesByPhone(CURRENT_PHONE);
+            }catch(err){
+              console.error("[EXPLORE cockpit] places error:", err);
+            }
+          }
 
-          setMsg("Cockpit chargé sur le backend réel PRO-EXPLORE.", "ok");
-        }catch(err){
-          console.error("[PRO-EXPLORE cockpit] error:", err);
-          accessBadge.className = "status bad";
-          accessBadge.textContent = "Erreur";
-          heroStatus.textContent = "Lecture interrompue";
-          heroStatusHint.textContent = "Le backend n’a pas renvoyé la lecture attendue.";
-          setMsg("Le cockpit n’a pas pu charger les données réelles. Vérifie les RPC PRO-EXPLORE ou la session PIN.", "bad");
+          let slugPlace = null;
+          if(CURRENT_SLUG){
+            try{
+              slugPlace = await loadPublicPlaceBySlug(CURRENT_SLUG);
+            }catch(err){
+              console.error("[EXPLORE cockpit] public place error:", err);
+            }
+          }
+
+          CURRENT_PLACES = Array.isArray(places) ? places : [];
+          CURRENT_MAIN = pickMainPlace(CURRENT_PLACES, slugPlace);
+
+          renderStats();
+          renderHero(CURRENT_MAIN);
+          renderMainPlace(CURRENT_MAIN);
+          renderPlaces();
+
+          if(!CURRENT_STATE?.access_ok){
+            setStatus(
+              CURRENT_SLUG
+                ? `Slug détecté (${CURRENT_SLUG}) mais accès non confirmé. Passe par la porte PIN pour ouvrir le rail.`
+                : "Aucun accès confirmé pour le moment. Le cockpit reste en aperçu propre.",
+              CURRENT_SLUG ? "warn" : "info"
+            );
+            setClawPreview(
+              CURRENT_SLUG
+                ? `Le slug ${CURRENT_SLUG} est visible, mais l’accès EXPLORE n’est pas encore confirmé.`
+                : "Le cockpit attend une identité ou une session valide."
+            );
+          } else {
+            setStatus(
+              CURRENT_MAIN
+                ? `Cockpit actif pour ${placeName(CURRENT_MAIN)}.`
+                : `Cockpit actif pour le téléphone ${CURRENT_PHONE || "pilote"}.`,
+              "ok"
+            );
+            setClawLive(CURRENT_MAIN);
+          }
+        } catch (err){
+          console.error("[EXPLORE cockpit] boot error:", err);
+          setStatus("Le cockpit n’a pas pu charger le rail EXPLORE pour le moment.", "bad");
+          renderHero(null);
+          renderMainPlace(null);
+          renderPlaces();
+          setClaw(
+            "Erreur",
+            "CLAW a détecté un blocage au chargement du cockpit EXPLORE.",
+            [
+              CURRENT_SLUG ? `Slug : ${CURRENT_SLUG}` : "Slug : —",
+              CURRENT_PHONE ? `Téléphone : ${CURRENT_PHONE}` : "Téléphone : —",
+              "Contrôle à faire"
+            ],
+            [
+              {
+                title:"Blocage principal",
+                text:"Le cockpit n’a pas pu lire correctement le guard ou les RPC du rail EXPLORE."
+              },
+              {
+                title:"Action utile",
+                text:"Recharge la page, puis repasse par pin.html si nécessaire."
+              }
+            ]
+          );
+        } finally {
+          document.documentElement.style.visibility = "";
         }
       }
 
