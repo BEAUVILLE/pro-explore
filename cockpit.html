@@ -17,7 +17,7 @@
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="./guad.js?v=explore-cockpit-guard-1"></script>
+  <script src="./guad.js?v=explore-cockpit-guard-2"></script>
 
   <style>
     :root{
@@ -162,6 +162,11 @@
       background:rgba(56,189,248,.10);
       border:1px solid rgba(56,189,248,.22);
       color:#d8f2ff;
+    }
+    .btn.warn{
+      background:rgba(245,158,11,.12);
+      border:1px solid rgba(245,158,11,.26);
+      color:#fde68a;
     }
 
     .nav{
@@ -596,6 +601,8 @@
       display:block;
     }
 
+    .hidden{display:none !important}
+
     .foot{
       margin-top:18px;
       color:var(--muted);
@@ -639,6 +646,7 @@
         <a class="btn secondary" id="btnLieuxTop" href="./lieux.html">Lieux</a>
         <a class="btn secondary" id="btnSubmitTop" href="./submit.html">Ajouter / éditer</a>
         <a class="btn info" id="btnClawTop" href="./claw.html">CLAW</a>
+        <a class="btn warn hidden" id="btnPinTop" href="./pin.html">PIN secours</a>
       </div>
     </header>
 
@@ -647,8 +655,8 @@
       <a id="navCockpit" class="active" href="./cockpit.html">Cockpit</a>
       <a id="navLieux" href="./lieux.html">Lieux</a>
       <a id="navSubmit" href="./submit.html">Ajouter / éditer</a>
-      <a id="navPin" href="./pin.html">PIN</a>
       <a id="navClaw" href="./claw.html">CLAW</a>
+      <a id="navPinRescue" class="hidden" href="./pin.html">PIN secours</a>
     </nav>
 
     <div id="status" class="status info">Préparation du cockpit EXPLORE…</div>
@@ -669,7 +677,7 @@
           <a class="btn primary" id="btnPrimaryAction" href="./submit.html">Ajouter un lieu</a>
           <a class="btn secondary" id="btnOpenLieux" href="./lieux.html">Voir les lieux</a>
           <a class="btn secondary" id="btnOpenClaw" href="./claw.html">Ouvrir CLAW</a>
-          <a class="btn ghost" id="btnOpenPin" href="./pin.html">Entrer par PIN</a>
+          <a class="btn warn hidden" id="btnOpenPin" href="./pin.html">PIN secours</a>
         </div>
       </article>
 
@@ -726,7 +734,7 @@
 
           <div class="box">
             <strong>Navigation utile</strong>
-            <span id="linksText">Le cockpit recoud vitrine, lieux, édition, pin et CLAW sur le même contexte.</span>
+            <span id="linksText">Le cockpit recoud vitrine, lieux, édition et CLAW sur le même contexte. Le PIN reste un secours seulement.</span>
           </div>
 
           <div class="placeActions" style="margin-bottom:14px">
@@ -846,14 +854,14 @@
         return String(v || "")
           .trim()
           .toLowerCase()
-          .replace(/\\s+/g, "-")
+          .replace(/\s+/g, "-")
           .replace(/[^a-z0-9-]/g, "")
           .replace(/-+/g, "-")
           .replace(/^-|-$/g, "");
       }
 
       function normalizePhone(v){
-        return String(v || "").replace(/[^\\d]/g, "");
+        return String(v || "").replace(/[^\d]/g, "");
       }
 
       function safeJsonParse(raw){
@@ -877,9 +885,21 @@
         try{ localStorage.setItem(key, String(value ?? "")); }catch(_){}
       }
 
+      function saveSessionPayload(slug, phone){
+        const payload = {
+          slug: normalizeSlug(slug || ""),
+          phone: normalizePhone(phone || ""),
+          module: MODULE,
+          ts: Date.now()
+        };
+        const raw = JSON.stringify(payload);
+        try{ sessionStorage.setItem(SESSION_KEY, raw); }catch(_){}
+        try{ localStorage.setItem(SESSION_KEY, raw); }catch(_){}
+      }
+
       function getSession(){
         const direct = safeJsonParse(storageGet(SESSION_KEY));
-        if(direct?.phone && direct?.ts && (Date.now() - direct.ts) <= MAX_AGE_MS){
+        if(direct?.phone && direct?.ts && (Date.now() - Number(direct.ts)) <= MAX_AGE_MS){
           return direct;
         }
 
@@ -922,36 +942,29 @@
         );
       }
 
-      function withSlug(path, slug = "", extra = {}){
-        const clean = normalizeSlug(slug);
-        const url = new URL(path, location.href);
+      function buildQuery(slug = "", phone = ""){
+        const q = new URLSearchParams();
+        const cleanSlug = normalizeSlug(slug);
+        const cleanPhone = normalizePhone(phone);
 
-        if(clean) url.searchParams.set("slug", clean);
+        if(cleanSlug) q.set("slug", cleanSlug);
+        if(cleanPhone) q.set("phone", cleanPhone);
 
-        Object.entries(extra || {}).forEach(([key, value]) => {
-          if(value !== null && value !== undefined && String(value).trim() !== ""){
-            url.searchParams.set(key, String(value));
-          }
-        });
-
-        const sameOrigin = url.origin === location.origin;
-        return sameOrigin ? `${url.pathname.split("/").pop()}${url.search}` : url.toString();
+        const s = q.toString();
+        return s ? `?${s}` : "";
       }
 
-      function withPhone(path, phone = "", extra = {}){
-        const clean = normalizePhone(phone);
-        const url = new URL(path, location.href);
+      function buildInternalHref(path, slug = "", phone = ""){
+        return `${path}${buildQuery(slug, phone)}`;
+      }
 
-        if(clean) url.searchParams.set("phone", clean);
+      function buildPinHref(slug = "", phone = ""){
+        return `${PATHS.pin}${buildQuery(slug, phone)}`;
+      }
 
-        Object.entries(extra || {}).forEach(([key, value]) => {
-          if(value !== null && value !== undefined && String(value).trim() !== ""){
-            url.searchParams.set(key, String(value));
-          }
-        });
-
-        const sameOrigin = url.origin === location.origin;
-        return sameOrigin ? `${url.pathname.split("/").pop()}${url.search}` : url.toString();
+      function buildPublicFicheHref(slug = ""){
+        const cleanSlug = normalizeSlug(slug);
+        return cleanSlug ? `./fiche.html?slug=${encodeURIComponent(cleanSlug)}` : "./index.html";
       }
 
       function placeName(place){
@@ -1036,7 +1049,7 @@
             },
             {
               title:"Navigation utile",
-              text:"Vitrine, lieux, édition, PIN et CLAW doivent suivre le même contexte."
+              text:"Vitrine, lieux, édition et CLAW doivent suivre le même contexte. Le PIN reste un secours."
             }
           ]
         );
@@ -1049,7 +1062,7 @@
           [
             CURRENT_SLUG ? `Slug : ${CURRENT_SLUG}` : "Slug absent",
             CURRENT_PHONE ? `Téléphone : ${CURRENT_PHONE}` : "Téléphone absent",
-            "PIN conseillé"
+            "PIN secours"
           ],
           [
             {
@@ -1091,7 +1104,7 @@
             },
             {
               title:"Navigation interne",
-              text:"Tu peux circuler entre cockpit, lieux, submit, pin et CLAW sans changer de rail."
+              text:"Tu peux circuler entre cockpit, lieux, submit et CLAW tant que la session tient."
             }
           ]
         );
@@ -1106,27 +1119,34 @@
           .replaceAll("'","&#39;");
       }
 
+      function setRescueVisibility(show){
+        $("navPinRescue").classList.toggle("hidden", !show);
+        $("btnPinTop").classList.toggle("hidden", !show);
+        $("btnOpenPin").classList.toggle("hidden", !show);
+      }
+
       function buildLinks(){
         const slug = CURRENT_SLUG;
         const phone = CURRENT_PHONE;
 
-        const cockpitHref = slug ? withSlug(PATHS.cockpit, slug, phone ? { phone } : {}) : withPhone(PATHS.cockpit, phone);
-        const lieuxHref = phone ? withPhone(PATHS.lieux, phone, slug ? { slug } : {}) : withSlug(PATHS.lieux, slug);
-        const submitHref = phone ? withPhone(PATHS.submit, phone, slug ? { slug } : {}) : withSlug(PATHS.submit, slug);
-        const pinHref = slug ? withSlug(PATHS.pin, slug, phone ? { phone } : {}) : withPhone(PATHS.pin, phone);
-        const clawHref = slug ? withSlug(PATHS.claw, slug, phone ? { phone } : {}) : withPhone(PATHS.claw, phone);
+        const cockpitHref = buildInternalHref(PATHS.cockpit, slug, phone);
+        const lieuxHref = buildInternalHref(PATHS.lieux, slug, phone);
+        const submitHref = buildInternalHref(PATHS.submit, slug, phone);
+        const clawHref = buildInternalHref(PATHS.claw, slug, phone);
+        const pinHref = buildPinHref(slug, phone);
 
         $("navAccess").href = PATHS.access;
         $("navCockpit").href = cockpitHref;
         $("navLieux").href = lieuxHref;
         $("navSubmit").href = submitHref;
-        $("navPin").href = pinHref;
         $("navClaw").href = clawHref;
+        $("navPinRescue").href = pinHref;
 
         $("btnAccessTop").href = PATHS.access;
         $("btnLieuxTop").href = lieuxHref;
         $("btnSubmitTop").href = submitHref;
         $("btnClawTop").href = clawHref;
+        $("btnPinTop").href = pinHref;
 
         $("btnOpenLieux").href = lieuxHref;
         $("btnOpenClaw").href = clawHref;
@@ -1185,10 +1205,7 @@
           p_owner_phone: clean
         });
 
-        if(error){
-          throw error;
-        }
-
+        if(error) throw error;
         return Array.isArray(data) ? data : [];
       }
 
@@ -1200,9 +1217,7 @@
           p_slug: clean
         });
 
-        if(error){
-          throw error;
-        }
+        if(error) throw error;
 
         if(data?.ok === true && data.place){
           return data.place;
@@ -1217,6 +1232,12 @@
 
       function pickMainPlace(places, slugPlace){
         if(slugPlace) return slugPlace;
+
+        if(Array.isArray(places) && CURRENT_SLUG){
+          const found = places.find(p => normalizeSlug(p?.slug) === CURRENT_SLUG);
+          if(found) return found;
+        }
+
         if(Array.isArray(places) && places.length) return places[0];
         return null;
       }
@@ -1249,7 +1270,7 @@
           $("heroTitle").textContent = "Le rail EXPLORE existe, mais l’accès reste à confirmer.";
           $("heroLead").textContent = "Le cockpit reste propre : aucune démo inutile, juste la bonne porte vers le PIN ou l’activation si besoin.";
           $("btnPrimaryAction").textContent = "Entrer par PIN";
-          $("btnPrimaryAction").href = $("navPin").href;
+          $("btnPrimaryAction").href = $("navPinRescue").href;
           return;
         }
 
@@ -1259,8 +1280,8 @@
           $("heroTitle").textContent = placeName(place);
           $("heroLead").textContent = placeShort(place);
           $("btnPrimaryAction").textContent = "Éditer ce lieu";
-          $("btnPrimaryAction").href = withPhone("./submit.html", CURRENT_PHONE, { slug: place.slug || CURRENT_SLUG });
-        } else {
+          $("btnPrimaryAction").href = buildInternalHref("./submit.html", place.slug || CURRENT_SLUG, CURRENT_PHONE);
+        }else{
           $("heroTitle").textContent = "Cockpit EXPLORE actif";
           $("heroLead").textContent = "Le rail est ouvert, mais aucun lieu n’est encore visible dans le cockpit. Ajoute ou recharge une fiche terrain.";
           $("btnPrimaryAction").textContent = "Ajouter un lieu";
@@ -1283,7 +1304,7 @@
           $("btnEditCurrent").href = $("navSubmit").href;
           $("btnViewCurrent").href = "./index.html";
           $("btnClawCurrent").href = $("navClaw").href;
-          $("linksText").textContent = "Le cockpit garde la couture vers vitrine, lieux, édition, pin et CLAW.";
+          $("linksText").textContent = "Le cockpit garde la couture vers vitrine, lieux, édition et CLAW. Le PIN reste un secours.";
 
           return;
         }
@@ -1300,9 +1321,9 @@
           ? "Affiner la lecture publique ou passer par CLAW pour améliorer la micro-copy."
           : "Contrôler la fiche puis publier quand la lecture est propre.";
 
-        $("btnEditCurrent").href = withPhone("./submit.html", CURRENT_PHONE, { slug: place.slug || CURRENT_SLUG });
-        $("btnViewCurrent").href = place.slug ? `./fiche.html?slug=${encodeURIComponent(place.slug)}` : "./index.html";
-        $("btnClawCurrent").href = $("navClaw").href;
+        $("btnEditCurrent").href = buildInternalHref("./submit.html", place.slug || CURRENT_SLUG, CURRENT_PHONE);
+        $("btnViewCurrent").href = buildPublicFicheHref(place.slug || CURRENT_SLUG);
+        $("btnClawCurrent").href = buildInternalHref("./claw.html", place.slug || CURRENT_SLUG, CURRENT_PHONE);
         $("linksText").textContent =
           `Rail utile : cockpit → lieux → édition du slug ${place.slug || CURRENT_SLUG || "—"} → CLAW.`;
       }
@@ -1322,9 +1343,9 @@
 
         box.innerHTML = rows.map((place) => {
           const slug = normalizeSlug(place.slug || "");
-          const editHref = withPhone("./submit.html", CURRENT_PHONE, slug ? { slug } : {});
-          const publicHref = slug ? `./fiche.html?slug=${encodeURIComponent(slug)}` : "./index.html";
-          const clawHref = slug ? withSlug("./claw.html", slug, CURRENT_PHONE ? { phone: CURRENT_PHONE } : {}) : $("navClaw").href;
+          const editHref = buildInternalHref("./submit.html", slug, CURRENT_PHONE);
+          const publicHref = buildPublicFicheHref(slug);
+          const clawHref = buildInternalHref("./claw.html", slug || CURRENT_SLUG, CURRENT_PHONE);
 
           return `
             <article class="placeCard">
@@ -1377,7 +1398,12 @@
             storageSet("DIGIY_PHONE", CURRENT_PHONE);
           }
 
+          if(CURRENT_SLUG || CURRENT_PHONE){
+            saveSessionPayload(CURRENT_SLUG, CURRENT_PHONE);
+          }
+
           buildLinks();
+          setRescueVisibility(!CURRENT_STATE?.access_ok);
 
           let places = [];
           if(CURRENT_PHONE){
@@ -1429,6 +1455,7 @@
         } catch (err){
           console.error("[EXPLORE cockpit] boot error:", err);
           setStatus("Le cockpit n’a pas pu charger le rail EXPLORE pour le moment.", "bad");
+          setRescueVisibility(true);
           renderHero(null);
           renderMainPlace(null);
           renderPlaces();
