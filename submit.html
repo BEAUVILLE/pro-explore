@@ -1,0 +1,1344 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>PRO-EXPLORE — Ajouter / éditer un lieu</title>
+  <meta name="theme-color" content="#06130f" />
+  <meta
+    name="description"
+    content="PRO-EXPLORE — création et édition des fiches terrain DIGIY."
+  />
+
+  <script>
+    window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
+    window.DIGIY_SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
+    window.DIGIY_SUPABASE_ANON = window.DIGIY_SUPABASE_ANON_KEY;
+    window.DIGIY_MODULE = "EXPLORE";
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root{
+      --bg:#06130f;
+      --bg2:#0a1f18;
+      --card:#0b241b;
+      --card2:#102b22;
+      --line:rgba(255,255,255,.08);
+      --ink:#f8fafc;
+      --muted:rgba(248,250,252,.72);
+      --soft:rgba(248,250,252,.52);
+      --gold:#d4af37;
+      --gold2:#f3d46b;
+      --ok:#22c55e;
+      --warn:#f59e0b;
+      --bad:#ef4444;
+      --radius:22px;
+      --shadow:0 24px 60px rgba(0,0,0,.28);
+      --focus:rgba(212,175,55,.32);
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      min-height:100vh;
+      color:var(--ink);
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(212,175,55,.09), transparent 26%),
+        linear-gradient(180deg, #071510 0%, #06130f 48%, #04100c 100%);
+    }
+
+    a{color:inherit;text-decoration:none}
+    button,input,textarea,select{font:inherit}
+
+    .wrap{
+      width:min(100%, 1240px);
+      margin:0 auto;
+      padding:18px 14px 44px;
+    }
+
+    .topbar{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:16px;
+    }
+
+    .brand{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      min-width:0;
+    }
+
+    .logo{
+      width:46px;
+      height:46px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg, rgba(212,175,55,.24), rgba(212,175,55,.06));
+      border:1px solid rgba(212,175,55,.22);
+      box-shadow:0 10px 28px rgba(0,0,0,.18);
+      font-size:23px;
+      flex:0 0 auto;
+    }
+
+    .brandText{min-width:0}
+    .kicker{
+      color:var(--gold2);
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      margin-bottom:3px;
+      white-space:nowrap;
+    }
+
+    .title{
+      font-size:clamp(18px, 2vw, 28px);
+      font-weight:900;
+      line-height:1.08;
+      letter-spacing:-.03em;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .sub{
+      margin-top:4px;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .topActions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .btn{
+      min-height:44px;
+      border:none;
+      border-radius:14px;
+      padding:0 14px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      font-weight:800;
+      cursor:pointer;
+      transition:filter .18s ease, transform .04s ease, opacity .18s ease;
+      white-space:nowrap;
+    }
+
+    .btn:active{transform:translateY(1px)}
+    .btn[disabled]{opacity:.6;cursor:not-allowed;pointer-events:none}
+
+    .btn.primary{
+      background:linear-gradient(135deg, var(--gold), var(--gold2));
+      color:#13200d;
+      box-shadow:0 14px 30px rgba(212,175,55,.22);
+    }
+
+    .btn.secondary{
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      color:var(--ink);
+    }
+
+    .btn.ghost{
+      background:transparent;
+      border:1px solid var(--line);
+      color:var(--ink);
+    }
+
+    .btn.warn{
+      background:rgba(245,158,11,.12);
+      border:1px solid rgba(245,158,11,.26);
+      color:#fde68a;
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:16px;
+      margin-bottom:16px;
+    }
+
+    .panel{
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .heroMain{
+      padding:22px;
+      background:
+        linear-gradient(180deg, rgba(212,175,55,.06), transparent 28%),
+        linear-gradient(180deg, var(--card), var(--card2));
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(212,175,55,.22);
+      background:rgba(212,175,55,.08);
+      color:var(--gold2);
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      margin-bottom:14px;
+    }
+
+    .heroTitle{
+      margin:0 0 10px;
+      font-size:clamp(26px, 4vw, 42px);
+      line-height:1.02;
+      letter-spacing:-.04em;
+    }
+
+    .heroLead{
+      margin:0;
+      color:var(--muted);
+      font-size:16px;
+      line-height:1.65;
+      max-width:60ch;
+    }
+
+    .heroSide{
+      padding:20px;
+      display:grid;
+      gap:12px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015)),
+        linear-gradient(180deg, #0a1c16, #0d241c);
+    }
+
+    .miniStat{
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      padding:14px;
+      background:rgba(255,255,255,.03);
+    }
+
+    .miniLabel{
+      color:var(--soft);
+      font-size:12px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      margin-bottom:8px;
+    }
+
+    .miniValue{
+      font-size:20px;
+      font-weight:900;
+      line-height:1.15;
+      letter-spacing:-.03em;
+      word-break:break-word;
+    }
+
+    .miniHint{
+      margin-top:6px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.45;
+    }
+
+    .nav{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .nav a{
+      min-height:42px;
+      display:inline-flex;
+      align-items:center;
+      padding:0 14px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+      color:#eef4f1;
+      font-size:13px;
+      font-weight:800;
+    }
+
+    .nav a.active{
+      border-color:rgba(212,175,55,.28);
+      background:rgba(212,175,55,.08);
+      color:var(--gold2);
+    }
+
+    .msg{
+      margin-bottom:16px;
+      border-radius:18px;
+      padding:14px 16px;
+      font-size:14px;
+      line-height:1.5;
+      font-weight:700;
+      display:none;
+    }
+
+    .msg.show{display:block}
+    .msg.info{
+      color:#dbeafe;
+      border:1px solid rgba(96,165,250,.18);
+      background:rgba(59,130,246,.08);
+    }
+    .msg.bad{
+      color:#fecaca;
+      border:1px solid rgba(239,68,68,.18);
+      background:rgba(239,68,68,.08);
+    }
+    .msg.ok{
+      color:#bbf7d0;
+      border:1px solid rgba(34,197,94,.18);
+      background:rgba(34,197,94,.08);
+    }
+    .msg.warn{
+      color:#fde68a;
+      border:1px solid rgba(245,158,11,.18);
+      background:rgba(245,158,11,.08);
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns:1.2fr .8fr;
+      gap:16px;
+    }
+
+    .cardBody{
+      padding:20px;
+    }
+
+    .sectionTitle{
+      margin:0 0 14px;
+      font-size:20px;
+      font-weight:900;
+      letter-spacing:-.02em;
+    }
+
+    .sectionSub{
+      margin:-4px 0 14px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    .grid{
+      display:grid;
+      gap:14px;
+    }
+
+    .grid2{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+    }
+
+    .grid3{
+      display:grid;
+      grid-template-columns:1fr 1fr 1fr;
+      gap:14px;
+    }
+
+    .field{
+      display:grid;
+      gap:8px;
+    }
+
+    .label{
+      font-size:13px;
+      font-weight:900;
+      color:#eef6f2;
+      letter-spacing:.02em;
+    }
+
+    .input, .textarea, .select{
+      width:100%;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+      color:var(--ink);
+      border-radius:16px;
+      outline:none;
+      transition:border-color .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+
+    .input, .select{
+      min-height:52px;
+      padding:0 14px;
+    }
+
+    .textarea{
+      min-height:120px;
+      padding:14px;
+      resize:vertical;
+    }
+
+    .input:focus, .textarea:focus, .select:focus{
+      border-color:rgba(212,175,55,.42);
+      box-shadow:0 0 0 5px var(--focus);
+      background:rgba(255,255,255,.05);
+    }
+
+    .hint{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.5;
+    }
+
+    .checkRow{
+      display:grid;
+      gap:12px;
+    }
+
+    .check{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+      border-radius:16px;
+      padding:12px 14px;
+    }
+
+    .check input{
+      margin-top:3px;
+      transform:scale(1.05);
+    }
+
+    .check strong{
+      display:block;
+      font-size:14px;
+      margin-bottom:4px;
+    }
+
+    .check span{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.45;
+    }
+
+    .sideBox{
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+      border-radius:18px;
+      padding:14px;
+      display:grid;
+      gap:8px;
+    }
+
+    .sideBox strong{
+      font-size:14px;
+    }
+
+    .sideBox span{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.5;
+      word-break:break-word;
+    }
+
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:16px;
+    }
+
+    .hidden{display:none !important}
+
+    .foot{
+      margin-top:18px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.6;
+      text-align:center;
+    }
+
+    @media (max-width: 1080px){
+      .hero, .layout{grid-template-columns:1fr}
+      .grid3{grid-template-columns:1fr 1fr}
+    }
+
+    @media (max-width: 760px){
+      .grid2, .grid3{grid-template-columns:1fr}
+    }
+
+    @media (max-width: 640px){
+      .wrap{padding:14px 12px 34px}
+      .topbar{flex-direction:column}
+      .topActions{width:100%;justify-content:flex-start}
+      .heroMain,.heroSide,.cardBody{padding:18px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">🛠️</div>
+        <div class="brandText">
+          <div class="kicker">DIGIYLYFE — Quartier Général</div>
+          <div class="title" id="pageTitle">PRO-EXPLORE • Ajouter un lieu</div>
+          <div class="sub" id="subline">Création et édition des fiches terrain sur le rail réel.</div>
+        </div>
+      </div>
+
+      <div class="topActions">
+        <a class="btn ghost" id="publicHomeBtn" href="./index.html">Vitrine</a>
+        <a class="btn secondary" id="backToClawBtn" href="./claw.html">CLAW</a>
+        <a class="btn secondary" id="backToLieuxBtn" href="./lieux.html">Lieux</a>
+        <a class="btn secondary" id="backToCockpitBtn" href="./cockpit.html">Cockpit</a>
+        <a class="btn warn hidden" id="rescuePinBtn" href="./pin.html">PIN secours</a>
+      </div>
+    </header>
+
+    <section class="hero">
+      <article class="panel heroMain">
+        <div class="badge">Édition terrain</div>
+        <h1 class="heroTitle" id="heroTitle">Créer une fiche claire, utile, publiable.</h1>
+        <p class="heroLead">
+          Ici tu prépares la fiche publique d’un lieu PRO-EXPLORE. Le but n’est pas de faire du bruit :
+          juste une lecture propre, concrète, utile pour le terrain.
+        </p>
+      </article>
+
+      <aside class="panel heroSide">
+        <div class="miniStat">
+          <div class="miniLabel">Téléphone pilote</div>
+          <div class="miniValue" id="heroPhone">—</div>
+          <div class="miniHint">Le lieu sera rattaché à ce numéro.</div>
+        </div>
+
+        <div class="miniStat">
+          <div class="miniLabel">Mode</div>
+          <div class="miniValue" id="heroMode">Chargement…</div>
+          <div class="miniHint" id="heroModeHint">Détection création / édition en cours.</div>
+        </div>
+
+        <div class="miniStat">
+          <div class="miniLabel">Slug actif</div>
+          <div class="miniValue" id="heroSlug">Nouveau lieu</div>
+          <div class="miniHint">Identifiant public de la fiche.</div>
+        </div>
+      </aside>
+    </section>
+
+    <nav class="nav">
+      <a id="navCockpit" href="./cockpit.html">Cockpit</a>
+      <a id="navLieux" href="./lieux.html">Lieux</a>
+      <a id="navSubmit" class="active" href="./submit.html">Ajouter / éditer</a>
+      <a id="navClaw" href="./claw.html">CLAW</a>
+      <a id="navPreview" href="./index.html">Vitrine publique</a>
+      <a id="navPinRescue" class="hidden" href="./pin.html">PIN secours</a>
+    </nav>
+
+    <div id="msg" class="msg info"></div>
+
+    <div class="layout">
+      <section class="panel">
+        <div class="cardBody">
+          <h2 class="sectionTitle">Fiche du lieu</h2>
+          <p class="sectionSub">
+            Garde ça simple : nom clair, catégorie utile, localisation lisible, description propre, contact direct.
+          </p>
+
+          <form id="placeForm" class="grid" novalidate>
+            <div class="grid2">
+              <div class="field">
+                <label class="label" for="publicName">Nom public</label>
+                <input id="publicName" class="input" type="text" placeholder="Ex: Plage calme de Saly" />
+              </div>
+
+              <div class="field">
+                <label class="label" for="slug">Slug public</label>
+                <input id="slug" class="input" type="text" placeholder="ex: plage-calme-saly" />
+                <div class="hint">Laisse vide au départ si tu veux le générer automatiquement depuis le nom.</div>
+              </div>
+            </div>
+
+            <div class="grid3">
+              <div class="field">
+                <label class="label" for="categoryCode">Catégorie</label>
+                <select id="categoryCode" class="select">
+                  <option value="">Choisir une catégorie</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label class="label" for="subcategory">Sous-catégorie</label>
+                <input id="subcategory" class="input" type="text" placeholder="ex: sortie, plage, famille, terrasse..." />
+              </div>
+
+              <div class="field">
+                <label class="label" for="priceHint">Indice de prix</label>
+                <input id="priceHint" class="input" type="text" placeholder="ex: Entrée libre / 5 000 F / Sur devis" />
+              </div>
+            </div>
+
+            <div class="grid2">
+              <div class="field">
+                <label class="label" for="city">Ville</label>
+                <input id="city" class="input" type="text" placeholder="ex: Saly" />
+              </div>
+
+              <div class="field">
+                <label class="label" for="zone">Zone / quartier</label>
+                <input id="zone" class="input" type="text" placeholder="ex: Centre" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="addressText">Adresse / repère</label>
+              <input id="addressText" class="input" type="text" placeholder="ex: Saly Centre, près du rond-point..." />
+            </div>
+
+            <div class="grid2">
+              <div class="field">
+                <label class="label" for="latitude">Latitude</label>
+                <input id="latitude" class="input" type="number" step="any" placeholder="14.444" />
+              </div>
+
+              <div class="field">
+                <label class="label" for="longitude">Longitude</label>
+                <input id="longitude" class="input" type="number" step="any" placeholder="-17.001" />
+              </div>
+            </div>
+
+            <div class="grid2">
+              <div class="field">
+                <label class="label" for="phone">Téléphone contact</label>
+                <input id="phone" class="input" type="tel" placeholder="221771342889" />
+              </div>
+
+              <div class="field">
+                <label class="label" for="whatsapp">WhatsApp</label>
+                <input id="whatsapp" class="input" type="tel" placeholder="221771342889" />
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="coverUrl">Image couverture (URL)</label>
+              <input id="coverUrl" class="input" type="url" placeholder="https://..." />
+            </div>
+
+            <div class="field">
+              <label class="label" for="photoUrls">Autres photos (une URL par ligne)</label>
+              <textarea id="photoUrls" class="textarea" placeholder="https://.../photo1.jpg&#10;https://.../photo2.jpg"></textarea>
+            </div>
+
+            <div class="field">
+              <label class="label" for="tags">Tags (séparés par virgule)</label>
+              <input id="tags" class="input" type="text" placeholder="ex: saly, plage, calme, famille" />
+            </div>
+
+            <div class="field">
+              <label class="label" for="shortDescription">Description courte</label>
+              <textarea id="shortDescription" class="textarea" placeholder="Une phrase courte et claire pour la lecture rapide."></textarea>
+            </div>
+
+            <div class="field">
+              <label class="label" for="fullDescription">Description complète</label>
+              <textarea id="fullDescription" class="textarea" placeholder="Décris le lieu, l’ambiance, le public, l’intérêt terrain, sans roman inutile."></textarea>
+            </div>
+
+            <div class="checkRow">
+              <label class="check">
+                <input id="isFeatured" type="checkbox" />
+                <div>
+                  <strong>Mettre en avant</strong>
+                  <span>Le lieu peut ressortir comme point mis en avant dans certaines lectures.</span>
+                </div>
+              </label>
+
+              <label class="check">
+                <input id="isPublished" type="checkbox" />
+                <div>
+                  <strong>Publier tout de suite</strong>
+                  <span>Si coché, le lieu devient visible côté public après sauvegarde.</span>
+                </div>
+              </label>
+            </div>
+
+            <div class="actions">
+              <button id="saveBtn" class="btn primary" type="submit">Enregistrer</button>
+              <button id="draftBtn" class="btn secondary" type="button">Sauver en brouillon</button>
+              <a id="previewBtn" class="btn ghost" href="./index.html">Voir la fiche</a>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <aside class="panel">
+        <div class="cardBody">
+          <h2 class="sectionTitle">Repères de lecture</h2>
+          <p class="sectionSub">
+            Une bonne fiche PRO-EXPLORE aide à voir vite, pas à noyer le lecteur.
+          </p>
+
+          <div class="grid">
+            <div class="sideBox">
+              <strong>Nom public</strong>
+              <span>Simple, reconnaissable, sans jargon. On doit sentir le lieu en une seconde.</span>
+            </div>
+
+            <div class="sideBox">
+              <strong>Catégorie</strong>
+              <span>Choisis la vraie famille métier du lieu. La lecture des stats dépend de ça.</span>
+            </div>
+
+            <div class="sideBox">
+              <strong>Ville + zone</strong>
+              <span>Très important pour la lecture territoriale. Une zone manquante casse une partie de la vision terrain.</span>
+            </div>
+
+            <div class="sideBox">
+              <strong>Description courte</strong>
+              <span>Une phrase claire pour la carte, la liste et la lecture rapide mobile.</span>
+            </div>
+
+            <div class="sideBox">
+              <strong>Publication</strong>
+              <span>Publié = visible dans les vues publiques. Brouillon = travail interne uniquement.</span>
+            </div>
+
+            <div class="sideBox">
+              <strong>État actuel</strong>
+              <span id="stateBox">Chargement…</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="foot">
+      PRO-EXPLORE • création / édition terrain • sauvegarde réelle sur le backend DIGIY
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      "use strict";
+
+      const SESSION_KEY = "digiy_explore_session";
+      const MAX_AGE_MS = 8 * 60 * 60 * 1000;
+
+      const supabase = window.supabase.createClient(
+        window.DIGIY_SUPABASE_URL,
+        window.DIGIY_SUPABASE_ANON_KEY
+      );
+
+      const $ = (id) => document.getElementById(id);
+
+      const msg = $("msg");
+      const pageTitle = $("pageTitle");
+      const heroTitle = $("heroTitle");
+      const subline = $("subline");
+      const heroPhone = $("heroPhone");
+      const heroMode = $("heroMode");
+      const heroModeHint = $("heroModeHint");
+      const heroSlug = $("heroSlug");
+      const stateBox = $("stateBox");
+
+      const publicHomeBtn = $("publicHomeBtn");
+      const backToClawBtn = $("backToClawBtn");
+      const rescuePinBtn = $("rescuePinBtn");
+
+      const navCockpit = $("navCockpit");
+      const navLieux = $("navLieux");
+      const navSubmit = $("navSubmit");
+      const navClaw = $("navClaw");
+      const navPreview = $("navPreview");
+      const navPinRescue = $("navPinRescue");
+
+      const backToLieuxBtn = $("backToLieuxBtn");
+      const backToCockpitBtn = $("backToCockpitBtn");
+      const previewBtn = $("previewBtn");
+
+      const form = $("placeForm");
+      const saveBtn = $("saveBtn");
+      const draftBtn = $("draftBtn");
+
+      const publicName = $("publicName");
+      const slug = $("slug");
+      const categoryCode = $("categoryCode");
+      const subcategory = $("subcategory");
+      const priceHint = $("priceHint");
+      const city = $("city");
+      const zone = $("zone");
+      const addressText = $("addressText");
+      const latitude = $("latitude");
+      const longitude = $("longitude");
+      const phone = $("phone");
+      const whatsapp = $("whatsapp");
+      const coverUrl = $("coverUrl");
+      const photoUrls = $("photoUrls");
+      const tags = $("tags");
+      const shortDescription = $("shortDescription");
+      const fullDescription = $("fullDescription");
+      const isFeatured = $("isFeatured");
+      const isPublished = $("isPublished");
+
+      let CURRENT_PHONE = "";
+      let CURRENT_SLUG = "";
+      let IS_EDIT_MODE = false;
+
+      function setMsg(text, type){
+        if(!text){
+          msg.className = "msg";
+          msg.textContent = "";
+          return;
+        }
+        msg.className = "msg show " + (type || "info");
+        msg.textContent = text;
+      }
+
+      function normalizePhone(v){
+        return String(v || "").replace(/[^\d]/g, "");
+      }
+
+      function normalizeSlug(v){
+        return slugify(v);
+      }
+
+      function safeJsonParse(raw){
+        try{
+          return JSON.parse(raw);
+        }catch(_){
+          return null;
+        }
+      }
+
+      function getSession(){
+        try{
+          const raw = localStorage.getItem(SESSION_KEY);
+          if(!raw) return null;
+
+          const parsed = safeJsonParse(raw);
+          if(!parsed || !parsed.ts) return null;
+
+          if((Date.now() - Number(parsed.ts || 0)) > MAX_AGE_MS){
+            localStorage.removeItem(SESSION_KEY);
+            return null;
+          }
+
+          return {
+            phone: normalizePhone(parsed.phone),
+            slug: normalizeSlug(parsed.slug),
+            module: String(parsed.module || "EXPLORE"),
+            ts: Number(parsed.ts || Date.now())
+          };
+        }catch(_){
+          return null;
+        }
+      }
+
+      function saveSession(next){
+        const current = getSession() || {};
+        const payload = {
+          phone: normalizePhone(next?.phone || current.phone || ""),
+          slug: normalizeSlug(next?.slug || current.slug || ""),
+          module: "EXPLORE",
+          ts: Date.now()
+        };
+
+        try{
+          localStorage.setItem(SESSION_KEY, JSON.stringify(payload));
+        }catch(_){}
+
+        return payload;
+      }
+
+      function getPhoneFromContext(){
+        const url = new URL(window.location.href);
+        const fromUrl = normalizePhone(url.searchParams.get("phone"));
+        if(fromUrl) return fromUrl;
+
+        const session = getSession();
+        if(session?.phone) return session.phone;
+
+        return "";
+      }
+
+      function getSlugFromContext(){
+        const url = new URL(window.location.href);
+        const fromUrl = normalizeSlug(url.searchParams.get("slug"));
+        if(fromUrl) return fromUrl;
+
+        const session = getSession();
+        if(session?.slug) return session.slug;
+
+        return "";
+      }
+
+      function slugify(value){
+        return String(value || "")
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-+|-+$/g, "")
+          .replace(/-{2,}/g, "-");
+      }
+
+      function buildQuery(params){
+        const q = new URLSearchParams();
+        const safeSlug = normalizeSlug(params?.slug ?? CURRENT_SLUG);
+        const safePhone = normalizePhone(params?.phone ?? CURRENT_PHONE);
+
+        if(safeSlug) q.set("slug", safeSlug);
+        if(safePhone) q.set("phone", safePhone);
+
+        const str = q.toString();
+        return str ? ("?" + str) : "";
+      }
+
+      function setBusy(busy){
+        saveBtn.disabled = !!busy;
+        draftBtn.disabled = !!busy;
+
+        const elements = form.querySelectorAll("input, textarea, select");
+        elements.forEach(function(el){
+          el.disabled = !!busy;
+        });
+
+        saveBtn.textContent = busy ? "Enregistrement..." : "Enregistrer";
+        draftBtn.textContent = busy ? "Patiente..." : "Sauver en brouillon";
+      }
+
+      function setFormDisabled(disabled){
+        form.querySelectorAll("input, textarea, select, button").forEach(function(el){
+          el.disabled = !!disabled;
+        });
+      }
+
+      function linesToJsonArray(text){
+        return String(text || "")
+          .split("\n")
+          .map(function(x){ return x.trim(); })
+          .filter(Boolean);
+      }
+
+      function commaToJsonArray(text){
+        return String(text || "")
+          .split(",")
+          .map(function(x){ return x.trim(); })
+          .filter(Boolean);
+      }
+
+      function updateRescueVisibility(show){
+        rescuePinBtn.classList.toggle("hidden", !show);
+        navPinRescue.classList.toggle("hidden", !show);
+      }
+
+      function updateNavLinks(){
+        const cockpitQuery = buildQuery({
+          slug: CURRENT_SLUG || "",
+          phone: CURRENT_PHONE || ""
+        });
+
+        const lieuxQuery = buildQuery({
+          phone: CURRENT_PHONE || ""
+        });
+
+        const submitQuery = buildQuery({
+          slug: CURRENT_SLUG || "",
+          phone: CURRENT_PHONE || ""
+        });
+
+        const clawQuery = buildQuery({
+          slug: CURRENT_SLUG || "",
+          phone: CURRENT_PHONE || ""
+        });
+
+        const previewQuery = CURRENT_SLUG
+          ? ("?slug=" + encodeURIComponent(CURRENT_SLUG))
+          : "";
+
+        navCockpit.href = "./cockpit.html" + cockpitQuery;
+        backToCockpitBtn.href = "./cockpit.html" + cockpitQuery;
+
+        navLieux.href = "./lieux.html" + lieuxQuery;
+        backToLieuxBtn.href = "./lieux.html" + lieuxQuery;
+
+        navSubmit.href = "./submit.html" + submitQuery;
+
+        navClaw.href = "./claw.html" + clawQuery;
+        backToClawBtn.href = "./claw.html" + clawQuery;
+
+        navPreview.href = CURRENT_SLUG ? "./index.html" + previewQuery : "./index.html";
+        previewBtn.href = CURRENT_SLUG ? "./index.html" + previewQuery : "./index.html";
+
+        publicHomeBtn.href = "./index.html";
+        rescuePinBtn.href = "./pin.html";
+        navPinRescue.href = "./pin.html";
+      }
+
+      function updateModeUi(){
+        heroPhone.textContent = CURRENT_PHONE || "—";
+        heroSlug.textContent = CURRENT_SLUG || "Nouveau lieu";
+
+        if(IS_EDIT_MODE){
+          pageTitle.textContent = "PRO-EXPLORE • Éditer un lieu";
+          heroTitle.textContent = "Corriger proprement une fiche existante.";
+          heroMode.textContent = "Édition";
+          heroModeHint.textContent = "Le formulaire recharge une fiche existante liée à ta session active.";
+          subline.textContent = "Édition du slug " + CURRENT_SLUG + " sur le rail réel PRO-EXPLORE.";
+          stateBox.textContent = "Mode édition actif. Tu peux corriger, republier ou remettre en brouillon.";
+        } else {
+          pageTitle.textContent = "PRO-EXPLORE • Ajouter un lieu";
+          heroTitle.textContent = "Créer une fiche claire, utile, publiable.";
+          heroMode.textContent = "Création";
+          heroModeHint.textContent = "Nouveau lieu en préparation.";
+          subline.textContent = "Création d’une nouvelle fiche rattachée au téléphone " + (CURRENT_PHONE || "—") + ".";
+          stateBox.textContent = "Mode création actif. Le slug peut être généré depuis le nom public.";
+        }
+      }
+
+      function populateCategories(items){
+        categoryCode.innerHTML = '<option value="">Choisir une catégorie</option>';
+        (items || []).forEach(function(item){
+          const opt = document.createElement("option");
+          opt.value = item.code;
+          opt.textContent = (item.icon ? item.icon + " " : "") + item.label;
+          categoryCode.appendChild(opt);
+        });
+      }
+
+      async function loadCategories(){
+        const { data, error } = await supabase
+          .from("digiy_explore_categories")
+          .select("code,label,icon,sort_order")
+          .eq("is_active", true)
+          .order("sort_order", { ascending: true });
+
+        if(error) throw error;
+        return Array.isArray(data) ? data : [];
+      }
+
+      async function loadPlaceByPhoneAndSlug(phoneValue, slugValue){
+        const { data, error } = await supabase.rpc("digiy_explore_list_places_by_phone", {
+          p_owner_phone: phoneValue
+        });
+        if(error) throw error;
+
+        const items = Array.isArray(data) ? data : [];
+        const safeSlug = normalizeSlug(slugValue);
+
+        const found = items.find(function(item){
+          return normalizeSlug(item?.slug) === safeSlug;
+        });
+
+        return found || null;
+      }
+
+      async function loadPublishedDetailsBySlug(slugValue){
+        const { data, error } = await supabase.rpc("digiy_explore_public_place_by_slug", {
+          p_slug: slugValue
+        });
+        if(error) throw error;
+        return data;
+      }
+
+      function fillFormFromPublishedPlace(place){
+        if(!place) return;
+
+        publicName.value = place.public_name || "";
+        slug.value = normalizeSlug(place.slug || "");
+        categoryCode.value = place.category_code || "";
+        subcategory.value = place.subcategory || "";
+        priceHint.value = place.price_hint || "";
+        city.value = place.city || "";
+        zone.value = place.zone || "";
+        addressText.value = place.address_text || "";
+        latitude.value = place.latitude ?? "";
+        longitude.value = place.longitude ?? "";
+        phone.value = normalizePhone(place.phone || "");
+        whatsapp.value = normalizePhone(place.whatsapp || "");
+        coverUrl.value = place.cover_url || "";
+        photoUrls.value = Array.isArray(place.photo_urls) ? place.photo_urls.join("\n") : "";
+        tags.value = Array.isArray(place.tags) ? place.tags.join(", ") : "";
+        shortDescription.value = place.short_description || "";
+        fullDescription.value = place.full_description || "";
+      }
+
+      function fillFormFromOwnerItem(item){
+        if(!item) return;
+
+        publicName.value = item.public_name || publicName.value || "";
+        slug.value = normalizeSlug(item.slug || slug.value || "");
+        categoryCode.value = item.category_code || categoryCode.value || "";
+        city.value = item.city || city.value || "";
+        zone.value = item.zone || zone.value || "";
+        subcategory.value = item.subcategory || subcategory.value || "";
+        shortDescription.value = item.short_description || shortDescription.value || "";
+        priceHint.value = item.price_hint || priceHint.value || "";
+        coverUrl.value = item.cover_url || coverUrl.value || "";
+        phone.value = normalizePhone(item.phone || phone.value || "");
+        whatsapp.value = normalizePhone(item.whatsapp || whatsapp.value || "");
+        isFeatured.checked = !!item.is_featured;
+        isPublished.checked = item.is_published === true && item.status === "published";
+      }
+
+      async function hydrateEditMode(){
+        if(!IS_EDIT_MODE || !CURRENT_PHONE || !CURRENT_SLUG) return;
+
+        setMsg("Chargement de la fiche existante…", "info");
+
+        try{
+          const foundItem = await loadPlaceByPhoneAndSlug(CURRENT_PHONE, CURRENT_SLUG);
+
+          if(!foundItem){
+            throw new Error("PLACE_NOT_FOUND_FOR_PHONE");
+          }
+
+          fillFormFromOwnerItem(foundItem);
+
+          try{
+            const publishedPayload = await loadPublishedDetailsBySlug(CURRENT_SLUG);
+            if(publishedPayload?.ok === true && publishedPayload.place){
+              fillFormFromPublishedPlace(publishedPayload.place);
+            }
+          }catch(_){
+            // on garde les données owner-side si la lecture publique ne remonte pas
+          }
+
+          if(!phone.value) phone.value = CURRENT_PHONE;
+          if(!whatsapp.value) whatsapp.value = CURRENT_PHONE;
+
+          setMsg("Fiche chargée. Tu peux la corriger.", "ok");
+        }catch(err){
+          console.error("[PRO-EXPLORE submit] hydrate error:", err);
+          setMsg("Impossible de relire cette fiche avec le rail actuel. Vérifie le slug ou le numéro actif.", "bad");
+        }
+      }
+
+      function validateForm(){
+        const cleanPublicName = String(publicName.value || "").trim();
+        const cleanCategory = String(categoryCode.value || "").trim();
+        const cleanCity = String(city.value || "").trim();
+
+        if(!CURRENT_PHONE){
+          setMsg("Aucun téléphone actif. Reviens par la porte PIN pour rouvrir la session.", "bad");
+          return false;
+        }
+
+        if(!cleanPublicName){
+          setMsg("Le nom public est obligatoire.", "bad");
+          publicName.focus();
+          return false;
+        }
+
+        if(!cleanCategory){
+          setMsg("Choisis une catégorie.", "bad");
+          categoryCode.focus();
+          return false;
+        }
+
+        if(!cleanCity){
+          setMsg("La ville est obligatoire.", "bad");
+          city.focus();
+          return false;
+        }
+
+        const finalSlug = normalizeSlug(slug.value || cleanPublicName);
+        if(!finalSlug){
+          setMsg("Impossible de générer un slug valide depuis le nom public.", "bad");
+          slug.focus();
+          return false;
+        }
+
+        if(latitude.value !== "" && Number.isNaN(Number(latitude.value))){
+          setMsg("Latitude invalide.", "bad");
+          latitude.focus();
+          return false;
+        }
+
+        if(longitude.value !== "" && Number.isNaN(Number(longitude.value))){
+          setMsg("Longitude invalide.", "bad");
+          longitude.focus();
+          return false;
+        }
+
+        return true;
+      }
+
+      function buildPayload(forceDraft){
+        const finalSlug = normalizeSlug(slug.value || publicName.value);
+        const publishNow = forceDraft ? false : !!isPublished.checked;
+        const status = publishNow ? "published" : "draft";
+
+        return {
+          p_owner_phone: CURRENT_PHONE,
+          p_slug: finalSlug,
+          p_public_name: String(publicName.value || "").trim(),
+          p_category_code: String(categoryCode.value || "").trim(),
+          p_city: String(city.value || "").trim(),
+          p_zone: String(zone.value || "").trim() || null,
+          p_subcategory: String(subcategory.value || "").trim() || null,
+          p_short_description: String(shortDescription.value || "").trim() || null,
+          p_full_description: String(fullDescription.value || "").trim() || null,
+          p_address_text: String(addressText.value || "").trim() || null,
+          p_latitude: latitude.value === "" ? null : Number(latitude.value),
+          p_longitude: longitude.value === "" ? null : Number(longitude.value),
+          p_phone: normalizePhone(phone.value) || null,
+          p_whatsapp: normalizePhone(whatsapp.value) || null,
+          p_cover_url: String(coverUrl.value || "").trim() || null,
+          p_photo_urls: linesToJsonArray(photoUrls.value),
+          p_tags: commaToJsonArray(tags.value),
+          p_external_links: [],
+          p_opening_hours: [],
+          p_price_hint: String(priceHint.value || "").trim() || null,
+          p_is_featured: !!isFeatured.checked,
+          p_status: status,
+          p_is_published: publishNow
+        };
+      }
+
+      async function savePlace(forceDraft){
+        if(!validateForm()) return;
+
+        const payload = buildPayload(forceDraft);
+
+        setBusy(true);
+        setMsg(
+          forceDraft
+            ? "Sauvegarde du brouillon en cours…"
+            : "Enregistrement du lieu en cours…",
+          "info"
+        );
+
+        try{
+          const { data, error } = await supabase.rpc("digiy_explore_upsert_place", payload);
+          if(error) throw error;
+          if(!data || data.ok !== true){
+            throw new Error("UPSERT_INVALID_RESPONSE");
+          }
+
+          CURRENT_SLUG = normalizeSlug(data.slug || payload.p_slug);
+          slug.value = CURRENT_SLUG;
+          heroSlug.textContent = CURRENT_SLUG;
+          IS_EDIT_MODE = true;
+
+          saveSession({
+            phone: CURRENT_PHONE,
+            slug: CURRENT_SLUG
+          });
+
+          updateModeUi();
+          updateNavLinks();
+
+          setMsg(
+            forceDraft
+              ? "Brouillon enregistré avec succès."
+              : (payload.p_is_published ? "Lieu enregistré et publié avec succès." : "Lieu enregistré avec succès."),
+            "ok"
+          );
+        }catch(err){
+          console.error("[PRO-EXPLORE submit] save error:", err);
+          setMsg("L’enregistrement a échoué. Vérifie les champs et le rail RPC.", "bad");
+        }finally{
+          setBusy(false);
+        }
+      }
+
+      function bindAutoSlug(){
+        publicName.addEventListener("input", function(){
+          const typedSlug = String(slug.value || "").trim();
+
+          if(IS_EDIT_MODE && CURRENT_SLUG && typedSlug === CURRENT_SLUG){
+            return;
+          }
+
+          if(!typedSlug || typedSlug === normalizeSlug(typedSlug)){
+            slug.value = normalizeSlug(publicName.value);
+          }
+        });
+
+        slug.addEventListener("blur", function(){
+          slug.value = normalizeSlug(slug.value);
+        });
+      }
+
+      function prefillContactFields(){
+        if(!phone.value && CURRENT_PHONE){
+          phone.value = CURRENT_PHONE;
+        }
+        if(!whatsapp.value && CURRENT_PHONE){
+          whatsapp.value = CURRENT_PHONE;
+        }
+      }
+
+      async function boot(){
+        CURRENT_PHONE = getPhoneFromContext();
+        CURRENT_SLUG = getSlugFromContext();
+        IS_EDIT_MODE = !!CURRENT_SLUG;
+
+        updateModeUi();
+        updateNavLinks();
+        bindAutoSlug();
+
+        if(CURRENT_PHONE || CURRENT_SLUG){
+          saveSession({
+            phone: CURRENT_PHONE,
+            slug: CURRENT_SLUG
+          });
+        }
+
+        if(!CURRENT_PHONE){
+          updateRescueVisibility(true);
+          heroPhone.textContent = "—";
+          heroMode.textContent = "Accès manquant";
+          heroModeHint.textContent = "Passe par la porte PIN pour ouvrir la session.";
+          stateBox.textContent = "Session absente. Le formulaire est verrouillé jusqu’à réouverture de l’accès.";
+          setMsg("Aucun téléphone actif trouvé. Reviens par pin.html pour ouvrir la session EXPLORE.", "bad");
+          setFormDisabled(true);
+          return;
+        }
+
+        updateRescueVisibility(false);
+
+        try{
+          const categories = await loadCategories();
+          populateCategories(categories);
+        }catch(err){
+          console.error("[PRO-EXPLORE submit] categories error:", err);
+          setMsg("Impossible de charger les catégories pour le moment.", "bad");
+        }
+
+        if(IS_EDIT_MODE){
+          await hydrateEditMode();
+        } else {
+          prefillContactFields();
+          setMsg("Mode création actif. Remplis les champs puis enregistre.", "info");
+        }
+
+        form.addEventListener("submit", async function(e){
+          e.preventDefault();
+          await savePlace(false);
+        });
+
+        draftBtn.addEventListener("click", async function(){
+          await savePlace(true);
+        });
+      }
+
+      boot();
+    })();
+  </script>
+</body>
+</html>
