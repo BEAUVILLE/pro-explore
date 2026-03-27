@@ -499,7 +499,7 @@
       </div>
 
       <div class="topActions">
-        <a class="btn ghost" id="publicHomeBtn" href="./index.html">Vitrine</a>
+        <a class="btn ghost" id="publicHomeBtn" href="https://beauville.github.io/digiy-explore/">Vitrine</a>
         <a class="btn secondary" id="backToClawBtn" href="./claw.html">CLAW</a>
         <a class="btn secondary" id="backToLieuxBtn" href="./lieux.html">Lieux</a>
         <a class="btn secondary" id="backToCockpitBtn" href="./cockpit.html">Cockpit</a>
@@ -512,7 +512,7 @@
         <div class="badge">Édition terrain</div>
         <h1 class="heroTitle" id="heroTitle">Créer une fiche claire, utile, publiable.</h1>
         <p class="heroLead">
-          Ici tu prépares la fiche publique d’un lieu PRO-EXPLORE. Le but n’est pas de faire du bruit :
+          Ici tu prépares la fiche publique d'un lieu PRO-EXPLORE. Le but n'est pas de faire du bruit :
           juste une lecture propre, concrète, utile pour le terrain.
         </p>
       </article>
@@ -543,7 +543,7 @@
       <a id="navLieux" href="./lieux.html">Lieux</a>
       <a id="navSubmit" class="active" href="./submit.html">Ajouter / éditer</a>
       <a id="navClaw" href="./claw.html">CLAW</a>
-      <a id="navPreview" href="./index.html">Vitrine publique</a>
+      <a id="navPreview" href="https://beauville.github.io/digiy-explore/">Vitrine publique</a>
       <a id="navPinRescue" class="hidden" href="./pin.html">PIN secours</a>
     </nav>
 
@@ -653,7 +653,7 @@
 
             <div class="field">
               <label class="label" for="fullDescription">Description complète</label>
-              <textarea id="fullDescription" class="textarea" placeholder="Décris le lieu, l’ambiance, le public, l’intérêt terrain, sans roman inutile."></textarea>
+              <textarea id="fullDescription" class="textarea" placeholder="Décris le lieu, l'ambiance, le public, l'intérêt terrain, sans roman inutile."></textarea>
             </div>
 
             <div class="checkRow">
@@ -677,7 +677,7 @@
             <div class="actions">
               <button id="saveBtn" class="btn primary" type="submit">Enregistrer</button>
               <button id="draftBtn" class="btn secondary" type="button">Sauver en brouillon</button>
-              <a id="previewBtn" class="btn ghost" href="./index.html">Voir la fiche</a>
+              <a id="previewBtn" class="btn ghost" href="https://beauville.github.io/digiy-explore/">Voir la fiche</a>
             </div>
           </form>
         </div>
@@ -733,6 +733,12 @@
   <script>
     (function(){
       "use strict";
+
+      /* ─── FIX : URL de la vitrine publique dans digiy-explore ───────────────
+       * Avant, tous les liens "Voir la fiche" / navPreview pointaient vers
+       * ./index.html (pro-explore). On pointe maintenant vers digiy-explore.
+       * ────────────────────────────────────────────────────────────────────── */
+      const PUBLIC_VITRINE_BASE = "https://beauville.github.io/digiy-explore/";
 
       const SESSION_KEY = "digiy_explore_session";
       const MAX_AGE_MS = 8 * 60 * 60 * 1000;
@@ -895,6 +901,13 @@
           .replace(/-{2,}/g, "-");
       }
 
+      function buildPublicFicheUrl(slugValue){
+        const clean = normalizeSlug(slugValue || "");
+        return clean
+          ? PUBLIC_VITRINE_BASE + "?slug=" + encodeURIComponent(clean)
+          : PUBLIC_VITRINE_BASE;
+      }
+
       function buildQuery(params){
         const q = new URLSearchParams();
         const safeSlug = normalizeSlug(params?.slug ?? CURRENT_SLUG);
@@ -965,9 +978,8 @@
           phone: CURRENT_PHONE || ""
         });
 
-        const previewQuery = CURRENT_SLUG
-          ? ("?slug=" + encodeURIComponent(CURRENT_SLUG))
-          : "";
+        /* ─── FIX : vitrine → digiy-explore avec slug en query string ─────── */
+        const publicFicheUrl = buildPublicFicheUrl(CURRENT_SLUG);
 
         navCockpit.href = "./cockpit.html" + cockpitQuery;
         backToCockpitBtn.href = "./cockpit.html" + cockpitQuery;
@@ -980,10 +992,10 @@
         navClaw.href = "./claw.html" + clawQuery;
         backToClawBtn.href = "./claw.html" + clawQuery;
 
-        navPreview.href = CURRENT_SLUG ? "./index.html" + previewQuery : "./index.html";
-        previewBtn.href = CURRENT_SLUG ? "./index.html" + previewQuery : "./index.html";
+        navPreview.href = publicFicheUrl;
+        previewBtn.href = publicFicheUrl;
 
-        publicHomeBtn.href = "./index.html";
+        publicHomeBtn.href = PUBLIC_VITRINE_BASE;
         rescuePinBtn.href = "./pin.html";
         navPinRescue.href = "./pin.html";
       }
@@ -1004,7 +1016,7 @@
           heroTitle.textContent = "Créer une fiche claire, utile, publiable.";
           heroMode.textContent = "Création";
           heroModeHint.textContent = "Nouveau lieu en préparation.";
-          subline.textContent = "Création d’une nouvelle fiche rattachée au téléphone " + (CURRENT_PHONE || "—") + ".";
+          subline.textContent = "Création d'une nouvelle fiche rattachée au téléphone " + (CURRENT_PHONE || "—") + ".";
           stateBox.textContent = "Mode création actif. Le slug peut être généré depuis le nom public.";
         }
       }
@@ -1110,8 +1122,13 @@
 
           try{
             const publishedPayload = await loadPublishedDetailsBySlug(CURRENT_SLUG);
-            if(publishedPayload?.ok === true && publishedPayload.place){
-              fillFormFromPublishedPlace(publishedPayload.place);
+            /* ─── FIX : la réponse RPC est { ok, place } ─── */
+            const publishedPlace = publishedPayload?.ok === true
+              ? publishedPayload.place
+              : publishedPayload;
+
+            if(publishedPlace && typeof publishedPlace === "object"){
+              fillFormFromPublishedPlace(publishedPlace);
             }
           }catch(_){
             // on garde les données owner-side si la lecture publique ne remonte pas
@@ -1250,7 +1267,7 @@
           );
         }catch(err){
           console.error("[PRO-EXPLORE submit] save error:", err);
-          setMsg("L’enregistrement a échoué. Vérifie les champs et le rail RPC.", "bad");
+          setMsg("L'enregistrement a échoué. Vérifie les champs et le rail RPC.", "bad");
         }finally{
           setBusy(false);
         }
@@ -1304,7 +1321,7 @@
           heroPhone.textContent = "—";
           heroMode.textContent = "Accès manquant";
           heroModeHint.textContent = "Passe par la porte PIN pour ouvrir la session.";
-          stateBox.textContent = "Session absente. Le formulaire est verrouillé jusqu’à réouverture de l’accès.";
+          stateBox.textContent = "Session absente. Le formulaire est verrouillé jusqu'à réouverture de l'accès.";
           setMsg("Aucun téléphone actif trouvé. Reviens par pin.html pour ouvrir la session EXPLORE.", "bad");
           setFormDisabled(true);
           return;
