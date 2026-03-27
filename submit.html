@@ -136,7 +136,7 @@
     }
 
     .btn:active{transform:translateY(1px)}
-    .btn[disabled]{opacity:.6;cursor:not-allowed}
+    .btn[disabled]{opacity:.6;cursor:not-allowed;pointer-events:none}
 
     .btn.primary{
       background:linear-gradient(135deg, var(--gold), var(--gold2));
@@ -154,6 +154,12 @@
       background:transparent;
       border:1px solid var(--line);
       color:var(--ink);
+    }
+
+    .btn.warn{
+      background:rgba(245,158,11,.12);
+      border:1px solid rgba(245,158,11,.26);
+      color:#fde68a;
     }
 
     .hero{
@@ -270,6 +276,12 @@
       font-weight:800;
     }
 
+    .nav a.active{
+      border-color:rgba(212,175,55,.28);
+      background:rgba(212,175,55,.08);
+      color:var(--gold2);
+    }
+
     .msg{
       margin-bottom:16px;
       border-radius:18px;
@@ -295,6 +307,11 @@
       color:#bbf7d0;
       border:1px solid rgba(34,197,94,.18);
       background:rgba(34,197,94,.08);
+    }
+    .msg.warn{
+      color:#fde68a;
+      border:1px solid rgba(245,158,11,.18);
+      background:rgba(245,158,11,.08);
     }
 
     .layout{
@@ -442,6 +459,8 @@
       margin-top:16px;
     }
 
+    .hidden{display:none !important}
+
     .foot{
       margin-top:18px;
       color:var(--muted);
@@ -480,10 +499,11 @@
       </div>
 
       <div class="topActions">
-        <a class="btn ghost" href="./index.html">Vitrine</a>
-        <a class="btn secondary" href="./pin.html">PIN</a>
+        <a class="btn ghost" id="publicHomeBtn" href="./index.html">Vitrine</a>
+        <a class="btn secondary" id="backToClawBtn" href="./claw.html">CLAW</a>
         <a class="btn secondary" id="backToLieuxBtn" href="./lieux.html">Lieux</a>
         <a class="btn secondary" id="backToCockpitBtn" href="./cockpit.html">Cockpit</a>
+        <a class="btn warn hidden" id="rescuePinBtn" href="./pin.html">PIN secours</a>
       </div>
     </header>
 
@@ -521,9 +541,10 @@
     <nav class="nav">
       <a id="navCockpit" href="./cockpit.html">Cockpit</a>
       <a id="navLieux" href="./lieux.html">Lieux</a>
-      <a href="./submit.html">Ajouter / éditer</a>
-      <a href="./index.html">Vitrine publique</a>
-      <a href="./pin.html">Entrée PIN</a>
+      <a id="navSubmit" class="active" href="./submit.html">Ajouter / éditer</a>
+      <a id="navClaw" href="./claw.html">CLAW</a>
+      <a id="navPreview" href="./index.html">Vitrine publique</a>
+      <a id="navPinRescue" class="hidden" href="./pin.html">PIN secours</a>
     </nav>
 
     <div id="msg" class="msg info"></div>
@@ -656,7 +677,7 @@
             <div class="actions">
               <button id="saveBtn" class="btn primary" type="submit">Enregistrer</button>
               <button id="draftBtn" class="btn secondary" type="button">Sauver en brouillon</button>
-              <a id="previewBtn" class="btn ghost" href="./index.html">Voir la vitrine</a>
+              <a id="previewBtn" class="btn ghost" href="./index.html">Voir la fiche</a>
             </div>
           </form>
         </div>
@@ -733,8 +754,17 @@
       const heroSlug = $("heroSlug");
       const stateBox = $("stateBox");
 
+      const publicHomeBtn = $("publicHomeBtn");
+      const backToClawBtn = $("backToClawBtn");
+      const rescuePinBtn = $("rescuePinBtn");
+
       const navCockpit = $("navCockpit");
       const navLieux = $("navLieux");
+      const navSubmit = $("navSubmit");
+      const navClaw = $("navClaw");
+      const navPreview = $("navPreview");
+      const navPinRescue = $("navPinRescue");
+
       const backToLieuxBtn = $("backToLieuxBtn");
       const backToCockpitBtn = $("backToCockpitBtn");
       const previewBtn = $("previewBtn");
@@ -781,38 +811,78 @@
         return String(v || "").replace(/[^\d]/g, "");
       }
 
+      function normalizeSlug(v){
+        return slugify(v);
+      }
+
       function safeJsonParse(raw){
-        try{ return JSON.parse(raw); }catch(_){ return null; }
+        try{
+          return JSON.parse(raw);
+        }catch(_){
+          return null;
+        }
       }
 
       function getSession(){
         try{
           const raw = localStorage.getItem(SESSION_KEY);
           if(!raw) return null;
+
           const parsed = safeJsonParse(raw);
-          if(!parsed || !parsed.phone || !parsed.ts) return null;
-          if((Date.now() - parsed.ts) > MAX_AGE_MS){
+          if(!parsed || !parsed.ts) return null;
+
+          if((Date.now() - Number(parsed.ts || 0)) > MAX_AGE_MS){
             localStorage.removeItem(SESSION_KEY);
             return null;
           }
-          return parsed;
+
+          return {
+            phone: normalizePhone(parsed.phone),
+            slug: normalizeSlug(parsed.slug),
+            module: String(parsed.module || "EXPLORE"),
+            ts: Number(parsed.ts || Date.now())
+          };
         }catch(_){
           return null;
         }
       }
 
-      function getPhone(){
+      function saveSession(next){
+        const current = getSession() || {};
+        const payload = {
+          phone: normalizePhone(next?.phone || current.phone || ""),
+          slug: normalizeSlug(next?.slug || current.slug || ""),
+          module: "EXPLORE",
+          ts: Date.now()
+        };
+
+        try{
+          localStorage.setItem(SESSION_KEY, JSON.stringify(payload));
+        }catch(_){}
+
+        return payload;
+      }
+
+      function getPhoneFromContext(){
         const url = new URL(window.location.href);
         const fromUrl = normalizePhone(url.searchParams.get("phone"));
         if(fromUrl) return fromUrl;
+
         const session = getSession();
-        if(session?.phone) return normalizePhone(session.phone);
+        if(session?.phone) return session.phone;
+
         return "";
       }
 
-      function getSlugFromUrl(){
+      function getSlugFromContext(){
         const url = new URL(window.location.href);
-        return String(url.searchParams.get("slug") || "").trim();
+        const fromUrl = normalizeSlug(url.searchParams.get("slug"));
+        if(fromUrl) return fromUrl;
+
+        const session = getSession();
+        if(session?.slug) return session.slug;
+
+        return "";
       }
 
       function slugify(value){
@@ -825,41 +895,97 @@
           .replace(/-{2,}/g, "-");
       }
 
+      function buildQuery(params){
+        const q = new URLSearchParams();
+        const safeSlug = normalizeSlug(params?.slug ?? CURRENT_SLUG);
+        const safePhone = normalizePhone(params?.phone ?? CURRENT_PHONE);
+
+        if(safeSlug) q.set("slug", safeSlug);
+        if(safePhone) q.set("phone", safePhone);
+
+        const str = q.toString();
+        return str ? ("?" + str) : "";
+      }
+
       function setBusy(busy){
         saveBtn.disabled = !!busy;
         draftBtn.disabled = !!busy;
+
         const elements = form.querySelectorAll("input, textarea, select");
-        elements.forEach(el => { el.disabled = !!busy; });
+        elements.forEach(function(el){
+          el.disabled = !!busy;
+        });
+
         saveBtn.textContent = busy ? "Enregistrement..." : "Enregistrer";
         draftBtn.textContent = busy ? "Patiente..." : "Sauver en brouillon";
+      }
+
+      function setFormDisabled(disabled){
+        form.querySelectorAll("input, textarea, select, button").forEach(function(el){
+          el.disabled = !!disabled;
+        });
       }
 
       function linesToJsonArray(text){
         return String(text || "")
           .split("\n")
-          .map(x => x.trim())
+          .map(function(x){ return x.trim(); })
           .filter(Boolean);
       }
 
       function commaToJsonArray(text){
         return String(text || "")
           .split(",")
-          .map(x => x.trim())
+          .map(function(x){ return x.trim(); })
           .filter(Boolean);
       }
 
-      function updateNavLinks(){
-        const phoneParam = CURRENT_PHONE ? "?phone=" + encodeURIComponent(CURRENT_PHONE) : "";
-        navCockpit.href = "./cockpit.html" + phoneParam;
-        navLieux.href = "./lieux.html" + phoneParam;
-        backToLieuxBtn.href = "./lieux.html" + phoneParam;
-        backToCockpitBtn.href = "./cockpit.html" + phoneParam;
+      function updateRescueVisibility(show){
+        rescuePinBtn.classList.toggle("hidden", !show);
+        navPinRescue.classList.toggle("hidden", !show);
+      }
 
-        if(CURRENT_SLUG){
-          previewBtn.href = "./fiche.html?slug=" + encodeURIComponent(CURRENT_SLUG);
-        } else {
-          previewBtn.href = "./index.html";
-        }
+      function updateNavLinks(){
+        const cockpitQuery = buildQuery({
+          slug: CURRENT_SLUG || "",
+          phone: CURRENT_PHONE || ""
+        });
+
+        const lieuxQuery = buildQuery({
+          phone: CURRENT_PHONE || ""
+        });
+
+        const submitQuery = buildQuery({
+          slug: CURRENT_SLUG || "",
+          phone: CURRENT_PHONE || ""
+        });
+
+        const clawQuery = buildQuery({
+          slug: CURRENT_SLUG || "",
+          phone: CURRENT_PHONE || ""
+        });
+
+        const previewQuery = CURRENT_SLUG
+          ? ("?slug=" + encodeURIComponent(CURRENT_SLUG))
+          : "";
+
+        navCockpit.href = "./cockpit.html" + cockpitQuery;
+        backToCockpitBtn.href = "./cockpit.html" + cockpitQuery;
+
+        navLieux.href = "./lieux.html" + lieuxQuery;
+        backToLieuxBtn.href = "./lieux.html" + lieuxQuery;
+
+        navSubmit.href = "./submit.html" + submitQuery;
+
+        navClaw.href = "./claw.html" + clawQuery;
+        backToClawBtn.href = "./claw.html" + clawQuery;
+
+        navPreview.href = CURRENT_SLUG ? "./fiche.html" + previewQuery : "./index.html";
+        previewBtn.href = CURRENT_SLUG ? "./fiche.html" + previewQuery : "./index.html";
+
+        publicHomeBtn.href = "./index.html";
+        rescuePinBtn.href = "./pin.html";
+        navPinRescue.href = "./pin.html";
       }
 
       function updateModeUi(){
@@ -870,7 +996,7 @@
           pageTitle.textContent = "PRO-EXPLORE • Éditer un lieu";
           heroTitle.textContent = "Corriger proprement une fiche existante.";
           heroMode.textContent = "Édition";
-          heroModeHint.textContent = "Le formulaire recharge une fiche existante liée à ton numéro.";
+          heroModeHint.textContent = "Le formulaire recharge une fiche existante liée à ta session active.";
           subline.textContent = "Édition du slug " + CURRENT_SLUG + " sur le rail réel PRO-EXPLORE.";
           stateBox.textContent = "Mode édition actif. Tu peux corriger, republier ou remettre en brouillon.";
         } else {
@@ -911,7 +1037,12 @@
         if(error) throw error;
 
         const items = Array.isArray(data) ? data : [];
-        const found = items.find(item => String(item.slug || "") === String(slugValue || ""));
+        const safeSlug = normalizeSlug(slugValue);
+
+        const found = items.find(function(item){
+          return normalizeSlug(item?.slug) === safeSlug;
+        });
+
         return found || null;
       }
 
@@ -927,7 +1058,7 @@
         if(!place) return;
 
         publicName.value = place.public_name || "";
-        slug.value = place.slug || "";
+        slug.value = normalizeSlug(place.slug || "");
         categoryCode.value = place.category_code || "";
         subcategory.value = place.subcategory || "";
         priceHint.value = place.price_hint || "";
@@ -936,8 +1067,8 @@
         addressText.value = place.address_text || "";
         latitude.value = place.latitude ?? "";
         longitude.value = place.longitude ?? "";
-        phone.value = place.phone || "";
-        whatsapp.value = place.whatsapp || "";
+        phone.value = normalizePhone(place.phone || "");
+        whatsapp.value = normalizePhone(place.whatsapp || "");
         coverUrl.value = place.cover_url || "";
         photoUrls.value = Array.isArray(place.photo_urls) ? place.photo_urls.join("\n") : "";
         tags.value = Array.isArray(place.tags) ? place.tags.join(", ") : "";
@@ -945,13 +1076,22 @@
         fullDescription.value = place.full_description || "";
       }
 
-      function setDraftStatusOnLoad(foundItem, publishedPayload){
-        if(foundItem){
-          isFeatured.checked = !!foundItem.is_featured;
-          isPublished.checked = foundItem.is_published === true && foundItem.status === "published";
-        } else if(publishedPayload?.place){
-          isPublished.checked = true;
-        }
+      function fillFormFromOwnerItem(item){
+        if(!item) return;
+
+        publicName.value = item.public_name || publicName.value || "";
+        slug.value = normalizeSlug(item.slug || slug.value || "");
+        categoryCode.value = item.category_code || categoryCode.value || "";
+        city.value = item.city || city.value || "";
+        zone.value = item.zone || zone.value || "";
+        subcategory.value = item.subcategory || subcategory.value || "";
+        shortDescription.value = item.short_description || shortDescription.value || "";
+        priceHint.value = item.price_hint || priceHint.value || "";
+        coverUrl.value = item.cover_url || coverUrl.value || "";
+        phone.value = normalizePhone(item.phone || phone.value || "");
+        whatsapp.value = normalizePhone(item.whatsapp || whatsapp.value || "");
+        isFeatured.checked = !!item.is_featured;
+        isPublished.checked = item.is_published === true && item.status === "published";
       }
 
       async function hydrateEditMode(){
@@ -966,22 +1106,20 @@
             throw new Error("PLACE_NOT_FOUND_FOR_PHONE");
           }
 
-          let publishedPayload = null;
-          try{
-            publishedPayload = await loadPublishedDetailsBySlug(CURRENT_SLUG);
-          }catch(_){}
+          fillFormFromOwnerItem(foundItem);
 
-          if(publishedPayload?.ok === true && publishedPayload.place){
-            fillFormFromPublishedPlace(publishedPayload.place);
-          } else {
-            publicName.value = foundItem.public_name || "";
-            slug.value = foundItem.slug || "";
-            categoryCode.value = foundItem.category_code || "";
-            city.value = foundItem.city || "";
-            zone.value = foundItem.zone || "";
+          try{
+            const publishedPayload = await loadPublishedDetailsBySlug(CURRENT_SLUG);
+            if(publishedPayload?.ok === true && publishedPayload.place){
+              fillFormFromPublishedPlace(publishedPayload.place);
+            }
+          }catch(_){
+            // on garde les données owner-side si la lecture publique ne remonte pas
           }
 
-          setDraftStatusOnLoad(foundItem, publishedPayload);
+          if(!phone.value) phone.value = CURRENT_PHONE;
+          if(!whatsapp.value) whatsapp.value = CURRENT_PHONE;
+
           setMsg("Fiche chargée. Tu peux la corriger.", "ok");
         }catch(err){
           console.error("[PRO-EXPLORE submit] hydrate error:", err);
@@ -991,12 +1129,11 @@
 
       function validateForm(){
         const cleanPublicName = String(publicName.value || "").trim();
-        const cleanSlug = String(slug.value || "").trim();
         const cleanCategory = String(categoryCode.value || "").trim();
         const cleanCity = String(city.value || "").trim();
 
         if(!CURRENT_PHONE){
-          setMsg("Aucun téléphone actif. Reviens par pin.html.", "bad");
+          setMsg("Aucun téléphone actif. Reviens par la porte PIN pour rouvrir la session.", "bad");
           return false;
         }
 
@@ -1018,9 +1155,22 @@
           return false;
         }
 
-        if(!cleanSlug && !slugify(cleanPublicName)){
+        const finalSlug = normalizeSlug(slug.value || cleanPublicName);
+        if(!finalSlug){
           setMsg("Impossible de générer un slug valide depuis le nom public.", "bad");
           slug.focus();
+          return false;
+        }
+
+        if(latitude.value !== "" && Number.isNaN(Number(latitude.value))){
+          setMsg("Latitude invalide.", "bad");
+          latitude.focus();
+          return false;
+        }
+
+        if(longitude.value !== "" && Number.isNaN(Number(longitude.value))){
+          setMsg("Longitude invalide.", "bad");
+          longitude.focus();
           return false;
         }
 
@@ -1028,7 +1178,7 @@
       }
 
       function buildPayload(forceDraft){
-        const finalSlug = String(slug.value || "").trim() || slugify(publicName.value);
+        const finalSlug = normalizeSlug(slug.value || publicName.value);
         const publishNow = forceDraft ? false : !!isPublished.checked;
         const status = publishNow ? "published" : "draft";
 
@@ -1063,8 +1213,14 @@
         if(!validateForm()) return;
 
         const payload = buildPayload(forceDraft);
+
         setBusy(true);
-        setMsg(forceDraft ? "Sauvegarde du brouillon en cours…" : "Enregistrement du lieu en cours…", "info");
+        setMsg(
+          forceDraft
+            ? "Sauvegarde du brouillon en cours…"
+            : "Enregistrement du lieu en cours…",
+          "info"
+        );
 
         try{
           const { data, error } = await supabase.rpc("digiy_explore_upsert_place", payload);
@@ -1073,14 +1229,18 @@
             throw new Error("UPSERT_INVALID_RESPONSE");
           }
 
-          CURRENT_SLUG = data.slug || payload.p_slug;
+          CURRENT_SLUG = normalizeSlug(data.slug || payload.p_slug);
           slug.value = CURRENT_SLUG;
           heroSlug.textContent = CURRENT_SLUG;
           IS_EDIT_MODE = true;
+
+          saveSession({
+            phone: CURRENT_PHONE,
+            slug: CURRENT_SLUG
+          });
+
           updateModeUi();
           updateNavLinks();
-
-          previewBtn.href = "./fiche.html?slug=" + encodeURIComponent(CURRENT_SLUG);
 
           setMsg(
             forceDraft
@@ -1098,30 +1258,59 @@
 
       function bindAutoSlug(){
         publicName.addEventListener("input", function(){
-          if(IS_EDIT_MODE && CURRENT_SLUG) return;
-          const current = String(slug.value || "").trim();
-          if(!current || current === slugify(current)){
-            slug.value = slugify(publicName.value);
+          const typedSlug = String(slug.value || "").trim();
+
+          if(IS_EDIT_MODE && CURRENT_SLUG && typedSlug === CURRENT_SLUG){
+            return;
           }
+
+          if(!typedSlug || typedSlug === normalizeSlug(typedSlug)){
+            slug.value = normalizeSlug(publicName.value);
+          }
+        });
+
+        slug.addEventListener("blur", function(){
+          slug.value = normalizeSlug(slug.value);
         });
       }
 
+      function prefillContactFields(){
+        if(!phone.value && CURRENT_PHONE){
+          phone.value = CURRENT_PHONE;
+        }
+        if(!whatsapp.value && CURRENT_PHONE){
+          whatsapp.value = CURRENT_PHONE;
+        }
+      }
+
       async function boot(){
-        CURRENT_PHONE = getPhone();
-        CURRENT_SLUG = getSlugFromUrl();
+        CURRENT_PHONE = getPhoneFromContext();
+        CURRENT_SLUG = getSlugFromContext();
         IS_EDIT_MODE = !!CURRENT_SLUG;
 
         updateModeUi();
         updateNavLinks();
+        bindAutoSlug();
+
+        if(CURRENT_PHONE || CURRENT_SLUG){
+          saveSession({
+            phone: CURRENT_PHONE,
+            slug: CURRENT_SLUG
+          });
+        }
 
         if(!CURRENT_PHONE){
+          updateRescueVisibility(true);
           heroPhone.textContent = "—";
           heroMode.textContent = "Accès manquant";
-          heroModeHint.textContent = "Passe d’abord par pin.html pour ouvrir la session.";
-          setMsg("Aucun téléphone actif trouvé. Reviens par pin.html.", "bad");
-          form.querySelectorAll("input, textarea, select, button").forEach(el => el.disabled = true);
+          heroModeHint.textContent = "Passe par la porte PIN pour ouvrir la session.";
+          stateBox.textContent = "Session absente. Le formulaire est verrouillé jusqu’à réouverture de l’accès.";
+          setMsg("Aucun téléphone actif trouvé. Reviens par pin.html pour ouvrir la session EXPLORE.", "bad");
+          setFormDisabled(true);
           return;
         }
+
+        updateRescueVisibility(false);
 
         try{
           const categories = await loadCategories();
@@ -1134,10 +1323,9 @@
         if(IS_EDIT_MODE){
           await hydrateEditMode();
         } else {
+          prefillContactFields();
           setMsg("Mode création actif. Remplis les champs puis enregistre.", "info");
         }
-
-        bindAutoSlug();
 
         form.addEventListener("submit", async function(e){
           e.preventDefault();
