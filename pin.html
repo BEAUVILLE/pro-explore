@@ -505,8 +505,8 @@
         </div>
       </div>
 
+      <!-- ─── FIX : Vitrine publique retiré — rail PRO uniquement ─── -->
       <div class="topActions">
-        <a class="topBtn" id="btnPublicTop" href="./index.html">Vitrine publique</a>
         <a class="topBtn hidden" id="btnCockpitTop" href="./cockpit.html">Cockpit</a>
         <a class="topBtn hidden" id="btnLieuxTop" href="./lieux.html">Lieux</a>
         <a class="topBtn hidden" id="btnSubmitTop" href="./submit.html">Ajouter / éditer</a>
@@ -516,7 +516,7 @@
 
     <section class="hero">
       <article class="panel heroCard">
-        <div class="eyebrow">Porte d’entrée / secours</div>
+        <div class="eyebrow">Porte d'entrée / secours</div>
         <h1>Observer. Comprendre. Agir.</h1>
         <p class="lead">
           Cette page ne sert pas à te faire tourner en rond. Elle ouvre le rail PRO-EXPLORE,
@@ -531,7 +531,7 @@
           </div>
           <div class="bullet">
             <span class="dot"></span>
-            <span>Le PIN sert d’entrée extérieure ou de secours. Une fois dedans, on circule sans le retaper partout.</span>
+            <span>Le PIN sert d'entrée extérieure ou de secours. Une fois dedans, on circule sans le retaper partout.</span>
           </div>
           <div class="bullet">
             <span class="dot"></span>
@@ -544,8 +544,8 @@
           <span id="targetText">Cockpit EXPLORE</span>
         </div>
 
+        <!-- ─── FIX : Vitrine publique retiré des liens rapides ─── -->
         <div class="links">
-          <a class="linkBtn" href="./index.html">Vitrine publique</a>
           <a class="linkBtn" id="linkDefaultCockpit" href="./cockpit.html">Cockpit pro</a>
           <a class="linkBtn" id="linkDefaultLieux" href="./lieux.html">Lieux</a>
           <a class="linkBtn" id="linkDefaultClaw" href="./claw.html">CLAW</a>
@@ -612,7 +612,7 @@
             <button id="submitBtn" class="mainBtn" type="submit">Ouvrir mon rail</button>
             <div id="msg" class="msg info">Entre ton numéro et ton PIN.</div>
             <div class="mini">
-              Vérification réelle d’abord sur le rail EXPLORE, puis tentative de secours sur le rail PIN DIGIY générique.
+              Vérification réelle d'abord sur le rail EXPLORE, puis tentative de secours sur le rail PIN DIGIY générique.
             </div>
           </div>
         </form>
@@ -654,8 +654,7 @@
         cockpit: "./cockpit.html",
         lieux: "./lieux.html",
         submit: "./submit.html",
-        claw: "./claw.html",
-        public: "./index.html"
+        claw: "./claw.html"
       };
 
       const supabase = window.supabase.createClient(
@@ -719,35 +718,27 @@
 
       function digiyRpcLooksOk(data){
         if (data == null) return false;
-
         if (data === true) return true;
-
         if (Array.isArray(data)) {
           if (!data.length) return false;
           return data.some(digiyRpcLooksOk);
         }
-
         if (typeof data === "object") {
           if (data.ok === true || data.access_ok === true) return true;
-
           const values = Object.values(data);
           if (values.includes(true)) return true;
           if (values.includes("t")) return true;
-
           return false;
         }
-
         if (typeof data === "string") {
           const s = data.trim().toLowerCase();
           return s === "true" || s.startsWith("(t,") || s.includes('"ok":true');
         }
-
         return false;
       }
 
       function extractSlug(data){
         if (!data) return null;
-
         if (Array.isArray(data)) {
           for (const item of data) {
             const found = extractSlug(item);
@@ -755,7 +746,6 @@
           }
           return null;
         }
-
         if (typeof data === "object") {
           return normalizeSlug(
             data.slug ||
@@ -765,12 +755,10 @@
             ""
           ) || null;
         }
-
         if (typeof data === "string") {
           const m = data.match(/([a-z0-9]+-\d{6,})/i);
           return m ? normalizeSlug(m[1]) : null;
         }
-
         return null;
       }
 
@@ -790,10 +778,8 @@
         const q = new URLSearchParams();
         const cleanPhone = normalizePhone(phone);
         const cleanSlug = normalizeSlug(slug);
-
         if(cleanSlug) q.set("slug", cleanSlug);
         if(cleanPhone) q.set("phone", cleanPhone);
-
         const str = q.toString();
         return str ? ("?" + str) : "";
       }
@@ -854,7 +840,6 @@
 
         try{ localStorage.setItem(SESSION_KEY, rawSession); }catch(_){}
         try{ sessionStorage.setItem(SESSION_KEY, rawSession); }catch(_){}
-
         try{ localStorage.setItem("digiy_explore_phone", cleanPhone); }catch(_){}
         try{ localStorage.setItem("digiy_explore_slug", resolvedSlug || ""); }catch(_){}
         try{ localStorage.setItem("digiy_last_phone", cleanPhone); }catch(_){}
@@ -877,14 +862,9 @@
           try{
             const raw = read();
             if(!raw) continue;
-
             const parsed = safeJsonParse(raw);
             if(!parsed || !parsed.phone || !parsed.ts) continue;
-
-            if((Date.now() - Number(parsed.ts)) > MAX_AGE_MS){
-              continue;
-            }
-
+            if((Date.now() - Number(parsed.ts)) > MAX_AGE_MS) continue;
             return parsed;
           }catch(_){}
         }
@@ -896,15 +876,12 @@
         const url = new URL(window.location.href);
         const fromUrl = normalizePhone(url.searchParams.get("phone"));
         if(fromUrl) return fromUrl;
-
         const session = getSession();
         if(session?.phone) return normalizePhone(session.phone);
-
         try{
           const saved = normalizePhone(localStorage.getItem("digiy_explore_phone"));
           if(saved) return saved;
         }catch(_){}
-
         return "";
       }
 
@@ -912,21 +889,21 @@
         const url = new URL(window.location.href);
         const fromUrl = normalizeSlug(url.searchParams.get("slug"));
         if(fromUrl) return fromUrl;
-
         const session = getSession();
         if(session?.slug) return normalizeSlug(session.slug);
-
         try{
           const saved = normalizeSlug(localStorage.getItem("digiy_explore_slug"));
           if(saved) return saved;
         }catch(_){}
-
         return "";
       }
 
       function readTargetRoute(){
         const url = new URL(window.location.href);
-        return getRouteName(url.searchParams.get("next"));
+        const next = url.searchParams.get("next") || "";
+        // Extraire la route depuis le chemin next (ex: /cockpit.html → cockpit)
+        const match = next.match(/\/(cockpit|lieux|submit|claw)\.html/);
+        return getRouteName(match ? match[1] : url.searchParams.get("route"));
       }
 
       function redirectToRoute(route, phone, slug){
@@ -960,13 +937,10 @@
           p_phone: phone,
           p_pin: pin
         });
-
         if(error) throw error;
-
         if (digiyRpcLooksOk(data)) {
           return { ok:true, source:"explore_admin_pin_check", data };
         }
-
         return { ok:false, source:"explore_admin_pin_check", data };
       }
 
@@ -981,12 +955,7 @@
         for(const params of candidates){
           try{
             const { data, error } = await supabase.rpc("digiy_verify_pin", params);
-
-            if(error){
-              lastError = error;
-              continue;
-            }
-
+            if(error){ lastError = error; continue; }
             if (digiyRpcLooksOk(data)) {
               return { ok:true, source:"digiy_verify_pin", data };
             }
@@ -1034,7 +1003,7 @@
         }
 
         setBusy(true);
-        setMsg("Vérification de l’accès PRO-EXPLORE...", "info");
+        setMsg("Vérification de l'accès PRO-EXPLORE...", "info");
 
         try{
           const result = await verifyAccess(phone, pin);
