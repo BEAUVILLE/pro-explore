@@ -643,7 +643,7 @@
       </div>
 
       <div class="topActions">
-        <a class="btn ghost" id="btnAccessTop" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener">Vitrine</a>
+        <a class="btn ghost" id="btnAccessTop" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener" onclick="window.open('https://explore.digiylyfe.com/','_blank');return false;">← Retour EXPLORE public</a>
         <a class="btn secondary" id="btnLieuxTop" href="./lieux.html">Lieux</a>
         <a class="btn secondary" id="btnSubmitTop" href="./submit.html">Ajouter / éditer</a>
         <a class="btn info" id="btnClawTop" href="./claw.html">CLAW</a>
@@ -652,7 +652,7 @@
     </header>
 
     <nav class="nav" aria-label="Navigation PRO EXPLORE">
-      <a id="navAccess" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener">Vitrine</a>
+      <a id="navAccess" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener" onclick="window.open('https://explore.digiylyfe.com/','_blank');return false;">← EXPLORE public</a>
       <a id="navCockpit" class="active" href="./cockpit.html">Cockpit</a>
       <a id="navLieux" href="./lieux.html">Lieux</a>
       <a id="navSubmit" href="./submit.html">Ajouter / éditer</a>
@@ -1141,14 +1141,14 @@
         const clawHref = buildInternalHref(PATHS.claw, slug, phone);
         const pinHref = buildPinHref(slug, phone);
 
-        $("navAccess").href = PATHS.access; $("navAccess").target = "_blank"; $("navAccess").rel = "noopener";
+        $("navAccess").href = PATHS.access; $("navAccess").target = "_blank"; $("navAccess").rel = "noopener"; $("navAccess").onclick = function(e){ e.preventDefault(); e.stopPropagation(); window.open(PATHS.access, "_blank"); return false; };
         $("navCockpit").href = cockpitHref;
         $("navLieux").href = lieuxHref;
         $("navSubmit").href = submitHref;
         $("navClaw").href = clawHref;
         $("navPinRescue").href = pinHref;
 
-        $("btnAccessTop").href = PATHS.access; $("btnAccessTop").target = "_blank"; $("btnAccessTop").rel = "noopener";
+        $("btnAccessTop").href = PATHS.access; $("btnAccessTop").target = "_blank"; $("btnAccessTop").rel = "noopener"; $("btnAccessTop").onclick = function(e){ e.preventDefault(); e.stopPropagation(); window.open(PATHS.access, "_blank"); return false; };
         $("btnLieuxTop").href = lieuxHref;
         $("btnSubmitTop").href = submitHref;
         $("btnClawTop").href = clawHref;
