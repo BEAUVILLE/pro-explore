@@ -643,7 +643,7 @@
       </div>
 
       <div class="topActions">
-        <button class="btn ghost" id="btnAccessTop" onclick="window.location.assign('https://explore.digiylyfe.com/')">← Retour EXPLORE public</button>
+        <a class="btn ghost" id="btnAccessTop" href="./submit.html">+ Ajouter un lieu</a>
         <a class="btn secondary" id="btnLieuxTop" href="./lieux.html">Lieux</a>
         <a class="btn secondary" id="btnSubmitTop" href="./submit.html">Ajouter / éditer</a>
         <a class="btn info" id="btnClawTop" href="./claw.html">CLAW</a>
@@ -652,7 +652,7 @@
     </header>
 
     <nav class="nav" aria-label="Navigation PRO EXPLORE">
-      <button class="btn ghost" id="navAccess" style="border-radius:999px;min-height:42px;padding:0 14px;font-size:13px;" onclick="window.location.assign('https://explore.digiylyfe.com/')">← EXPLORE public</button>
+      <a id="navAccess" href="./submit.html">Ajouter un lieu</a>
       <a id="navCockpit" class="active" href="./cockpit.html">Cockpit</a>
       <a id="navLieux" href="./lieux.html">Lieux</a>
       <a id="navSubmit" href="./submit.html">Ajouter / éditer</a>
@@ -740,7 +740,7 @@
 
           <div class="placeActions" style="margin-bottom:14px">
             <a class="btn secondary" id="btnEditCurrent" href="./submit.html">Éditer ce lieu</a>
-            <button class="btn secondary" id="btnViewCurrent" onclick="window.location.assign('https://explore.digiylyfe.com/')">Voir la vitrine</button>
+            <a class="btn secondary" id="btnViewCurrent" href="./submit.html">Voir / éditer ma fiche</a>
             <a class="btn info" id="btnClawCurrent" href="./claw.html">Lire avec CLAW</a>
           </div>
 
@@ -833,7 +833,7 @@
       const PUBLIC_VITRINE_BASE = "https://explore.digiylyfe.com/";
 
       const PATHS = {
-        access: PUBLIC_VITRINE_BASE,
+        access: './submit.html',
         cockpit: "./cockpit.html",
         lieux: "./lieux.html",
         submit: "./submit.html",
@@ -1141,14 +1141,14 @@
         const clawHref = buildInternalHref(PATHS.claw, slug, phone);
         const pinHref = buildPinHref(slug, phone);
 
-        $("navAccess").onclick = function(){ window.location.assign(PATHS.access); };
+        $("navAccess").href = PATHS.submit;
         $("navCockpit").href = cockpitHref;
         $("navLieux").href = lieuxHref;
         $("navSubmit").href = submitHref;
         $("navClaw").href = clawHref;
         $("navPinRescue").href = pinHref;
 
-        $("btnAccessTop").onclick = function(){ window.location.assign(PATHS.access); };
+        $("btnAccessTop").href = PATHS.submit;
         $("btnLieuxTop").href = lieuxHref;
         $("btnSubmitTop").href = submitHref;
         $("btnClawTop").href = clawHref;
@@ -1309,7 +1309,7 @@
             : "Ouvre d'abord le rail par PIN.";
 
           $("btnEditCurrent").href = $("navSubmit").href;
-          $("btnViewCurrent").href = "#"; $("btnViewCurrent").onclick = function(e){ e.preventDefault(); window.location.assign(PUBLIC_VITRINE_BASE); };
+          $("btnViewCurrent").href = PATHS.submit;
           $("btnClawCurrent").href = $("navClaw").href;
           $("linksText").textContent = "Le cockpit garde la couture vers vitrine, lieux, édition et CLAW. Le PIN reste un secours.";
 
@@ -1329,7 +1329,7 @@
           : "Contrôler la fiche puis publier quand la lecture est propre.";
 
         $("btnEditCurrent").href = buildInternalHref("./submit.html", place.slug || CURRENT_SLUG, CURRENT_PHONE);
-        $("btnViewCurrent").href = "#"; $("btnViewCurrent").onclick = function(e){ e.preventDefault(); window.location.assign(buildPublicFicheHref(place.slug || CURRENT_SLUG)); };
+        $("btnViewCurrent").href = buildInternalHref(PATHS.submit, place.slug || CURRENT_SLUG, CURRENT_PHONE);
         $("btnClawCurrent").href = buildInternalHref("./claw.html", place.slug || CURRENT_SLUG, CURRENT_PHONE);
         $("linksText").textContent =
           `Rail utile : cockpit → lieux → édition du slug ${place.slug || CURRENT_SLUG || "—"} → CLAW.`;
