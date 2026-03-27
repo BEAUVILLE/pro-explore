@@ -17,7 +17,8 @@
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="./guad.js?v=explore-claw-guard-2"></script>
+  <!-- FIX : guad.js → guard.js -->
+  <script src="./guard.js?v=explore-claw-guard-3"></script>
   <script src="./claw-tools-explore.js?v=explore-claw-tools-2"></script>
 
   <style>
@@ -383,10 +384,7 @@
       margin-bottom:12px;
     }
 
-    .box strong{
-      font-size:14px;
-    }
-
+    .box strong{ font-size:14px; }
     .box span{
       color:var(--muted);
       font-size:13px;
@@ -458,17 +456,17 @@
         </div>
       </div>
 
+      <!-- FIX : Vitrine retiré de la topbar — rail PRO uniquement -->
       <div class="topActions">
         <a class="btn secondary" id="btnCockpitTop" href="./cockpit.html">Cockpit</a>
         <a class="btn secondary" id="btnLieuxTop" href="./lieux.html">Lieux</a>
         <a class="btn secondary" id="btnSubmitTop" href="./submit.html">Ajouter / éditer</a>
-        <a class="btn ghost" id="btnAccessTop" href="./index.html">Vitrine</a>
         <a class="btn warn hidden" id="btnPinTop" href="./pin.html">PIN secours</a>
       </div>
     </header>
 
+    <!-- FIX : navAccess (Vitrine) retiré de la nav -->
     <nav class="nav" aria-label="Navigation PRO EXPLORE">
-      <a id="navAccess" href="./index.html">Vitrine</a>
       <a id="navCockpit" href="./cockpit.html">Cockpit</a>
       <a id="navLieux" href="./lieux.html">Lieux</a>
       <a id="navSubmit" href="./submit.html">Ajouter / éditer</a>
@@ -483,7 +481,7 @@
         <div class="badge" id="modeBadge">Lecture légère</div>
         <h1 id="heroTitle">Voir le terrain sans bruit.</h1>
         <p class="heroLead" id="heroLead">
-          CLAW relit le slug EXPLORE, l’état d’accès, le lieu chargé et te pousse l’action simple à faire maintenant.
+          CLAW relit le slug EXPLORE, l'état d'accès, le lieu chargé et te pousse l'action simple à faire maintenant.
         </p>
 
         <div class="pills" id="heroPills">
@@ -503,7 +501,7 @@
         <div class="miniStat">
           <div class="miniLabel">Slug actif</div>
           <div class="miniValue" id="heroSlug">—</div>
-          <div class="miniHint">Identifiant terrain détecté par l’URL, le guard ou le stockage local.</div>
+          <div class="miniHint">Identifiant terrain détecté par l'URL, le guard ou le stockage local.</div>
         </div>
 
         <div class="miniStat">
@@ -513,7 +511,7 @@
         </div>
 
         <div class="miniStat">
-          <div class="miniLabel">État d’accès</div>
+          <div class="miniLabel">État d'accès</div>
           <div class="miniValue" id="heroAccess">—</div>
           <div class="miniHint" id="heroAccessHint">CLAW attend la lecture du guard.</div>
         </div>
@@ -600,6 +598,7 @@
     (() => {
       "use strict";
 
+      /* FIX : vitrine retirée — rail PRO uniquement */
       const STORAGE_KEY = "digiy_explore_session";
 
       const $ = (id) => document.getElementById(id);
@@ -630,7 +629,6 @@
         btnOpenCockpit: $("btnOpenCockpit"),
         btnOpenSubmit: $("btnOpenSubmit"),
         btnOpenPin: $("btnOpenPin"),
-        navAccess: $("navAccess"),
         navCockpit: $("navCockpit"),
         navLieux: $("navLieux"),
         navSubmit: $("navSubmit"),
@@ -639,7 +637,6 @@
         btnCockpitTop: $("btnCockpitTop"),
         btnLieuxTop: $("btnLieuxTop"),
         btnSubmitTop: $("btnSubmitTop"),
-        btnAccessTop: $("btnAccessTop"),
         btnPinTop: $("btnPinTop")
       };
 
@@ -652,11 +649,7 @@
       }
 
       function safeJsonParse(raw){
-        try{
-          return JSON.parse(raw);
-        }catch(_){
-          return null;
-        }
+        try{ return JSON.parse(raw); }catch(_){ return null; }
       }
 
       function normalizePhone(v){
@@ -673,9 +666,7 @@
           .replace(/-{2,}/g, "-");
       }
 
-      function normalizeSlug(v){
-        return slugify(v);
-      }
+      function normalizeSlug(v){ return slugify(v); }
 
       function getUrlSeed(){
         const url = new URL(window.location.href);
@@ -690,35 +681,28 @@
           const raw = localStorage.getItem(STORAGE_KEY);
           const parsed = safeJsonParse(raw);
           if(!parsed) return { slug:"", phone:"" };
-
           return {
             slug: normalizeSlug(parsed.slug),
             phone: normalizePhone(parsed.phone)
           };
-        }catch(_){
-          return { slug:"", phone:"" };
-        }
+        }catch(_){ return { slug:"", phone:"" }; }
       }
 
       function getGuardSeed(){
         try{
           const guard = window.DIGIY_GUARD || {};
           const state = guard.state || (typeof guard.getState === "function" ? guard.getState() : {}) || {};
-
           return {
             slug: normalizeSlug(state.slug || state.current_slug || state.owner_slug || ""),
             phone: normalizePhone(state.phone || state.owner_phone || "")
           };
-        }catch(_){
-          return { slug:"", phone:"" };
-        }
+        }catch(_){ return { slug:"", phone:"" }; }
       }
 
       function getSeedContext(){
         const fromUrl = getUrlSeed();
         const fromGuard = getGuardSeed();
         const fromStore = getStoredSeed();
-
         return {
           slug: normalizeSlug(fromUrl.slug || fromGuard.slug || fromStore.slug || ""),
           phone: normalizePhone(fromUrl.phone || fromGuard.phone || fromStore.phone || "")
@@ -732,20 +716,15 @@
           module: "EXPLORE",
           ts: Date.now()
         };
-
-        try{
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
-        }catch(_){}
+        try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(payload)); }catch(_){}
       }
 
       function buildQuery(params){
         const q = new URLSearchParams();
         const safeSlug = normalizeSlug(params?.slug || "");
         const safePhone = normalizePhone(params?.phone || "");
-
         if(safeSlug) q.set("slug", safeSlug);
         if(safePhone) q.set("phone", safePhone);
-
         const str = q.toString();
         return str ? ("?" + str) : "";
       }
@@ -753,13 +732,13 @@
       function computeLinks(slug, phone, provided){
         const cleanSlug = normalizeSlug(slug);
         const cleanPhone = normalizePhone(phone);
+        const q = buildQuery({ slug: cleanSlug, phone: cleanPhone });
 
         const fallback = {
-          access: "./index.html",
-          cockpit: "./cockpit.html" + buildQuery({ slug: cleanSlug, phone: cleanPhone }),
-          lieux: "./lieux.html" + buildQuery({ slug: cleanSlug, phone: cleanPhone }),
-          submit: "./submit.html" + buildQuery({ slug: cleanSlug, phone: cleanPhone }),
-          claw: "./claw.html" + buildQuery({ slug: cleanSlug, phone: cleanPhone }),
+          cockpit: "./cockpit.html" + q,
+          lieux: "./lieux.html" + q,
+          submit: "./submit.html" + q,
+          claw: "./claw.html" + q,
           pin: cleanPhone ? ("./pin.html?phone=" + encodeURIComponent(cleanPhone)) : "./pin.html"
         };
 
@@ -768,45 +747,20 @@
 
       function normalizeContext(raw){
         const seed = getSeedContext();
-
-        const accessOk =
-          typeof raw?.access_ok === "boolean"
-            ? raw.access_ok
-            : !!raw?.has_access;
-
-        const slug = normalizeSlug(
-          raw?.slug ||
-          raw?.place_slug ||
-          raw?.current_slug ||
-          seed.slug
-        );
-
-        const phone = normalizePhone(
-          raw?.phone ||
-          raw?.owner_phone ||
-          raw?.contact_phone ||
-          seed.phone
-        );
+        const accessOk = typeof raw?.access_ok === "boolean" ? raw.access_ok : !!raw?.has_access;
+        const slug = normalizeSlug(raw?.slug || raw?.place_slug || raw?.current_slug || seed.slug);
+        const phone = normalizePhone(raw?.phone || raw?.owner_phone || raw?.contact_phone || seed.phone);
 
         const ctx = {
           module: "EXPLORE",
           slug,
           phone,
           access_ok: accessOk,
-          business_name:
-            String(
-              raw?.business_name ||
-              raw?.public_name ||
-              raw?.place_name ||
-              raw?.name ||
-              ""
-            ).trim(),
+          business_name: String(raw?.business_name || raw?.public_name || raw?.place_name || raw?.name || "").trim(),
           city: String(raw?.city || raw?.place_city || "").trim(),
           zone: String(raw?.zone || raw?.district || "").trim(),
           activity: String(raw?.activity || raw?.category_label || raw?.category_code || "").trim(),
-          is_published:
-            raw?.is_published === true ||
-            raw?.published === true,
+          is_published: raw?.is_published === true || raw?.published === true,
           owner_places_count: Number(raw?.owner_places_count || raw?.places_count || 0),
           published_places_count: Number(raw?.published_places_count || raw?.published_count || 0)
         };
@@ -824,7 +778,7 @@
       function renderLinks(ctx){
         const links = ctx.links || computeLinks(ctx.slug, ctx.phone, {});
 
-        els.navAccess.href = links.access || "./index.html";
+        /* FIX : navAccess supprimé — plus dans le DOM */
         els.navCockpit.href = links.cockpit || "./cockpit.html";
         els.navLieux.href = links.lieux || "./lieux.html";
         els.navSubmit.href = links.submit || "./submit.html";
@@ -834,7 +788,7 @@
         els.btnCockpitTop.href = links.cockpit || "./cockpit.html";
         els.btnLieuxTop.href = links.lieux || "./lieux.html";
         els.btnSubmitTop.href = links.submit || "./submit.html";
-        els.btnAccessTop.href = links.access || "./index.html";
+        /* FIX : btnAccessTop supprimé — plus dans le DOM */
         els.btnPinTop.href = links.pin || "./pin.html";
 
         els.btnOpenCockpit.href = links.cockpit || "./cockpit.html";
@@ -843,22 +797,10 @@
       }
 
       function buildActionText(ctx){
-        if(!ctx.access_ok){
-          return "Passe d’abord par le PIN ou vérifie l’abonnement EXPLORE.";
-        }
-
-        if(!ctx.slug){
-          return "Il manque encore un slug propre pour travailler le rail.";
-        }
-
-        if(!ctx.business_name){
-          return "Le slug est vivant, mais il faut enrichir ou vérifier la fiche lieu.";
-        }
-
-        if(!ctx.is_published){
-          return "La fiche existe, mais le prochain cran logique est le contrôle avant publication.";
-        }
-
+        if(!ctx.access_ok) return "Passe d'abord par le PIN ou vérifie l'abonnement EXPLORE.";
+        if(!ctx.slug) return "Il manque encore un slug propre pour travailler le rail.";
+        if(!ctx.business_name) return "Le slug est vivant, mais il faut enrichir ou vérifier la fiche lieu.";
+        if(!ctx.is_published) return "La fiche existe, mais le prochain cran logique est le contrôle avant publication.";
         return "Le rail est vivant. Lis la fiche, affine la micro-copy, puis pilote depuis cockpit ou lieux.";
       }
 
@@ -909,7 +851,7 @@
 
         if(!ctx.access_ok){
           els.modeBadge.textContent = "Lecture prudente";
-          els.heroTitle.textContent = "CLAW voit le rail, mais l’accès reste à confirmer.";
+          els.heroTitle.textContent = "CLAW voit le rail, mais l'accès reste à confirmer.";
           els.heroLead.textContent = "Ici on ne force rien. On lit le slug, on garde la navigation propre, puis on pousse la prochaine action utile.";
           els.briefTitle.textContent = "Accès ou session à vérifier";
           els.briefText.textContent = "Le guard EXPLORE existe bien, mais CLAW ne prétend pas ouvrir un rail fermé. Passe par PIN si nécessaire.";
@@ -917,7 +859,7 @@
         }else if(!ctx.business_name){
           els.modeBadge.textContent = "Rail vivant";
           els.heroTitle.textContent = "CLAW voit un rail actif, mais peu de matière lieu.";
-          els.heroLead.textContent = "Le slug existe et l’accès tient. Le prochain cran logique est de vérifier les lieux ou d’ajouter une fiche propre.";
+          els.heroLead.textContent = "Le slug existe et l'accès tient. Le prochain cran logique est de vérifier les lieux ou d'ajouter une fiche propre.";
           els.briefTitle.textContent = "Slug vivant, fiche faible";
           els.briefText.textContent = "Le guard est bon. Il faut maintenant enrichir la lecture terrain via lieux.html ou submit.html.";
           setStatus("Accès actif. Lecture lieu encore légère.", "ok");
@@ -927,15 +869,13 @@
           els.heroLead.textContent = "Nom, ville, zone, catégorie, publication : on a assez de matière pour diagnostiquer la fiche sans casser le moule.";
           els.briefTitle.textContent = "Lieu chargé";
           els.briefText.textContent =
-            `${ctx.business_name}${ctx.city ? " à " + ctx.city : ""}${ctx.zone ? ", zone " + ctx.zone : ""}. ${ctx.is_published ? "La fiche est publiée." : "La fiche n’est pas encore publiée."}`;
+            `${ctx.business_name}${ctx.city ? " à " + ctx.city : ""}${ctx.zone ? ", zone " + ctx.zone : ""}. ${ctx.is_published ? "La fiche est publiée." : "La fiche n'est pas encore publiée."}`;
           setStatus("Contexte CLAW chargé proprement.", "ok");
         }
 
         els.linksText.textContent = [
-          ctx.links?.cockpit ? "Cockpit" : "",
-          ctx.links?.lieux ? "Lieux" : "",
-          ctx.links?.submit ? "Ajouter / éditer" : "",
-          !ctx.access_ok && ctx.links?.pin ? "PIN secours" : ""
+          "Cockpit", "Lieux", "Ajouter / éditer",
+          !ctx.access_ok ? "PIN secours" : ""
         ].filter(Boolean).join(" • ");
 
         refreshPrompt();
@@ -962,57 +902,25 @@
           `accès: ${access}`
         ].join("\n");
 
-        if(kind === "territory_brief"){
-          return `${common}\n\nDonne un brief terrain très court sur ce lieu, ce qu’il représente localement, et l’action logique à faire maintenant.`;
-        }
-
-        if(kind === "place_read"){
-          return `${common}\n\nLis cette fiche comme un opérateur terrain DIGIY. Dis ce qui est clair, ce qui manque, et la correction prioritaire sans roman inutile.`;
-        }
-
-        if(kind === "publish_check"){
-          return `${common}\n\nContrôle si la fiche semble prête à publier côté public. Réponds en 3 blocs : prêt / à corriger / action immédiate.`;
-        }
-
-        if(kind === "mobile_copy"){
-          return `${common}\n\nÉcris une micro-copy mobile courte pour présenter ce lieu dans l’app DIGIY EXPLORE avec un ton clair et terrain.`;
-        }
-
+        if(kind === "territory_brief") return `${common}\n\nDonne un brief terrain très court sur ce lieu, ce qu'il représente localement, et l'action logique à faire maintenant.`;
+        if(kind === "place_read") return `${common}\n\nLis cette fiche comme un opérateur terrain DIGIY. Dis ce qui est clair, ce qui manque, et la correction prioritaire sans roman inutile.`;
+        if(kind === "publish_check") return `${common}\n\nContrôle si la fiche semble prête à publier côté public. Réponds en 3 blocs : prêt / à corriger / action immédiate.`;
+        if(kind === "mobile_copy") return `${common}\n\nÉcris une micro-copy mobile courte pour présenter ce lieu dans l'app DIGIY EXPLORE avec un ton clair et terrain.`;
         return `${common}\n\nDonne une lecture générale CLAW du rail PRO-EXPLORE et la prochaine action simple à faire.`;
       }
 
       function buildPrompt(kind, ctx){
-        if(
-          window.DIGIY_CLAW_EXPLORE &&
-          typeof window.DIGIY_CLAW_EXPLORE.buildPrompt === "function"
-        ){
-          try{
-            return window.DIGIY_CLAW_EXPLORE.buildPrompt(kind, ctx);
-          }catch(err){
-            console.warn("[EXPLORE CLAW] buildPrompt fallback:", err);
-          }
+        if(window.DIGIY_CLAW_EXPLORE && typeof window.DIGIY_CLAW_EXPLORE.buildPrompt === "function"){
+          try{ return window.DIGIY_CLAW_EXPLORE.buildPrompt(kind, ctx); }catch(err){ console.warn("[EXPLORE CLAW] buildPrompt fallback:", err); }
         }
         return buildFallbackPrompt(kind, ctx);
       }
 
       async function copyPrompt(text){
-        if(
-          window.DIGIY_CLAW_EXPLORE &&
-          typeof window.DIGIY_CLAW_EXPLORE.copyPrompt === "function"
-        ){
-          try{
-            return await window.DIGIY_CLAW_EXPLORE.copyPrompt(text);
-          }catch(err){
-            console.warn("[EXPLORE CLAW] copyPrompt fallback:", err);
-          }
+        if(window.DIGIY_CLAW_EXPLORE && typeof window.DIGIY_CLAW_EXPLORE.copyPrompt === "function"){
+          try{ return await window.DIGIY_CLAW_EXPLORE.copyPrompt(text); }catch(err){ console.warn("[EXPLORE CLAW] copyPrompt fallback:", err); }
         }
-
-        try{
-          await navigator.clipboard.writeText(text || "");
-          return true;
-        }catch(_){
-          return false;
-        }
+        try{ await navigator.clipboard.writeText(text || ""); return true; }catch(_){ return false; }
       }
 
       function refreshPrompt(){
@@ -1022,24 +930,13 @@
 
       async function waitGuard(){
         if(window.DIGIY_GUARD?.ready && typeof window.DIGIY_GUARD.ready === "function"){
-          try{
-            await window.DIGIY_GUARD.ready();
-          }catch(err){
-            console.warn("[EXPLORE CLAW] guard ready error:", err);
-          }
+          try{ await window.DIGIY_GUARD.ready(); }catch(err){ console.warn("[EXPLORE CLAW] guard ready error:", err); }
         }
       }
 
       async function loadToolContext(){
-        if(
-          window.DIGIY_CLAW_EXPLORE &&
-          typeof window.DIGIY_CLAW_EXPLORE.loadContext === "function"
-        ){
-          try{
-            return await window.DIGIY_CLAW_EXPLORE.loadContext();
-          }catch(err){
-            console.warn("[EXPLORE CLAW] tool context error:", err);
-          }
+        if(window.DIGIY_CLAW_EXPLORE && typeof window.DIGIY_CLAW_EXPLORE.loadContext === "function"){
+          try{ return await window.DIGIY_CLAW_EXPLORE.loadContext(); }catch(err){ console.warn("[EXPLORE CLAW] tool context error:", err); }
         }
         return null;
       }
@@ -1047,7 +944,6 @@
       async function boot(){
         try{
           await waitGuard();
-
           const rawCtx = await loadToolContext();
           const ctx = normalizeContext(rawCtx || {});
           renderContext(ctx);
