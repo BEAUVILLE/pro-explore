@@ -15,9 +15,11 @@
     window.DIGIY_SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
     window.DIGIY_SUPABASE_ANON = window.DIGIY_SUPABASE_ANON_KEY;
     window.DIGIY_MODULE = "EXPLORE";
+    window.DIGIY_LOGIN_URL = "./pin.html";
+    document.documentElement.style.visibility = "hidden";
   </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="./guad.js?v=explore-lieux-claw-1"></script>
+  <script src="./guad.js?v=explore-lieux-claw-2"></script>
 
   <style>
     :root{
@@ -163,6 +165,12 @@
       background:rgba(56,189,248,.10);
       border:1px solid rgba(56,189,248,.22);
       color:#d8f2ff;
+    }
+
+    .btn.warn{
+      background:rgba(245,158,11,.12);
+      border:1px solid rgba(245,158,11,.26);
+      color:#fde68a;
     }
 
     .hero{
@@ -634,6 +642,8 @@
       font-size:14px;
     }
 
+    .hidden{display:none !important}
+
     .foot{
       margin-top:18px;
       color:var(--muted);
@@ -676,10 +686,10 @@
 
       <div class="topActions">
         <a class="btn ghost" id="btnAccessTop" href="./index.html">Vitrine</a>
-        <a class="btn secondary" id="btnPinTop" href="./pin.html">PIN</a>
         <a class="btn secondary" id="btnCockpitTop" href="./cockpit.html">Cockpit</a>
         <a class="btn info" id="btnClawTop" href="./claw.html">CLAW</a>
         <a class="btn primary" id="btnSubmitTop" href="./submit.html">+ Ajouter un lieu</a>
+        <a class="btn warn hidden" id="btnPinTop" href="./pin.html">PIN secours</a>
       </div>
     </header>
 
@@ -696,6 +706,7 @@
           <a class="btn secondary" id="btnHeroCockpit" href="./cockpit.html">Cockpit</a>
           <a class="btn secondary" id="btnHeroSubmit" href="./submit.html">Ajouter / éditer</a>
           <a class="btn info" id="btnHeroClaw" href="./claw.html">Ouvrir CLAW</a>
+          <a class="btn warn hidden" id="btnHeroPin" href="./pin.html">PIN secours</a>
         </div>
       </article>
 
@@ -707,15 +718,15 @@
         </div>
 
         <div class="miniStat">
-          <div class="miniLabel">État du rail</div>
-          <div class="miniValue" id="heroStatus">Chargement…</div>
-          <div class="miniHint" id="heroStatusHint">Connexion à la liste réelle des lieux.</div>
+          <div class="miniLabel">Slug actif</div>
+          <div class="miniValue" id="heroSlug">—</div>
+          <div class="miniHint">Contexte porté entre lieux, cockpit, édition et CLAW.</div>
         </div>
 
         <div class="miniStat">
           <div class="miniLabel">Action utile</div>
           <div class="miniValue" id="heroAction">—</div>
-          <div class="miniHint">Le prochain cran simple poussé par le cockpit lieux.</div>
+          <div class="miniHint" id="heroStatusHint">Le prochain cran simple poussé par le cockpit lieux.</div>
         </div>
       </aside>
     </section>
@@ -724,9 +735,9 @@
       <a id="navCockpit" href="./cockpit.html">Cockpit</a>
       <a id="navLieux" class="active" href="./lieux.html">Lieux</a>
       <a id="navSubmit" href="./submit.html">Ajouter / éditer</a>
-      <a id="navAccess" href="./index.html">Vitrine publique</a>
-      <a id="navPin" href="./pin.html">Entrée PIN</a>
       <a id="navClaw" href="./claw.html">CLAW</a>
+      <a id="navAccess" href="./index.html">Vitrine publique</a>
+      <a id="navPinRescue" class="hidden" href="./pin.html">PIN secours</a>
     </nav>
 
     <div id="msg" class="msg info"></div>
@@ -828,9 +839,9 @@
 
       const msg = $("msg");
       const heroPhone = $("heroPhone");
-      const heroStatus = $("heroStatus");
-      const heroStatusHint = $("heroStatusHint");
+      const heroSlug = $("heroSlug");
       const heroAction = $("heroAction");
+      const heroStatusHint = $("heroStatusHint");
       const subline = $("subline");
 
       const statTotal = $("statTotal");
@@ -845,6 +856,8 @@
 
       let ALL_ITEMS = [];
       let CURRENT_PHONE = "";
+      let CURRENT_SLUG = "";
+      let CURRENT_ACCESS_OK = false;
 
       function setMsg(text, type){
         if(!text){
@@ -897,8 +910,8 @@
       function setClawMissingAccess(){
         setClaw(
           "Accès manquant",
-          "CLAW garde une lecture sobre : pas de session, pas de téléphone pilote, donc pas de liste réelle à lire.",
-          ["PIN conseillé", "Session absente"],
+          "CLAW garde une lecture sobre : pas de session valide, donc pas de liste réelle à lire.",
+          ["PIN secours", "Session absente"],
           [
             {
               title:"Blocage principal",
@@ -916,6 +929,16 @@
         return String(v || "").replace(/[^\d]/g, "");
       }
 
+      function normalizeSlug(v){
+        return String(v || "")
+          .trim()
+          .toLowerCase()
+          .replace(/\s+/g, "-")
+          .replace(/[^a-z0-9-]/g, "")
+          .replace(/-+/g, "-")
+          .replace(/^-|-$/g, "");
+      }
+
       function safeJsonParse(raw){
         try{ return JSON.parse(raw); }catch(_){ return null; }
       }
@@ -930,16 +953,6 @@
 
       function getSession(){
         try{
-          const rawLocal = localStorage.getItem(SESSION_KEY);
-          if(rawLocal){
-            const parsed = safeJsonParse(rawLocal);
-            if(parsed && parsed.phone && parsed.ts && (Date.now() - parsed.ts) <= MAX_AGE_MS){
-              return parsed;
-            }
-          }
-        }catch(_){}
-
-        try{
           const rawSession = sessionStorage.getItem(SESSION_KEY);
           if(rawSession){
             const parsed = safeJsonParse(rawSession);
@@ -949,11 +962,22 @@
           }
         }catch(_){}
 
+        try{
+          const rawLocal = localStorage.getItem(SESSION_KEY);
+          if(rawLocal){
+            const parsed = safeJsonParse(rawLocal);
+            if(parsed && parsed.phone && parsed.ts && (Date.now() - parsed.ts) <= MAX_AGE_MS){
+              return parsed;
+            }
+          }
+        }catch(_){}
+
         const guardState = window.DIGIY_GUARD?.state || null;
-        if(guardState?.phone){
+        if(guardState?.phone || guardState?.slug){
           return {
-            phone: guardState.phone,
-            slug: guardState.slug || "",
+            phone: normalizePhone(guardState.phone || ""),
+            slug: normalizeSlug(guardState.slug || ""),
+            access_ok: typeof guardState.access_ok === "boolean" ? guardState.access_ok : undefined,
             ts: Date.now()
           };
         }
@@ -961,15 +985,72 @@
         return null;
       }
 
+      function saveSession(next){
+        const payload = {
+          phone: normalizePhone(next?.phone || ""),
+          slug: normalizeSlug(next?.slug || ""),
+          module: "EXPLORE",
+          ts: Date.now()
+        };
+
+        const raw = JSON.stringify(payload);
+
+        try{ sessionStorage.setItem(SESSION_KEY, raw); }catch(_){}
+        try{ localStorage.setItem(SESSION_KEY, raw); }catch(_){}
+      }
+
+      function getGuardState(){
+        const st = window.DIGIY_GUARD?.state || {};
+        return {
+          phone: normalizePhone(st.phone || ""),
+          slug: normalizeSlug(st.slug || ""),
+          access_ok: typeof st.access_ok === "boolean" ? st.access_ok : null
+        };
+      }
+
       function getPhone(){
         const url = new URL(window.location.href);
         const fromUrl = normalizePhone(url.searchParams.get("phone"));
         if(fromUrl) return fromUrl;
 
+        const guard = getGuardState();
+        if(guard.phone) return guard.phone;
+
         const session = getSession();
         if(session?.phone) return normalizePhone(session.phone);
 
         return "";
+      }
+
+      function getSlug(){
+        const url = new URL(window.location.href);
+        const fromUrl = normalizeSlug(url.searchParams.get("slug"));
+        if(fromUrl) return fromUrl;
+
+        const guard = getGuardState();
+        if(guard.slug) return guard.slug;
+
+        const session = getSession();
+        if(session?.slug) return normalizeSlug(session.slug);
+
+        return "";
+      }
+
+      function resolveAccess(){
+        const url = new URL(window.location.href);
+        const urlPhone = normalizePhone(url.searchParams.get("phone"));
+        const guard = getGuardState();
+        const session = getSession();
+
+        if(typeof guard.access_ok === "boolean"){
+          return guard.access_ok;
+        }
+
+        if(typeof session?.access_ok === "boolean"){
+          return session.access_ok;
+        }
+
+        return !!(urlPhone || guard.phone || session?.phone);
       }
 
       function fmtDate(v){
@@ -996,57 +1077,51 @@
           .replaceAll("'", "&#039;");
       }
 
-      function withPhone(path, extra = {}){
-        const url = new URL(path, window.location.href);
-        if(CURRENT_PHONE) url.searchParams.set("phone", CURRENT_PHONE);
+      function buildQuery(params = {}){
+        const q = new URLSearchParams();
+        const safePhone = normalizePhone(params.phone ?? CURRENT_PHONE);
+        const safeSlug = normalizeSlug(params.slug ?? CURRENT_SLUG);
 
-        Object.entries(extra || {}).forEach(([key, value]) => {
-          if(value !== null && value !== undefined && String(value).trim() !== ""){
-            url.searchParams.set(key, String(value));
-          }
-        });
+        if(safeSlug) q.set("slug", safeSlug);
+        if(safePhone) q.set("phone", safePhone);
 
-        return url.toString();
+        const s = q.toString();
+        return s ? ("?" + s) : "";
       }
 
-      function publicUrlFromSlug(slug){
-        const url = new URL("./fiche.html", window.location.href);
-        url.searchParams.set("slug", slug);
-        return url.toString();
+      function buildInternalHref(path, params = {}){
+        return path + buildQuery(params);
       }
 
-      function editUrlFromSlug(slug){
-        const url = new URL("./submit.html", window.location.href);
-        if(slug) url.searchParams.set("slug", slug);
-        if(CURRENT_PHONE) url.searchParams.set("phone", CURRENT_PHONE);
-        return url.toString();
-      }
-
-      function cockpitUrl(){
-        return withPhone("./cockpit.html");
-      }
-
-      function clawUrl(slug){
-        return withPhone("./claw.html", slug ? { slug } : {});
+      function buildPublicFicheHref(slug){
+        const safeSlug = normalizeSlug(slug);
+        return safeSlug ? `./fiche.html?slug=${encodeURIComponent(safeSlug)}` : "./index.html";
       }
 
       function refreshNavLinks(){
         $("btnAccessTop").href = "./index.html";
-        $("btnPinTop").href = withPhone("./pin.html");
-        $("btnCockpitTop").href = withPhone("./cockpit.html");
-        $("btnClawTop").href = withPhone("./claw.html");
-        $("btnSubmitTop").href = withPhone("./submit.html");
+        $("btnCockpitTop").href = buildInternalHref("./cockpit.html");
+        $("btnClawTop").href = buildInternalHref("./claw.html");
+        $("btnSubmitTop").href = buildInternalHref("./submit.html");
+        $("btnPinTop").href = buildInternalHref("./pin.html");
 
-        $("btnHeroCockpit").href = withPhone("./cockpit.html");
-        $("btnHeroSubmit").href = withPhone("./submit.html");
-        $("btnHeroClaw").href = withPhone("./claw.html");
+        $("btnHeroCockpit").href = buildInternalHref("./cockpit.html");
+        $("btnHeroSubmit").href = buildInternalHref("./submit.html");
+        $("btnHeroClaw").href = buildInternalHref("./claw.html");
+        $("btnHeroPin").href = buildInternalHref("./pin.html");
 
-        $("navCockpit").href = withPhone("./cockpit.html");
-        $("navLieux").href = withPhone("./lieux.html");
-        $("navSubmit").href = withPhone("./submit.html");
+        $("navCockpit").href = buildInternalHref("./cockpit.html");
+        $("navLieux").href = buildInternalHref("./lieux.html");
+        $("navSubmit").href = buildInternalHref("./submit.html");
+        $("navClaw").href = buildInternalHref("./claw.html");
         $("navAccess").href = "./index.html";
-        $("navPin").href = withPhone("./pin.html");
-        $("navClaw").href = withPhone("./claw.html");
+        $("navPinRescue").href = buildInternalHref("./pin.html");
+      }
+
+      function setRescueVisibility(show){
+        $("btnPinTop").classList.toggle("hidden", !show);
+        $("btnHeroPin").classList.toggle("hidden", !show);
+        $("navPinRescue").classList.toggle("hidden", !show);
       }
 
       function computeStats(items){
@@ -1095,26 +1170,28 @@
         const archived = items.filter(x => x?.status === "archived").length;
         const drafts = items.filter(x => x?.status === "draft" || (x?.is_published !== true && x?.status !== "archived")).length;
 
-        if(!CURRENT_PHONE){
-          heroStatus.textContent = "Accès manquant";
-          heroStatusHint.textContent = "Passe d’abord par pin.html pour ouvrir la session.";
+        heroPhone.textContent = CURRENT_PHONE || "—";
+        heroSlug.textContent = CURRENT_SLUG || "—";
+
+        if(!CURRENT_ACCESS_OK || !CURRENT_PHONE){
           heroAction.textContent = "Entrer par PIN";
+          heroStatusHint.textContent = "Passe d’abord par pin.html pour ouvrir la session.";
           setClawMissingAccess();
           return;
         }
 
         if(!total){
-          heroStatus.textContent = "Rail actif";
-          heroStatusHint.textContent = "Aucun lieu encore remonté pour ce numéro.";
           heroAction.textContent = "Ajouter un lieu";
+          heroStatusHint.textContent = "Le rail est actif mais aucun lieu n’est encore remonté.";
           setClaw(
             "Rail vivant",
             "Le numéro pilote est reconnu, mais aucun lieu n’est encore visible. Le prochain cran logique est d’ajouter une première fiche terrain.",
             [
               `Téléphone : ${CURRENT_PHONE}`,
+              CURRENT_SLUG ? `Slug : ${CURRENT_SLUG}` : "",
               "0 lieu",
               "Action : ajouter"
-            ],
+            ].filter(Boolean),
             [
               {
                 title:"Lecture du rail",
@@ -1129,19 +1206,22 @@
           return;
         }
 
-        heroStatus.textContent = "Rail actif";
         heroStatusHint.textContent = `${total} lieu(x) chargé(s) sur le backend réel.`;
         heroAction.textContent = published ? "Affiner les fiches publiées" : "Publier un premier lieu";
 
-        const first = items[0];
+        const first = CURRENT_SLUG
+          ? items.find(x => normalizeSlug(x?.slug) === CURRENT_SLUG) || items[0]
+          : items[0];
+
         const firstName = first?.public_name || "Lieu pilote";
-        const firstSlug = first?.slug || "slug absent";
+        const firstSlug = normalizeSlug(first?.slug || "");
 
         setClaw(
           "Lecture vivante",
           "CLAW relit ici la densité du rail EXPLORE : combien de lieux, combien de publiés, combien de brouillons, et quelle action pousse le terrain.",
           [
             `Téléphone : ${CURRENT_PHONE}`,
+            CURRENT_SLUG ? `Slug actif : ${CURRENT_SLUG}` : "",
             `${total} lieu(x)`,
             `${published} publié(s)`,
             `${drafts} brouillon(s)`,
@@ -1150,7 +1230,7 @@
           [
             {
               title:"Lieu pilote",
-              text:`${firstName} (${firstSlug}) ouvre la marche de la liste actuelle.`
+              text:`${firstName}${firstSlug ? " (" + firstSlug + ")" : ""} ouvre la marche de la liste actuelle.`
             },
             {
               title:"Action utile",
@@ -1183,6 +1263,7 @@
         }
 
         list.innerHTML = items.map(function(item){
+          const safeSlug = normalizeSlug(item?.slug || "");
           const isPublished = item?.is_published === true && item?.status === "published";
           const isArchived = item?.status === "archived";
 
@@ -1201,7 +1282,6 @@
 
           const zoneLine = [item?.city, item?.zone].filter(Boolean).join(" — ");
           const featured = item?.is_featured ? '<span class="slug">Mis en avant</span>' : "";
-          const slug = item?.slug || "";
 
           return `
             <article class="card">
@@ -1212,29 +1292,29 @@
                     <div class="meta">
                       <b>Lieu :</b> ${escapeHtml(zoneLine || "Zone non précisée")}<br>
                       <b>Catégorie :</b> ${escapeHtml(item?.category_code || "—")}<br>
-                      <b>Slug :</b> ${escapeHtml(slug || "—")}<br>
+                      <b>Slug :</b> ${escapeHtml(safeSlug || "—")}<br>
                       <b>Mise à jour :</b> ${escapeHtml(fmtDate(item?.updated_at))}
                     </div>
                   </div>
 
                   <div class="statusRow">
                     <div class="status ${statusClass}">${escapeHtml(statusText)}</div>
-                    <div class="slug">${escapeHtml(slug || "—")}</div>
+                    <div class="slug">${escapeHtml(safeSlug || "—")}</div>
                     ${featured}
                   </div>
                 </div>
 
                 <div class="actions">
-                  <a class="btn secondary" href="${escapeHtml(editUrlFromSlug(slug))}">Éditer</a>
-                  <a class="btn ghost" href="${escapeHtml(cockpitUrl())}">Cockpit</a>
-                  <a class="btn info" href="${escapeHtml(clawUrl(slug))}">CLAW</a>
-                  <a class="btn ghost" href="${escapeHtml(publicUrlFromSlug(slug))}" target="_blank" rel="noopener">Voir fiche publique</a>
+                  <a class="btn secondary" href="${escapeHtml(buildInternalHref('./submit.html', { slug: safeSlug }))}">Éditer</a>
+                  <a class="btn ghost" href="${escapeHtml(buildInternalHref('./cockpit.html', { slug: safeSlug }))}">Cockpit</a>
+                  <a class="btn info" href="${escapeHtml(buildInternalHref('./claw.html', { slug: safeSlug }))}">CLAW</a>
+                  <a class="btn ghost" href="${escapeHtml(buildPublicFicheHref(safeSlug))}" target="_blank" rel="noopener">Voir fiche publique</a>
                   ${
                     isPublished
-                      ? `<button class="btn secondary js-unpublish" data-slug="${escapeHtml(slug)}">Dépublier</button>`
-                      : `<button class="btn primary js-publish" data-slug="${escapeHtml(slug)}">Publier</button>`
+                      ? `<button class="btn secondary js-unpublish" data-slug="${escapeHtml(safeSlug)}">Dépublier</button>`
+                      : `<button class="btn primary js-publish" data-slug="${escapeHtml(safeSlug)}">Publier</button>`
                   }
-                  <button class="btn ghost js-archive" data-slug="${escapeHtml(slug)}">Archiver</button>
+                  <button class="btn ghost js-archive" data-slug="${escapeHtml(safeSlug)}">Archiver</button>
                 </div>
               </div>
             </article>
@@ -1295,12 +1375,12 @@
       }
 
       async function refresh(){
-        if(!CURRENT_PHONE){
-          heroPhone.textContent = "—";
-          heroStatus.textContent = "Accès manquant";
-          heroStatusHint.textContent = "Passe d’abord par pin.html pour ouvrir la session.";
+        if(!CURRENT_ACCESS_OK || !CURRENT_PHONE){
+          heroPhone.textContent = CURRENT_PHONE || "—";
+          heroSlug.textContent = CURRENT_SLUG || "—";
           heroAction.textContent = "Entrer par PIN";
-          setMsg("Aucun téléphone trouvé. Ouvre d’abord pin.html.", "bad");
+          heroStatusHint.textContent = "Passe d’abord par pin.html pour ouvrir la session.";
+          setMsg("Aucune session valide trouvée. Ouvre d’abord pin.html.", "bad");
           list.innerHTML = `
             <div class="card">
               <div class="cardInner">
@@ -1315,15 +1395,22 @@
         }
 
         heroPhone.textContent = CURRENT_PHONE;
-        heroStatus.textContent = "Chargement";
-        heroStatusHint.textContent = "Lecture des lieux en cours…";
+        heroSlug.textContent = CURRENT_SLUG || "—";
         heroAction.textContent = "Analyse";
+        heroStatusHint.textContent = "Lecture des lieux en cours…";
         setMsg("Chargement des lieux PRO-EXPLORE...", "info");
         reloadBtn.disabled = true;
 
         try{
           const items = await loadPlaces(CURRENT_PHONE);
           ALL_ITEMS = items;
+
+          if(!CURRENT_SLUG && items.length){
+            CURRENT_SLUG = normalizeSlug(items[0]?.slug || "");
+            saveSession({ phone: CURRENT_PHONE, slug: CURRENT_SLUG });
+            refreshNavLinks();
+          }
+
           computeStats(items);
           renderList();
           updateHeroAndClaw(items);
@@ -1331,9 +1418,8 @@
           setMsg("Liste réelle des lieux chargée.", "ok");
         }catch(err){
           console.error("[PRO-EXPLORE lieux] load error:", err);
-          heroStatus.textContent = "Erreur";
-          heroStatusHint.textContent = "Impossible de lire la liste réelle.";
           heroAction.textContent = "Vérifier le rail";
+          heroStatusHint.textContent = "Impossible de lire la liste réelle.";
           list.innerHTML = `
             <div class="card">
               <div class="cardInner">
@@ -1349,8 +1435,9 @@
             "CLAW a détecté un blocage sur la lecture des lieux EXPLORE.",
             [
               CURRENT_PHONE ? `Téléphone : ${CURRENT_PHONE}` : "Téléphone : —",
+              CURRENT_SLUG ? `Slug : ${CURRENT_SLUG}` : "",
               "Contrôle à faire"
-            ],
+            ].filter(Boolean),
             [
               {
                 title:"Blocage principal",
@@ -1377,6 +1464,13 @@
           if(!res || res.ok !== true){
             throw new Error("RPC publish invalide");
           }
+
+          if(!CURRENT_SLUG){
+            CURRENT_SLUG = normalizeSlug(slug);
+            saveSession({ phone: CURRENT_PHONE, slug: CURRENT_SLUG });
+            refreshNavLinks();
+          }
+
           setMsg(
             publish
               ? "Lieu publié avec succès."
@@ -1416,13 +1510,24 @@
         await waitGuard();
 
         CURRENT_PHONE = getPhone();
-        refreshNavLinks();
+        CURRENT_SLUG = getSlug();
+        CURRENT_ACCESS_OK = resolveAccess();
 
-        if(!CURRENT_PHONE){
-          heroPhone.textContent = "—";
-          heroStatus.textContent = "Accès manquant";
-          heroStatusHint.textContent = "Passe d’abord par pin.html pour ouvrir la session.";
+        if(CURRENT_PHONE || CURRENT_SLUG){
+          saveSession({
+            phone: CURRENT_PHONE,
+            slug: CURRENT_SLUG
+          });
+        }
+
+        refreshNavLinks();
+        setRescueVisibility(!CURRENT_ACCESS_OK);
+
+        if(!CURRENT_ACCESS_OK || !CURRENT_PHONE){
+          heroPhone.textContent = CURRENT_PHONE || "—";
+          heroSlug.textContent = CURRENT_SLUG || "—";
           heroAction.textContent = "Entrer par PIN";
+          heroStatusHint.textContent = "Passe d’abord par pin.html pour ouvrir la session.";
           subline.textContent = "Aucune session active détectée.";
           setMsg("Aucun téléphone trouvé. Ouvre d’abord pin.html.", "bad");
           list.innerHTML = `
@@ -1435,19 +1540,27 @@
             </div>
           `;
           setClawMissingAccess();
+          document.documentElement.style.visibility = "";
           return;
         }
 
         heroPhone.textContent = CURRENT_PHONE;
+        heroSlug.textContent = CURRENT_SLUG || "—";
         subline.textContent = "Gestion des lieux rattachés au téléphone " + CURRENT_PHONE + ".";
         searchInput.addEventListener("input", renderList);
         statusFilter.addEventListener("change", renderList);
         reloadBtn.addEventListener("click", refresh);
 
-        refresh();
+        await refresh();
+        document.documentElement.style.visibility = "";
       }
 
-      boot();
+      boot().catch(function(err){
+        console.error("[PRO-EXPLORE lieux] boot error:", err);
+        setMsg("Le chargement initial a échoué.", "bad");
+        setClawMissingAccess();
+        document.documentElement.style.visibility = "";
+      });
     })();
   </script>
 </body>
