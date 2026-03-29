@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>PRO-EXPLORE — Entrée PIN</title>
+  <title>Je fais découvrir mon lieu — Mon accès</title>
   <meta name="theme-color" content="#06130f" />
   <meta
     name="description"
-    content="PRO-EXPLORE — entrée sécurisée par PIN pour accéder au rail interne DIGIY."
+    content="Entre dans ton espace DIGIY EXPLORE avec ton numéro et ton PIN."
   />
 
   <script>
@@ -41,7 +41,7 @@
     *{box-sizing:border-box}
     html,body{margin:0;padding:0}
     body{
-      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family:Outfit, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
         radial-gradient(circle at top, rgba(212,175,55,.12), transparent 28%),
         radial-gradient(circle at right bottom, rgba(56,189,248,.07), transparent 24%),
@@ -76,16 +76,21 @@
     }
 
     .logo{
-      width:44px;
-      height:44px;
-      border-radius:14px;
-      display:grid;
-      place-items:center;
-      background:linear-gradient(135deg, rgba(212,175,55,.2), rgba(212,175,55,.06));
+      width:54px;
+      height:54px;
+      border-radius:16px;
+      overflow:hidden;
       border:1px solid rgba(212,175,55,.22);
       box-shadow:0 10px 24px rgba(0,0,0,.18);
-      font-size:22px;
       flex:0 0 auto;
+      background:#fff;
+    }
+
+    .logo img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
     }
 
     .brandText{min-width:0}
@@ -96,6 +101,7 @@
       color:var(--gold2);
       white-space:nowrap;
       margin-bottom:3px;
+      font-weight:800;
     }
 
     .title{
@@ -498,69 +504,68 @@
   <div class="wrap">
     <div class="topbar">
       <div class="brand">
-        <div class="logo">🧭</div>
+        <div class="logo">
+          <img src="https://digiylyfe.net/wp-content/uploads/2026/03/digiylyfe_logo_qr.jpeg" alt="Logo DIGIYLYFE" />
+        </div>
         <div class="brandText">
-          <div class="kicker">DIGIYLYFE — Quartier Général</div>
-          <div class="title">PRO-EXPLORE • Entrée PIN</div>
+          <div class="kicker">DIGIYLYFE</div>
+          <div class="title">Je fais découvrir mon lieu • Mon accès</div>
         </div>
       </div>
 
-      <!-- ─── FIX : Vitrine publique retiré — rail PRO uniquement ─── -->
       <div class="topActions">
-        <a class="topBtn hidden" id="btnCockpitTop" href="./cockpit.html">Cockpit</a>
-        <a class="topBtn hidden" id="btnLieuxTop" href="./lieux.html">Lieux</a>
-        <a class="topBtn hidden" id="btnSubmitTop" href="./submit.html">Ajouter / éditer</a>
-        <a class="topBtn info hidden" id="btnClawTop" href="./claw.html">CLAW</a>
+        <a class="topBtn hidden" id="btnCockpitTop" href="./cockpit.html">Ma gestion</a>
+        <a class="topBtn hidden" id="btnLieuxTop" href="./lieux.html">Mes lieux</a>
+        <a class="topBtn hidden" id="btnSubmitTop" href="./submit.html">Ajouter un lieu</a>
+        <a class="topBtn info hidden" id="btnClawTop" href="./claw.html">Analyse</a>
       </div>
     </div>
 
     <section class="hero">
       <article class="panel heroCard">
-        <div class="eyebrow">Porte d'entrée / secours</div>
-        <h1>Observer. Comprendre. Agir.</h1>
+        <div class="eyebrow">Accès sécurisé</div>
+        <h1>Entre et reprends ton travail.</h1>
         <p class="lead">
-          Cette page ne sert pas à te faire tourner en rond. Elle ouvre le rail PRO-EXPLORE,
-          pose la session proprement, puis te renvoie vers le bon intérieur : cockpit, lieux,
-          édition ou CLAW.
+          Cette page t’aide à entrer vite dans ton espace. Tu poses ton numéro, ton PIN,
+          puis tu repars directement vers la bonne page pour continuer sans tourner en rond.
         </p>
 
         <div class="bullets">
           <div class="bullet">
             <span class="dot"></span>
-            <span>Lecture rapide du territoire, pensée pour mobile et usage terrain.</span>
+            <span>Ton accès est pensé pour téléphone, usage terrain et reprise rapide.</span>
           </div>
           <div class="bullet">
             <span class="dot"></span>
-            <span>Le PIN sert d'entrée extérieure ou de secours. Une fois dedans, on circule sans le retaper partout.</span>
+            <span>Le PIN sert d’entrée ou de secours. Une fois dedans, tu circules sans le retaper partout.</span>
           </div>
           <div class="bullet">
             <span class="dot"></span>
-            <span>Le contexte garde le numéro et le slug pour nourrir cockpit, lieux, submit et CLAW.</span>
+            <span>Tu peux reprendre ta gestion, voir tes lieux, ajouter un lieu ou ouvrir l’analyse.</span>
           </div>
         </div>
 
         <div class="railBox">
-          <strong>Direction après ouverture</strong>
-          <span id="targetText">Cockpit EXPLORE</span>
+          <strong>Après l’entrée</strong>
+          <span id="targetText">Ma gestion</span>
         </div>
 
-        <!-- ─── FIX : Vitrine publique retiré des liens rapides ─── -->
         <div class="links">
-          <a class="linkBtn" id="linkDefaultCockpit" href="./cockpit.html">Cockpit pro</a>
-          <a class="linkBtn" id="linkDefaultLieux" href="./lieux.html">Lieux</a>
-          <a class="linkBtn" id="linkDefaultSubmit" href="./submit.html">Ajouter / éditer</a>
-          <a class="linkBtn" id="linkDefaultClaw" href="./claw.html">CLAW</a>
+          <a class="linkBtn" id="linkDefaultCockpit" href="./cockpit.html">Ma gestion</a>
+          <a class="linkBtn" id="linkDefaultLieux" href="./lieux.html">Mes lieux</a>
+          <a class="linkBtn" id="linkDefaultSubmit" href="./submit.html">Ajouter un lieu</a>
+          <a class="linkBtn" id="linkDefaultClaw" href="./claw.html">Analyse</a>
         </div>
       </article>
 
       <aside class="panel sessionCard">
         <div class="pinHead">
-          <h2 class="pinTitle">Accès protégé</h2>
-          <div class="badge">PIN PRO</div>
+          <h2 class="pinTitle">Entrer dans mon espace</h2>
+          <div class="badge">Accès</div>
         </div>
 
         <p class="hint">
-          Entre ton numéro et ton code PIN pour ouvrir le rail interne PRO-EXPLORE.
+          Entre ton numéro et ton PIN pour retrouver tes lieux et reprendre ton activité.
         </p>
 
         <form id="pinForm" class="grid" novalidate>
@@ -598,46 +603,46 @@
           </div>
 
           <div class="field">
-            <label class="label" for="nextSelect">Ouvrir ensuite</label>
+            <label class="label" for="nextSelect">Aller ensuite vers</label>
             <div class="inputWrap">
               <select id="nextSelect" class="input">
-                <option value="cockpit">Cockpit</option>
-                <option value="lieux">Lieux</option>
-                <option value="submit">Ajouter / éditer</option>
-                <option value="claw">CLAW</option>
+                <option value="cockpit">Ma gestion</option>
+                <option value="lieux">Mes lieux</option>
+                <option value="submit">Ajouter un lieu</option>
+                <option value="claw">Analyse</option>
               </select>
             </div>
           </div>
 
           <div class="actions">
-            <button id="submitBtn" class="mainBtn" type="submit">Ouvrir mon rail</button>
+            <button id="submitBtn" class="mainBtn" type="submit">Entrer dans mon espace</button>
             <div id="msg" class="msg info">Entre ton numéro et ton PIN.</div>
             <div class="mini">
-              Vérification réelle d'abord sur le rail EXPLORE, puis tentative de secours sur le rail PIN DIGIY générique.
+              Ton accès est vérifié, puis tu es envoyé vers la bonne page.
             </div>
           </div>
         </form>
 
         <div id="sessionBox" class="sessionBox hidden">
           <div class="sessionHead">
-            <strong>Session détectée</strong>
-            <span class="sessionState" id="sessionState">Active</span>
+            <strong>Accès déjà ouvert</strong>
+            <span class="sessionState" id="sessionState">Session active</span>
           </div>
           <div class="sessionText" id="sessionText">
-            Une session EXPLORE existe déjà sur cet appareil.
+            Une session existe déjà sur cet appareil.
           </div>
           <div class="sessionLinks">
-            <a class="sessionLink" id="sessionCockpit" href="./cockpit.html">Cockpit</a>
-            <a class="sessionLink" id="sessionLieux" href="./lieux.html">Lieux</a>
-            <a class="sessionLink" id="sessionSubmit" href="./submit.html">Ajouter / éditer</a>
-            <a class="sessionLink info" id="sessionClaw" href="./claw.html">CLAW</a>
+            <a class="sessionLink" id="sessionCockpit" href="./cockpit.html">Ma gestion</a>
+            <a class="sessionLink" id="sessionLieux" href="./lieux.html">Mes lieux</a>
+            <a class="sessionLink" id="sessionSubmit" href="./submit.html">Ajouter un lieu</a>
+            <a class="sessionLink info" id="sessionClaw" href="./claw.html">Analyse</a>
           </div>
         </div>
 
         <div class="foot">
-          <div>Module : <strong>EXPLORE</strong></div>
-          <div>Stockage session : <strong>localStorage + sessionStorage</strong></div>
-          <div>Redirection par défaut : <strong id="footTarget">cockpit.html</strong></div>
+          <div>Une fois entré, tu peux circuler librement entre les pages principales.</div>
+          <div>Si ton accès tombe, reviens ici pour le rouvrir rapidement.</div>
+          <div>Ouverture prévue : <strong id="footTarget">Ma gestion</strong></div>
         </div>
       </aside>
     </section>
@@ -714,7 +719,7 @@
         pinInput.disabled = !!busy;
         togglePinBtn.disabled = !!busy;
         nextSelect.disabled = !!busy;
-        submitBtn.textContent = busy ? "Vérification..." : "Ouvrir mon rail";
+        submitBtn.textContent = busy ? "Ouverture..." : "Entrer dans mon espace";
       }
 
       function digiyRpcLooksOk(data){
@@ -769,10 +774,10 @@
       }
 
       function routeLabel(route){
-        if(route === "lieux") return "Lieux EXPLORE";
-        if(route === "submit") return "Ajouter / éditer";
-        if(route === "claw") return "CLAW";
-        return "Cockpit EXPLORE";
+        if(route === "lieux") return "Mes lieux";
+        if(route === "submit") return "Ajouter un lieu";
+        if(route === "claw") return "Analyse";
+        return "Ma gestion";
       }
 
       function buildQuery(phone, slug){
@@ -792,8 +797,9 @@
 
       function updateTargetUi(){
         const route = getRouteName(nextSelect.value);
-        targetText.textContent = routeLabel(route);
-        footTarget.textContent = (ROUTES[route] || ROUTES.cockpit).replace("./", "");
+        const label = routeLabel(route);
+        targetText.textContent = label;
+        footTarget.textContent = label;
       }
 
       function setTopLinks(phone, slug){
@@ -903,7 +909,6 @@
       function readTargetRoute(){
         const url = new URL(window.location.href);
         const next = url.searchParams.get("next") || "";
-        // Extraire la route depuis le chemin next (ex: /cockpit.html → cockpit)
         const match = next.match(/\/(cockpit|lieux|submit|claw)\.html/);
         return getRouteName(match ? match[1] : url.searchParams.get("route"));
       }
@@ -926,10 +931,7 @@
         $("sessionSubmit").href = buildInternalHref("submit", cleanPhone, cleanSlug);
         $("sessionClaw").href = buildInternalHref("claw", cleanPhone, cleanSlug);
 
-        sessionText.textContent =
-          cleanSlug
-            ? `Session EXPLORE détectée pour ${cleanPhone}, slug ${cleanSlug}.`
-            : `Session EXPLORE détectée pour ${cleanPhone}.`;
+        sessionText.textContent = `Une session est déjà ouverte pour ${cleanPhone}.`;
 
         setSessionVisibility(true);
       }
@@ -1005,7 +1007,7 @@
         }
 
         setBusy(true);
-        setMsg("Vérification de l'accès PRO-EXPLORE...", "info");
+        setMsg("Vérification de ton accès...", "info");
 
         try{
           const result = await verifyAccess(phone, pin);
@@ -1019,14 +1021,14 @@
           const session = saveSession(phone, result, preferredSlug);
           renderSessionBox(session);
           setTopLinks(session.phone, session.slug || "");
-          setMsg("Accès validé. Ouverture du rail...", "ok");
+          setMsg("Accès validé. Ouverture en cours...", "ok");
 
           setTimeout(function(){
             redirectToRoute(route, session.phone, session.slug || preferredSlug || null);
           }, 320);
         }catch(err){
           console.error("[PRO-EXPLORE PIN] error:", err);
-          setMsg("La vérification a échoué. Rail PIN introuvable ou réponse non valide.", "bad");
+          setMsg("La vérification a échoué pour le moment. Réessaie dans un instant.", "bad");
           setBusy(false);
         }
       });
