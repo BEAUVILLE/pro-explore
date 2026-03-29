@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>PRO-EXPLORE — Ajouter / éditer un lieu</title>
+  <title>DIGIY EXPLORE — Préparer un lieu</title>
   <meta name="theme-color" content="#06130f" />
   <meta
     name="description"
-    content="PRO-EXPLORE — création et édition des fiches terrain DIGIY."
+    content="DIGIY EXPLORE — créer ou corriger une fiche lieu de façon simple, claire et utile."
   />
 
   <script>
@@ -40,10 +40,11 @@
 
     *{box-sizing:border-box}
     html,body{margin:0;padding:0}
+
     body{
       min-height:100vh;
       color:var(--ink);
-      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family:Outfit, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
         radial-gradient(circle at top, rgba(212,175,55,.09), transparent 26%),
         linear-gradient(180deg, #071510 0%, #06130f 48%, #04100c 100%);
@@ -74,19 +75,27 @@
     }
 
     .logo{
-      width:46px;
-      height:46px;
-      border-radius:16px;
+      width:58px;
+      height:58px;
+      border-radius:18px;
       display:grid;
       place-items:center;
-      background:linear-gradient(135deg, rgba(212,175,55,.24), rgba(212,175,55,.06));
+      background:linear-gradient(135deg, rgba(212,175,55,.18), rgba(212,175,55,.05));
       border:1px solid rgba(212,175,55,.22);
       box-shadow:0 10px 28px rgba(0,0,0,.18);
-      font-size:23px;
       flex:0 0 auto;
+      overflow:hidden;
+    }
+
+    .logo img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
     }
 
     .brandText{min-width:0}
+
     .kicker{
       color:var(--gold2);
       font-size:12px;
@@ -483,6 +492,7 @@
       .topbar{flex-direction:column}
       .topActions{width:100%;justify-content:flex-start}
       .heroMain,.heroSide,.cardBody{padding:18px}
+      .logo{width:52px;height:52px}
     }
   </style>
 </head>
@@ -490,36 +500,38 @@
   <div class="wrap">
     <header class="topbar">
       <div class="brand">
-        <div class="logo">🛠️</div>
+        <div class="logo">
+          <img src="https://digiylyfe.net/wp-content/uploads/2026/03/digiylyfe_logo_qr.jpeg" alt="Logo DIGIYLYFE" />
+        </div>
         <div class="brandText">
-          <div class="kicker">DIGIYLYFE — Quartier Général</div>
-          <div class="title" id="pageTitle">PRO-EXPLORE • Ajouter un lieu</div>
-          <div class="sub" id="subline">Création et édition des fiches terrain sur le rail réel.</div>
+          <div class="kicker">DIGIYLYFE</div>
+          <div class="title" id="pageTitle">Je fais découvrir un lieu</div>
+          <div class="sub" id="subline">Prépare une fiche propre, claire et utile pour le terrain.</div>
         </div>
       </div>
 
       <div class="topActions">
         <a class="btn ghost" id="publicHomeBtn" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener">Vitrine</a>
-        <a class="btn secondary" id="backToClawBtn" href="./claw.html">CLAW</a>
-        <a class="btn secondary" id="backToLieuxBtn" href="./lieux.html">Lieux</a>
-        <a class="btn secondary" id="backToCockpitBtn" href="./cockpit.html">Cockpit</a>
-        <a class="btn warn hidden" id="rescuePinBtn" href="./pin.html">PIN secours</a>
+        <a class="btn secondary" id="backToClawBtn" href="./claw.html">Analyse</a>
+        <a class="btn secondary" id="backToLieuxBtn" href="./lieux.html">Mes lieux</a>
+        <a class="btn secondary" id="backToCockpitBtn" href="./cockpit.html">Ma gestion</a>
+        <a class="btn warn hidden" id="rescuePinBtn" href="./pin.html">Accès secours</a>
       </div>
     </header>
 
     <section class="hero">
       <article class="panel heroMain">
-        <div class="badge">Édition terrain</div>
-        <h1 class="heroTitle" id="heroTitle">Créer une fiche claire, utile, publiable.</h1>
+        <div class="badge">Préparation terrain</div>
+        <h1 class="heroTitle" id="heroTitle">Créer une fiche simple, forte et publiable.</h1>
         <p class="heroLead">
-          Ici tu prépares la fiche publique d'un lieu PRO-EXPLORE. Le but n'est pas de faire du bruit :
-          juste une lecture propre, concrète, utile pour le terrain.
+          Ici tu prépares la fiche d’un lieu à montrer au public. Le but n’est pas de faire du bruit.
+          Il faut une lecture propre, concrète, humaine, qui donne envie de comprendre et d’agir.
         </p>
       </article>
 
       <aside class="panel heroSide">
         <div class="miniStat">
-          <div class="miniLabel">Téléphone pilote</div>
+          <div class="miniLabel">Téléphone actif</div>
           <div class="miniValue" id="heroPhone">—</div>
           <div class="miniHint">Le lieu sera rattaché à ce numéro.</div>
         </div>
@@ -527,24 +539,24 @@
         <div class="miniStat">
           <div class="miniLabel">Mode</div>
           <div class="miniValue" id="heroMode">Chargement…</div>
-          <div class="miniHint" id="heroModeHint">Détection création / édition en cours.</div>
+          <div class="miniHint" id="heroModeHint">Détection création / correction en cours.</div>
         </div>
 
         <div class="miniStat">
-          <div class="miniLabel">Slug actif</div>
+          <div class="miniLabel">Identifiant public</div>
           <div class="miniValue" id="heroSlug">Nouveau lieu</div>
-          <div class="miniHint">Identifiant public de la fiche.</div>
+          <div class="miniHint">Nom technique public de la fiche.</div>
         </div>
       </aside>
     </section>
 
     <nav class="nav">
-      <a id="navCockpit" href="./cockpit.html">Cockpit</a>
-      <a id="navLieux" href="./lieux.html">Lieux</a>
-      <a id="navSubmit" class="active" href="./submit.html">Ajouter / éditer</a>
-      <a id="navClaw" href="./claw.html">CLAW</a>
+      <a id="navCockpit" href="./cockpit.html">Ma gestion</a>
+      <a id="navLieux" href="./lieux.html">Mes lieux</a>
+      <a id="navSubmit" class="active" href="./submit.html">Ajouter / corriger</a>
+      <a id="navClaw" href="./claw.html">Analyse</a>
       <a id="navPreview" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener">Vitrine publique</a>
-      <a id="navPinRescue" class="hidden" href="./pin.html">PIN secours</a>
+      <a id="navPinRescue" class="hidden" href="./pin.html">Accès secours</a>
     </nav>
 
     <div id="msg" class="msg info"></div>
@@ -565,7 +577,7 @@
               </div>
 
               <div class="field">
-                <label class="label" for="slug">Slug public</label>
+                <label class="label" for="slug">Identifiant public</label>
                 <input id="slug" class="input" type="text" placeholder="ex: plage-calme-saly" />
                 <div class="hint">Laisse vide au départ si tu veux le générer automatiquement depuis le nom.</div>
               </div>
@@ -661,7 +673,7 @@
                 <input id="isFeatured" type="checkbox" />
                 <div>
                   <strong>Mettre en avant</strong>
-                  <span>Le lieu peut ressortir comme point mis en avant dans certaines lectures.</span>
+                  <span>Le lieu peut ressortir davantage dans certaines lectures.</span>
                 </div>
               </label>
 
@@ -687,7 +699,7 @@
         <div class="cardBody">
           <h2 class="sectionTitle">Repères de lecture</h2>
           <p class="sectionSub">
-            Une bonne fiche PRO-EXPLORE aide à voir vite, pas à noyer le lecteur.
+            Une bonne fiche aide à voir vite. Elle ne noie pas le lecteur.
           </p>
 
           <div class="grid">
@@ -698,17 +710,17 @@
 
             <div class="sideBox">
               <strong>Catégorie</strong>
-              <span>Choisis la vraie famille métier du lieu. La lecture des stats dépend de ça.</span>
+              <span>Choisis la vraie famille du lieu. La lecture de l’ensemble dépend de ça.</span>
             </div>
 
             <div class="sideBox">
               <strong>Ville + zone</strong>
-              <span>Très important pour la lecture territoriale. Une zone manquante casse une partie de la vision terrain.</span>
+              <span>Très important pour la lecture du terrain. Une zone manquante affaiblit la clarté.</span>
             </div>
 
             <div class="sideBox">
               <strong>Description courte</strong>
-              <span>Une phrase claire pour la carte, la liste et la lecture rapide mobile.</span>
+              <span>Une phrase claire pour la carte, la liste et la lecture rapide sur téléphone.</span>
             </div>
 
             <div class="sideBox">
@@ -726,7 +738,7 @@
     </div>
 
     <div class="foot">
-      PRO-EXPLORE • création / édition terrain • sauvegarde réelle sur le backend DIGIY
+      DIGIY EXPLORE • préparation simple • lecture claire • publication propre
     </div>
   </div>
 
@@ -734,12 +746,7 @@
     (function(){
       "use strict";
 
-      /* ─── FIX : URL de la vitrine publique dans digiy-explore ───────────────
-       * Avant, tous les liens "Voir la fiche" / navPreview pointaient vers
-       * ./index.html (pro-explore). On pointe maintenant vers digiy-explore.
-       * ────────────────────────────────────────────────────────────────────── */
       const PUBLIC_VITRINE_BASE = "https://explore.digiylyfe.com/";
-
       const SESSION_KEY = "digiy_explore_session";
       const MAX_AGE_MS = 8 * 60 * 60 * 1000;
 
@@ -817,6 +824,16 @@
         return String(v || "").replace(/[^\d]/g, "");
       }
 
+      function slugify(value){
+        return String(value || "")
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-+|-+$/g, "")
+          .replace(/-{2,}/g, "-");
+      }
+
       function normalizeSlug(v){
         return slugify(v);
       }
@@ -889,16 +906,6 @@
         if(session?.slug) return session.slug;
 
         return "";
-      }
-
-      function slugify(value){
-        return String(value || "")
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "")
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, "-")
-          .replace(/^-+|-+$/g, "")
-          .replace(/-{2,}/g, "-");
       }
 
       function buildPublicFicheUrl(slugValue){
@@ -978,7 +985,6 @@
           phone: CURRENT_PHONE || ""
         });
 
-        /* ─── FIX : vitrine → digiy-explore avec slug en query string ─────── */
         const publicFicheUrl = buildPublicFicheUrl(CURRENT_SLUG);
 
         navCockpit.href = "./cockpit.html" + cockpitQuery;
@@ -992,10 +998,18 @@
         navClaw.href = "./claw.html" + clawQuery;
         backToClawBtn.href = "./claw.html" + clawQuery;
 
-        navPreview.href = publicFicheUrl; navPreview.target = '_blank'; navPreview.rel = 'noopener';
-        previewBtn.href = publicFicheUrl; previewBtn.target = '_blank'; previewBtn.rel = 'noopener';
+        navPreview.href = publicFicheUrl;
+        navPreview.target = "_blank";
+        navPreview.rel = "noopener";
 
-        publicHomeBtn.href = PUBLIC_VITRINE_BASE; publicHomeBtn.target = '_blank'; publicHomeBtn.rel = 'noopener';
+        previewBtn.href = publicFicheUrl;
+        previewBtn.target = "_blank";
+        previewBtn.rel = "noopener";
+
+        publicHomeBtn.href = PUBLIC_VITRINE_BASE;
+        publicHomeBtn.target = "_blank";
+        publicHomeBtn.rel = "noopener";
+
         rescuePinBtn.href = "./pin.html";
         navPinRescue.href = "./pin.html";
       }
@@ -1005,19 +1019,19 @@
         heroSlug.textContent = CURRENT_SLUG || "Nouveau lieu";
 
         if(IS_EDIT_MODE){
-          pageTitle.textContent = "PRO-EXPLORE • Éditer un lieu";
+          pageTitle.textContent = "Je corrige un lieu";
           heroTitle.textContent = "Corriger proprement une fiche existante.";
-          heroMode.textContent = "Édition";
-          heroModeHint.textContent = "Le formulaire recharge une fiche existante liée à ta session active.";
-          subline.textContent = "Édition du slug " + CURRENT_SLUG + " sur le rail réel PRO-EXPLORE.";
-          stateBox.textContent = "Mode édition actif. Tu peux corriger, republier ou remettre en brouillon.";
+          heroMode.textContent = "Correction";
+          heroModeHint.textContent = "Le formulaire recharge une fiche déjà liée à ta session active.";
+          subline.textContent = "Tu corriges maintenant la fiche " + CURRENT_SLUG + ".";
+          stateBox.textContent = "Mode correction actif. Tu peux ajuster, republier ou remettre en brouillon.";
         } else {
-          pageTitle.textContent = "PRO-EXPLORE • Ajouter un lieu";
-          heroTitle.textContent = "Créer une fiche claire, utile, publiable.";
+          pageTitle.textContent = "Je fais découvrir un lieu";
+          heroTitle.textContent = "Créer une fiche simple, forte et publiable.";
           heroMode.textContent = "Création";
           heroModeHint.textContent = "Nouveau lieu en préparation.";
-          subline.textContent = "Création d'une nouvelle fiche rattachée au téléphone " + (CURRENT_PHONE || "—") + ".";
-          stateBox.textContent = "Mode création actif. Le slug peut être généré depuis le nom public.";
+          subline.textContent = "Création d'une nouvelle fiche liée au téléphone " + (CURRENT_PHONE || "—") + ".";
+          stateBox.textContent = "Mode création actif. L'identifiant peut être généré depuis le nom public.";
         }
       }
 
@@ -1122,7 +1136,6 @@
 
           try{
             const publishedPayload = await loadPublishedDetailsBySlug(CURRENT_SLUG);
-            /* ─── FIX : la réponse RPC est { ok, place } ─── */
             const publishedPlace = publishedPayload?.ok === true
               ? publishedPayload.place
               : publishedPayload;
@@ -1139,8 +1152,8 @@
 
           setMsg("Fiche chargée. Tu peux la corriger.", "ok");
         }catch(err){
-          console.error("[PRO-EXPLORE submit] hydrate error:", err);
-          setMsg("Impossible de relire cette fiche avec le rail actuel. Vérifie le slug ou le numéro actif.", "bad");
+          console.error("[DIGIY EXPLORE submit] hydrate error:", err);
+          setMsg("Impossible de relire cette fiche pour le moment. Vérifie l'identifiant ou le numéro actif.", "bad");
         }
       }
 
@@ -1150,7 +1163,7 @@
         const cleanCity = String(city.value || "").trim();
 
         if(!CURRENT_PHONE){
-          setMsg("Aucun téléphone actif. Reviens par la porte PIN pour rouvrir la session.", "bad");
+          setMsg("Aucun téléphone actif. Reviens par l'accès secours pour rouvrir la session.", "bad");
           return false;
         }
 
@@ -1174,7 +1187,7 @@
 
         const finalSlug = normalizeSlug(slug.value || cleanPublicName);
         if(!finalSlug){
-          setMsg("Impossible de générer un slug valide depuis le nom public.", "bad");
+          setMsg("Impossible de générer un identifiant valide depuis le nom public.", "bad");
           slug.focus();
           return false;
         }
@@ -1266,8 +1279,8 @@
             "ok"
           );
         }catch(err){
-          console.error("[PRO-EXPLORE submit] save error:", err);
-          setMsg("L'enregistrement a échoué. Vérifie les champs et le rail RPC.", "bad");
+          console.error("[DIGIY EXPLORE submit] save error:", err);
+          setMsg("L'enregistrement a échoué. Vérifie les champs et la connexion au backend.", "bad");
         }finally{
           setBusy(false);
         }
@@ -1320,9 +1333,9 @@
           updateRescueVisibility(true);
           heroPhone.textContent = "—";
           heroMode.textContent = "Accès manquant";
-          heroModeHint.textContent = "Passe par la porte PIN pour ouvrir la session.";
-          stateBox.textContent = "Session absente. Le formulaire est verrouillé jusqu'à réouverture de l'accès.";
-          setMsg("Aucun téléphone actif trouvé. Reviens par pin.html pour ouvrir la session EXPLORE.", "bad");
+          heroModeHint.textContent = "Passe par l'accès secours pour rouvrir la session.";
+          stateBox.textContent = "Session absente. Le formulaire reste verrouillé tant que l'accès n'est pas rouvert.";
+          setMsg("Aucun téléphone actif trouvé. Reviens par pin.html pour rouvrir l'accès EXPLORE.", "bad");
           setFormDisabled(true);
           return;
         }
@@ -1333,7 +1346,7 @@
           const categories = await loadCategories();
           populateCategories(categories);
         }catch(err){
-          console.error("[PRO-EXPLORE submit] categories error:", err);
+          console.error("[DIGIY EXPLORE submit] categories error:", err);
           setMsg("Impossible de charger les catégories pour le moment.", "bad");
         }
 
