@@ -456,7 +456,6 @@
         </div>
       </div>
 
-      <!-- FIX : Vitrine retiré de la topbar — rail PRO uniquement -->
       <div class="topActions">
         <a class="btn secondary" id="btnCockpitTop" href="./cockpit.html">Cockpit</a>
         <a class="btn secondary" id="btnLieuxTop" href="./lieux.html">Lieux</a>
@@ -465,7 +464,6 @@
       </div>
     </header>
 
-    <!-- FIX : navAccess (Vitrine) retiré de la nav -->
     <nav class="nav" aria-label="Navigation PRO EXPLORE">
       <a id="navCockpit" href="./cockpit.html">Cockpit</a>
       <a id="navLieux" href="./lieux.html">Lieux</a>
@@ -598,7 +596,6 @@
     (() => {
       "use strict";
 
-      /* FIX : vitrine retirée — rail PRO uniquement */
       const STORAGE_KEY = "digiy_explore_session";
 
       const $ = (id) => document.getElementById(id);
@@ -778,7 +775,6 @@
       function renderLinks(ctx){
         const links = ctx.links || computeLinks(ctx.slug, ctx.phone, {});
 
-        /* FIX : navAccess supprimé — plus dans le DOM */
         els.navCockpit.href = links.cockpit || "./cockpit.html";
         els.navLieux.href = links.lieux || "./lieux.html";
         els.navSubmit.href = links.submit || "./submit.html";
@@ -788,7 +784,6 @@
         els.btnCockpitTop.href = links.cockpit || "./cockpit.html";
         els.btnLieuxTop.href = links.lieux || "./lieux.html";
         els.btnSubmitTop.href = links.submit || "./submit.html";
-        /* FIX : btnAccessTop supprimé — plus dans le DOM */
         els.btnPinTop.href = links.pin || "./pin.html";
 
         els.btnOpenCockpit.href = links.cockpit || "./cockpit.html";
