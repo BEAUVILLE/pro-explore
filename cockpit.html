@@ -1,12 +1,11 @@
-<!-- DIGIY COCKPIT v27-03-2026 — ZERO VITRINE EXTERNE — SUBMIT ONLY -->
 <!doctype html>
 <html lang="fr">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
   <meta name="theme-color" content="#06130f"/>
-  <meta name="description" content="PRO-EXPLORE — cockpit terrain DIGIY avec navigation CLAW."/>
-  <title>PRO-EXPLORE — Cockpit</title>
+  <meta name="description" content="DIGIY EXPLORE — ma gestion terrain, mes lieux et mon analyse."/>
+  <title>DIGIY EXPLORE — Ma gestion</title>
 
   <script>
     window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
@@ -17,9 +16,12 @@
     document.documentElement.style.visibility = "hidden";
   </script>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <!-- ─── FIX : guad.js → guard.js (typo corrigée) ─── -->
-  <script src="./guard.js?v=explore-cockpit-guard-3"></script>
+  <script src="./guard.js?v=explore-cockpit-guard-4"></script>
 
   <style>
     :root{
@@ -45,10 +47,11 @@
 
     *{box-sizing:border-box}
     html,body{margin:0;padding:0}
+
     body{
       min-height:100vh;
       color:var(--ink);
-      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family:Outfit, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
         radial-gradient(circle at top, rgba(212,175,55,.08), transparent 24%),
         radial-gradient(circle at right bottom, rgba(56,189,248,.08), transparent 22%),
@@ -81,19 +84,19 @@
     }
 
     .logo{
-      width:46px;
-      height:46px;
-      border-radius:16px;
-      display:grid;
-      place-items:center;
-      background:linear-gradient(135deg, rgba(212,175,55,.24), rgba(212,175,55,.06));
+      width:56px;
+      height:56px;
+      border-radius:18px;
+      object-fit:cover;
+      display:block;
+      background:#fff;
       border:1px solid rgba(212,175,55,.22);
       box-shadow:0 10px 28px rgba(0,0,0,.18);
-      font-size:23px;
       flex:0 0 auto;
     }
 
     .brandText{min-width:0}
+
     .kicker{
       color:var(--gold2);
       font-size:12px;
@@ -145,26 +148,31 @@
 
     .btn:active{transform:translateY(1px)}
     .btn[disabled]{opacity:.6;cursor:not-allowed}
+
     .btn.primary{
       background:linear-gradient(135deg, var(--gold), var(--gold2));
       color:#13200d;
       box-shadow:0 14px 30px rgba(212,175,55,.22);
     }
+
     .btn.secondary{
       background:rgba(255,255,255,.05);
       border:1px solid rgba(255,255,255,.08);
       color:var(--ink);
     }
+
     .btn.ghost{
       background:transparent;
       border:1px solid var(--line);
       color:var(--ink);
     }
+
     .btn.info{
       background:rgba(56,189,248,.10);
       border:1px solid rgba(56,189,248,.22);
       color:#d8f2ff;
     }
+
     .btn.warn{
       background:rgba(245,158,11,.12);
       border:1px solid rgba(245,158,11,.26);
@@ -214,16 +222,19 @@
       border-color:rgba(96,165,250,.18);
       background:rgba(59,130,246,.08);
     }
+
     .status.ok{
       color:#bbf7d0;
       border-color:rgba(34,197,94,.18);
       background:rgba(34,197,94,.08);
     }
+
     .status.warn{
       color:#fde68a;
       border-color:rgba(245,158,11,.18);
       background:rgba(245,158,11,.08);
     }
+
     .status.bad{
       color:#fecaca;
       border-color:rgba(239,68,68,.18);
@@ -391,6 +402,7 @@
     }
 
     .cardBody{padding:20px}
+
     .sectionTitle{
       margin:0 0 14px;
       font-size:20px;
@@ -613,16 +625,16 @@
       text-align:center;
     }
 
-    @media (max-width: 1080px){
-      .hero, .layout, .clawGrid{grid-template-columns:1fr}
+    @media (max-width:1080px){
+      .hero,.layout,.clawGrid{grid-template-columns:1fr}
       .stats{grid-template-columns:1fr 1fr}
     }
 
-    @media (max-width: 760px){
+    @media (max-width:760px){
       .stats{grid-template-columns:1fr}
     }
 
-    @media (max-width: 640px){
+    @media (max-width:640px){
       .wrap{padding:14px 12px 34px}
       .topbar{flex-direction:column}
       .topActions{width:100%;justify-content:flex-start}
@@ -635,71 +647,70 @@
   <div class="wrap">
     <header class="topbar">
       <div class="brand">
-        <div class="logo">🧭</div>
+        <img class="logo" src="https://digiylyfe.net/wp-content/uploads/2026/03/digiylyfe_logo_qr.jpeg" alt="Logo DIGIYLYFE"/>
         <div class="brandText">
           <div class="kicker">DIGIYLYFE — Quartier Général</div>
-          <div class="title">PRO-EXPLORE • Cockpit terrain</div>
-          <div class="sub" id="subline">Lecture simple des lieux, publication, et navigation CLAW sur le rail réel.</div>
+          <div class="title">DIGIY EXPLORE • Ma gestion</div>
+          <div class="sub" id="subline">Lecture simple de tes lieux, de leur visibilité et de la prochaine action utile.</div>
         </div>
       </div>
 
       <div class="topActions">
         <a class="btn primary" id="btnAccessTop" href="./submit.html">+ Ajouter un lieu</a>
-        <a class="btn secondary" id="btnLieuxTop" href="./lieux.html">Lieux</a>
+        <a class="btn secondary" id="btnLieuxTop" href="./lieux.html">Mes lieux</a>
         <a class="btn secondary" id="btnSubmitTop" href="./submit.html">Ajouter / éditer</a>
-        <a class="btn info" id="btnClawTop" href="./claw.html">CLAW</a>
+        <a class="btn info" id="btnClawTop" href="./claw.html">Analyse</a>
         <a class="btn warn hidden" id="btnPinTop" href="./pin.html">PIN secours</a>
       </div>
     </header>
 
-    <nav class="nav" aria-label="Navigation PRO EXPLORE">
-      
-      <a id="navCockpit" class="active" href="./cockpit.html">Cockpit</a>
-      <a id="navLieux" href="./lieux.html">Lieux</a>
+    <nav class="nav" aria-label="Navigation EXPLORE">
+      <a id="navCockpit" class="active" href="./cockpit.html">Ma gestion</a>
+      <a id="navLieux" href="./lieux.html">Mes lieux</a>
       <a id="navSubmit" href="./submit.html">Ajouter / éditer</a>
-      <a id="navClaw" href="./claw.html">CLAW</a>
+      <a id="navClaw" href="./claw.html">Analyse</a>
       <a id="navPinRescue" class="hidden" href="./pin.html">PIN secours</a>
     </nav>
 
-    <div id="status" class="status info">Préparation du cockpit EXPLORE…</div>
+    <div id="status" class="status info">Préparation de ton espace EXPLORE…</div>
 
     <section class="hero">
       <article class="panel heroMain">
         <div class="heroBadge" id="heroBadge">Lecture terrain</div>
-        <h1 class="heroTitle" id="heroTitle">Voir les lieux, sans usine à gaz.</h1>
+        <h1 class="heroTitle" id="heroTitle">Voir tes lieux, sans usine à gaz.</h1>
         <p class="heroLead" id="heroLead">
-          Ici tu lis rapidement le rail EXPLORE : accès, slug, lieux rattachés, publication et prochaine action simple.
+          Ici tu lis rapidement ton espace EXPLORE : accès, identifiant, lieux rattachés, visibilité et prochaine action simple.
         </p>
 
         <div class="heroPills" id="heroPills">
-          <div class="pill">Module : EXPLORE</div>
+          <div class="pill">Espace : EXPLORE</div>
         </div>
 
         <div class="heroActions">
           <a class="btn primary" id="btnPrimaryAction" href="./submit.html">Ajouter un lieu</a>
-          <a class="btn secondary" id="btnOpenLieux" href="./lieux.html">Voir les lieux</a>
-          <a class="btn secondary" id="btnOpenClaw" href="./claw.html">Ouvrir CLAW</a>
+          <a class="btn secondary" id="btnOpenLieux" href="./lieux.html">Mes lieux</a>
+          <a class="btn secondary" id="btnOpenClaw" href="./claw.html">Ouvrir Analyse</a>
           <a class="btn warn hidden" id="btnOpenPin" href="./pin.html">PIN secours</a>
         </div>
       </article>
 
       <aside class="panel heroSide">
         <div class="miniStat">
-          <div class="miniLabel">Slug actif</div>
+          <div class="miniLabel">Identifiant actif</div>
           <div class="miniValue" id="heroSlug">—</div>
-          <div class="miniHint">Le slug EXPLORE lu dans l'URL, le guard ou le stockage.</div>
+          <div class="miniHint">L’identifiant EXPLORE lu dans l’URL, la session ou le stockage.</div>
         </div>
 
         <div class="miniStat">
-          <div class="miniLabel">Téléphone pilote</div>
+          <div class="miniLabel">Téléphone actif</div>
           <div class="miniValue" id="heroPhone">—</div>
           <div class="miniHint">Le numéro relié à la session ouverte.</div>
         </div>
 
         <div class="miniStat">
-          <div class="miniLabel">Lieu sélectionné</div>
+          <div class="miniLabel">Lieu principal</div>
           <div class="miniValue" id="heroPlace">—</div>
-          <div class="miniHint">Le lieu principal lu via slug ou la première fiche du pilote.</div>
+          <div class="miniHint">Le lieu lu par l’identifiant ou la première fiche remontée.</div>
         </div>
       </aside>
     </section>
@@ -726,26 +737,26 @@
     <section class="layout">
       <article class="panel">
         <div class="cardBody">
-          <h2 class="sectionTitle">Lieu pilote</h2>
-          <p class="sectionSub">Le cockpit met en avant le lieu lu par le slug, sinon le premier lieu du pilote.</p>
+          <h2 class="sectionTitle">Lieu principal</h2>
+          <p class="sectionSub">Cet espace met en avant le lieu lu par l’identifiant, sinon la première fiche active du téléphone.</p>
 
           <div class="box">
             <strong id="mainPlaceName">Aucun lieu lu</strong>
-            <span id="mainPlaceText">Le slug ou la liste des lieux n'a pas encore donné de lecture utile.</span>
+            <span id="mainPlaceText">L’identifiant ou la liste des lieux n’a pas encore donné de lecture utile.</span>
           </div>
 
           <div class="box">
             <strong>Navigation utile</strong>
-            <span id="linksText">Le cockpit recoud vitrine, lieux, édition et CLAW sur le même contexte. Le PIN reste un secours seulement.</span>
+            <span id="linksText">Ta gestion recoud tes lieux, l’édition et l’analyse sur le même contexte. Le PIN reste un secours seulement.</span>
           </div>
 
           <div class="placeActions" style="margin-bottom:14px">
             <a class="btn secondary" id="btnEditCurrent" href="./submit.html">Éditer ce lieu</a>
-            <a class="btn secondary" id="btnViewCurrent" href="./submit.html">Voir / éditer ma fiche</a>
-            <a class="btn info" id="btnClawCurrent" href="./claw.html">Lire avec CLAW</a>
+            <a class="btn secondary" id="btnViewCurrent" href="./submit.html">Ouvrir ma fiche</a>
+            <a class="btn info" id="btnClawCurrent" href="./claw.html">Lire avec Analyse</a>
           </div>
 
-          <h2 class="sectionTitle">Lieux du pilote</h2>
+          <h2 class="sectionTitle">Mes lieux</h2>
           <p class="sectionSub">Lecture directe des lieux rattachés au téléphone actif.</p>
 
           <div class="places" id="placesBox">
@@ -757,8 +768,8 @@
       <aside>
         <section class="panel">
           <div class="cardBody">
-            <h2 class="sectionTitle">Repères cockpit</h2>
-            <p class="sectionSub">Le cockpit lit le terrain et pousse la prochaine action logique.</p>
+            <h2 class="sectionTitle">Repères utiles</h2>
+            <p class="sectionSub">L’espace lit le terrain et pousse la prochaine action logique.</p>
 
             <div class="box">
               <strong>Ville</strong>
@@ -776,7 +787,7 @@
             </div>
 
             <div class="box">
-              <strong>Publication</strong>
+              <strong>Visibilité</strong>
               <span id="boxPublished">—</span>
             </div>
 
@@ -792,13 +803,13 @@
             <div class="clawHead">
               <div>
                 <div class="clawKicker">CLAW DIGIY</div>
-                <h2 class="clawTitle">Lecture légère du cockpit</h2>
+                <h2 class="clawTitle">Lecture légère de ton espace</h2>
               </div>
               <div class="clawMode" id="clawMode">Analyse légère</div>
             </div>
 
             <div class="clawText" id="clawSummary">
-              CLAW attend le slug, l'accès et le lieu principal pour te pousser le bon cran.
+              L’analyse attend l’identifiant, l’accès et le lieu principal pour pousser le bon cran.
             </div>
 
             <div class="clawPills" id="clawPills"></div>
@@ -808,7 +819,7 @@
             <div class="clawList" id="clawList">
               <div class="clawItem">
                 <strong>Chargement</strong>
-                <span>CLAW prépare la lecture terrain de ce cockpit.</span>
+                <span>L’analyse prépare la lecture terrain de cet espace.</span>
               </div>
             </div>
           </article>
@@ -817,7 +828,7 @@
     </section>
 
     <div class="foot">
-      PRO-EXPLORE • cockpit terrain • lecture simple • nav CLAW recousue
+      DIGIY EXPLORE • ma gestion • lecture simple • analyse recousue
     </div>
   </div>
 
@@ -830,11 +841,7 @@
       const SESSION_KEY = "digiy_explore_session";
       const MAX_AGE_MS = 8 * 60 * 60 * 1000;
 
-      /* ─── FIX : vitrine pointe vers digiy-explore ─── */
-      const PUBLIC_VITRINE_BASE = "https://explore.digiylyfe.com/";
-
       const PATHS = {
-        access: './submit.html', /* PRO only */
         cockpit: "./cockpit.html",
         lieux: "./lieux.html",
         submit: "./submit.html",
@@ -967,13 +974,6 @@
         return `${PATHS.pin}${buildQuery(slug, phone)}`;
       }
 
-      function buildPublicFicheHref(slug = ""){
-        const cleanSlug = normalizeSlug(slug);
-        return cleanSlug
-          ? PUBLIC_VITRINE_BASE + "?slug=" + encodeURIComponent(cleanSlug)
-          : PUBLIC_VITRINE_BASE;
-      }
-
       function placeName(place){
         return (
           place?.public_name ||
@@ -1024,9 +1024,18 @@
         box.className = `status ${type}`;
       }
 
+      function escapeHtml(value){
+        return String(value ?? "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#39;");
+      }
+
       function setClaw(mode, summary, pills = [], items = []){
         $("clawMode").textContent = mode || "Analyse légère";
-        $("clawSummary").textContent = summary || "CLAW lit le rail sans bavarder.";
+        $("clawSummary").textContent = summary || "L’analyse lit le rail sans bavarder.";
 
         $("clawPills").innerHTML = (Array.isArray(pills) ? pills : [])
           .filter(Boolean)
@@ -1047,16 +1056,16 @@
       function setClawLoading(){
         setClaw(
           "Chargement",
-          "CLAW attend le guard, le téléphone actif et le lieu principal pour pousser la prochaine action utile.",
-          ["Module : EXPLORE", "Cockpit terrain", "Rail en préparation"],
+          "L’analyse attend le guard, le téléphone actif et le lieu principal pour pousser la prochaine action utile.",
+          ["Espace : EXPLORE", "Ma gestion", "Chargement en cours"],
           [
             {
-              title:"Lecture du cockpit",
-              text:"Le cockpit doit rester simple : accès, lieux, publication et direction utile."
+              title:"Lecture de l’espace",
+              text:"L’écran doit rester simple : accès, lieux, visibilité et direction utile."
             },
             {
               title:"Navigation utile",
-              text:"Vitrine, lieux, édition et CLAW doivent suivre le même contexte. Le PIN reste un secours."
+              text:"Tes lieux, l’édition et l’analyse doivent suivre le même contexte. Le PIN reste un secours."
             }
           ]
         );
@@ -1065,20 +1074,20 @@
       function setClawPreview(message){
         setClaw(
           "Aperçu",
-          "CLAW voit une coquille propre, mais l'accès ou l'identité restent à confirmer.",
+          "L’analyse voit une coquille propre, mais l’accès ou l’identité restent à confirmer.",
           [
-            CURRENT_SLUG ? `Slug : ${CURRENT_SLUG}` : "Slug absent",
+            CURRENT_SLUG ? `Identifiant : ${CURRENT_SLUG}` : "Identifiant absent",
             CURRENT_PHONE ? `Téléphone : ${CURRENT_PHONE}` : "Téléphone absent",
             "PIN secours"
           ],
           [
             {
               title:"État actuel",
-              text: message || "Le cockpit reste en aperçu tant que le rail n'est pas ouvert."
+              text: message || "L’espace reste en aperçu tant que l’accès n’est pas ouvert."
             },
             {
               title:"Action utile",
-              text:"Passe par pin.html pour ouvrir proprement la session EXPLORE."
+              text:"Passe par l’entrée PIN pour ouvrir proprement la session EXPLORE."
             }
           ]
         );
@@ -1087,49 +1096,41 @@
       function setClawLive(place){
         setClaw(
           "Lecture vivante",
-          "CLAW lit le cockpit EXPLORE sans créer une usine : nombre de lieux, état de publication et prochaine action terrain.",
+          "L’analyse lit ton espace EXPLORE sans créer une usine : nombre de lieux, état de visibilité et prochaine action terrain.",
           [
-            CURRENT_SLUG ? `Slug : ${CURRENT_SLUG}` : "Slug : —",
+            CURRENT_SLUG ? `Identifiant : ${CURRENT_SLUG}` : "Identifiant : —",
             CURRENT_PHONE ? `Téléphone : ${CURRENT_PHONE}` : "Téléphone : —",
             `${CURRENT_PLACES.length} lieu(x)`,
-            isPublished(place) ? "Lieu publié" : "Lieu à publier"
+            place && isPublished(place) ? "Lieu publié" : "Lieu à publier"
           ],
           [
             {
-              title:"Lecture du rail",
+              title:"Lecture du terrain",
               text: place
-                ? `${placeName(place)} est le point principal lu par le cockpit.`
-                : "Le cockpit est vivant mais aucun lieu principal n'a encore été lu."
+                ? `${placeName(place)} est le point principal lu dans ta gestion.`
+                : "L’espace est vivant mais aucun lieu principal n’a encore été lu."
             },
             {
               title:"Action utile",
               text: !place
-                ? "Ajoute un lieu ou ouvre lieux.html pour enrichir le rail."
+                ? "Ajoute un lieu ou ouvre Mes lieux pour enrichir ton espace."
                 : isPublished(place)
-                  ? "Passe par CLAW ou submit.html pour affiner la micro-copy et la lecture publique."
+                  ? "Passe par Analyse ou Ajouter / éditer pour affiner la micro-copy et la lecture."
                   : "Le cran logique est la vérification puis la publication du lieu."
             },
             {
               title:"Navigation interne",
-              text:"Tu peux circuler entre cockpit, lieux, submit et CLAW tant que la session tient."
+              text:"Tu peux circuler entre Ma gestion, Mes lieux, Ajouter / éditer et Analyse tant que la session tient."
             }
           ]
         );
       }
 
-      function escapeHtml(v){
-        return String(v ?? "")
-          .replaceAll("&","&amp;")
-          .replaceAll("<","&lt;")
-          .replaceAll(">","&gt;")
-          .replaceAll('"',"&quot;")
-          .replaceAll("'","&#39;");
-      }
-
       function setRescueVisibility(show){
-        $("navPinRescue").classList.toggle("hidden", !show);
-        $("btnPinTop").classList.toggle("hidden", !show);
-        $("btnOpenPin").classList.toggle("hidden", !show);
+        const visible = !!show;
+        $("btnPinTop").classList.toggle("hidden", !visible);
+        $("btnOpenPin").classList.toggle("hidden", !visible);
+        $("navPinRescue").classList.toggle("hidden", !visible);
       }
 
       function buildLinks(){
@@ -1148,7 +1149,7 @@
         $("navClaw").href = clawHref;
         $("navPinRescue").href = pinHref;
 
-        $("btnAccessTop").href = PATHS.submit;
+        $("btnAccessTop").href = submitHref;
         $("btnLieuxTop").href = lieuxHref;
         $("btnSubmitTop").href = submitHref;
         $("btnClawTop").href = clawHref;
@@ -1215,7 +1216,7 @@
         return Array.isArray(data) ? data : [];
       }
 
-      async function loadPublicPlaceBySlug(slug){
+      async function loadPlaceBySlug(slug){
         const clean = normalizeSlug(slug);
         if(!clean) return null;
 
@@ -1225,7 +1226,6 @@
 
         if(error) throw error;
 
-        /* ─── FIX : extraire data.place si réponse { ok, place } ─── */
         if(data?.ok === true && data.place){
           return data.place;
         }
@@ -1263,8 +1263,8 @@
         $("heroPlace").textContent = place ? placeName(place) : "Aucun lieu lu";
 
         const pills = [
-          "Module : EXPLORE",
-          CURRENT_SLUG ? `Slug : ${CURRENT_SLUG}` : "Slug absent",
+          "Espace : EXPLORE",
+          CURRENT_SLUG ? `Identifiant : ${CURRENT_SLUG}` : "Identifiant absent",
           CURRENT_PHONE ? `Téléphone : ${CURRENT_PHONE}` : "Téléphone absent",
           place ? `Ville : ${placeCity(place)}` : "",
           place ? `Catégorie : ${placeCategory(place)}` : ""
@@ -1274,23 +1274,23 @@
 
         if(!CURRENT_STATE?.access_ok){
           $("heroBadge").textContent = "Mode aperçu";
-          $("heroTitle").textContent = "Le rail EXPLORE existe, mais l'accès reste à confirmer.";
-          $("heroLead").textContent = "Le cockpit reste propre : aucune démo inutile, juste la bonne porte vers le PIN ou l'activation si besoin.";
+          $("heroTitle").textContent = "Ton espace EXPLORE existe, mais l’accès reste à confirmer.";
+          $("heroLead").textContent = "L’écran reste propre : aucune démo inutile, juste la bonne porte vers le PIN ou l’activation si besoin.";
           $("btnPrimaryAction").textContent = "Entrer par PIN";
           $("btnPrimaryAction").href = $("navPinRescue").href;
           return;
         }
 
-        $("heroBadge").textContent = "Cockpit vivant";
+        $("heroBadge").textContent = "Espace vivant";
 
         if(place){
           $("heroTitle").textContent = placeName(place);
           $("heroLead").textContent = placeShort(place);
           $("btnPrimaryAction").textContent = "Éditer ce lieu";
-          $("btnPrimaryAction").href = buildInternalHref("./submit.html", place.slug || CURRENT_SLUG, CURRENT_PHONE);
+          $("btnPrimaryAction").href = buildInternalHref(PATHS.submit, place.slug || CURRENT_SLUG, CURRENT_PHONE);
         }else{
-          $("heroTitle").textContent = "Cockpit EXPLORE actif";
-          $("heroLead").textContent = "Le rail est ouvert, mais aucun lieu n'est encore visible dans le cockpit. Ajoute ou recharge une fiche terrain.";
+          $("heroTitle").textContent = "EXPLORE actif";
+          $("heroLead").textContent = "L’accès est ouvert, mais aucun lieu n’est encore visible ici. Ajoute ou recharge une fiche terrain.";
           $("btnPrimaryAction").textContent = "Ajouter un lieu";
           $("btnPrimaryAction").href = $("navSubmit").href;
         }
@@ -1299,20 +1299,19 @@
       function renderMainPlace(place){
         if(!place){
           $("mainPlaceName").textContent = "Aucun lieu lu";
-          $("mainPlaceText").textContent = "Le cockpit n'a pas trouvé de fiche principale. Passe par Ajouter / éditer ou relis lieux.html.";
+          $("mainPlaceText").textContent = "L’espace n’a pas trouvé de fiche principale. Passe par Ajouter / éditer ou relis Mes lieux.";
           $("boxCity").textContent = "—";
           $("boxZone").textContent = "—";
           $("boxCategory").textContent = "—";
           $("boxPublished").textContent = "—";
           $("boxAction").textContent = CURRENT_STATE?.access_ok
             ? "Ajoute un lieu ou recharge une fiche existante."
-            : "Ouvre d'abord le rail par PIN.";
+            : "Ouvre d’abord l’accès par PIN.";
 
           $("btnEditCurrent").href = $("navSubmit").href;
-          $("btnViewCurrent").href = PATHS.submit;
+          $("btnViewCurrent").href = $("navSubmit").href;
           $("btnClawCurrent").href = $("navClaw").href;
-          $("linksText").textContent = "Le cockpit garde la couture vers vitrine, lieux, édition et CLAW. Le PIN reste un secours.";
-
+          $("linksText").textContent = "Ta gestion recoud tes lieux, l’édition et l’analyse sur le même contexte. Le PIN reste un secours seulement.";
           return;
         }
 
@@ -1325,14 +1324,14 @@
         $("boxCategory").textContent = placeCategory(place);
         $("boxPublished").textContent = isPublished(place) ? "Publié" : "Brouillon / à publier";
         $("boxAction").textContent = isPublished(place)
-          ? "Affiner la lecture publique ou passer par CLAW pour améliorer la micro-copy."
+          ? "Affiner la lecture ou passer par Analyse pour améliorer la micro-copy."
           : "Contrôler la fiche puis publier quand la lecture est propre.";
 
-        $("btnEditCurrent").href = buildInternalHref("./submit.html", place.slug || CURRENT_SLUG, CURRENT_PHONE);
+        $("btnEditCurrent").href = buildInternalHref(PATHS.submit, place.slug || CURRENT_SLUG, CURRENT_PHONE);
         $("btnViewCurrent").href = buildInternalHref(PATHS.submit, place.slug || CURRENT_SLUG, CURRENT_PHONE);
-        $("btnClawCurrent").href = buildInternalHref("./claw.html", place.slug || CURRENT_SLUG, CURRENT_PHONE);
+        $("btnClawCurrent").href = buildInternalHref(PATHS.claw, place.slug || CURRENT_SLUG, CURRENT_PHONE);
         $("linksText").textContent =
-          `Rail utile : cockpit → lieux → édition du slug ${place.slug || CURRENT_SLUG || "—"} → CLAW.`;
+          `Repère utile : gestion → lieux → édition de ${place.slug || CURRENT_SLUG || "—"} → analyse.`;
       }
 
       function renderPlaces(){
@@ -1342,7 +1341,7 @@
         if(!rows.length){
           box.innerHTML = `
             <div class="empty">
-              Aucun lieu n'est remonté pour le téléphone actif. Passe par <strong>Ajouter / éditer</strong> pour poser une première fiche.
+              Aucun lieu n’est remonté pour le téléphone actif. Passe par <strong>Ajouter / éditer</strong> pour poser une première fiche.
             </div>
           `;
           return;
@@ -1350,9 +1349,8 @@
 
         box.innerHTML = rows.map((place) => {
           const slug = normalizeSlug(place.slug || "");
-          const editHref = buildInternalHref("./submit.html", slug, CURRENT_PHONE);
-          const publicHref = buildPublicFicheHref(slug);
-          const clawHref = buildInternalHref("./claw.html", slug || CURRENT_SLUG, CURRENT_PHONE);
+          const editHref = buildInternalHref(PATHS.submit, slug, CURRENT_PHONE);
+          const clawHref = buildInternalHref(PATHS.claw, slug || CURRENT_SLUG, CURRENT_PHONE);
 
           return `
             <article class="placeCard">
@@ -1363,7 +1361,7 @@
                     <span class="metaTag">${escapeHtml(placeCategory(place))}</span>
                     <span class="metaTag">${escapeHtml(placeCity(place))}</span>
                     <span class="metaTag">${escapeHtml(placeZone(place))}</span>
-                    <span class="metaTag">${escapeHtml(slug || "slug absent")}</span>
+                    <span class="metaTag">${escapeHtml(slug || "identifiant absent")}</span>
                   </div>
                 </div>
                 <div class="placeMeta">
@@ -1375,9 +1373,8 @@
               <div class="placeDesc">${escapeHtml(placeShort(place))}</div>
 
               <div class="placeActions">
-                <a class="btn secondary" href="${escapeHtml(editHref)}">Éditer</a>
-                <a class="btn ghost" href="${escapeHtml(publicHref)}">Voir</a>
-                <a class="btn info" href="${escapeHtml(clawHref)}">CLAW</a>
+                <a class="btn secondary" href="${escapeHtml(editHref)}">Gérer</a>
+                <a class="btn info" href="${escapeHtml(clawHref)}">Analyse</a>
               </div>
             </article>
           `;
@@ -1424,9 +1421,9 @@
           let slugPlace = null;
           if(CURRENT_SLUG){
             try{
-              slugPlace = await loadPublicPlaceBySlug(CURRENT_SLUG);
+              slugPlace = await loadPlaceBySlug(CURRENT_SLUG);
             }catch(err){
-              console.error("[EXPLORE cockpit] public place error:", err);
+              console.error("[EXPLORE cockpit] place by slug error:", err);
             }
           }
 
@@ -1441,51 +1438,51 @@
           if(!CURRENT_STATE?.access_ok){
             setStatus(
               CURRENT_SLUG
-                ? `Slug détecté (${CURRENT_SLUG}) mais accès non confirmé. Passe par la porte PIN pour ouvrir le rail.`
-                : "Aucun accès confirmé pour le moment. Le cockpit reste en aperçu propre.",
+                ? `Identifiant détecté (${CURRENT_SLUG}) mais accès non confirmé. Passe par la porte PIN pour ouvrir l’espace.`
+                : "Aucun accès confirmé pour le moment. L’espace reste en aperçu propre.",
               CURRENT_SLUG ? "warn" : "info"
             );
             setClawPreview(
               CURRENT_SLUG
-                ? `Le slug ${CURRENT_SLUG} est visible, mais l'accès EXPLORE n'est pas encore confirmé.`
-                : "Le cockpit attend une identité ou une session valide."
+                ? `L’identifiant ${CURRENT_SLUG} est visible, mais l’accès EXPLORE n’est pas encore confirmé.`
+                : "L’espace attend une identité ou une session valide."
             );
-          } else {
+          }else{
             setStatus(
               CURRENT_MAIN
-                ? `Cockpit actif pour ${placeName(CURRENT_MAIN)}.`
-                : `Cockpit actif pour le téléphone ${CURRENT_PHONE || "pilote"}.`,
+                ? `Espace actif pour ${placeName(CURRENT_MAIN)}.`
+                : `Espace actif pour le téléphone ${CURRENT_PHONE || "pilote"}.`,
               "ok"
             );
             setClawLive(CURRENT_MAIN);
           }
-        } catch (err){
+        }catch(err){
           console.error("[EXPLORE cockpit] boot error:", err);
-          setStatus("Le cockpit n'a pas pu charger le rail EXPLORE pour le moment.", "bad");
+          setStatus("L’espace n’a pas pu charger le rail EXPLORE pour le moment.", "bad");
           setRescueVisibility(true);
           renderHero(null);
           renderMainPlace(null);
           renderPlaces();
           setClaw(
             "Erreur",
-            "CLAW a détecté un blocage au chargement du cockpit EXPLORE.",
+            "L’analyse a détecté un blocage au chargement de ton espace EXPLORE.",
             [
-              CURRENT_SLUG ? `Slug : ${CURRENT_SLUG}` : "Slug : —",
+              CURRENT_SLUG ? `Identifiant : ${CURRENT_SLUG}` : "Identifiant : —",
               CURRENT_PHONE ? `Téléphone : ${CURRENT_PHONE}` : "Téléphone : —",
               "Contrôle à faire"
             ],
             [
               {
                 title:"Blocage principal",
-                text:"Le cockpit n'a pas pu lire correctement le guard ou les RPC du rail EXPLORE."
+                text:"L’écran n’a pas pu lire correctement le guard ou les RPC du rail EXPLORE."
               },
               {
                 title:"Action utile",
-                text:"Recharge la page, puis repasse par pin.html si nécessaire."
+                text:"Recharge la page, puis repasse par l’entrée PIN si nécessaire."
               }
             ]
           );
-        } finally {
+        }finally{
           document.documentElement.style.visibility = "";
         }
       }
