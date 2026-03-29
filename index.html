@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>PRO-EXPLORE — Portail Pro</title>
+  <title>Je fais découvrir mon lieu — Mon espace</title>
   <meta name="theme-color" content="#06130f" />
   <meta
     name="description"
-    content="PRO-EXPLORE — portail professionnel DIGIY pour piloter les lieux, zones et lectures terrain."
+    content="DIGIY EXPLORE — retrouve ton accès, tes lieux, ta gestion et tes pages utiles."
   />
 
   <script>
@@ -42,7 +42,7 @@
     body{
       min-height:100vh;
       color:var(--ink);
-      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family:Outfit, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
         radial-gradient(circle at top, rgba(212,175,55,.10), transparent 26%),
         linear-gradient(180deg, #071510 0%, #06130f 48%, #04100c 100%);
@@ -72,16 +72,21 @@
     }
 
     .logo{
-      width:48px;
-      height:48px;
-      border-radius:16px;
-      display:grid;
-      place-items:center;
-      background:linear-gradient(135deg, rgba(212,175,55,.24), rgba(212,175,55,.06));
+      width:56px;
+      height:56px;
+      border-radius:18px;
+      overflow:hidden;
       border:1px solid rgba(212,175,55,.22);
       box-shadow:0 10px 28px rgba(0,0,0,.18);
-      font-size:24px;
       flex:0 0 auto;
+      background:#fff;
+    }
+
+    .logo img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
     }
 
     .brandText{min-width:0}
@@ -431,55 +436,57 @@
   <div class="wrap">
     <header class="topbar">
       <div class="brand">
-        <div class="logo">🧭</div>
+        <div class="logo">
+          <img src="https://digiylyfe.net/wp-content/uploads/2026/03/digiylyfe_logo_qr.jpeg" alt="Logo DIGIYLYFE" />
+        </div>
         <div class="brandText">
-          <div class="kicker">DIGIYLYFE — Quartier Général</div>
-          <div class="title">PRO-EXPLORE • Portail Pro</div>
-          <div class="sub">Porte d’entrée du module pro pour lire le terrain, gérer les lieux et publier proprement.</div>
+          <div class="kicker">DIGIYLYFE</div>
+          <div class="title">Je fais découvrir mon lieu — Mon espace</div>
+          <div class="sub">Retrouve ici toutes tes portes utiles pour entrer, gérer, corriger et avancer sans te disperser.</div>
         </div>
       </div>
 
       <div class="topActions">
-        <a class="btn ghost" href="../index.html">Retour EXPLORE public</a>
-        <a class="btn secondary" href="./pin.html">Entrée PIN</a>
-        <a class="btn primary" href="./cockpit.html">Ouvrir le cockpit</a>
+        <a class="btn ghost" href="../index.html">Retour à la vitrine</a>
+        <a class="btn secondary" href="./pin.html">Mon accès</a>
+        <a class="btn primary" href="./cockpit.html">Entrer dans mon espace</a>
       </div>
     </header>
 
     <section class="hero">
       <article class="panel heroMain">
-        <div class="badge">Centre de vision terrain</div>
-        <h1>Le poste de pilotage PRO-EXPLORE.</h1>
+        <div class="badge">Point d'entrée</div>
+        <h1>Toutes tes portes utiles au même endroit.</h1>
         <p class="lead">
-          Ce dossier regroupe les portes pro du module EXPLORE. Ici, tu entres, tu vois le terrain,
-          tu gères les lieux, tu crées les fiches et tu gardes une lecture simple, utile, DIGIY.
+          Ici, tu retrouves les pages principales pour travailler proprement : entrer dans ton espace,
+          voir tes lieux, ajouter un lieu, corriger une fiche et garder une lecture simple du terrain.
         </p>
 
         <div class="heroTags">
-          <div class="pill">📍 Lieux</div>
-          <div class="pill">🧠 Lecture terrain</div>
-          <div class="pill">🔐 PIN PRO</div>
-          <div class="pill">🛠️ Publication</div>
+          <div class="pill">📍 Mes lieux</div>
+          <div class="pill">🧠 Analyse</div>
+          <div class="pill">🔐 Mon accès</div>
+          <div class="pill">🛠️ Ajouter un lieu</div>
         </div>
       </article>
 
       <aside class="panel heroSide">
         <div class="miniStat">
-          <div class="miniLabel">Backend</div>
-          <div class="miniValue">Rail réel posé</div>
-          <div class="miniHint">RPC SQL validées : upsert, cockpit, liste, fiche publique, publish.</div>
+          <div class="miniLabel">Accès</div>
+          <div class="miniValue">Prêt</div>
+          <div class="miniHint">Tu peux entrer rapidement puis reprendre ton travail sans tourner en rond.</div>
         </div>
 
         <div class="miniStat">
-          <div class="miniLabel">Front pro</div>
-          <div class="miniValue">Portes prêtes</div>
-          <div class="miniHint">PIN, cockpit, lieux, submit recousus sur le backend réel.</div>
+          <div class="miniLabel">Pages utiles</div>
+          <div class="miniValue">En place</div>
+          <div class="miniHint">Mon accès, ma gestion, mes lieux et ajout de lieu sont déjà reliés.</div>
         </div>
 
         <div class="miniStat">
-          <div class="miniLabel">Doctrine</div>
+          <div class="miniLabel">Esprit DIGIY</div>
           <div class="miniValue">Terrain d’abord</div>
-          <div class="miniHint">Pas de démo inutile, pas de mélange ancien rail / nouveau rail.</div>
+          <div class="miniHint">Lecture simple, action directe, pas de façade froide ni de détour inutile.</div>
         </div>
       </aside>
     </section>
@@ -488,61 +495,61 @@
       <article class="tile">
         <div class="tileTop">
           <div>
-            <div class="tileLabel">Accès sécurisé</div>
-            <div class="tileTitle">PIN</div>
+            <div class="tileLabel">Entrée</div>
+            <div class="tileTitle">Mon accès</div>
           </div>
           <div class="tileIcon">🔐</div>
         </div>
         <div class="tileText">
-          Porte d’entrée sécurisée du module. Vérifie le numéro et le PIN avant d’ouvrir le cockpit.
+          Entre avec ton numéro et ton PIN pour rouvrir ton espace et reprendre ton activité.
         </div>
         <div class="tileActions">
-          <a class="btn primary" href="./pin.html">Ouvrir PIN</a>
+          <a class="btn primary" href="./pin.html">Ouvrir mon accès</a>
         </div>
       </article>
 
       <article class="tile">
         <div class="tileTop">
           <div>
-            <div class="tileLabel">Lecture rapide</div>
-            <div class="tileTitle">Cockpit</div>
+            <div class="tileLabel">Vue d’ensemble</div>
+            <div class="tileTitle">Ma gestion</div>
           </div>
           <div class="tileIcon">📊</div>
         </div>
         <div class="tileText">
-          Vue d’ensemble du terrain : lieux, zones, catégories, derniers mouvements et synthèse locale.
+          Regarde l’ensemble de ton activité, lis ce qui bouge et reprends la bonne action au bon moment.
         </div>
         <div class="tileActions">
-          <a class="btn primary" href="./cockpit.html">Ouvrir cockpit</a>
+          <a class="btn primary" href="./cockpit.html">Ouvrir ma gestion</a>
         </div>
       </article>
 
       <article class="tile">
         <div class="tileTop">
           <div>
-            <div class="tileLabel">Gestion réelle</div>
-            <div class="tileTitle">Lieux</div>
+            <div class="tileLabel">Travail réel</div>
+            <div class="tileTitle">Mes lieux</div>
           </div>
           <div class="tileIcon">📍</div>
         </div>
         <div class="tileText">
-          Liste des lieux rattachés au numéro actif, avec publication, dépublication, archivage et accès aux fiches.
+          Retrouve tes fiches, vois ce qui est visible, ce qui attend encore et ce qui mérite d’être repris.
         </div>
         <div class="tileActions">
-          <a class="btn primary" href="./lieux.html">Gérer les lieux</a>
+          <a class="btn primary" href="./lieux.html">Voir mes lieux</a>
         </div>
       </article>
 
       <article class="tile">
         <div class="tileTop">
           <div>
-            <div class="tileLabel">Création / édition</div>
-            <div class="tileTitle">Submit</div>
+            <div class="tileLabel">Création</div>
+            <div class="tileTitle">Ajouter un lieu</div>
           </div>
           <div class="tileIcon">🛠️</div>
         </div>
         <div class="tileText">
-          Formulaire de création et d’édition pour construire des fiches propres, publiables et lisibles côté public.
+          Crée une nouvelle fiche ou corrige une fiche existante pour la rendre plus claire, plus forte et plus utile.
         </div>
         <div class="tileActions">
           <a class="btn primary" href="./submit.html">Ajouter un lieu</a>
@@ -553,29 +560,29 @@
     <section class="grid2">
       <article class="panel">
         <div class="cardBody">
-          <h2 class="cardTitle">Ordre de circulation conseillé</h2>
-          <div class="cardSub">Chemin simple pour travailler proprement sans se disperser.</div>
+          <h2 class="cardTitle">Chemin simple conseillé</h2>
+          <div class="cardSub">Pour avancer proprement sans perdre ton énergie.</div>
 
           <div class="list">
             <div class="item">
-              <strong>1. Entrée PIN</strong>
-              <span>Passer par <b>pin.html</b> pour ouvrir la session pro.</span>
+              <strong>1. Ouvrir mon accès</strong>
+              <span>Entre d’abord avec ton numéro et ton PIN.</span>
             </div>
             <div class="item">
-              <strong>2. Cockpit</strong>
-              <span>Lire l’état du terrain dans <b>cockpit.html</b>.</span>
+              <strong>2. Voir ma gestion</strong>
+              <span>Regarde rapidement où tu en es avant de bouger quoi que ce soit.</span>
             </div>
             <div class="item">
-              <strong>3. Lieux</strong>
-              <span>Vérifier les fiches existantes dans <b>lieux.html</b>.</span>
+              <strong>3. Vérifier mes lieux</strong>
+              <span>Vois quelles fiches sont prêtes, à corriger ou à remettre en avant.</span>
             </div>
             <div class="item">
-              <strong>4. Submit</strong>
-              <span>Créer ou corriger une fiche dans <b>submit.html</b>.</span>
+              <strong>4. Ajouter ou corriger</strong>
+              <span>Travaille une fiche proprement, sans mélanger les étapes.</span>
             </div>
             <div class="item">
-              <strong>5. Vérification publique</strong>
-              <span>Contrôler la lecture finale dans la vitrine publique et <b>fiche.html</b>.</span>
+              <strong>5. Contrôler la vitrine</strong>
+              <span>Relis le rendu public pour confirmer que la lecture reste simple et forte.</span>
             </div>
           </div>
         </div>
@@ -583,16 +590,16 @@
 
       <article class="panel">
         <div class="cardBody">
-          <h2 class="cardTitle">Doctrine DIGIY</h2>
-          <div class="cardSub">Le moule maître à garder pour éviter les dérapages.</div>
+          <h2 class="cardTitle">Règles de maison DIGIY</h2>
+          <div class="cardSub">Le cap à garder pour rester propre et utile.</div>
 
           <div class="doctrine">
-            <div class="rule">Toujours partir du rail réel validé. Ne pas inventer un backend parallèle.</div>
-            <div class="rule">Zéro démo si le backend existe déjà.</div>
-            <div class="rule">Ne pas mélanger ancien rail et nouveau rail dans un même fichier.</div>
-            <div class="rule">Navigation croisée visible entre les portes principales du module.</div>
-            <div class="rule">Lecture simple côté terrain, pas d’interface laboratoire.</div>
-            <div class="rule">Travailler fichier par fichier, proprement, sans casser le reste.</div>
+            <div class="rule">Toujours partir de ce qui fonctionne déjà pour éviter les détours inutiles.</div>
+            <div class="rule">Pas de bruit ni de faux décor quand le vrai travail existe déjà.</div>
+            <div class="rule">Une page = un rôle clair, pour garder une circulation simple.</div>
+            <div class="rule">Chaque porte doit mener à une action humaine compréhensible.</div>
+            <div class="rule">La lecture doit rester mobile, directe et terrain.</div>
+            <div class="rule">On avance proprement, sans casser le reste.</div>
           </div>
         </div>
       </article>
@@ -601,22 +608,21 @@
     <section class="panel">
       <div class="cardBody">
         <h2 class="cardTitle">Accès rapides</h2>
-        <div class="cardSub">Raccourcis utiles pour bosser sans tourner en rond.</div>
+        <div class="cardSub">Les raccourcis utiles pour aller droit au but.</div>
 
         <div class="topActions" style="justify-content:flex-start;">
-          <a class="btn secondary" href="./pin.html">🔐 PIN</a>
-          <a class="btn secondary" href="./cockpit.html">📊 Cockpit</a>
-          <a class="btn secondary" href="./lieux.html">📍 Lieux</a>
-          <a class="btn secondary" href="./submit.html">🛠️ Submit</a>
-          <a class="btn ghost" href="../index.html#spots">🌍 Spots publics</a>
+          <a class="btn secondary" href="./pin.html">🔐 Mon accès</a>
+          <a class="btn secondary" href="./cockpit.html">📊 Ma gestion</a>
+          <a class="btn secondary" href="./lieux.html">📍 Mes lieux</a>
+          <a class="btn secondary" href="./submit.html">🛠️ Ajouter un lieu</a>
+          <a class="btn ghost" href="../index.html#spots">🌍 Voir la vitrine</a>
         </div>
       </div>
     </section>
 
     <div class="footerNote">
-      PRO-EXPLORE • portail pro • backend réel branché • lecture terrain simple • doctrine DIGIY respectée
+      DIGIY EXPLORE • espace pro • lecture simple • action directe • façade humaine
     </div>
   </div>
 </body>
 </html>
-
