@@ -324,18 +324,18 @@
   async function loginWithPin(slug, pin) {
     const s = normSlug(slug);
     const p = normPin(pin);
-    if (!s) return { ok: false, error: "Slug manquant." };
+    if (!s) return { ok: false, error: "Identifiant manquant." };
     if (!p) return { ok: false, error: "PIN manquant." };
 
     const sub   = await resolveSubBySlug(s);
     const phone = normPhone(sub?.phone);
-    if (!phone) return { ok: false, error: "Slug inconnu." };
+    if (!phone) return { ok: false, error: "Identifiant inconnu." };
 
     const auth = await attemptPinLoginRPCs(s, p, phone);
     if (!auth?.ok) return { ok: false, error: "PIN invalide." };
 
     const hasAccess = await checkAccess(phone);
-    if (!hasAccess) return { ok: false, error: "Abonnement inactif." };
+    if (!hasAccess) return { ok: false, error: "Ton accès n'est pas actif pour le moment." };
 
     rememberIdentity({ slug: s, phone });
     enrichUrlIfMissingSlug(s);
@@ -442,4 +442,4 @@
   }
 
   ready();
-})();;
+})();
