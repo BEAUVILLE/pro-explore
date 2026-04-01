@@ -4,8 +4,8 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
   <meta name="theme-color" content="#06130f"/>
-  <meta name="description" content="DIGIY EXPLORE — ma gestion terrain, mes lieux et mon analyse."/>
-  <title>DIGIY EXPLORE — Ma gestion</title>
+  <meta name="description" content="Retrouve tes lieux, ta visibilité et la prochaine bonne action sans détour."/>
+  <title>Je fais découvrir mon lieu — Mon espace</title>
 
   <script>
     window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
@@ -650,7 +650,7 @@
         <img class="logo" src="https://digiylyfe.net/wp-content/uploads/2026/03/digiylyfe_logo_qr.jpeg" alt="Logo DIGIYLYFE"/>
         <div class="brandText">
           <div class="kicker">DIGIYLYFE — Quartier Général</div>
-          <div class="title">DIGIY EXPLORE • Ma gestion</div>
+          <div class="title">Je fais découvrir mon lieu • Mon espace</div>
           <div class="sub" id="subline">Lecture simple de tes lieux, de leur visibilité et de la prochaine action utile.</div>
         </div>
       </div>
@@ -660,7 +660,7 @@
         <a class="btn secondary" id="btnLieuxTop" href="./lieux.html">Mes lieux</a>
         <a class="btn secondary" id="btnSubmitTop" href="./submit.html">Ajouter / éditer</a>
         <a class="btn info" id="btnClawTop" href="./claw.html">Analyse</a>
-        <a class="btn warn hidden" id="btnPinTop" href="./pin.html">PIN secours</a>
+        <a class="btn warn hidden" id="btnPinTop" href="./pin.html">Entrée secours</a>
       </div>
     </header>
 
@@ -669,28 +669,28 @@
       <a id="navLieux" href="./lieux.html">Mes lieux</a>
       <a id="navSubmit" href="./submit.html">Ajouter / éditer</a>
       <a id="navClaw" href="./claw.html">Analyse</a>
-      <a id="navPinRescue" class="hidden" href="./pin.html">PIN secours</a>
+      <a id="navPinRescue" class="hidden" href="./pin.html">Entrée secours</a>
     </nav>
 
-    <div id="status" class="status info">Préparation de ton espace EXPLORE…</div>
+    <div id="status" class="status info">Préparation de ton espace…</div>
 
     <section class="hero">
       <article class="panel heroMain">
         <div class="heroBadge" id="heroBadge">Lecture terrain</div>
         <h1 class="heroTitle" id="heroTitle">Voir tes lieux, sans usine à gaz.</h1>
         <p class="heroLead" id="heroLead">
-          Ici tu lis rapidement ton espace EXPLORE : accès, identifiant, lieux rattachés, visibilité et prochaine action simple.
+          Ici tu lis rapidement ton espace : entrée, identifiant, lieux rattachés, visibilité et prochaine action simple.
         </p>
 
         <div class="heroPills" id="heroPills">
-          <div class="pill">Espace : EXPLORE</div>
+          <div class="pill">Espace prêt</div>
         </div>
 
         <div class="heroActions">
           <a class="btn primary" id="btnPrimaryAction" href="./submit.html">Ajouter un lieu</a>
           <a class="btn secondary" id="btnOpenLieux" href="./lieux.html">Mes lieux</a>
-          <a class="btn secondary" id="btnOpenClaw" href="./claw.html">Ouvrir Analyse</a>
-          <a class="btn warn hidden" id="btnOpenPin" href="./pin.html">PIN secours</a>
+          <a class="btn secondary" id="btnOpenClaw" href="./claw.html">Ouvrir l'analyse</a>
+          <a class="btn warn hidden" id="btnOpenPin" href="./pin.html">Entrée secours</a>
         </div>
       </article>
 
@@ -698,7 +698,7 @@
         <div class="miniStat">
           <div class="miniLabel">Identifiant actif</div>
           <div class="miniValue" id="heroSlug">—</div>
-          <div class="miniHint">L’identifiant EXPLORE lu dans l’URL, la session ou le stockage.</div>
+          <div class="miniHint">L’identifiant lu dans l’URL, la session ou le stockage.</div>
         </div>
 
         <div class="miniStat">
@@ -747,7 +747,7 @@
 
           <div class="box">
             <strong>Navigation utile</strong>
-            <span id="linksText">Ta gestion recoud tes lieux, l’édition et l’analyse sur le même contexte. Le PIN reste un secours seulement.</span>
+            <span id="linksText">Ton espace recoud tes lieux, l’édition et l’analyse sur le même contexte. Le code reste un secours seulement.</span>
           </div>
 
           <div class="placeActions" style="margin-bottom:14px">
@@ -760,7 +760,7 @@
           <p class="sectionSub">Lecture directe des lieux rattachés au téléphone actif.</p>
 
           <div class="places" id="placesBox">
-            <div class="empty">Chargement des lieux…</div>
+            <div class="empty">Chargement des fiches…</div>
           </div>
         </div>
       </article>
@@ -802,7 +802,7 @@
           <article class="clawCard">
             <div class="clawHead">
               <div>
-                <div class="clawKicker">CLAW DIGIY</div>
+                <div class="clawKicker">Lecture DIGIY</div>
                 <h2 class="clawTitle">Lecture légère de ton espace</h2>
               </div>
               <div class="clawMode" id="clawMode">Analyse légère</div>
@@ -828,7 +828,7 @@
     </section>
 
     <div class="foot">
-      DIGIY EXPLORE • ma gestion • lecture simple • analyse recousue
+      DIGIY EXPLORE • mon espace • lecture simple • analyse recousue
     </div>
   </div>
 
@@ -1065,7 +1065,7 @@
             },
             {
               title:"Navigation utile",
-              text:"Tes lieux, l’édition et l’analyse doivent suivre le même contexte. Le PIN reste un secours."
+              text:"Tes lieux, l’édition et l’analyse doivent suivre le même contexte. Le code reste un secours."
             }
           ]
         );
@@ -1078,7 +1078,7 @@
           [
             CURRENT_SLUG ? `Identifiant : ${CURRENT_SLUG}` : "Identifiant absent",
             CURRENT_PHONE ? `Téléphone : ${CURRENT_PHONE}` : "Téléphone absent",
-            "PIN secours"
+            "Entrée secours"
           ],
           [
             {
@@ -1087,7 +1087,7 @@
             },
             {
               title:"Action utile",
-              text:"Passe par l’entrée PIN pour ouvrir proprement la session EXPLORE."
+              text:"Passe par l’entrée pour ouvrir proprement la session."
             }
           ]
         );

@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-  <title>PRO-EXPLORE — CLAW</title>
+  <title>Je fais découvrir mon lieu — Lecture utile</title>
   <meta name="theme-color" content="#06130f"/>
-  <meta name="description" content="CLAW by DIGIY — lecture légère du rail PRO-EXPLORE." />
+  <meta name="description" content="Lecture légère du contexte réel pour voir vite la bonne action à faire." />
 
   <script>
     window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
@@ -450,54 +450,54 @@
       <div class="brand">
         <div class="logo">🦅</div>
         <div class="brandText">
-          <div class="kicker">CLAW by DIGIY</div>
-          <div class="title">PRO-EXPLORE • Lecture légère</div>
-          <div class="sub" id="subline">CLAW lit le rail terrain, la fiche lieu et la prochaine action utile.</div>
+          <div class="kicker">Lecture DIGIY</div>
+          <div class="title">Je fais découvrir mon lieu • Lecture utile</div>
+          <div class="sub" id="subline">Cette page relit le contexte terrain, la fiche lieu et la prochaine action utile.</div>
         </div>
       </div>
 
       <div class="topActions">
-        <a class="btn secondary" id="btnCockpitTop" href="./cockpit.html">Cockpit</a>
-        <a class="btn secondary" id="btnLieuxTop" href="./lieux.html">Lieux</a>
+        <a class="btn secondary" id="btnCockpitTop" href="./cockpit.html">Mon espace</a>
+        <a class="btn secondary" id="btnLieuxTop" href="./lieux.html">Mes lieux</a>
         <a class="btn secondary" id="btnSubmitTop" href="./submit.html">Ajouter / éditer</a>
-        <a class="btn warn hidden" id="btnPinTop" href="./pin.html">PIN secours</a>
+        <a class="btn warn hidden" id="btnPinTop" href="./pin.html">Entrée secours</a>
       </div>
     </header>
 
-    <nav class="nav" aria-label="Navigation PRO EXPLORE">
-      <a id="navCockpit" href="./cockpit.html">Cockpit</a>
-      <a id="navLieux" href="./lieux.html">Lieux</a>
+    <nav class="nav" aria-label="Navigation EXPLORE">
+      <a id="navCockpit" href="./cockpit.html">Mon espace</a>
+      <a id="navLieux" href="./lieux.html">Mes lieux</a>
       <a id="navSubmit" href="./submit.html">Ajouter / éditer</a>
-      <a id="navClaw" class="active" href="./claw.html">CLAW</a>
-      <a id="navPinRescue" class="hidden" href="./pin.html">PIN secours</a>
+      <a id="navClaw" class="active" href="./claw.html">Lecture utile</a>
+      <a id="navPinRescue" class="hidden" href="./pin.html">Entrée secours</a>
     </nav>
 
-    <div id="status" class="status info">Préparation de CLAW…</div>
+    <div id="status" class="status info">Préparation de la lecture…</div>
 
     <section class="hero">
       <article class="panel heroMain">
         <div class="badge" id="modeBadge">Lecture légère</div>
         <h1 id="heroTitle">Voir le terrain sans bruit.</h1>
         <p class="heroLead" id="heroLead">
-          CLAW relit le slug EXPLORE, l'état d'accès, le lieu chargé et te pousse l'action simple à faire maintenant.
+          Cette lecture relit l'identifiant actif, l'état d'entrée, le lieu chargé et te pousse l'action simple à faire maintenant.
         </p>
 
         <div class="pills" id="heroPills">
-          <div class="pill">Module : EXPLORE</div>
+          <div class="pill">Contexte EXPLORE</div>
         </div>
 
         <div class="actions">
           <button class="btn primary" id="btnCopyPrompt" type="button">Copier le prompt</button>
           <button class="btn info" id="btnRefresh" type="button">Recharger le contexte</button>
-          <a class="btn secondary" id="btnOpenCockpit" href="./cockpit.html">Ouvrir le cockpit</a>
+          <a class="btn secondary" id="btnOpenCockpit" href="./cockpit.html">Ouvrir mon espace</a>
           <a class="btn secondary" id="btnOpenSubmit" href="./submit.html">Éditer le lieu</a>
-          <a class="btn warn hidden" id="btnOpenPin" href="./pin.html">PIN secours</a>
+          <a class="btn warn hidden" id="btnOpenPin" href="./pin.html">Entrée secours</a>
         </div>
       </article>
 
       <aside class="panel heroSide">
         <div class="miniStat">
-          <div class="miniLabel">Slug actif</div>
+          <div class="miniLabel">Identifiant actif</div>
           <div class="miniValue" id="heroSlug">—</div>
           <div class="miniHint">Identifiant terrain détecté par l'URL, le guard ou le stockage local.</div>
         </div>
@@ -511,7 +511,7 @@
         <div class="miniStat">
           <div class="miniLabel">État d'accès</div>
           <div class="miniValue" id="heroAccess">—</div>
-          <div class="miniHint" id="heroAccessHint">CLAW attend la lecture du guard.</div>
+          <div class="miniHint" id="heroAccessHint">La lecture attend la confirmation d'entrée.</div>
         </div>
       </aside>
     </section>
@@ -519,12 +519,12 @@
     <section class="grid">
       <article class="panel">
         <div class="cardBody">
-          <h2 class="sectionTitle">Lecture CLAW</h2>
-          <p class="sectionSub">Résumé direct du rail EXPLORE, sans démo inutile.</p>
+          <h2 class="sectionTitle">Lecture utile</h2>
+          <p class="sectionSub">Résumé direct du contexte réel, sans démo inutile.</p>
 
           <div class="box">
             <strong id="briefTitle">Chargement</strong>
-            <span id="briefText">CLAW attend le contexte réel du module.</span>
+            <span id="briefText">La lecture attend le contexte réel de la page.</span>
           </div>
 
           <div class="box">
@@ -534,7 +534,7 @@
 
           <div class="box">
             <strong>Navigation utile</strong>
-            <span id="linksText">Cockpit, lieux, édition et pin seront recousus ici avec le bon slug.</span>
+            <span id="linksText">Mon espace, les lieux, l'édition et l'entrée seront recousus ici avec le bon identifiant.</span>
           </div>
 
           <div class="actions">
@@ -552,7 +552,7 @@
       <aside class="panel">
         <div class="cardBody">
           <h2 class="sectionTitle">Repères terrain</h2>
-          <p class="sectionSub">Ce que CLAW voit pour décider vite.</p>
+          <p class="sectionSub">Ce que la page voit pour décider vite.</p>
 
           <div class="box">
             <strong>Ville</strong>
@@ -588,7 +588,7 @@
     </section>
 
     <div class="foot">
-      PRO-EXPLORE • CLAW • lecture simple, navigation propre, zéro backend inventé
+      DIGIY EXPLORE • lecture utile • navigation propre • zéro backend inventé
     </div>
   </div>
 
@@ -860,17 +860,17 @@
           setStatus("Accès actif. Lecture lieu encore légère.", "ok");
         }else{
           els.modeBadge.textContent = "Lecture vivante";
-          els.heroTitle.textContent = "CLAW lit le lieu et pousse la bonne action.";
+          els.heroTitle.textContent = "La lecture du lieu pousse la bonne action.";
           els.heroLead.textContent = "Nom, ville, zone, catégorie, publication : on a assez de matière pour diagnostiquer la fiche sans casser le moule.";
           els.briefTitle.textContent = "Lieu chargé";
           els.briefText.textContent =
             `${ctx.business_name}${ctx.city ? " à " + ctx.city : ""}${ctx.zone ? ", zone " + ctx.zone : ""}. ${ctx.is_published ? "La fiche est publiée." : "La fiche n'est pas encore publiée."}`;
-          setStatus("Contexte CLAW chargé proprement.", "ok");
+          setStatus("Contexte chargé proprement.", "ok");
         }
 
         els.linksText.textContent = [
-          "Cockpit", "Lieux", "Ajouter / éditer",
-          !ctx.access_ok ? "PIN secours" : ""
+          "Mon espace", "Mes lieux", "Ajouter / éditer",
+          !ctx.access_ok ? "Entrée secours" : ""
         ].filter(Boolean).join(" • ");
 
         refreshPrompt();
@@ -901,7 +901,7 @@
         if(kind === "place_read") return `${common}\n\nLis cette fiche comme un opérateur terrain DIGIY. Dis ce qui est clair, ce qui manque, et la correction prioritaire sans roman inutile.`;
         if(kind === "publish_check") return `${common}\n\nContrôle si la fiche semble prête à publier côté public. Réponds en 3 blocs : prêt / à corriger / action immédiate.`;
         if(kind === "mobile_copy") return `${common}\n\nÉcris une micro-copy mobile courte pour présenter ce lieu dans l'app DIGIY EXPLORE avec un ton clair et terrain.`;
-        return `${common}\n\nDonne une lecture générale CLAW du rail PRO-EXPLORE et la prochaine action simple à faire.`;
+        return `${common}\n\nDonne une lecture générale du contexte EXPLORE et la prochaine action simple à faire.`;
       }
 
       function buildPrompt(kind, ctx){

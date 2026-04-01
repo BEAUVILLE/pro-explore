@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>PRO-EXPLORE — Lieux</title>
+  <title>Je fais découvrir mes lieux — Mes lieux</title>
   <meta name="theme-color" content="#06130f" />
   <meta
     name="description"
-    content="PRO-EXPLORE — gestion des lieux, publication, archivage et lecture terrain."
+    content="Retrouve tes lieux, vois ce qui est visible et avance sans détour sur la bonne fiche."
   />
 
   <script>
@@ -678,7 +678,7 @@
         <img class="logo" src="https://digiylyfe.net/wp-content/uploads/2026/03/digiylyfe_logo_qr.jpeg" alt="Logo DIGIYLYFE"/>
         <div class="brandText">
           <div class="kicker">DIGIYLYFE — Quartier Général</div>
-          <div class="title">DIGIY EXPLORE • Mes lieux</div>
+          <div class="title">Je fais découvrir mes lieux • Mes lieux</div>
           <div class="sub" id="subline">Lecture, publication, archivage et analyse des fiches terrain.</div>
         </div>
       </div>
@@ -688,7 +688,7 @@
         <a class="btn secondary" id="btnCockpitTop" href="./cockpit.html">Ma gestion</a>
         <a class="btn info" id="btnClawTop" href="./claw.html">Analyse</a>
         <a class="btn primary" id="btnSubmitTop" href="./submit.html">+ Ajouter un lieu</a>
-        <a class="btn warn hidden" id="btnPinTop" href="./pin.html">PIN secours</a>
+        <a class="btn warn hidden" id="btnPinTop" href="./pin.html">Entrée secours</a>
       </div>
     </header>
 
@@ -697,7 +697,7 @@
         <div class="badge">Pilotage terrain</div>
         <h1 class="heroTitle">Tes lieux, sans brouillard.</h1>
         <p class="heroLead">
-          Ici tu vois les fiches EXPLORE liées à ton numéro, leur état,
+          Ici tu vois les fiches liées à ton numéro, leur état,
           leur statut de publication et les actions directes pour faire avancer le terrain.
         </p>
 
@@ -705,7 +705,7 @@
           <a class="btn secondary" id="btnHeroCockpit" href="./cockpit.html">Ma gestion</a>
           <a class="btn secondary" id="btnHeroSubmit" href="./submit.html">Ajouter / éditer</a>
           <a class="btn info" id="btnHeroClaw" href="./claw.html">Ouvrir Analyse</a>
-          <a class="btn warn hidden" id="btnHeroPin" href="./pin.html">PIN secours</a>
+          <a class="btn warn hidden" id="btnHeroPin" href="./pin.html">Entrée secours</a>
         </div>
       </article>
 
@@ -735,7 +735,7 @@
       <a id="navLieux" class="active" href="./lieux.html">Mes lieux</a>
       <a id="navSubmit" href="./submit.html">Ajouter / éditer</a>
       <a id="navClaw" href="./claw.html">Analyse</a>
-      <a id="navPinRescue" class="hidden" href="./pin.html">PIN secours</a>
+      <a id="navPinRescue" class="hidden" href="./pin.html">Entrée secours</a>
     </nav>
 
     <div id="msg" class="msg info"></div>
@@ -885,7 +885,7 @@
         setClaw(
           "Chargement",
           "L’analyse attend le téléphone pilote, la lecture du guard et la liste réelle des lieux.",
-          ["Espace : EXPLORE", "Page : lieux", "Rail réel"],
+          ["Espace prêt", "Page : lieux", "Rail réel"],
           [
             { title:"Lecture attendue", text:"L’écran relit ici le nombre de lieux, leur publication et l’action la plus utile." },
             { title:"Direction utile", text:"Quand le rail est ouvert, on passe vers Ajouter / éditer, Ma gestion ou Analyse selon le besoin." }
@@ -897,10 +897,10 @@
         setClaw(
           "Accès manquant",
           "L’analyse garde une lecture sobre : pas de session valide, donc pas de liste réelle à lire.",
-          ["PIN secours", "Session absente"],
+          ["Entrée secours", "Session absente"],
           [
-            { title:"Blocage principal", text:"Le module attend une session PIN active pour relier les lieux au bon numéro." },
-            { title:"Action utile", text:"Passe d’abord par pin.html, puis reviens sur lieux.html." }
+            { title:"Blocage principal", text:"La page attend une entrée active pour relier les lieux au bon numéro." },
+            { title:"Action utile", text:"Passe d’abord par l’entrée, puis reviens sur tes lieux." }
           ]
         );
       }
