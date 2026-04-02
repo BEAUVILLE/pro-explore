@@ -677,18 +677,18 @@
       <div class="brand">
         <img class="logo" src="https://digiylyfe.net/wp-content/uploads/2026/03/digiylyfe_logo_qr.jpeg" alt="Logo DIGIYLYFE"/>
         <div class="brandText">
-          <div class="kicker">DIGIYLYFE — Quartier Général</div>
+          <div class="kicker">DIGIYLYFE — Repères d'activité</div>
           <div class="title">Je fais découvrir mes lieux • Mes lieux</div>
           <div class="sub" id="subline">Lecture, publication, archivage et analyse des fiches terrain.</div>
         </div>
       </div>
 
       <div class="topActions">
-        <a class="btn ghost" id="btnAccessTop" href="./submit.html">+ Ajouter un lieu</a>
-        <a class="btn secondary" id="btnCockpitTop" href="./cockpit.html">Ma gestion</a>
-        <a class="btn info" id="btnClawTop" href="./claw.html">Analyse</a>
         <a class="btn primary" id="btnSubmitTop" href="./submit.html">+ Ajouter un lieu</a>
-        <a class="btn warn hidden" id="btnPinTop" href="./pin.html">Entrée secours</a>
+        <a class="btn ghost hidden" id="btnAccessTop" href="./submit.html">+ Ajouter un lieu</a>
+        <a class="btn secondary hidden" id="btnCockpitTop" href="./cockpit.html">Ma gestion</a>
+        <a class="btn info hidden" id="btnClawTop" href="./claw.html">Lecture utile</a>
+        <a class="btn warn hidden" id="btnPinTop" href="./pin.html">Retrouver mon accès</a>
       </div>
     </header>
 
@@ -702,10 +702,10 @@
         </p>
 
         <div class="heroActions">
+          <a class="btn primary" id="btnHeroSubmit" href="./submit.html">Ajouter / corriger</a>
           <a class="btn secondary" id="btnHeroCockpit" href="./cockpit.html">Ma gestion</a>
-          <a class="btn secondary" id="btnHeroSubmit" href="./submit.html">Ajouter / éditer</a>
-          <a class="btn info" id="btnHeroClaw" href="./claw.html">Ouvrir Analyse</a>
-          <a class="btn warn hidden" id="btnHeroPin" href="./pin.html">Entrée secours</a>
+          <a class="btn info hidden" id="btnHeroClaw" href="./claw.html">Ouvrir la lecture utile</a>
+          <a class="btn warn hidden" id="btnHeroPin" href="./pin.html">Retrouver mon accès</a>
         </div>
       </article>
 
@@ -717,9 +717,9 @@
         </div>
 
         <div class="miniStat">
-          <div class="miniLabel">Identifiant actif</div>
+          <div class="miniLabel">Repère du lieu</div>
           <div class="miniValue" id="heroSlug">—</div>
-          <div class="miniHint">Contexte porté entre lieux, gestion, édition et analyse.</div>
+          <div class="miniHint">Repère repris automatiquement entre tes lieux, ta gestion et la correction d'une fiche.</div>
         </div>
 
         <div class="miniStat">
@@ -734,8 +734,8 @@
       <a id="navCockpit" href="./cockpit.html">Ma gestion</a>
       <a id="navLieux" class="active" href="./lieux.html">Mes lieux</a>
       <a id="navSubmit" href="./submit.html">Ajouter / éditer</a>
-      <a id="navClaw" href="./claw.html">Analyse</a>
-      <a id="navPinRescue" class="hidden" href="./pin.html">Entrée secours</a>
+      <a id="navClaw" href="./claw.html">Lecture utile</a>
+      <a id="navPinRescue" class="hidden" href="./pin.html">Retrouver mon accès</a>
     </nav>
 
     <div id="msg" class="msg info"></div>
@@ -767,7 +767,7 @@
       <article class="clawCard">
         <div class="clawHead">
           <div>
-            <div class="clawKicker">CLAW DIGIY</div>
+            <div class="clawKicker">Lecture terrain</div>
             <h2 class="clawTitle">Lecture légère des lieux</h2>
           </div>
           <div class="clawMode" id="clawMode">Analyse légère</div>
@@ -897,7 +897,7 @@
         setClaw(
           "Accès manquant",
           "L’analyse garde une lecture sobre : pas de session valide, donc pas de liste réelle à lire.",
-          ["Entrée secours", "Session absente"],
+          ["Retrouver mon accès", "Accès absent"],
           [
             { title:"Blocage principal", text:"La page attend une entrée active pour relier les lieux au bon numéro." },
             { title:"Action utile", text:"Passe d’abord par l’entrée, puis reviens sur tes lieux." }
@@ -1155,7 +1155,7 @@
           "L’analyse relit la densité du rail EXPLORE : lieux, publiés, brouillons et prochaine action terrain.",
           [
             `Téléphone : ${CURRENT_PHONE}`,
-            CURRENT_SLUG ? `Identifiant actif : ${CURRENT_SLUG}` : "",
+            CURRENT_SLUG ? `Repère du lieu : ${CURRENT_SLUG}` : "",
             `${total} lieu(x)`,
             `${published} publié(s)`,
             `${drafts} brouillon(s)`,

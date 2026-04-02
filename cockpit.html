@@ -649,7 +649,7 @@
       <div class="brand">
         <img class="logo" src="https://digiylyfe.net/wp-content/uploads/2026/03/digiylyfe_logo_qr.jpeg" alt="Logo DIGIYLYFE"/>
         <div class="brandText">
-          <div class="kicker">DIGIYLYFE — Quartier Général</div>
+          <div class="kicker">DIGIYLYFE — Repères d'activité</div>
           <div class="title">Je fais découvrir mon lieu • Mon espace</div>
           <div class="sub" id="subline">Lecture simple de tes lieux, de leur visibilité et de la prochaine action utile.</div>
         </div>
@@ -657,10 +657,10 @@
 
       <div class="topActions">
         <a class="btn primary" id="btnAccessTop" href="./submit.html">+ Ajouter un lieu</a>
-        <a class="btn secondary" id="btnLieuxTop" href="./lieux.html">Mes lieux</a>
-        <a class="btn secondary" id="btnSubmitTop" href="./submit.html">Ajouter / éditer</a>
-        <a class="btn info" id="btnClawTop" href="./claw.html">Analyse</a>
-        <a class="btn warn hidden" id="btnPinTop" href="./pin.html">Entrée secours</a>
+        <a class="btn secondary hidden" id="btnLieuxTop" href="./lieux.html">Mes lieux</a>
+        <a class="btn secondary hidden" id="btnSubmitTop" href="./submit.html">Ajouter / éditer</a>
+        <a class="btn info hidden" id="btnClawTop" href="./claw.html">Lecture utile</a>
+        <a class="btn warn hidden" id="btnPinTop" href="./pin.html">Retrouver mon accès</a>
       </div>
     </header>
 
@@ -668,8 +668,8 @@
       <a id="navCockpit" class="active" href="./cockpit.html">Ma gestion</a>
       <a id="navLieux" href="./lieux.html">Mes lieux</a>
       <a id="navSubmit" href="./submit.html">Ajouter / éditer</a>
-      <a id="navClaw" href="./claw.html">Analyse</a>
-      <a id="navPinRescue" class="hidden" href="./pin.html">Entrée secours</a>
+      <a id="navClaw" href="./claw.html">Lecture utile</a>
+      <a id="navPinRescue" class="hidden" href="./pin.html">Retrouver mon accès</a>
     </nav>
 
     <div id="status" class="status info">Préparation de ton espace…</div>
@@ -689,16 +689,16 @@
         <div class="heroActions">
           <a class="btn primary" id="btnPrimaryAction" href="./submit.html">Ajouter un lieu</a>
           <a class="btn secondary" id="btnOpenLieux" href="./lieux.html">Mes lieux</a>
-          <a class="btn secondary" id="btnOpenClaw" href="./claw.html">Ouvrir l'analyse</a>
-          <a class="btn warn hidden" id="btnOpenPin" href="./pin.html">Entrée secours</a>
+          <a class="btn secondary hidden" id="btnOpenClaw" href="./claw.html">Ouvrir la lecture utile</a>
+          <a class="btn warn hidden" id="btnOpenPin" href="./pin.html">Retrouver mon accès</a>
         </div>
       </article>
 
       <aside class="panel heroSide">
         <div class="miniStat">
-          <div class="miniLabel">Identifiant actif</div>
+          <div class="miniLabel">Repère du lieu</div>
           <div class="miniValue" id="heroSlug">—</div>
-          <div class="miniHint">L’identifiant lu dans l’URL, la session ou le stockage.</div>
+          <div class="miniHint">Le repère repris automatiquement pour garder la bonne lecture d'une page à l'autre.</div>
         </div>
 
         <div class="miniStat">
@@ -753,7 +753,7 @@
           <div class="placeActions" style="margin-bottom:14px">
             <a class="btn secondary" id="btnEditCurrent" href="./submit.html">Éditer ce lieu</a>
             <a class="btn secondary" id="btnViewCurrent" href="./submit.html">Ouvrir ma fiche</a>
-            <a class="btn info" id="btnClawCurrent" href="./claw.html">Lire avec Analyse</a>
+            <a class="btn info" id="btnClawCurrent" href="./claw.html">Ouvrir la lecture utile</a>
           </div>
 
           <h2 class="sectionTitle">Mes lieux</h2>
@@ -802,7 +802,7 @@
           <article class="clawCard">
             <div class="clawHead">
               <div>
-                <div class="clawKicker">Lecture DIGIY</div>
+                <div class="clawKicker">Lecture terrain</div>
                 <h2 class="clawTitle">Lecture légère de ton espace</h2>
               </div>
               <div class="clawMode" id="clawMode">Analyse légère</div>
@@ -1078,7 +1078,7 @@
           [
             CURRENT_SLUG ? `Identifiant : ${CURRENT_SLUG}` : "Identifiant absent",
             CURRENT_PHONE ? `Téléphone : ${CURRENT_PHONE}` : "Téléphone absent",
-            "Entrée secours"
+            "Retrouver mon accès"
           ],
           [
             {

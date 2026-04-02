@@ -460,7 +460,7 @@
         <a class="btn secondary" id="btnCockpitTop" href="./cockpit.html">Mon espace</a>
         <a class="btn secondary" id="btnLieuxTop" href="./lieux.html">Mes lieux</a>
         <a class="btn secondary" id="btnSubmitTop" href="./submit.html">Ajouter / éditer</a>
-        <a class="btn warn hidden" id="btnPinTop" href="./pin.html">Entrée secours</a>
+        <a class="btn warn hidden" id="btnPinTop" href="./pin.html">Retrouver mon accès</a>
       </div>
     </header>
 
@@ -469,7 +469,7 @@
       <a id="navLieux" href="./lieux.html">Mes lieux</a>
       <a id="navSubmit" href="./submit.html">Ajouter / éditer</a>
       <a id="navClaw" class="active" href="./claw.html">Lecture utile</a>
-      <a id="navPinRescue" class="hidden" href="./pin.html">Entrée secours</a>
+      <a id="navPinRescue" class="hidden" href="./pin.html">Retrouver mon accès</a>
     </nav>
 
     <div id="status" class="status info">Préparation de la lecture…</div>
@@ -487,19 +487,19 @@
         </div>
 
         <div class="actions">
-          <button class="btn primary" id="btnCopyPrompt" type="button">Copier ma lecture</button>
+          <button class="btn primary" id="btnCopyPrompt" type="button">Copier le résumé</button>
           <button class="btn info" id="btnRefresh" type="button">Recharger le contexte</button>
           <a class="btn secondary" id="btnOpenCockpit" href="./cockpit.html">Ouvrir mon espace</a>
           <a class="btn secondary" id="btnOpenSubmit" href="./submit.html">Éditer le lieu</a>
-          <a class="btn warn hidden" id="btnOpenPin" href="./pin.html">Entrée secours</a>
+          <a class="btn warn hidden" id="btnOpenPin" href="./pin.html">Retrouver mon accès</a>
         </div>
       </article>
 
       <aside class="panel heroSide">
         <div class="miniStat">
-          <div class="miniLabel">Identifiant actif</div>
+          <div class="miniLabel">Repère du lieu</div>
           <div class="miniValue" id="heroSlug">—</div>
-          <div class="miniHint">Identifiant du lieu repris automatiquement pour garder la bonne lecture.</div>
+          <div class="miniHint">Repère du lieu repris automatiquement pour garder une lecture continue.</div>
         </div>
 
         <div class="miniStat">
@@ -538,14 +538,14 @@
           </div>
 
           <div class="actions">
-            <button class="btn secondary" data-kind="general" type="button">Prompt général</button>
-            <button class="btn secondary" data-kind="territory_brief" type="button">Brief terrain</button>
-            <button class="btn secondary" data-kind="place_read" type="button">Lecture fiche</button>
-            <button class="btn secondary" data-kind="publish_check" type="button">Contrôle publication</button>
-            <button class="btn secondary" data-kind="mobile_copy" type="button">Micro-copy mobile</button>
+            <button class="btn secondary" data-kind="general" type="button">Vue d'ensemble</button>
+            <button class="btn secondary" data-kind="territory_brief" type="button">Repères terrain</button>
+            <button class="btn secondary" data-kind="place_read" type="button">Lecture du lieu</button>
+            <button class="btn secondary" data-kind="publish_check" type="button">Vérifier avant publication</button>
+            <button class="btn secondary" data-kind="mobile_copy" type="button">Texte mobile</button>
           </div>
 
-          <textarea id="promptBox" class="textarea" spellcheck="false"></textarea>
+          <textarea id="promptBox" class="textarea" spellcheck="false" placeholder="Le résumé prêt à partager apparaît ici."></textarea>
         </div>
       </article>
 
@@ -870,7 +870,7 @@
 
         els.linksText.textContent = [
           "Mon espace", "Mes lieux", "Ajouter / éditer",
-          !ctx.access_ok ? "Entrée secours" : ""
+          !ctx.access_ok ? "Retrouver mon accès" : ""
         ].filter(Boolean).join(" • ");
 
         refreshPrompt();

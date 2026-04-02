@@ -512,7 +512,7 @@
 
       <div class="topActions">
         <a class="btn ghost" id="publicHomeBtn" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener">Vitrine</a>
-        <a class="btn secondary" id="backToClawBtn" href="./claw.html">Analyse</a>
+        <a class="btn secondary" id="backToClawBtn" href="./claw.html">Lecture utile</a>
         <a class="btn secondary" id="backToLieuxBtn" href="./lieux.html">Mes lieux</a>
         <a class="btn secondary" id="backToCockpitBtn" href="./cockpit.html">Ma gestion</a>
         <a class="btn warn hidden" id="rescuePinBtn" href="./pin.html">Accès secours</a>
@@ -543,7 +543,7 @@
         </div>
 
         <div class="miniStat">
-          <div class="miniLabel">Identifiant public</div>
+          <div class="miniLabel">Nom du lien</div>
           <div class="miniValue" id="heroSlug">Nouveau lieu</div>
           <div class="miniHint">Nom court utilisé dans le lien public de la fiche.</div>
         </div>
@@ -554,7 +554,7 @@
       <a id="navCockpit" href="./cockpit.html">Ma gestion</a>
       <a id="navLieux" href="./lieux.html">Mes lieux</a>
       <a id="navSubmit" class="active" href="./submit.html">Ajouter / corriger</a>
-      <a id="navClaw" href="./claw.html">Analyse</a>
+      <a id="navClaw" href="./claw.html">Lecture utile</a>
       <a id="navPreview" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener">Vitrine publique</a>
       <a id="navPinRescue" class="hidden" href="./pin.html">Accès secours</a>
     </nav>
@@ -577,7 +577,7 @@
               </div>
 
               <div class="field">
-                <label class="label" for="slug">Identifiant public</label>
+                <label class="label" for="slug">Nom du lien public</label>
                 <input id="slug" class="input" type="text" placeholder="ex: plage-calme-saly" />
                 <div class="hint">Laisse vide au départ si tu veux générer automatiquement le lien public depuis le nom.</div>
               </div>
@@ -621,12 +621,12 @@
 
             <div class="grid2">
               <div class="field">
-                <label class="label" for="latitude">Latitude</label>
+                <label class="label" for="latitude">Repère carte nord-sud</label>
                 <input id="latitude" class="input" type="number" step="any" placeholder="14.444" />
               </div>
 
               <div class="field">
-                <label class="label" for="longitude">Longitude</label>
+                <label class="label" for="longitude">Repère carte est-ouest</label>
                 <input id="longitude" class="input" type="number" step="any" placeholder="-17.001" />
               </div>
             </div>
@@ -644,12 +644,12 @@
             </div>
 
             <div class="field">
-              <label class="label" for="coverUrl">Image couverture (URL)</label>
+              <label class="label" for="coverUrl">Image de couverture (lien)</label>
               <input id="coverUrl" class="input" type="url" placeholder="https://..." />
             </div>
 
             <div class="field">
-              <label class="label" for="photoUrls">Autres photos (une URL par ligne)</label>
+              <label class="label" for="photoUrls">Autres photos (un lien par ligne)</label>
               <textarea id="photoUrls" class="textarea" placeholder="https://.../photo1.jpg&#10;https://.../photo2.jpg"></textarea>
             </div>
 
