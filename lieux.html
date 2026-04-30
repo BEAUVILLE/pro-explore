@@ -643,6 +643,67 @@
 
     .hidden{display:none !important}
 
+
+    .foldPanel{
+      margin:0 0 16px;
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      background:linear-gradient(180deg, rgba(96,165,250,.06), rgba(34,197,94,.035));
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .foldPanel > summary{
+      min-height:58px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:15px 18px;
+      cursor:pointer;
+      list-style:none;
+      font-size:15px;
+      font-weight:1000;
+      color:#ecfff4;
+    }
+
+    .foldPanel > summary::-webkit-details-marker{display:none}
+
+    .foldPanel > summary::after{
+      content:"Ouvrir";
+      color:#d7efff;
+      font-size:12px;
+      font-weight:950;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(96,165,250,.18);
+      background:rgba(96,165,250,.08);
+      flex:0 0 auto;
+    }
+
+    .foldPanel[open] > summary::after{content:"Fermer"}
+
+    .foldHint{
+      display:block;
+      margin-top:4px;
+      color:var(--muted);
+      font-size:12px;
+      font-weight:800;
+      line-height:1.35;
+    }
+
+    .mobileNudge{
+      margin:0 0 16px;
+      padding:14px 16px;
+      border-radius:18px;
+      border:1px solid rgba(212,175,55,.18);
+      background:rgba(212,175,55,.07);
+      color:#fff4ba;
+      font-size:14px;
+      font-weight:850;
+      line-height:1.5;
+    }
+
     .foot{
       margin-top:18px;
       color:var(--muted);
@@ -658,16 +719,27 @@
 
     @media (max-width: 760px){
       .toolbar{grid-template-columns:1fr}
+      .stats{grid-template-columns:repeat(2,1fr)}
+      .statCard{padding:14px}
+      .statValue{font-size:28px}
+      .statFoot{display:none}
     }
 
     @media (max-width: 640px){
       .wrap{padding:14px 12px 34px}
       .topbar{flex-direction:column}
       .topActions{width:100%;justify-content:flex-start}
-      .stats{grid-template-columns:1fr}
       .heroMain,.heroSide,.clawCard{padding:18px}
+      .heroSide{display:none}
+      .heroLead{font-size:14px;line-height:1.55}
+      .badge{margin-bottom:10px}
+      .heroActions > *, .topActions > *, .nav > *{flex:1 1 auto}
+      .nav{overflow:auto;flex-wrap:nowrap;padding-bottom:2px}
+      .nav > *{flex:0 0 auto}
       .cardTop{flex-direction:column}
-      .topActions > *, .nav > *{flex:1 1 auto}
+      .clawGrid{gap:10px;margin:0 0 14px}
+      .foldPanel > summary{align-items:flex-start;flex-direction:column}
+      .foldPanel > summary::after{align-self:flex-start}
     }
   </style>
 </head>
@@ -677,28 +749,27 @@
       <div class="brand">
         <img class="logo" src="https://digiylyfe.net/wp-content/uploads/2026/03/digiylyfe_logo_qr.jpeg" alt="Logo DIGIYLYFE"/>
         <div class="brandText">
-          <div class="kicker">DIGIYLYFE — Repères d'activité</div>
-          <div class="title">Je fais découvrir mes lieux • Mes lieux</div>
-          <div class="sub" id="subline">Lecture, publication, archivage et analyse des fiches terrain.</div>
+          <div class="kicker">JE FAIS DÉCOUVRIR MON LIEU</div>
+          <div class="title">Mes lieux</div>
+          <div class="sub" id="subline">Voir, corriger, publier. Le reste reste rangé.</div>
         </div>
       </div>
 
       <div class="topActions">
-        <a class="btn primary" id="btnSubmitTop" href="./submit.html">+ Ajouter un lieu</a>
-        <a class="btn ghost hidden" id="btnAccessTop" href="./submit.html">+ Ajouter un lieu</a>
+        <a class="btn primary" id="btnSubmitTop" href="./submit.html">+ Ajouter</a>
+        <a class="btn ghost hidden" id="btnAccessTop" href="./submit.html">+ Ajouter</a>
         <a class="btn secondary hidden" id="btnCockpitTop" href="./cockpit.html">Ma gestion</a>
-        <a class="btn info hidden" id="btnClawTop" href="./claw.html">Lecture utile</a>
+        <a class="btn info hidden" id="btnClawTop" href="./claw.html">Aide DIGIY</a>
         <a class="btn warn hidden" id="btnPinTop" href="./pin.html">Retrouver mon accès</a>
       </div>
     </header>
 
     <section class="hero">
       <article class="panel heroMain">
-        <div class="badge">Pilotage terrain</div>
-        <h1 class="heroTitle">Tes lieux, sans brouillard.</h1>
+        <div class="badge">Lecture terrain</div>
+        <h1 class="heroTitle">Tes lieux, vite et clair.</h1>
         <p class="heroLead">
-          Ici tu vois les fiches liées à ton numéro, leur état,
-          leur statut de publication et les actions directes pour faire avancer le terrain.
+          Regarde ce qui est visible, corrige ce qui fatigue, ajoute ce qui manque.
         </p>
 
         <div class="heroActions">
@@ -711,21 +782,21 @@
 
       <aside class="panel heroSide">
         <div class="miniStat">
-          <div class="miniLabel">Téléphone pilote</div>
+          <div class="miniLabel">Téléphone actif</div>
           <div class="miniValue" id="heroPhone">—</div>
-          <div class="miniHint">Base de gestion rattachée au numéro actif.</div>
+          <div class="miniHint">Le numéro de ton espace ouvert.</div>
         </div>
 
         <div class="miniStat">
-          <div class="miniLabel">Repère du lieu</div>
+          <div class="miniLabel">Lieu repéré</div>
           <div class="miniValue" id="heroSlug">—</div>
-          <div class="miniHint">Repère repris automatiquement entre tes lieux, ta gestion et la correction d'une fiche.</div>
+          <div class="miniHint">Le lieu repris automatiquement entre les pages.</div>
         </div>
 
         <div class="miniStat">
           <div class="miniLabel">Action utile</div>
           <div class="miniValue" id="heroAction">—</div>
-          <div class="miniHint" id="heroStatusHint">Le prochain cran simple poussé par la page des lieux.</div>
+          <div class="miniHint" id="heroStatusHint">La prochaine action simple.</div>
         </div>
       </aside>
     </section>
@@ -733,44 +804,48 @@
     <nav class="nav" aria-label="Navigation EXPLORE">
       <a id="navCockpit" href="./cockpit.html">Ma gestion</a>
       <a id="navLieux" class="active" href="./lieux.html">Mes lieux</a>
-      <a id="navSubmit" href="./submit.html">Ajouter / éditer</a>
-      <a id="navClaw" href="./claw.html">Lecture utile</a>
+      <a id="navSubmit" href="./submit.html">Ajouter / corriger</a>
+      <a id="navClaw" href="./claw.html">Aide DIGIY</a>
       <a id="navPinRescue" class="hidden" href="./pin.html">Retrouver mon accès</a>
     </nav>
 
     <div id="msg" class="msg info"></div>
 
+    <div class="mobileNudge">Un lieu publié donne envie. Un brouillon attend ta main. Ici tu vois vite où agir.</div>
+
     <section class="stats">
       <article class="statCard">
-        <div class="statLabel">Total lieux</div>
+        <div class="statLabel">Lieux</div>
         <div class="statValue" id="statTotal">—</div>
-        <div class="statFoot">Toutes les fiches du numéro actif.</div>
+        <div class="statFoot">Total.</div>
       </article>
       <article class="statCard">
         <div class="statLabel">Publiés</div>
         <div class="statValue" id="statPublished">—</div>
-        <div class="statFoot">Déjà visibles côté public.</div>
+        <div class="statFoot">Visibles.</div>
       </article>
       <article class="statCard">
         <div class="statLabel">Brouillons</div>
         <div class="statValue" id="statDraft">—</div>
-        <div class="statFoot">À retravailler ou publier.</div>
+        <div class="statFoot">À finir.</div>
       </article>
       <article class="statCard">
         <div class="statLabel">Archivés</div>
         <div class="statValue" id="statArchived">—</div>
-        <div class="statFoot">Sortis de la lecture active.</div>
+        <div class="statFoot">Rangés.</div>
       </article>
     </section>
 
-    <section class="clawGrid" id="clawSection">
+    <details class="foldPanel" id="clawDetails">
+      <summary>Ouvrir l’aide DIGIY<span class="foldHint">Lecture simple de tes lieux, sans prendre toute la page.</span></summary>
+      <section class="clawGrid" id="clawSection">
       <article class="clawCard">
         <div class="clawHead">
           <div>
             <div class="clawKicker">Lecture terrain</div>
             <h2 class="clawTitle">Lecture légère des lieux</h2>
           </div>
-          <div class="clawMode" id="clawMode">Analyse légère</div>
+          <div class="clawMode" id="clawMode">Aide DIGIY légère</div>
         </div>
         <div class="clawText" id="clawSummary">
           L’analyse lit l’état de tes lieux, la publication et la prochaine action simple.
@@ -786,21 +861,22 @@
           </div>
         </div>
       </article>
-    </section>
+      </section>
+    </details>
 
     <section class="toolbar">
       <div class="searchWrap">
-        <input id="searchInput" class="input" type="text" placeholder="Rechercher un lieu, une ville, une zone, une catégorie…" />
+        <input id="searchInput" class="input" type="text" placeholder="Chercher un lieu…" />
       </div>
       <div class="filterWrap">
         <select id="statusFilter" class="select">
-          <option value="all">Tous les états</option>
+          <option value="all">Tous</option>
           <option value="published">Publiés</option>
           <option value="draft">Brouillons</option>
           <option value="archived">Archivés</option>
         </select>
       </div>
-      <button id="reloadBtn" class="btn secondary" type="button">Actualiser</button>
+      <button id="reloadBtn" class="btn secondary" type="button">↻ Recharger</button>
     </section>
 
     <section id="list" class="list">
@@ -810,7 +886,7 @@
     </section>
 
     <div class="foot">
-      DIGIY EXPLORE • gestion réelle des lieux • publier / archiver / lecture publique • analyse
+      DIGIY EXPLORE • voir • corriger • publier • faire venir
     </div>
   </div>
 
@@ -862,8 +938,8 @@
       }
 
       function setClaw(mode, summary, pills = [], items = []){
-        $("clawMode").textContent = mode || "Analyse légère";
-        $("clawSummary").textContent = summary || "L’analyse lit le rail sans bavarder.";
+        $("clawMode").textContent = mode || "Aide DIGIY légère";
+        $("clawSummary").textContent = summary || "L’aide lit tes lieux sans bavarder.";
 
         $("clawPills").innerHTML = (Array.isArray(pills) ? pills : [])
           .filter(Boolean)
@@ -885,22 +961,22 @@
         setClaw(
           "Chargement",
           "L’analyse attend le téléphone pilote, la lecture du guard et la liste réelle des lieux.",
-          ["Espace prêt", "Page : lieux", "Rail réel"],
+          ["Espace prêt", "Mes lieux", "Données réelles"],
           [
-            { title:"Lecture attendue", text:"L’écran relit ici le nombre de lieux, leur publication et l’action la plus utile." },
-            { title:"Direction utile", text:"Quand le rail est ouvert, on passe vers Ajouter / éditer, Ma gestion ou Analyse selon le besoin." }
+            { title:"Lecture attendue", text:"L’écran relit le nombre de lieux, leur visibilité et l’action utile." },
+            { title:"Direction utile", text:"Quand le rail est ouvert, on passe vers Ajouter / corriger, Ma gestion ou Aide DIGIY selon le besoin." }
           ]
         );
       }
 
       function setClawMissingAccess(){
         setClaw(
-          "Accès manquant",
-          "L’analyse garde une lecture sobre : pas de session valide, donc pas de liste réelle à lire.",
-          ["Retrouver mon accès", "Accès absent"],
+          "Accès à rouvrir",
+          "L’aide reste sobre : l’accès n’est pas ouvert, donc la liste ne peut pas encore se charger.",
+          ["Retrouver mon accès", "Accès fermé"],
           [
-            { title:"Blocage principal", text:"La page attend une entrée active pour relier les lieux au bon numéro." },
-            { title:"Action utile", text:"Passe d’abord par l’entrée, puis reviens sur tes lieux." }
+            { title:"Point à régler", text:"La page attend ton entrée active pour relier les lieux au bon numéro." },
+            { title:"Action utile", text:"Rouvre ton accès, puis reviens ici." }
           ]
         );
       }
@@ -1133,8 +1209,8 @@
             "Le numéro pilote est reconnu, mais aucun lieu n’est encore visible.",
             [`Téléphone : ${CURRENT_PHONE}`, CURRENT_SLUG ? `Identifiant : ${CURRENT_SLUG}` : "", "0 lieu", "Action : ajouter"].filter(Boolean),
             [
-              { title:"Lecture du rail", text:"Le backend répond, mais la liste est vide pour ce numéro." },
-              { title:"Action utile", text:"Passe par submit.html pour poser une première fiche EXPLORE." }
+              { title:"Lecture du rail", text:"L’accès répond, mais aucun lieu n’est encore lié à ce numéro." },
+              { title:"Action utile", text:"Ajoute une première fiche pour lancer ton espace." }
             ]
           );
           return;
@@ -1155,7 +1231,7 @@
           "L’analyse relit la densité du rail EXPLORE : lieux, publiés, brouillons et prochaine action terrain.",
           [
             `Téléphone : ${CURRENT_PHONE}`,
-            CURRENT_SLUG ? `Repère du lieu : ${CURRENT_SLUG}` : "",
+            CURRENT_SLUG ? `Lieu repéré : ${CURRENT_SLUG}` : "",
             `${total} lieu(x)`,
             `${published} publié(s)`,
             `${drafts} brouillon(s)`,
@@ -1166,7 +1242,7 @@
             {
               title:"Action utile",
               text: published
-                ? "Passe par Analyse ou Ajouter / éditer pour renforcer la lecture publique des lieux déjà publiés."
+                ? "Passe par Aide DIGIY ou Ajouter / corriger pour renforcer la lecture publique des lieux déjà publiés."
                 : "Le cran logique est de publier au moins une fiche propre pour rendre le rail visible."
             },
             { title:"Navigation utile", text:"Tu peux passer de lieux à ma gestion, ajouter / éditer ou analyse sans quitter le même rail." }
@@ -1227,15 +1303,15 @@
                 </div>
 
                 <div class="actions">
-                  <a class="btn secondary" href="${escapeHtml(buildInternalHref('./submit.html', { slug: safeSlug }))}">Éditer</a>
+                  <a class="btn secondary" href="${escapeHtml(buildInternalHref('./submit.html', { slug: safeSlug }))}">Corriger</a>
                   <a class="btn ghost" href="${escapeHtml(buildInternalHref('./cockpit.html', { slug: safeSlug }))}">Ma gestion</a>
-                  <a class="btn info" href="${escapeHtml(buildInternalHref('./claw.html', { slug: safeSlug }))}">Analyse</a>
+                  <a class="btn info" href="${escapeHtml(buildInternalHref('./claw.html', { slug: safeSlug }))}">Aide DIGIY</a>
                   <a class="btn ghost" href="${escapeHtml(publicHref)}" target="_blank" rel="noopener">🌍 Voir fiche publique</a>
                   ${isPublished
-                    ? `<button class="btn secondary js-unpublish" data-slug="${escapeHtml(safeSlug)}">Dépublier</button>`
+                    ? `<button class="btn secondary js-unpublish" data-slug="${escapeHtml(safeSlug)}">Retirer</button>`
                     : `<button class="btn primary js-publish" data-slug="${escapeHtml(safeSlug)}">Publier</button>`
                   }
-                  <button class="btn ghost js-archive" data-slug="${escapeHtml(safeSlug)}">Archiver</button>
+                  <button class="btn ghost js-archive" data-slug="${escapeHtml(safeSlug)}">Ranger</button>
                 </div>
               </div>
             </article>
@@ -1296,17 +1372,17 @@
           heroSlug.textContent = CURRENT_SLUG || "—";
           heroAction.textContent = "Entrer par PIN";
           heroStatusHint.textContent = "Passe d’abord par pin.html pour ouvrir la session.";
-          setMsg("Aucune session valide trouvée. Ouvre d’abord pin.html.", "bad");
-          list.innerHTML = `<div class="card"><div class="cardInner"><div class="empty">Pas de session active. Reviens sur <b>pin.html</b> pour entrer dans le module EXPLORE.</div></div></div>`;
+          setMsg("Aucun accès ouvert. Rouvre ton accès.", "bad");
+          list.innerHTML = `<div class="card"><div class="cardInner"><div class="empty">Pas d’accès actif. Reviens sur <b>Mon accès</b> pour entrer.</div></div></div>`;
           setClawMissingAccess();
           return;
         }
 
         heroPhone.textContent = CURRENT_PHONE;
         heroSlug.textContent = CURRENT_SLUG || "—";
-        heroAction.textContent = "Analyse";
+        heroAction.textContent = "Aide DIGIY";
         heroStatusHint.textContent = "Lecture des lieux en cours…";
-        setMsg("Chargement des lieux EXPLORE…", "info");
+        setMsg("Chargement de tes lieux…", "info");
         reloadBtn.disabled = true;
 
         try{
@@ -1322,18 +1398,18 @@
           computeStats(items);
           renderList();
           updateHeroAndClaw(items);
-          setMsg("Liste réelle des lieux chargée.", "ok");
+          setMsg("Tes lieux sont chargés.", "ok");
         }catch(err){
           console.error("[EXPLORE lieux] load error:", err);
           heroAction.textContent = "Vérifier le rail";
           heroStatusHint.textContent = "Impossible de lire la liste réelle.";
-          list.innerHTML = `<div class="card"><div class="cardInner"><div class="empty">La liste n’a pas pu être chargée. Vérifie la session PIN ou le RPC <b>digiy_explore_list_places_by_phone</b>.</div></div></div>`;
-          setMsg("Lecture des lieux impossible pour le moment.", "bad");
-          setClaw("Erreur", "L’analyse a détecté un blocage sur la lecture des lieux EXPLORE.",
+          list.innerHTML = `<div class="card"><div class="cardInner"><div class="empty">La liste n’a pas pu être chargée. Rouvre ton accès, puis recharge.</div></div></div>`;
+          setMsg("Impossible de charger tes lieux pour le moment.", "bad");
+          setClaw("Erreur", "L’aide a détecté un blocage pendant la lecture de tes lieux.",
             [CURRENT_PHONE ? `Téléphone : ${CURRENT_PHONE}` : "Téléphone : —", CURRENT_SLUG ? `Identifiant : ${CURRENT_SLUG}` : "", "Contrôle à faire"].filter(Boolean),
             [
-              { title:"Blocage principal", text:"La page n’a pas pu relire la liste réelle du pilote." },
-              { title:"Action utile", text:"Recharge la page, puis repasse par pin.html si la session est tombée." }
+              { title:"Point à régler", text:"La page n’a pas pu relire ta liste de lieux." },
+              { title:"Action utile", text:"Recharge la page, puis rouvre ton accès si besoin." }
             ]
           );
         }finally{
@@ -1352,27 +1428,27 @@
             saveSession({ phone: CURRENT_PHONE, slug: CURRENT_SLUG });
             refreshNavLinks();
           }
-          setMsg(publish ? "Lieu publié avec succès." : "Lieu repassé en brouillon.", "ok");
+          setMsg(publish ? "Lieu publié avec succès." : "Le lieu est retiré du public.", "ok");
           await refresh();
         }catch(err){
           console.error("[EXPLORE lieux] publish error:", err);
-          setMsg("L’action de publication a échoué.", "bad");
+          setMsg("L’action n’a pas abouti.", "bad");
         }
       }
 
       async function archiveSlug(slug){
         if(!CURRENT_PHONE || !slug) return;
-        const confirmed = window.confirm("Archiver ce lieu ? Il sera retiré de la lecture active.");
+        const confirmed = window.confirm("Ranger ce lieu ? Il sera retiré de la lecture active.");
         if(!confirmed) return;
-        setMsg("Archivage en cours pour " + slug + "...", "info");
+        setMsg("Rangement en cours pour " + slug + "...", "info");
         try{
           const res = await rpcArchive(CURRENT_PHONE, slug);
           if(!res || res.ok !== true) throw new Error("RPC archive invalide");
-          setMsg("Lieu archivé avec succès.", "ok");
+          setMsg("Lieu rangé avec succès.", "ok");
           await refresh();
         }catch(err){
           console.error("[EXPLORE lieux] archive error:", err);
-          setMsg("L’archivage a échoué.", "bad");
+          setMsg("Le rangement a échoué.", "bad");
         }
       }
 
@@ -1397,8 +1473,8 @@
           heroAction.textContent = "Entrer par PIN";
           heroStatusHint.textContent = "Passe d’abord par pin.html pour ouvrir la session.";
           subline.textContent = "Aucune session active détectée.";
-          setMsg("Aucun téléphone trouvé. Ouvre d’abord pin.html.", "bad");
-          list.innerHTML = `<div class="card"><div class="cardInner"><div class="empty">Pas de session active. Reviens sur <b>pin.html</b> pour entrer dans le module EXPLORE.</div></div></div>`;
+          setMsg("Aucun téléphone trouvé. Rouvre d’abord ton accès.", "bad");
+          list.innerHTML = `<div class="card"><div class="cardInner"><div class="empty">Pas d’accès actif. Reviens sur <b>Mon accès</b> pour entrer.</div></div></div>`;
           setClawMissingAccess();
           document.documentElement.style.visibility = "";
           return;
@@ -1417,7 +1493,7 @@
 
       boot().catch(function(err){
         console.error("[EXPLORE lieux] boot error:", err);
-        setMsg("Le chargement initial a échoué.", "bad");
+        setMsg("Le chargement a échoué.", "bad");
         setClawMissingAccess();
         document.documentElement.style.visibility = "";
       });
