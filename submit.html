@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Je fais découvrir un lieu — Préparer une fiche</title>
+  <title>Ajouter un lieu — DIGIY EXPLORE</title>
   <meta name="theme-color" content="#06130f" />
   <meta
     name="description"
-    content="Crée ou corrige une fiche lieu de façon simple, claire et utile."
+    content="Ajoute ou corrige un lieu de façon simple, claire et utile."
   />
 
   <script>
@@ -441,6 +441,44 @@
       line-height:1.45;
     }
 
+
+    .helpDetails{
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+      border-radius:18px;
+      overflow:hidden;
+    }
+
+    .helpDetails summary{
+      min-height:52px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:0 14px;
+      cursor:pointer;
+      font-weight:900;
+      color:var(--gold2);
+      list-style:none;
+    }
+
+    .helpDetails summary::-webkit-details-marker{display:none}
+
+    .helpDetails summary::after{
+      content:"＋";
+      font-weight:900;
+      color:var(--muted);
+    }
+
+    .helpDetails[open] summary::after{content:"−"}
+
+    .helpDetails .helpContent{
+      border-top:1px solid rgba(255,255,255,.08);
+      padding:14px;
+      display:grid;
+      gap:10px;
+    }
+
     .sideBox{
       border:1px solid rgba(255,255,255,.08);
       background:rgba(255,255,255,.03);
@@ -493,6 +531,7 @@
       .topActions{width:100%;justify-content:flex-start}
       .heroMain,.heroSide,.cardBody{padding:18px}
       .logo{width:52px;height:52px}
+      .actions .btn,.topActions .btn,.nav a{flex:1 1 auto}
     }
   </style>
 </head>
@@ -505,27 +544,27 @@
         </div>
         <div class="brandText">
           <div class="kicker">DIGIYLYFE</div>
-          <div class="title" id="pageTitle">Je fais découvrir un lieu</div>
-          <div class="sub" id="subline">Prépare une fiche propre, claire et utile pour le terrain.</div>
+          <div class="title" id="pageTitle">Ajouter un lieu</div>
+          <div class="sub" id="subline">Nom, zone, contact, photos et publication.</div>
         </div>
       </div>
 
       <div class="topActions">
-        <a class="btn ghost" id="publicHomeBtn" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener">Vitrine</a>
-        <a class="btn secondary" id="backToClawBtn" href="./claw.html">Lecture utile</a>
+        <a class="btn ghost" id="publicHomeBtn" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener">Voir public</a>
+        <a class="btn secondary" id="backToClawBtn" href="./claw.html">Aide DIGIY</a>
         <a class="btn secondary" id="backToLieuxBtn" href="./lieux.html">Mes lieux</a>
         <a class="btn secondary" id="backToCockpitBtn" href="./cockpit.html">Ma gestion</a>
-        <a class="btn warn hidden" id="rescuePinBtn" href="./pin.html">Accès secours</a>
+        <a class="btn warn hidden" id="rescuePinBtn" href="./pin.html">Retrouver mon accès</a>
       </div>
     </header>
 
     <section class="hero">
       <article class="panel heroMain">
-        <div class="badge">Préparation terrain</div>
-        <h1 class="heroTitle" id="heroTitle">Créer une fiche simple, forte et publiable.</h1>
+        <div class="badge">Ajouter un lieu</div>
+        <h1 class="heroTitle" id="heroTitle">Préparer un lieu clair, prêt à montrer.</h1>
         <p class="heroLead">
-          Ici tu prépares la fiche d’un lieu à montrer au public. Le but n’est pas de faire du bruit.
-          Il faut une lecture propre, concrète, humaine, qui donne envie de comprendre et d’agir.
+          Mets l’essentiel : le nom, l’endroit, ce qu’on y trouve, le contact et une photo si tu as déjà un lien.
+          Une bonne fiche donne envie sans fatiguer le lecteur.
         </p>
       </article>
 
@@ -543,9 +582,9 @@
         </div>
 
         <div class="miniStat">
-          <div class="miniLabel">Nom du lien</div>
+          <div class="miniLabel">Lien public</div>
           <div class="miniValue" id="heroSlug">Nouveau lieu</div>
-          <div class="miniHint">Nom court utilisé dans le lien public de la fiche.</div>
+          <div class="miniHint">Nom court utilisé pour ouvrir la fiche côté public.</div>
         </div>
       </aside>
     </section>
@@ -554,9 +593,9 @@
       <a id="navCockpit" href="./cockpit.html">Ma gestion</a>
       <a id="navLieux" href="./lieux.html">Mes lieux</a>
       <a id="navSubmit" class="active" href="./submit.html">Ajouter / corriger</a>
-      <a id="navClaw" href="./claw.html">Lecture utile</a>
-      <a id="navPreview" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener">Vitrine publique</a>
-      <a id="navPinRescue" class="hidden" href="./pin.html">Accès secours</a>
+      <a id="navClaw" href="./claw.html">Aide DIGIY</a>
+      <a id="navPreview" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener">Voir public</a>
+      <a id="navPinRescue" class="hidden" href="./pin.html">Retrouver mon accès</a>
     </nav>
 
     <div id="msg" class="msg info"></div>
@@ -564,22 +603,22 @@
     <div class="layout">
       <section class="panel">
         <div class="cardBody">
-          <h2 class="sectionTitle">Fiche du lieu</h2>
+          <h2 class="sectionTitle">Les infos du lieu</h2>
           <p class="sectionSub">
-            Garde ça simple : nom clair, catégorie utile, localisation lisible, description propre, contact direct.
+            Remplis ce qui aide vraiment le client : comprendre, situer, contacter, venir.
           </p>
 
           <form id="placeForm" class="grid" novalidate>
             <div class="grid2">
               <div class="field">
-                <label class="label" for="publicName">Nom public</label>
+                <label class="label" for="publicName">Nom du lieu</label>
                 <input id="publicName" class="input" type="text" placeholder="Ex: Plage calme de Saly" />
               </div>
 
               <div class="field">
-                <label class="label" for="slug">Nom du lien public</label>
+                <label class="label" for="slug">Lien public</label>
                 <input id="slug" class="input" type="text" placeholder="ex: plage-calme-saly" />
-                <div class="hint">Laisse vide au départ si tu veux générer automatiquement le lien public depuis le nom.</div>
+                <div class="hint">Optionnel. Si tu laisses vide, DIGIY crée un lien simple depuis le nom.</div>
               </div>
             </div>
 
@@ -592,12 +631,12 @@
               </div>
 
               <div class="field">
-                <label class="label" for="subcategory">Sous-catégorie</label>
+                <label class="label" for="subcategory">Type précis</label>
                 <input id="subcategory" class="input" type="text" placeholder="ex: sortie, plage, famille, terrasse..." />
               </div>
 
               <div class="field">
-                <label class="label" for="priceHint">Indice de prix</label>
+                <label class="label" for="priceHint">Prix / entrée</label>
                 <input id="priceHint" class="input" type="text" placeholder="ex: Entrée libre / 5 000 F / Sur devis" />
               </div>
             </div>
@@ -621,12 +660,12 @@
 
             <div class="grid2">
               <div class="field">
-                <label class="label" for="latitude">Repère carte nord-sud</label>
+                <label class="label" for="latitude">Position carte nord-sud</label>
                 <input id="latitude" class="input" type="number" step="any" placeholder="14.444" />
               </div>
 
               <div class="field">
-                <label class="label" for="longitude">Repère carte est-ouest</label>
+                <label class="label" for="longitude">Position carte est-ouest</label>
                 <input id="longitude" class="input" type="number" step="any" placeholder="-17.001" />
               </div>
             </div>
@@ -644,52 +683,54 @@
             </div>
 
             <div class="field">
-              <label class="label" for="coverUrl">Image de couverture (lien)</label>
+              <label class="label" for="coverUrl">Lien de la photo principale</label>
               <input id="coverUrl" class="input" type="url" placeholder="https://..." />
+                <div class="hint">Optionnel. Tu peux utiliser une photo déjà posée dans ta médiathèque DIGIYLYFE.NET ou un lien prêt.</div>
             </div>
 
             <div class="field">
-              <label class="label" for="photoUrls">Autres photos (un lien par ligne)</label>
-              <textarea id="photoUrls" class="textarea" placeholder="https://.../photo1.jpg&#10;https://.../photo2.jpg"></textarea>
+              <label class="label" for="photoUrls">Autres photos</label>
+              <textarea id="photoUrls" class="textarea" placeholder="Un lien photo par ligne si tu en as déjà."></textarea>
+              <div class="hint">Pas obligatoire. Le lieu peut être préparé sans galerie complète.</div>
             </div>
 
             <div class="field">
-              <label class="label" for="tags">Tags (séparés par virgule)</label>
+              <label class="label" for="tags">Mots pour retrouver le lieu</label>
               <input id="tags" class="input" type="text" placeholder="ex: saly, plage, calme, famille" />
             </div>
 
             <div class="field">
-              <label class="label" for="shortDescription">Description courte</label>
-              <textarea id="shortDescription" class="textarea" placeholder="Une phrase courte et claire pour la lecture rapide."></textarea>
+              <label class="label" for="shortDescription">Phrase courte</label>
+              <textarea id="shortDescription" class="textarea" placeholder="Ex : Un endroit calme pour respirer, manger ou découvrir le coin."></textarea>
             </div>
 
             <div class="field">
-              <label class="label" for="fullDescription">Description complète</label>
-              <textarea id="fullDescription" class="textarea" placeholder="Décris le lieu, l'ambiance, le public, l'intérêt terrain, sans roman inutile."></textarea>
+              <label class="label" for="fullDescription">Ce qu’il faut savoir</label>
+              <textarea id="fullDescription" class="textarea" placeholder="Décris l’ambiance, l’accès, le meilleur moment pour venir et ce qui donne envie."></textarea>
             </div>
 
             <div class="checkRow">
               <label class="check">
                 <input id="isFeatured" type="checkbox" />
                 <div>
-                  <strong>Mettre en avant</strong>
-                  <span>Le lieu peut ressortir davantage dans certaines lectures.</span>
+                  <strong>Faire ressortir ce lieu</strong>
+                  <span>À cocher pour donner plus de place à ce lieu dans certaines lectures.</span>
                 </div>
               </label>
 
               <label class="check">
                 <input id="isPublished" type="checkbox" />
                 <div>
-                  <strong>Publier tout de suite</strong>
-                  <span>Si coché, le lieu devient visible côté public après sauvegarde.</span>
+                  <strong>Mettre en ligne après enregistrement</strong>
+                  <span>Sinon, il reste en préparation et tu pourras le publier plus tard.</span>
                 </div>
               </label>
             </div>
 
             <div class="actions">
-              <button id="saveBtn" class="btn primary" type="submit">Enregistrer</button>
-              <button id="draftBtn" class="btn secondary" type="button">Sauver en brouillon</button>
-              <a id="previewBtn" class="btn ghost" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener">Voir la fiche</a>
+              <button id="saveBtn" class="btn primary" type="submit">Enregistrer la fiche</button>
+              <button id="draftBtn" class="btn secondary" type="button">Garder en préparation</button>
+              <a id="previewBtn" class="btn ghost" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener">Voir côté public</a>
             </div>
           </form>
         </div>
@@ -697,48 +738,51 @@
 
       <aside class="panel">
         <div class="cardBody">
-          <h2 class="sectionTitle">Repères de lecture</h2>
+          <h2 class="sectionTitle">Aide rapide</h2>
           <p class="sectionSub">
-            Une bonne fiche aide à voir vite. Elle ne noie pas le lecteur.
+            Ouvre seulement si tu veux un rappel. Le formulaire suffit pour avancer.
           </p>
 
-          <div class="grid">
-            <div class="sideBox">
-              <strong>Nom public</strong>
-              <span>Simple, reconnaissable, sans jargon. On doit sentir le lieu en une seconde.</span>
-            </div>
+          <details class="helpDetails">
+            <summary>Voir l’aide de remplissage</summary>
+            <div class="helpContent">
+              <div class="sideBox">
+                <strong>Nom du lieu</strong>
+                <span>Simple, reconnaissable, sans jargon. On doit sentir le lieu en une seconde.</span>
+              </div>
 
-            <div class="sideBox">
-              <strong>Catégorie</strong>
-              <span>Choisis la vraie famille du lieu. La lecture de l’ensemble dépend de ça.</span>
-            </div>
+              <div class="sideBox">
+                <strong>Catégorie</strong>
+                <span>Choisis la vraie famille du lieu. La lecture de l’ensemble dépend de ça.</span>
+              </div>
 
-            <div class="sideBox">
-              <strong>Ville + zone</strong>
-              <span>Très important pour la lecture du terrain. Une zone manquante affaiblit la clarté.</span>
-            </div>
+              <div class="sideBox">
+                <strong>Ville et zone</strong>
+                <span>Très important pour la lecture du terrain. Une zone manquante affaiblit la clarté.</span>
+              </div>
 
-            <div class="sideBox">
-              <strong>Description courte</strong>
-              <span>Une phrase claire pour la carte, la liste et la lecture rapide sur téléphone.</span>
-            </div>
+              <div class="sideBox">
+                <strong>Phrase courte</strong>
+                <span>Une phrase claire pour la carte, la liste et la lecture rapide sur téléphone.</span>
+              </div>
 
-            <div class="sideBox">
-              <strong>Publication</strong>
-              <span>Publié = visible dans les vues publiques. Brouillon = travail interne uniquement.</span>
-            </div>
+              <div class="sideBox">
+                <strong>Mise en ligne</strong>
+                <span>Visible = le public peut voir la fiche. Préparation = tu gardes la main avant sortie.</span>
+              </div>
 
-            <div class="sideBox">
-              <strong>État actuel</strong>
-              <span id="stateBox">Chargement…</span>
+              <div class="sideBox">
+                <strong>État actuel</strong>
+                <span id="stateBox">Chargement…</span>
+              </div>
             </div>
-          </div>
+          </details>
         </div>
       </aside>
     </div>
 
     <div class="foot">
-      DIGIY EXPLORE • préparation simple • lecture claire • publication propre
+      DIGIY EXPLORE • ajouter un lieu • corriger • publier proprement
     </div>
   </div>
 
@@ -936,8 +980,8 @@
           el.disabled = !!busy;
         });
 
-        saveBtn.textContent = busy ? "Enregistrement..." : "Enregistrer";
-        draftBtn.textContent = busy ? "Patiente..." : "Sauver en brouillon";
+        saveBtn.textContent = busy ? "Enregistrement..." : "Enregistrer la fiche";
+        draftBtn.textContent = busy ? "Patiente..." : "Garder en préparation";
       }
 
       function setFormDisabled(disabled){
@@ -1019,15 +1063,15 @@
         heroSlug.textContent = CURRENT_SLUG || "Nouveau lieu";
 
         if(IS_EDIT_MODE){
-          pageTitle.textContent = "Je corrige un lieu";
-          heroTitle.textContent = "Corriger proprement une fiche existante.";
+          pageTitle.textContent = "Corriger un lieu";
+          heroTitle.textContent = "Corriger ce lieu sans te perdre."; 
           heroMode.textContent = "Correction";
           heroModeHint.textContent = "Le formulaire recharge une fiche déjà liée à ta session active.";
           subline.textContent = "Tu corriges maintenant la fiche " + CURRENT_SLUG + ".";
           stateBox.textContent = "Mode correction actif. Tu peux ajuster, republier ou remettre en brouillon.";
         } else {
-          pageTitle.textContent = "Je fais découvrir un lieu";
-          heroTitle.textContent = "Créer une fiche simple, forte et publiable.";
+          pageTitle.textContent = "Ajouter un lieu";
+          heroTitle.textContent = "Préparer un lieu clair, prêt à montrer."; 
           heroMode.textContent = "Création";
           heroModeHint.textContent = "Nouveau lieu en préparation.";
           subline.textContent = "Création d'une nouvelle fiche liée au téléphone " + (CURRENT_PHONE || "—") + ".";
@@ -1168,7 +1212,7 @@
         }
 
         if(!cleanPublicName){
-          setMsg("Le nom public est obligatoire.", "bad");
+          setMsg("Le nom du lieu est obligatoire.", "bad");
           publicName.focus();
           return false;
         }
@@ -1180,14 +1224,14 @@
         }
 
         if(!cleanCity){
-          setMsg("La ville est obligatoire.", "bad");
+          setMsg("La ville est obligatoire pour situer le lieu.", "bad");
           city.focus();
           return false;
         }
 
         const finalSlug = normalizeSlug(slug.value || cleanPublicName);
         if(!finalSlug){
-          setMsg("Impossible de générer un identifiant valide depuis le nom public.", "bad");
+          setMsg("Impossible de créer un lien public depuis ce nom.", "bad");
           slug.focus();
           return false;
         }
@@ -1248,7 +1292,7 @@
         setMsg(
           forceDraft
             ? "Sauvegarde du brouillon en cours…"
-            : "Enregistrement du lieu en cours…",
+            : "Enregistrement de la fiche…",
           "info"
         );
 
@@ -1274,13 +1318,13 @@
 
           setMsg(
             forceDraft
-              ? "Brouillon enregistré avec succès."
-              : (payload.p_is_published ? "Lieu enregistré et publié avec succès." : "Lieu enregistré avec succès."),
+              ? "Fiche gardée en préparation."
+              : (payload.p_is_published ? "Fiche enregistrée et mise en ligne." : "Fiche enregistrée."),
             "ok"
           );
         }catch(err){
           console.error("[DIGIY EXPLORE submit] save error:", err);
-          setMsg("L'enregistrement a échoué. Vérifie les champs et la connexion au backend.", "bad");
+          setMsg("L’enregistrement a échoué. Vérifie les champs puis réessaie.", "bad");
         }finally{
           setBusy(false);
         }
@@ -1354,7 +1398,7 @@
           await hydrateEditMode();
         } else {
           prefillContactFields();
-          setMsg("Mode création actif. Remplis les champs puis enregistre.", "info");
+          setMsg("Mode ajout actif. Remplis l’essentiel puis enregistre.", "info");
         }
 
         form.addEventListener("submit", async function(e){
