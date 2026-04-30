@@ -7,25 +7,21 @@
   <meta name="theme-color" content="#06130f" />
   <meta
     name="description"
-    content="Retrouve ton entrée, tes lieux et les bonnes actions pour faire découvrir ton lieu sans te disperser."
+    content="Retrouve vite tes lieux, ajoute une fiche et avance sans te disperser."
   />
 
   <style>
     :root{
       --bg:#06130f;
-      --bg2:#0a1f18;
       --card:#0b241b;
       --card2:#102b22;
       --line:rgba(255,255,255,.08);
-      --line2:rgba(212,175,55,.18);
       --ink:#f8fafc;
       --muted:rgba(248,250,252,.72);
       --soft:rgba(248,250,252,.54);
       --gold:#d4af37;
       --gold2:#f3d46b;
       --ok:#22c55e;
-      --warn:#f59e0b;
-      --bad:#ef4444;
       --radius:24px;
       --shadow:0 24px 60px rgba(0,0,0,.30);
     }
@@ -44,9 +40,9 @@
     a{color:inherit;text-decoration:none}
 
     .wrap{
-      width:min(100%, 1220px);
+      width:min(100%, 1120px);
       margin:0 auto;
-      padding:18px 14px 40px;
+      padding:16px 12px 34px;
     }
 
     .topbar{
@@ -54,7 +50,7 @@
       align-items:flex-start;
       justify-content:space-between;
       gap:14px;
-      margin-bottom:18px;
+      margin-bottom:14px;
     }
 
     .brand{
@@ -65,8 +61,8 @@
     }
 
     .logo{
-      width:56px;
-      height:56px;
+      width:54px;
+      height:54px;
       border-radius:18px;
       overflow:hidden;
       border:1px solid rgba(212,175,55,.22);
@@ -86,16 +82,16 @@
     .kicker{
       color:var(--gold2);
       font-size:12px;
-      font-weight:800;
-      letter-spacing:.18em;
+      font-weight:900;
+      letter-spacing:.16em;
       text-transform:uppercase;
       margin-bottom:4px;
       white-space:nowrap;
     }
 
     .title{
-      font-size:clamp(18px, 2vw, 28px);
-      font-weight:900;
+      font-size:clamp(18px, 2vw, 27px);
+      font-weight:1000;
       line-height:1.08;
       letter-spacing:-.03em;
       white-space:nowrap;
@@ -118,18 +114,19 @@
     }
 
     .btn{
-      min-height:44px;
+      min-height:46px;
       border:none;
-      border-radius:14px;
-      padding:0 14px;
+      border-radius:15px;
+      padding:0 15px;
       display:inline-flex;
       align-items:center;
       justify-content:center;
       gap:8px;
-      font-weight:800;
+      font-weight:900;
       cursor:pointer;
       transition:filter .18s ease, transform .04s ease;
       white-space:nowrap;
+      text-align:center;
     }
 
     .btn:active{transform:translateY(1px)}
@@ -153,9 +150,9 @@
 
     .hero{
       display:grid;
-      grid-template-columns:1.15fr .85fr;
-      gap:16px;
-      margin-bottom:16px;
+      grid-template-columns:1.18fr .82fr;
+      gap:14px;
+      margin-bottom:14px;
     }
 
     .panel{
@@ -163,14 +160,13 @@
       border-radius:var(--radius);
       box-shadow:var(--shadow);
       overflow:hidden;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
     }
 
     .heroMain{
-      padding:24px;
+      padding:22px;
       background:
-        linear-gradient(180deg, rgba(212,175,55,.06), transparent 28%),
+        linear-gradient(180deg, rgba(212,175,55,.07), transparent 30%),
         linear-gradient(180deg, var(--card), var(--card2));
     }
 
@@ -184,37 +180,49 @@
       background:rgba(212,175,55,.08);
       color:var(--gold2);
       font-size:12px;
-      font-weight:900;
+      font-weight:1000;
       letter-spacing:.08em;
       text-transform:uppercase;
       margin-bottom:14px;
     }
 
     h1{
-      margin:0 0 12px;
-      font-size:clamp(30px, 4vw, 50px);
+      margin:0 0 10px;
+      font-size:clamp(30px, 4vw, 48px);
       line-height:1.02;
-      letter-spacing:-.04em;
+      letter-spacing:-.045em;
     }
 
     .lead{
       margin:0;
       color:var(--muted);
-      font-size:16px;
-      line-height:1.7;
-      max-width:60ch;
+      font-size:15.5px;
+      line-height:1.62;
+      max-width:58ch;
+    }
+
+    .heroActions{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:10px;
+      margin-top:18px;
+    }
+
+    .heroActions .btn{
+      min-height:52px;
+      border-radius:17px;
     }
 
     .heroTags{
       display:flex;
       flex-wrap:wrap;
-      gap:10px;
-      margin-top:18px;
+      gap:9px;
+      margin-top:14px;
     }
 
     .pill{
-      min-height:38px;
-      padding:0 13px;
+      min-height:36px;
+      padding:0 12px;
       border-radius:999px;
       display:inline-flex;
       align-items:center;
@@ -222,14 +230,14 @@
       background:rgba(255,255,255,.05);
       border:1px solid rgba(255,255,255,.08);
       color:#eef6f2;
-      font-weight:700;
-      font-size:13px;
+      font-weight:800;
+      font-size:12.5px;
     }
 
     .heroSide{
-      padding:20px;
+      padding:18px;
       display:grid;
-      gap:12px;
+      gap:10px;
       background:
         linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015)),
         linear-gradient(180deg, #0a1c16, #0d241c);
@@ -244,16 +252,16 @@
 
     .miniLabel{
       color:var(--soft);
-      font-size:12px;
-      font-weight:800;
+      font-size:11.5px;
+      font-weight:900;
       text-transform:uppercase;
       letter-spacing:.08em;
-      margin-bottom:8px;
+      margin-bottom:7px;
     }
 
     .miniValue{
-      font-size:21px;
-      font-weight:900;
+      font-size:20px;
+      font-weight:1000;
       line-height:1.15;
       letter-spacing:-.03em;
     }
@@ -265,23 +273,22 @@
       line-height:1.45;
     }
 
-    .grid{
+    .quickGrid{
       display:grid;
-      grid-template-columns:repeat(4, 1fr);
-      gap:14px;
-      margin-bottom:16px;
+      grid-template-columns:repeat(3, 1fr);
+      gap:12px;
+      margin-bottom:14px;
     }
 
     .tile{
       border:1px solid var(--line);
       border-radius:22px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
       box-shadow:var(--shadow);
-      padding:18px;
+      padding:16px;
       display:grid;
-      gap:14px;
-      min-height:210px;
+      gap:12px;
+      min-height:172px;
     }
 
     .tileTop{
@@ -292,36 +299,37 @@
     }
 
     .tileIcon{
-      width:42px;
-      height:42px;
+      width:40px;
+      height:40px;
       border-radius:14px;
       display:grid;
       place-items:center;
-      font-size:20px;
+      font-size:19px;
       background:rgba(212,175,55,.10);
       border:1px solid rgba(212,175,55,.18);
       color:var(--gold2);
+      flex:0 0 auto;
     }
 
     .tileLabel{
       color:var(--soft);
-      font-size:12px;
-      font-weight:800;
+      font-size:11.5px;
+      font-weight:900;
       text-transform:uppercase;
       letter-spacing:.08em;
     }
 
     .tileTitle{
-      font-size:21px;
-      font-weight:900;
+      font-size:20px;
+      font-weight:1000;
       line-height:1.15;
       letter-spacing:-.03em;
     }
 
     .tileText{
       color:var(--muted);
-      font-size:14px;
-      line-height:1.65;
+      font-size:13.5px;
+      line-height:1.55;
     }
 
     .tileActions{
@@ -336,31 +344,46 @@
       border-radius:12px;
       padding:0 12px;
       font-size:13px;
+      flex:1 1 auto;
     }
 
-    .grid2{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:16px;
-      margin-bottom:16px;
+    .guide{
+      margin-bottom:14px;
     }
 
-    .cardBody{
-      padding:20px;
+    details{
+      border:1px solid var(--line);
+      border-radius:22px;
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      box-shadow:var(--shadow);
+      overflow:hidden;
     }
 
-    .cardTitle{
-      margin:0 0 12px;
-      font-size:20px;
-      font-weight:900;
-      letter-spacing:-.02em;
+    summary{
+      list-style:none;
+      cursor:pointer;
+      padding:18px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      font-weight:1000;
+      font-size:18px;
     }
 
-    .cardSub{
+    summary::-webkit-details-marker{display:none}
+    summary span{
       color:var(--muted);
       font-size:13px;
-      line-height:1.55;
-      margin-bottom:14px;
+      font-weight:800;
+      line-height:1.45;
+    }
+
+    .detailsBody{
+      padding:0 18px 18px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
     }
 
     .list{
@@ -368,38 +391,23 @@
       gap:10px;
     }
 
-    .item{
+    .item,.rule{
       border:1px solid rgba(255,255,255,.08);
       background:rgba(255,255,255,.03);
-      border-radius:18px;
-      padding:14px;
+      border-radius:16px;
+      padding:13px;
     }
 
-    .item strong{
+    .item strong,.rule strong{
       display:block;
       font-size:14px;
       margin-bottom:6px;
     }
 
-    .item span{
+    .item span,.rule span{
       color:var(--muted);
-      font-size:14px;
+      font-size:13.5px;
       line-height:1.55;
-    }
-
-    .doctrine{
-      display:grid;
-      gap:10px;
-    }
-
-    .rule{
-      border-left:3px solid rgba(212,175,55,.45);
-      padding:10px 12px;
-      background:rgba(255,255,255,.03);
-      border-radius:12px;
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.6;
     }
 
     .footerNote{
@@ -410,18 +418,24 @@
       text-align:center;
     }
 
-    @media (max-width: 1120px){
-      .grid{grid-template-columns:repeat(2, 1fr)}
+    @media (max-width: 980px){
       .hero{grid-template-columns:1fr}
-      .grid2{grid-template-columns:1fr}
+      .quickGrid{grid-template-columns:1fr}
+      .detailsBody{grid-template-columns:1fr}
     }
 
     @media (max-width: 640px){
       .wrap{padding:14px 12px 34px}
       .topbar{flex-direction:column}
       .topActions{width:100%;justify-content:flex-start}
-      .grid{grid-template-columns:1fr}
-      .heroMain,.heroSide,.cardBody{padding:18px}
+      .topActions > *{flex:1 1 auto}
+      .heroMain,.heroSide{padding:18px}
+      .heroActions{grid-template-columns:1fr}
+      .tile{min-height:auto}
+      summary{
+        align-items:flex-start;
+        flex-direction:column;
+      }
     }
   </style>
 </head>
@@ -434,88 +448,61 @@
         </div>
         <div class="brandText">
           <div class="kicker">DIGIYLYFE</div>
-          <div class="title">Je fais découvrir mon lieu — Mon espace</div>
-          <div class="sub">Retrouve ici toutes tes portes utiles pour entrer, gérer, corriger et avancer sans te disperser.</div>
+          <div class="title">Je fais découvrir mon lieu</div>
+          <div class="sub">Tes lieux, tes actions utiles, sans détour.</div>
         </div>
       </div>
 
       <div class="topActions">
-        <a class="btn secondary" href="./pin.html">Mon accès</a>
-        <a class="btn primary" href="./cockpit.html">Entrer dans mon espace</a>
+        <a class="btn secondary digiy-link" href="./pin.html">Mon accès</a>
+        <a class="btn primary digiy-link" href="./lieux.html">Voir mes lieux</a>
       </div>
     </header>
 
     <section class="hero">
       <article class="panel heroMain">
-        <div class="badge">Point d'entrée</div>
-        <h1>Toutes tes portes utiles au même endroit.</h1>
+        <div class="badge">Point d’entrée</div>
+        <h1>Fais découvrir ton lieu, simplement.</h1>
         <p class="lead">
-          Ici, tu retrouves les pages principales pour travailler proprement : entrer dans ton espace,
-          voir tes lieux, ajouter un lieu, corriger une fiche et garder une lecture simple du terrain.
+          Commence par voir ce qui existe déjà. Ensuite tu ajoutes, corriges ou mets en avant le bon lieu.
+          Ici, on avance proprement : une action claire à la fois.
         </p>
 
+        <div class="heroActions">
+          <a class="btn primary digiy-link" href="./lieux.html">📍 Voir mes lieux</a>
+          <a class="btn secondary digiy-link" href="./submit.html">➕ Ajouter un lieu</a>
+        </div>
+
         <div class="heroTags">
-          <div class="pill">📍 Mes lieux</div>
-          <div class="pill">🧠 Lecture utile</div>
-          <div class="pill">🔐 Mon accès</div>
-          <div class="pill">🛠️ Ajouter un lieu</div>
+          <div class="pill">📍 Voir</div>
+          <div class="pill">➕ Ajouter</div>
+          <div class="pill">✏️ Corriger</div>
+          <div class="pill">🌍 Faire venir</div>
         </div>
       </article>
 
       <aside class="panel heroSide">
         <div class="miniStat">
-          <div class="miniLabel">Accès</div>
-          <div class="miniValue">Prêt</div>
-          <div class="miniHint">Tu peux entrer rapidement puis reprendre ton travail sans tourner en rond.</div>
+          <div class="miniLabel">Geste maître</div>
+          <div class="miniValue">Voir mes lieux</div>
+          <div class="miniHint">Avant d’ajouter, regarde ce qui est déjà posé.</div>
         </div>
 
         <div class="miniStat">
-          <div class="miniLabel">Pages utiles</div>
-          <div class="miniValue">En place</div>
-          <div class="miniHint">Mon accès, ma gestion, mes lieux et ajout de lieu sont déjà reliés.</div>
+          <div class="miniLabel">Action rapide</div>
+          <div class="miniValue">Ajouter un lieu</div>
+          <div class="miniHint">Une fiche simple pour rendre un endroit visible et compréhensible.</div>
         </div>
 
         <div class="miniStat">
-          <div class="miniLabel">Esprit DIGIY</div>
-          <div class="miniValue">Terrain d’abord</div>
-          <div class="miniHint">Lecture simple, action directe, pas de façade froide ni de détour inutile.</div>
+          <div class="miniLabel">Lecture</div>
+          <div class="miniValue">Ma gestion</div>
+          <div class="miniHint">Pour lire l’ensemble sans se perdre dans les détails.</div>
         </div>
       </aside>
     </section>
 
-    <section class="grid">
-      <article class="tile">
-        <div class="tileTop">
-          <div>
-            <div class="tileLabel">Entrée</div>
-            <div class="tileTitle">Mon accès</div>
-          </div>
-          <div class="tileIcon">🔐</div>
-        </div>
-        <div class="tileText">
-          Entre avec ton numéro et ton code pour rouvrir ton espace et reprendre ton activité.
-        </div>
-        <div class="tileActions">
-          <a class="btn primary" href="./pin.html">Ouvrir mon accès</a>
-        </div>
-      </article>
-
-      <article class="tile">
-        <div class="tileTop">
-          <div>
-            <div class="tileLabel">Vue d’ensemble</div>
-            <div class="tileTitle">Ma gestion</div>
-          </div>
-          <div class="tileIcon">📊</div>
-        </div>
-        <div class="tileText">
-          Regarde l’ensemble de ton activité, lis ce qui bouge et reprends la bonne action au bon moment.
-        </div>
-        <div class="tileActions">
-          <a class="btn primary" href="./cockpit.html">Ouvrir ma gestion</a>
-        </div>
-      </article>
-
+    <section class="quickGrid" aria-label="Actions principales EXPLORE">
       <article class="tile">
         <div class="tileTop">
           <div>
@@ -525,10 +512,10 @@
           <div class="tileIcon">📍</div>
         </div>
         <div class="tileText">
-          Retrouve tes fiches, vois ce qui est visible, ce qui attend encore et ce qui mérite d’être repris.
+          Retrouve les fiches déjà posées, vois ce qui est visible et ce qui mérite une correction.
         </div>
         <div class="tileActions">
-          <a class="btn primary" href="./lieux.html">Voir mes lieux</a>
+          <a class="btn primary digiy-link" href="./lieux.html">Voir mes lieux</a>
         </div>
       </article>
 
@@ -536,84 +523,124 @@
         <div class="tileTop">
           <div>
             <div class="tileLabel">Création</div>
-            <div class="tileTitle">Ajouter un lieu</div>
+            <div class="tileTitle">Ajouter</div>
           </div>
-          <div class="tileIcon">🛠️</div>
+          <div class="tileIcon">➕</div>
         </div>
         <div class="tileText">
-          Crée une nouvelle fiche ou corrige une fiche existante pour la rendre plus claire, plus forte et plus utile.
+          Ajoute un lieu utile : spot, activité, adresse, expérience ou endroit à faire connaître.
         </div>
         <div class="tileActions">
-          <a class="btn primary" href="./submit.html">Ajouter un lieu</a>
+          <a class="btn primary digiy-link" href="./submit.html">Ajouter un lieu</a>
+        </div>
+      </article>
+
+      <article class="tile">
+        <div class="tileTop">
+          <div>
+            <div class="tileLabel">Lecture simple</div>
+            <div class="tileTitle">Ma gestion</div>
+          </div>
+          <div class="tileIcon">🧭</div>
+        </div>
+        <div class="tileText">
+          Lis ton espace, reprends la bonne fiche et garde une vue claire de ce qui avance.
+        </div>
+        <div class="tileActions">
+          <a class="btn secondary digiy-link" href="./cockpit.html">Ouvrir ma gestion</a>
         </div>
       </article>
     </section>
 
-    <section class="grid2">
-      <article class="panel">
-        <div class="cardBody">
-          <h2 class="cardTitle">Chemin simple conseillé</h2>
-          <div class="cardSub">Pour avancer proprement sans perdre ton énergie.</div>
+    <section class="guide">
+      <details>
+        <summary>
+          <div>
+            Chemin conseillé
+            <span>À ouvrir seulement si tu veux te rappeler l’ordre simple.</span>
+          </div>
+          <div>⌄</div>
+        </summary>
 
+        <div class="detailsBody">
           <div class="list">
             <div class="item">
-              <strong>1. Ouvrir mon accès</strong>
-              <span>Entre d’abord avec ton numéro et ton code.</span>
+              <strong>1. Voir mes lieux</strong>
+              <span>Commence par lire ce qui existe déjà.</span>
             </div>
             <div class="item">
-              <strong>2. Voir ma gestion</strong>
-              <span>Regarde rapidement où tu en es avant de bouger quoi que ce soit.</span>
+              <strong>2. Ajouter ou corriger</strong>
+              <span>Travaille une fiche à la fois, sans mélanger.</span>
             </div>
             <div class="item">
-              <strong>3. Vérifier mes lieux</strong>
-              <span>Vois quelles fiches sont prêtes, à corriger ou à remettre en avant.</span>
+              <strong>3. Vérifier la lecture</strong>
+              <span>Le client doit comprendre vite où aller et pourquoi venir.</span>
             </div>
-            <div class="item">
-              <strong>4. Ajouter ou corriger</strong>
-              <span>Travaille une fiche proprement, sans mélanger les étapes.</span>
+          </div>
+
+          <div class="list">
+            <div class="rule">
+              <strong>Règle DIGIY</strong>
+              <span>Moins de texte ouvert, plus d’action directe.</span>
             </div>
-            <div class="item">
-              <strong>5. Contrôler la vitrine</strong>
-              <span>Relis le rendu public pour confirmer que la lecture reste simple et forte.</span>
+            <div class="rule">
+              <strong>Mobile terrain</strong>
+              <span>Un bouton doit mener à un geste clair sous le pouce.</span>
+            </div>
+            <div class="rule">
+              <strong>Sans casser</strong>
+              <span>On garde les pages existantes, on améliore seulement la circulation.</span>
             </div>
           </div>
         </div>
-      </article>
-
-      <article class="panel">
-        <div class="cardBody">
-          <h2 class="cardTitle">Règles de maison DIGIY</h2>
-          <div class="cardSub">Le cap à garder pour rester propre et utile.</div>
-
-          <div class="doctrine">
-            <div class="rule">Toujours partir de ce qui fonctionne déjà pour éviter les détours inutiles.</div>
-            <div class="rule">Pas de bruit ni de faux décor quand le vrai travail existe déjà.</div>
-            <div class="rule">Une page = un rôle clair, pour garder une circulation simple.</div>
-            <div class="rule">Chaque porte doit mener à une action humaine compréhensible.</div>
-            <div class="rule">La lecture doit rester mobile, directe et terrain.</div>
-            <div class="rule">On avance proprement, sans casser le reste.</div>
-          </div>
-        </div>
-      </article>
+      </details>
     </section>
 
     <section class="panel">
-      <div class="cardBody">
-        <h2 class="cardTitle">Accès rapides</h2>
-        <div class="cardSub">Les raccourcis utiles pour aller droit au but.</div>
-
+      <div style="padding:18px">
         <div class="topActions" style="justify-content:flex-start;">
-          <a class="btn secondary" href="./pin.html">🔐 Mon accès</a>
-          <a class="btn secondary" href="./cockpit.html">📊 Ma gestion</a>
-          <a class="btn secondary" href="./lieux.html">📍 Mes lieux</a>
-          <a class="btn secondary" href="./submit.html">🛠️ Ajouter un lieu</a>
+          <a class="btn secondary digiy-link" href="./pin.html">🔐 Mon accès</a>
+          <a class="btn secondary digiy-link" href="./cockpit.html">🧭 Ma gestion</a>
+          <a class="btn secondary digiy-link" href="./lieux.html">📍 Mes lieux</a>
+          <a class="btn secondary digiy-link" href="./submit.html">➕ Ajouter</a>
         </div>
       </div>
     </section>
 
     <div class="footerNote">
-      DIGIY EXPLORE • lecture simple • action directe • façade humaine
+      DIGIY EXPLORE • voir • ajouter • corriger • faire venir
     </div>
   </div>
+
+  <script>
+    (function(){
+      "use strict";
+
+      const PASS_PARAMS = ["slug", "phone", "tel", "module"];
+
+      function keepContext(href){
+        try{
+          const current = new URLSearchParams(window.location.search);
+          const next = new URL(href, window.location.href);
+
+          PASS_PARAMS.forEach((key) => {
+            const val = current.get(key);
+            if(val && !next.searchParams.get(key)){
+              next.searchParams.set(key, val);
+            }
+          });
+
+          return next.pathname + next.search + next.hash;
+        }catch(_){
+          return href;
+        }
+      }
+
+      document.querySelectorAll("a.digiy-link[href]").forEach((a) => {
+        a.setAttribute("href", keepContext(a.getAttribute("href")));
+      });
+    })();
+  </script>
 </body>
 </html>
+
