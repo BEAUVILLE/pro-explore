@@ -615,6 +615,245 @@
       display:block;
     }
 
+
+    .btn.gold{
+      background:rgba(212,175,55,.14);
+      border:1px solid rgba(212,175,55,.28);
+      color:#fff0a7;
+    }
+
+    .textarea{
+      width:100%;
+      min-height:92px;
+      resize:vertical;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:16px;
+      background:rgba(255,255,255,.045);
+      color:var(--ink);
+      padding:13px 14px;
+      outline:none;
+      font:inherit;
+      line-height:1.55;
+    }
+
+    .textarea:focus{
+      border-color:rgba(212,175,55,.40);
+      box-shadow:0 0 0 4px rgba(212,175,55,.12);
+    }
+
+    .quickExplore{
+      margin-bottom:16px;
+      border-color:rgba(212,175,55,.22);
+      background:
+        radial-gradient(900px 360px at 100% 0%, rgba(212,175,55,.11), transparent 55%),
+        linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
+    }
+
+    .quickExploreHead{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:12px;
+    }
+
+    .quickExploreHead h2{
+      margin:0 0 6px;
+      font-size:20px;
+      line-height:1.15;
+      font-weight:1000;
+      letter-spacing:-.02em;
+    }
+
+    .quickExploreLead{
+      color:var(--muted);
+      font-size:13px;
+      font-weight:800;
+      line-height:1.55;
+      max-width:70ch;
+    }
+
+    .quickTag{
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      padding:8px 11px;
+      border-radius:999px;
+      border:1px solid rgba(212,175,55,.28);
+      background:rgba(212,175,55,.10);
+      color:var(--gold2);
+      font-size:12px;
+      font-weight:1000;
+      white-space:nowrap;
+    }
+
+    .quickGuide{
+      padding:13px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.12);
+      display:grid;
+      gap:8px;
+      margin:12px 0;
+    }
+
+    .quickGuide strong{
+      color:var(--gold2);
+      font-size:13px;
+      font-weight:1000;
+    }
+
+    .quickGuide p{
+      margin:0;
+      color:var(--muted);
+      font-size:13px;
+      font-weight:800;
+      line-height:1.55;
+    }
+
+    .quickExamples{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .quickExamples button{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.05);
+      color:var(--ink);
+      border-radius:999px;
+      padding:8px 11px;
+      font-size:12px;
+      font-weight:900;
+      cursor:pointer;
+    }
+
+    .quickExamples button:hover{
+      border-color:rgba(212,175,55,.30);
+      color:var(--gold2);
+    }
+
+    .quickDraft{
+      display:none;
+      margin-top:12px;
+      padding:13px;
+      border-radius:18px;
+      border:1px solid rgba(34,197,94,.28);
+      background:rgba(34,197,94,.08);
+      color:#d7ffe1;
+      font-size:13px;
+      font-weight:800;
+      line-height:1.55;
+    }
+
+    .quickDraft strong{color:#fff}
+
+    .memoryBox{
+      margin-top:12px;
+      padding:13px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.12);
+      display:grid;
+      gap:10px;
+    }
+
+    .memoryHead{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:flex-start;
+    }
+
+    .memoryTitle{
+      font-size:13px;
+      font-weight:1000;
+      color:var(--gold2);
+      line-height:1.25;
+    }
+
+    .memoryHelp{
+      margin-top:4px;
+      color:var(--muted);
+      font-size:12px;
+      font-weight:800;
+      line-height:1.45;
+    }
+
+    .memoryList{
+      display:grid;
+      gap:8px;
+    }
+
+    .memoryItem{
+      padding:11px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      display:grid;
+      gap:5px;
+    }
+
+    .memoryItemTop{
+      display:flex;
+      justify-content:space-between;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:flex-start;
+    }
+
+    .memoryItemTitle{
+      font-size:13px;
+      font-weight:1000;
+      color:var(--ink);
+      line-height:1.35;
+    }
+
+    .memoryItemAmount{
+      font-size:12px;
+      font-weight:1000;
+      color:#d7ffe1;
+      white-space:nowrap;
+    }
+
+    .memoryItemMeta{
+      color:var(--muted);
+      font-size:12px;
+      font-weight:800;
+      line-height:1.4;
+    }
+
+    .memoryEmpty{
+      padding:11px;
+      border-radius:16px;
+      border:1px dashed rgba(255,255,255,.16);
+      color:var(--muted);
+      font-size:12px;
+      font-weight:800;
+      line-height:1.45;
+    }
+
+    .memoryPayAction{
+      margin-top:6px;
+      display:inline-flex;
+      width:max-content;
+      max-width:100%;
+      min-height:36px;
+      align-items:center;
+      justify-content:center;
+      gap:7px;
+      padding:8px 11px;
+      border-radius:999px;
+      border:1px solid rgba(212,175,55,.28);
+      background:rgba(212,175,55,.10);
+      color:var(--gold2);
+      font-size:12px;
+      font-weight:1000;
+      text-decoration:none;
+    }
+
     .hidden{display:none !important}
 
     .foot{
@@ -732,6 +971,56 @@
         <div class="statLabel">Mis en avant</div>
         <div class="statValue" id="sFeatured">0</div>
       </article>
+    </section>
+
+
+    <section class="panel quickExplore" id="quickExploreNote">
+      <div class="cardBody">
+        <div class="quickExploreHead">
+          <div>
+            <h2>Note rapide activité</h2>
+            <div class="quickExploreLead">
+              Écris comme tu parles. DIGIY prépare la trace, puis tu l’envoies vers <b>Mon argent</b> quand c’est bon.
+            </div>
+          </div>
+          <div class="quickTag">EXPLORE → PAY</div>
+        </div>
+
+        <div class="quickGuide">
+          <strong>Une phrase suffit.</strong>
+          <p>Exemples : visite, avance, guide payé, transport, affiche, petite dépense liée au lieu.</p>
+          <div class="quickExamples" id="quickExploreExamples">
+            <button type="button">Visite lagune 15000 wave</button>
+            <button type="button">Avance excursion 10000 wave</button>
+            <button type="button">Guide payé 5000 cash</button>
+            <button type="button">Transport client 3000 cash</button>
+            <button type="button">Dépense affiche 2000 cash</button>
+          </div>
+        </div>
+
+        <textarea class="textarea" id="quickExploreInput" placeholder="Ex : Visite lagune 15000 wave"></textarea>
+
+        <div class="placeActions" style="margin-top:12px">
+          <button class="btn gold" id="btnQuickExplorePrepare" type="button">Préparer</button>
+          <button class="btn primary" id="btnQuickExploreConfirm" type="button" style="display:none">✅ Confirmer</button>
+          <button class="btn ghost" id="btnQuickExploreClear" type="button">Effacer</button>
+        </div>
+
+        <div class="quickDraft" id="quickExploreDraft"></div>
+
+        <div class="memoryBox">
+          <div class="memoryHead">
+            <div>
+              <div class="memoryTitle">🧠 Aide-mémoire EXPLORE</div>
+              <div class="memoryHelp">Dernières notes confirmées ici. Elles restent locales sur le téléphone, puis peuvent partir vers Mon argent.</div>
+            </div>
+            <button class="btn ghost" id="btnQuickExploreMemoryClear" type="button">Vider</button>
+          </div>
+          <div class="memoryList" id="quickExploreMemoryList">
+            <div class="memoryEmpty">Aucune note confirmée pour le moment.</div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section class="layout">
@@ -1381,8 +1670,307 @@
         }).join("");
       }
 
+
+      function quickExploreDraftKey(){
+        return "digiy_explore_quick_note_draft_" + (CURRENT_PHONE || "local");
+      }
+
+      function quickExploreMemoryKey(){
+        return "digiy_explore_quick_note_memory_" + (CURRENT_PHONE || "local");
+      }
+
+      function quickMoney(v){
+        const n = Number(v || 0);
+        return Number.isFinite(n) ? n.toLocaleString("fr-FR") + " F CFA" : "—";
+      }
+
+      function readQuickExploreMemory(){
+        try{
+          const raw = localStorage.getItem(quickExploreMemoryKey());
+          const list = JSON.parse(raw || "[]");
+          return Array.isArray(list) ? list : [];
+        }catch{
+          return [];
+        }
+      }
+
+      function writeQuickExploreMemory(list){
+        try{
+          localStorage.setItem(quickExploreMemoryKey(), JSON.stringify(Array.isArray(list) ? list : []));
+        }catch(_){}
+      }
+
+      function saveQuickExploreDraft(draft, confirmed = false){
+        try{
+          localStorage.setItem(quickExploreDraftKey(), JSON.stringify({
+            ...draft,
+            status: confirmed ? "confirmed_local" : "draft",
+            confirmed_at: confirmed ? new Date().toISOString() : null
+          }));
+          return true;
+        }catch{
+          return false;
+        }
+      }
+
+      function paySlugFromExplorePhone(){
+        const p = normalizePhone(CURRENT_PHONE || new URLSearchParams(location.search).get("phone") || "");
+        return p ? "pay-" + p : "";
+      }
+
+      function payExploreLabel(item){
+        const title = String(item?.title || "Note EXPLORE").trim();
+        const comp = String(item?.complement || "").trim();
+        return comp ? `${title} — ${comp}` : title;
+      }
+
+      function buildPayFromExploreUrl(item){
+        const p = normalizePhone(CURRENT_PHONE || new URLSearchParams(location.search).get("phone") || "");
+        const paySlug = paySlugFromExplorePhone();
+        const qsPay = new URLSearchParams();
+
+        if(paySlug) qsPay.set("slug", paySlug);
+        if(p) qsPay.set("phone", p);
+
+        qsPay.set("fromDraft", "1");
+        qsPay.set("direction", item?.direction === "in" ? "in" : "out");
+        qsPay.set("scope", "pro");
+        qsPay.set("amount", String(Math.round(Number(item?.amount_xof || 0))));
+        qsPay.set("kind", item?.kind || (item?.direction === "in" ? "sale" : "expense"));
+        qsPay.set("channel", item?.channel && item.channel !== "manual" ? String(item.channel) : "other");
+        qsPay.set("category", item?.category || "explore_note");
+        qsPay.set("source_module", "EXPLORE");
+        qsPay.set("source_id", String(item?.memory_id || item?.created_at || "explore_quick_note"));
+        qsPay.set("label", payExploreLabel(item));
+        qsPay.set("note", String(item?.sentence || "").trim());
+        qsPay.set("complement", String(item?.complement || "").trim());
+        qsPay.set("intent", "explore_quick_note");
+
+        return "https://pro-pay.digiylyfe.com/admin.html?" + qsPay.toString();
+      }
+
+      function parseQuickExploreSentence(sentence){
+        const raw = String(sentence || "").trim();
+        if(!raw) return null;
+
+        const amountMatch = raw.match(/(\d[\d\s.,]*)\s*(?:f|fcfa|xof)?\b/i);
+        const amount = amountMatch ? Number(String(amountMatch[1]).replace(/[^\d]/g, "")) : 0;
+
+        const lower = raw.toLowerCase();
+        let channel = "manual";
+        if(/\bwave\b/.test(lower)) channel = "wave";
+        else if(/\bcash\b|\besp[eè]ces?\b|\bliquide\b/.test(lower)) channel = "cash";
+        else if(/\bom\b|orange\s*money/.test(lower)) channel = "orange_money";
+
+        let direction = "in";
+        let kind = "sale";
+        let category = "explore_income";
+        let title = "Recette EXPLORE";
+
+        if(/guide|pay[eé]|payer|transport|taxi|carburant|affiche|pub|d[eé]pense|achat|commission|mat[eé]riel|frais/.test(lower)){
+          direction = "out";
+          kind = "expense";
+          category = "explore_expense";
+          title = "Dépense EXPLORE";
+        }
+
+        if(/avance|acompte|r[eè]glement|visite|excursion|sortie|tour|client|ticket|entr[eé]e|r[eé]servation/.test(lower)){
+          direction = "in";
+          kind = "sale";
+          category = "explore_sale";
+          title = "Recette EXPLORE";
+        }
+
+        if(/guide/.test(lower)){
+          direction = "out";
+          kind = "expense";
+          category = "guide_payment";
+          title = "Guide payé";
+        }else if(/transport|taxi|carburant/.test(lower)){
+          direction = "out";
+          kind = "expense";
+          category = "transport_expense";
+          title = "Transport payé";
+        }else if(/affiche|pub|publicit[eé]|flyer/.test(lower)){
+          direction = "out";
+          kind = "expense";
+          category = "marketing_expense";
+          title = "Communication payée";
+        }else if(/avance|acompte/.test(lower)){
+          direction = "in";
+          kind = "sale";
+          category = "advance_income";
+          title = "Avance reçue";
+        }else if(/visite|excursion|sortie|tour|ticket|entr[eé]e/.test(lower)){
+          direction = "in";
+          kind = "sale";
+          category = "visit_income";
+          title = "Visite payée";
+        }
+
+        const complement = raw
+          .replace(amountMatch ? amountMatch[0] : "", "")
+          .replace(/\b(wave|cash|esp[eè]ces?|liquide|om|orange\s*money|fcfa|xof)\b/gi, "")
+          .trim();
+
+        return {
+          sentence: raw,
+          title,
+          complement,
+          amount_xof: amount || 0,
+          channel,
+          direction,
+          kind,
+          category,
+          impact: direction === "in" ? "argent qui entre" : "argent qui sort",
+          created_at: new Date().toISOString()
+        };
+      }
+
+      function renderQuickExploreDraft(draft){
+        const box = $("quickExploreDraft");
+        const confirmBtn = $("btnQuickExploreConfirm");
+        if(!box) return;
+
+        if(!draft || !draft.sentence){
+          box.style.display = "none";
+          box.innerHTML = "";
+          if(confirmBtn) confirmBtn.style.display = "none";
+          return;
+        }
+
+        const amountText = draft.amount_xof ? quickMoney(draft.amount_xof) : "montant à préciser";
+        const channelText = draft.channel === "manual" ? "canal à préciser" : draft.channel;
+        const payUrl = buildPayFromExploreUrl({
+          ...draft,
+          memory_id: draft.memory_id || "explore_draft_" + Date.now()
+        });
+        const canSendPay = !!normalizePhone(CURRENT_PHONE || new URLSearchParams(location.search).get("phone") || "");
+
+        box.style.display = "block";
+        if(confirmBtn) confirmBtn.style.display = "inline-flex";
+
+        box.innerHTML = `
+          <strong>Voilà ce que DIGIY a préparé :</strong><br>
+          Type : ${escapeHtml(draft.title)}<br>
+          Montant : ${escapeHtml(amountText)}<br>
+          Canal : ${escapeHtml(channelText)}<br>
+          Impact : ${escapeHtml(draft.impact)}<br>
+          ${draft.complement ? `Détail : ${escapeHtml(draft.complement)}<br>` : ``}
+          <br>
+          ${canSendPay
+            ? `<a class="memoryPayAction" href="${escapeHtml(payUrl)}">Envoyer vers Mon argent</a>`
+            : `<span style="color:#fde68a">Téléphone absent : ouvre l’accès pour envoyer vers Mon argent.</span>`
+          }
+        `;
+      }
+
+      function addQuickExploreMemory(draft){
+        const item = {
+          ...draft,
+          memory_id: "explore_" + Date.now(),
+          confirmed_at: new Date().toISOString()
+        };
+        const list = [item, ...readQuickExploreMemory()].slice(0, 10);
+        writeQuickExploreMemory(list);
+        return item;
+      }
+
+      function renderQuickExploreMemory(){
+        const box = $("quickExploreMemoryList");
+        if(!box) return;
+
+        const list = readQuickExploreMemory();
+        if(!list.length){
+          box.innerHTML = `<div class="memoryEmpty">Aucune note confirmée pour le moment.</div>`;
+          return;
+        }
+
+        box.innerHTML = list.map(item => {
+          const amount = item.amount_xof ? quickMoney(item.amount_xof) : "montant à préciser";
+          const channel = item.channel && item.channel !== "manual" ? item.channel : "canal à préciser";
+          const payUrl = buildPayFromExploreUrl(item);
+          return `
+            <div class="memoryItem">
+              <div class="memoryItemTop">
+                <div class="memoryItemTitle">${escapeHtml(item.title || "Note EXPLORE")}</div>
+                <div class="memoryItemAmount">${escapeHtml(amount)}</div>
+              </div>
+              <div class="memoryItemMeta">${escapeHtml(item.sentence || "")}</div>
+              <div class="memoryItemMeta">${escapeHtml(channel)} · ${escapeHtml(item.impact || "")}</div>
+              <a class="memoryPayAction" href="${escapeHtml(payUrl)}">Envoyer vers Mon argent</a>
+            </div>
+          `;
+        }).join("");
+      }
+
+      function bindQuickExploreNote(){
+        const input = $("quickExploreInput");
+        const prepare = $("btnQuickExplorePrepare");
+        const confirm = $("btnQuickExploreConfirm");
+        const clear = $("btnQuickExploreClear");
+        const clearMemory = $("btnQuickExploreMemoryClear");
+        const examples = $("quickExploreExamples");
+        if(!input || !prepare) return;
+
+        examples?.querySelectorAll("button").forEach(btn => {
+          btn.addEventListener("click", () => {
+            input.value = btn.textContent.trim();
+            const draft = parseQuickExploreSentence(input.value);
+            saveQuickExploreDraft(draft, false);
+            renderQuickExploreDraft(draft);
+          });
+        });
+
+        prepare.addEventListener("click", () => {
+          const draft = parseQuickExploreSentence(input.value);
+          if(!draft){
+            setStatus("Écris une note simple avant de préparer la trace.", "warn");
+            return;
+          }
+          saveQuickExploreDraft(draft, false);
+          renderQuickExploreDraft(draft);
+          setStatus("Note préparée. Vérifie, puis envoie vers Mon argent si c’est bon.", "ok");
+        });
+
+        confirm?.addEventListener("click", () => {
+          const draft = parseQuickExploreSentence(input.value);
+          if(!draft){
+            setStatus("Aucune note à confirmer.", "warn");
+            return;
+          }
+          const item = addQuickExploreMemory(draft);
+          saveQuickExploreDraft(item, true);
+          renderQuickExploreDraft(item);
+          renderQuickExploreMemory();
+          setStatus("Note confirmée localement. Tu peux l’envoyer vers Mon argent.", "ok");
+        });
+
+        clear?.addEventListener("click", () => {
+          input.value = "";
+          try{ localStorage.removeItem(quickExploreDraftKey()); }catch(_){}
+          renderQuickExploreDraft(null);
+          setStatus("Note rapide effacée.", "info");
+        });
+
+        clearMemory?.addEventListener("click", () => {
+          writeQuickExploreMemory([]);
+          renderQuickExploreMemory();
+          setStatus("Aide-mémoire EXPLORE vidé sur ce téléphone.", "info");
+        });
+
+        const saved = safeJsonParse(storageGet(quickExploreDraftKey()));
+        if(saved?.sentence){
+          input.value = saved.sentence;
+          renderQuickExploreDraft(saved);
+        }
+        renderQuickExploreMemory();
+      }
+
+
       async function boot(){
         setClawLoading();
+        bindQuickExploreNote();
 
         try{
           CURRENT_STATE = await resolveGuardState();
