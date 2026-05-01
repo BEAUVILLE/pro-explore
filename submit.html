@@ -1,9 +1,9 @@
-<!doctype html>
+><!doctype html>
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Ajouter un lieu — DIGIY EXPLORE</title>
+  <title>Je fais découvrir mon lieu — Ajouter</title>
   <meta name="theme-color" content="#06130f" />
   <meta
     name="description"
@@ -15,8 +15,10 @@
     window.DIGIY_SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
     window.DIGIY_SUPABASE_ANON = window.DIGIY_SUPABASE_ANON_KEY;
     window.DIGIY_MODULE = "EXPLORE";
+    window.DIGIY_LOGIN_URL = "./pin.html";
   </script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./guard.js?v=explore-submit-mobile"></script>
 
   <style>
     :root{
@@ -56,7 +58,7 @@
     .wrap{
       width:min(100%, 1240px);
       margin:0 auto;
-      padding:18px 14px 44px;
+      padding:18px 14px calc(104px + env(safe-area-inset-bottom,0px));
     }
 
     .topbar{
@@ -506,6 +508,88 @@
       margin-top:16px;
     }
 
+
+    #placeForm, #publicName{scroll-margin-top:96px}
+
+    .bottomNav{
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:0;
+      z-index:99990;
+      padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));
+      background:rgba(6,19,15,.94);
+      border-top:1px solid rgba(255,255,255,.10);
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
+    }
+
+    .bottomNavInner{
+      width:min(100%,760px);
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:6px;
+    }
+
+    .bottomNav a{
+      min-height:58px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      align-content:center;
+      gap:3px;
+      color:rgba(248,250,252,.70);
+      font-size:11px;
+      font-weight:950;
+      text-align:center;
+      border:1px solid transparent;
+      text-decoration:none;
+    }
+
+    .bottomNav .ico{font-size:18px;line-height:1}
+
+    .bottomNav a.active{
+      color:#13200d;
+      background:linear-gradient(135deg,var(--gold),var(--gold2));
+      border-color:rgba(212,175,55,.30);
+      box-shadow:0 12px 26px rgba(212,175,55,.18);
+    }
+
+    .mobileFastRow{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .mobileFastRow a{
+      min-height:46px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.05);
+      color:var(--ink);
+      text-decoration:none;
+      font-weight:950;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:10px 12px;
+    }
+
+    .mobileFastRow a.primary{
+      background:linear-gradient(90deg,var(--gold),var(--gold2));
+      color:#13200d;
+      border:none;
+    }
+
+    @media (max-width:640px){
+      .mobileFastRow{grid-template-columns:1fr 1fr}
+      .nav{display:none}
+      .topActions{display:none}
+    }
+
     .hidden{display:none !important}
 
     .foot{
@@ -526,7 +610,7 @@
     }
 
     @media (max-width: 640px){
-      .wrap{padding:14px 12px 34px}
+      .wrap{padding:14px 12px calc(104px + env(safe-area-inset-bottom,0px))}
       .topbar{flex-direction:column}
       .topActions{width:100%;justify-content:flex-start}
       .heroMain,.heroSide,.cardBody{padding:18px}
@@ -551,10 +635,10 @@
 
       <div class="topActions">
         <a class="btn ghost" id="publicHomeBtn" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener">Voir public</a>
-        <a class="btn secondary" id="backToClawBtn" href="./claw.html">Aide DIGIY</a>
-        <a class="btn secondary" id="backToLieuxBtn" href="./lieux.html">Mes lieux</a>
-        <a class="btn secondary" id="backToCockpitBtn" href="./cockpit.html">Ma gestion</a>
-        <a class="btn warn hidden" id="rescuePinBtn" href="./pin.html">Retrouver mon accès</a>
+        <a class="btn secondary" id="backToClawBtn" href="./claw.html">Plus</a>
+        <a class="btn secondary" id="backToLieuxBtn" href="./lieux.html">Lieux</a>
+        <a class="btn secondary" id="backToCockpitBtn" href="./cockpit.html">Accueil</a>
+        <a class="btn warn hidden" id="rescuePinBtn" href="./pin.html">Accès</a>
       </div>
     </header>
 
@@ -566,6 +650,13 @@
           Mets l’essentiel : le nom, l’endroit, ce qu’on y trouve, le contact et une photo si tu as déjà un lien.
           Une bonne fiche donne envie sans fatiguer le lecteur.
         </p>
+
+        <div class="mobileFastRow">
+          <a id="fastHome" href="./cockpit.html">🏠 Accueil</a>
+          <a id="fastLieux" href="./lieux.html">📍 Lieux</a>
+          <a class="primary" id="fastSubmit" href="./submit.html">➕ Ajouter</a>
+          <a id="fastNotes" href="./cockpit.html#quickExploreNote">✍️ Notes</a>
+        </div>
       </article>
 
       <aside class="panel heroSide">
@@ -590,12 +681,12 @@
     </section>
 
     <nav class="nav">
-      <a id="navCockpit" href="./cockpit.html">Ma gestion</a>
-      <a id="navLieux" href="./lieux.html">Mes lieux</a>
-      <a id="navSubmit" class="active" href="./submit.html">Ajouter / corriger</a>
-      <a id="navClaw" href="./claw.html">Aide DIGIY</a>
+      <a id="navCockpit" href="./cockpit.html">Accueil</a>
+      <a id="navLieux" href="./lieux.html">Lieux</a>
+      <a id="navSubmit" class="active" href="./submit.html">Ajouter</a>
+      <a id="navClaw" href="./claw.html">Plus</a>
       <a id="navPreview" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener">Voir public</a>
-      <a id="navPinRescue" class="hidden" href="./pin.html">Retrouver mon accès</a>
+      <a id="navPinRescue" class="hidden" href="./pin.html">Accès</a>
     </nav>
 
     <div id="msg" class="msg info"></div>
@@ -730,7 +821,7 @@
             <div class="actions">
               <button id="saveBtn" class="btn primary" type="submit">Enregistrer la fiche</button>
               <button id="draftBtn" class="btn secondary" type="button">Garder en préparation</button>
-              <a id="previewBtn" class="btn ghost" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener">Voir côté public</a>
+              <a id="previewBtn" class="btn ghost" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener">Voir public</a>
             </div>
           </form>
         </div>
@@ -782,9 +873,20 @@
     </div>
 
     <div class="foot">
-      DIGIY EXPLORE • ajouter un lieu • corriger • publier proprement
+      DIGIY EXPLORE • ajouter • lieux • notes • visibilité
     </div>
   </div>
+
+
+  <nav class="bottomNav" aria-label="Navigation EXPLORE">
+    <div class="bottomNavInner">
+      <a id="bottomHome" href="./cockpit.html"><span class="ico">🏠</span><span>Accueil</span></a>
+      <a id="bottomLieux" href="./lieux.html"><span class="ico">📍</span><span>Lieux</span></a>
+      <a class="active" id="bottomSubmit" href="./submit.html"><span class="ico">➕</span><span>Ajouter</span></a>
+      <a id="bottomNotes" href="./cockpit.html#quickExploreNote"><span class="ico">✍️</span><span>Notes</span></a>
+      <a id="bottomMore" href="./claw.html"><span class="ico">⚙️</span><span>Plus</span></a>
+    </div>
+  </nav>
 
   <script>
     (function(){
@@ -935,6 +1037,9 @@
         const fromUrl = normalizePhone(url.searchParams.get("phone"));
         if(fromUrl) return fromUrl;
 
+        const guardState = window.DIGIY_GUARD?.state || null;
+        if(guardState?.phone) return normalizePhone(guardState.phone);
+
         const session = getSession();
         if(session?.phone) return session.phone;
 
@@ -945,6 +1050,9 @@
         const url = new URL(window.location.href);
         const fromUrl = normalizeSlug(url.searchParams.get("slug"));
         if(fromUrl) return fromUrl;
+
+        const guardState = window.DIGIY_GUARD?.state || null;
+        if(guardState?.slug) return normalizeSlug(guardState.slug);
 
         const session = getSession();
         if(session?.slug) return session.slug;
@@ -1054,8 +1162,26 @@
         publicHomeBtn.target = "_blank";
         publicHomeBtn.rel = "noopener";
 
-        rescuePinBtn.href = "./pin.html";
-        navPinRescue.href = "./pin.html";
+        rescuePinBtn.href = "./pin.html" + buildQuery({ slug: CURRENT_SLUG || "", phone: CURRENT_PHONE || "" });
+        navPinRescue.href = "./pin.html" + buildQuery({ slug: CURRENT_SLUG || "", phone: CURRENT_PHONE || "" });
+
+        const notesHref = "./cockpit.html" + buildQuery({ slug: CURRENT_SLUG || "", phone: CURRENT_PHONE || "" }) + "#quickExploreNote";
+        const mobileLinks = {
+          fastHome: "./cockpit.html" + cockpitQuery,
+          fastLieux: "./lieux.html" + lieuxQuery,
+          fastSubmit: "./submit.html" + submitQuery,
+          fastNotes: notesHref,
+          bottomHome: "./cockpit.html" + cockpitQuery,
+          bottomLieux: "./lieux.html" + lieuxQuery,
+          bottomSubmit: "./submit.html" + submitQuery,
+          bottomNotes: notesHref,
+          bottomMore: "./claw.html" + clawQuery
+        };
+
+        Object.entries(mobileLinks).forEach(function(pair){
+          const node = document.getElementById(pair[0]);
+          if(node) node.href = pair[1];
+        });
       }
 
       function updateModeUi(){
@@ -1358,6 +1484,12 @@
       }
 
       async function boot(){
+        try{
+          if(window.DIGIY_GUARD?.ready && typeof window.DIGIY_GUARD.ready === "function"){
+            await window.DIGIY_GUARD.ready();
+          }
+        }catch(_){}
+
         CURRENT_PHONE = getPhoneFromContext();
         CURRENT_SLUG = getSlugFromContext();
         IS_EDIT_MODE = !!CURRENT_SLUG;
@@ -1415,4 +1547,4 @@
     })();
   </script>
 </body>
-</html>
+</html
