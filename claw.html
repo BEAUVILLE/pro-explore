@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-  <title>Je fais découvrir mon lieu — Lecture utile</title>
+  <title>Je fais découvrir mon lieu — Plus</title>
   <meta name="theme-color" content="#06130f"/>
-  <meta name="description" content="Lecture légère du contexte réel pour voir vite la bonne action à faire." />
+  <meta name="description" content="Je fais découvrir mon lieu — Plus : lecture utile, repères terrain, accès, lieux et prochaines actions." />
 
   <script>
     window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
@@ -15,6 +15,10 @@
     window.DIGIY_LOGIN_URL = "./pin.html";
     document.documentElement.style.visibility = "hidden";
   </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <!-- FIX : guad.js → guard.js -->
@@ -47,7 +51,7 @@
     body{
       min-height:100vh;
       color:var(--ink);
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      font-family:Outfit,Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       background:
         radial-gradient(circle at top, rgba(56,189,248,.10), transparent 24%),
         radial-gradient(circle at right bottom, rgba(212,175,55,.08), transparent 24%),
@@ -60,7 +64,7 @@
     .wrap{
       width:min(100%, 1180px);
       margin:0 auto;
-      padding:18px 14px 42px;
+      padding:18px 14px calc(104px + env(safe-area-inset-bottom,0px));
     }
 
     .topbar{
@@ -420,6 +424,88 @@
       background:rgba(255,255,255,.05);
     }
 
+
+    #promptBox, #briefTitle{scroll-margin-top:96px}
+
+    .bottomNav{
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:0;
+      z-index:99990;
+      padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));
+      background:rgba(6,19,15,.94);
+      border-top:1px solid rgba(255,255,255,.10);
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
+    }
+
+    .bottomNavInner{
+      width:min(100%,760px);
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:6px;
+    }
+
+    .bottomNav a{
+      min-height:58px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      align-content:center;
+      gap:3px;
+      color:rgba(248,250,252,.70);
+      font-size:11px;
+      font-weight:950;
+      text-align:center;
+      border:1px solid transparent;
+      text-decoration:none;
+    }
+
+    .bottomNav .ico{font-size:18px;line-height:1}
+
+    .bottomNav a.active{
+      color:#13200d;
+      background:linear-gradient(135deg,var(--gold),var(--gold2));
+      border-color:rgba(212,175,55,.30);
+      box-shadow:0 12px 26px rgba(212,175,55,.18);
+    }
+
+    .mobileFastRow{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .mobileFastRow a{
+      min-height:46px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.05);
+      color:var(--ink);
+      text-decoration:none;
+      font-weight:950;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:10px 12px;
+    }
+
+    .mobileFastRow a.primary{
+      background:linear-gradient(90deg,var(--gold),var(--gold2));
+      color:#13200d;
+      border:none;
+    }
+
+    @media (max-width:640px){
+      .mobileFastRow{grid-template-columns:1fr 1fr}
+      .nav{display:none}
+      .topActions{display:none}
+    }
+
     .hidden{display:none !important}
 
     .foot{
@@ -435,7 +521,7 @@
     }
 
     @media (max-width: 640px){
-      .wrap{padding:14px 12px 34px}
+      .wrap{padding:14px 12px calc(104px + env(safe-area-inset-bottom,0px))}
       .topbar{flex-direction:column}
       .topActions{width:100%;justify-content:flex-start}
       .heroMain,.heroSide,.cardBody{padding:18px}
@@ -450,26 +536,26 @@
       <div class="brand">
         <div class="logo">🦅</div>
         <div class="brandText">
-          <div class="kicker">Lecture DIGIY</div>
-          <div class="title">Je fais découvrir mon lieu • Lecture utile</div>
-          <div class="sub" id="subline">Cette page relit le contexte terrain, la fiche lieu et la prochaine action utile.</div>
+          <div class="kicker">Mon assistant DIGIY</div>
+          <div class="title">Je fais découvrir mon lieu • Plus</div>
+          <div class="sub" id="subline">Plus, repères terrain et prochaine action simple.</div>
         </div>
       </div>
 
       <div class="topActions">
-        <a class="btn secondary" id="btnCockpitTop" href="./cockpit.html">Mon espace</a>
-        <a class="btn secondary" id="btnLieuxTop" href="./lieux.html">Mes lieux</a>
-        <a class="btn secondary" id="btnSubmitTop" href="./submit.html">Ajouter / éditer</a>
-        <a class="btn warn hidden" id="btnPinTop" href="./pin.html">Retrouver mon accès</a>
+        <a class="btn secondary" id="btnCockpitTop" href="./cockpit.html">Accueil</a>
+        <a class="btn secondary" id="btnLieuxTop" href="./lieux.html">Lieux</a>
+        <a class="btn secondary" id="btnSubmitTop" href="./submit.html">Ajouter</a>
+        <a class="btn warn hidden" id="btnPinTop" href="./pin.html">Accès</a>
       </div>
     </header>
 
     <nav class="nav" aria-label="Navigation EXPLORE">
-      <a id="navCockpit" href="./cockpit.html">Mon espace</a>
-      <a id="navLieux" href="./lieux.html">Mes lieux</a>
-      <a id="navSubmit" href="./submit.html">Ajouter / éditer</a>
-      <a id="navClaw" class="active" href="./claw.html">Lecture utile</a>
-      <a id="navPinRescue" class="hidden" href="./pin.html">Retrouver mon accès</a>
+      <a id="navCockpit" href="./cockpit.html">Accueil</a>
+      <a id="navLieux" href="./lieux.html">Lieux</a>
+      <a id="navSubmit" href="./submit.html">Ajouter</a>
+      <a id="navClaw" class="active" href="./claw.html">Plus</a>
+      <a id="navPinRescue" class="hidden" href="./pin.html">Accès</a>
     </nav>
 
     <div id="status" class="status info">Préparation de la lecture…</div>
@@ -479,7 +565,7 @@
         <div class="badge" id="modeBadge">Lecture légère</div>
         <h1 id="heroTitle">Voir le terrain sans bruit.</h1>
         <p class="heroLead" id="heroLead">
-          Cette lecture relit l'identifiant actif, l'état d'entrée, le lieu chargé et te pousse l'action simple à faire maintenant.
+          Cette page relit l’identifiant actif, l’état d’entrée, le lieu chargé et la prochaine action utile.
         </p>
 
         <div class="pills" id="heroPills">
@@ -489,27 +575,34 @@
         <div class="actions">
           <button class="btn primary" id="btnCopyPrompt" type="button">Copier le résumé</button>
           <button class="btn info" id="btnRefresh" type="button">Recharger le contexte</button>
-          <a class="btn secondary" id="btnOpenCockpit" href="./cockpit.html">Ouvrir mon espace</a>
-          <a class="btn secondary" id="btnOpenSubmit" href="./submit.html">Éditer le lieu</a>
-          <a class="btn warn hidden" id="btnOpenPin" href="./pin.html">Retrouver mon accès</a>
+          <a class="btn secondary" id="btnOpenCockpit" href="./cockpit.html">Ouvrir l’accueil</a>
+          <a class="btn secondary" id="btnOpenSubmit" href="./submit.html">Ajouter / corriger</a>
+          <a class="btn warn hidden" id="btnOpenPin" href="./pin.html">Accès</a>
+        </div>
+
+        <div class="mobileFastRow">
+          <a id="fastHome" href="./cockpit.html">🏠 Accueil</a>
+          <a id="fastLieux" href="./lieux.html">📍 Lieux</a>
+          <a id="fastSubmit" href="./submit.html">➕ Ajouter</a>
+          <a id="fastNotes" href="./cockpit.html#quickExploreNote">✍️ Notes</a>
         </div>
       </article>
 
       <aside class="panel heroSide">
         <div class="miniStat">
-          <div class="miniLabel">Repère du lieu</div>
+          <div class="miniLabel">Identifiant</div>
           <div class="miniValue" id="heroSlug">—</div>
-          <div class="miniHint">Repère du lieu repris automatiquement pour garder une lecture continue.</div>
+          <div class="miniHint">Identifiant repris automatiquement pour garder une lecture continue.</div>
         </div>
 
         <div class="miniStat">
-          <div class="miniLabel">Lieu lu</div>
+          <div class="miniLabel">Lieu repéré</div>
           <div class="miniValue" id="heroPlace">—</div>
           <div class="miniHint">Nom public ou lecture la plus proche du lieu.</div>
         </div>
 
         <div class="miniStat">
-          <div class="miniLabel">État d'accès</div>
+          <div class="miniLabel">État d’accès</div>
           <div class="miniValue" id="heroAccess">—</div>
           <div class="miniHint" id="heroAccessHint">La lecture attend la confirmation d'entrée.</div>
         </div>
@@ -519,7 +612,7 @@
     <section class="grid">
       <article class="panel">
         <div class="cardBody">
-          <h2 class="sectionTitle">Lecture utile</h2>
+          <h2 class="sectionTitle">Plus</h2>
           <p class="sectionSub">Résumé direct du contexte réel, sans démo inutile.</p>
 
           <div class="box">
@@ -528,13 +621,13 @@
           </div>
 
           <div class="box">
-            <strong>Pills utiles</strong>
+            <strong>Repères utiles</strong>
             <span id="pillText">Les repères terrain vont apparaître ici.</span>
           </div>
 
           <div class="box">
             <strong>Navigation utile</strong>
-            <span id="linksText">Mon espace, les lieux, l'édition et l'entrée seront recousus ici avec le bon identifiant.</span>
+            <span id="linksText">Accueil, les lieux, l'édition et l'entrée seront recousus ici avec le bon identifiant.</span>
           </div>
 
           <div class="actions">
@@ -588,9 +681,20 @@
     </section>
 
     <div class="foot">
-      DIGIY EXPLORE • lecture utile • navigation propre • zéro backend inventé
+      DIGIY EXPLORE • plus • lecture utile • navigation propre
     </div>
   </div>
+
+
+  <nav class="bottomNav" aria-label="Navigation EXPLORE">
+    <div class="bottomNavInner">
+      <a id="bottomHome" href="./cockpit.html"><span class="ico">🏠</span><span>Accueil</span></a>
+      <a id="bottomLieux" href="./lieux.html"><span class="ico">📍</span><span>Lieux</span></a>
+      <a id="bottomSubmit" href="./submit.html"><span class="ico">➕</span><span>Ajouter</span></a>
+      <a id="bottomNotes" href="./cockpit.html#quickExploreNote"><span class="ico">✍️</span><span>Notes</span></a>
+      <a class="active" id="bottomMore" href="./claw.html"><span class="ico">⚙️</span><span>Plus</span></a>
+    </div>
+  </nav>
 
   <script>
     (() => {
@@ -634,7 +738,16 @@
         btnCockpitTop: $("btnCockpitTop"),
         btnLieuxTop: $("btnLieuxTop"),
         btnSubmitTop: $("btnSubmitTop"),
-        btnPinTop: $("btnPinTop")
+        btnPinTop: $("btnPinTop"),
+        fastHome: $("fastHome"),
+        fastLieux: $("fastLieux"),
+        fastSubmit: $("fastSubmit"),
+        fastNotes: $("fastNotes"),
+        bottomHome: $("bottomHome"),
+        bottomLieux: $("bottomLieux"),
+        bottomSubmit: $("bottomSubmit"),
+        bottomNotes: $("bottomNotes"),
+        bottomMore: $("bottomMore")
       };
 
       let CURRENT_CTX = null;
@@ -668,7 +781,7 @@
       function getUrlSeed(){
         const url = new URL(window.location.href);
         return {
-          slug: normalizeSlug(url.searchParams.get("slug")),
+          identifiant: normalizeSlug(url.searchParams.get("slug")),
           phone: normalizePhone(url.searchParams.get("phone"))
         };
       }
@@ -677,12 +790,12 @@
         try{
           const raw = localStorage.getItem(STORAGE_KEY);
           const parsed = safeJsonParse(raw);
-          if(!parsed) return { slug:"", phone:"" };
+          if(!parsed) return { identifiant:"", phone:"" };
           return {
-            slug: normalizeSlug(parsed.slug),
+            identifiant: normalizeSlug(parsed.slug),
             phone: normalizePhone(parsed.phone)
           };
-        }catch(_){ return { slug:"", phone:"" }; }
+        }catch(_){ return { identifiant:"", phone:"" }; }
       }
 
       function getGuardSeed(){
@@ -690,10 +803,10 @@
           const guard = window.DIGIY_GUARD || {};
           const state = guard.state || (typeof guard.getState === "function" ? guard.getState() : {}) || {};
           return {
-            slug: normalizeSlug(state.slug || state.current_slug || state.owner_slug || ""),
+            identifiant: normalizeSlug(state.slug || state.current_slug || state.owner_slug || ""),
             phone: normalizePhone(state.phone || state.owner_phone || "")
           };
-        }catch(_){ return { slug:"", phone:"" }; }
+        }catch(_){ return { identifiant:"", phone:"" }; }
       }
 
       function getSeedContext(){
@@ -701,14 +814,14 @@
         const fromGuard = getGuardSeed();
         const fromStore = getStoredSeed();
         return {
-          slug: normalizeSlug(fromUrl.slug || fromGuard.slug || fromStore.slug || ""),
+          identifiant: normalizeSlug(fromUrl.slug || fromGuard.slug || fromStore.slug || ""),
           phone: normalizePhone(fromUrl.phone || fromGuard.phone || fromStore.phone || "")
         };
       }
 
       function saveSeedContext(ctx){
         const payload = {
-          slug: normalizeSlug(ctx?.slug || ""),
+          identifiant: normalizeSlug(ctx?.slug || ""),
           phone: normalizePhone(ctx?.phone || ""),
           module: "EXPLORE",
           ts: Date.now()
@@ -729,7 +842,7 @@
       function computeLinks(slug, phone, provided){
         const cleanSlug = normalizeSlug(slug);
         const cleanPhone = normalizePhone(phone);
-        const q = buildQuery({ slug: cleanSlug, phone: cleanPhone });
+        const q = buildQuery({ identifiant: cleanSlug, phone: cleanPhone });
 
         const fallback = {
           cockpit: "./cockpit.html" + q,
@@ -789,6 +902,23 @@
         els.btnOpenCockpit.href = links.cockpit || "./cockpit.html";
         els.btnOpenSubmit.href = links.submit || "./submit.html";
         els.btnOpenPin.href = links.pin || "./pin.html";
+
+        const notesHref = (links.cockpit || "./cockpit.html") + "#quickExploreNote";
+        const map = {
+          fastHome: links.cockpit || "./cockpit.html",
+          fastLieux: links.lieux || "./lieux.html",
+          fastSubmit: links.submit || "./submit.html",
+          fastNotes: notesHref,
+          bottomHome: links.cockpit || "./cockpit.html",
+          bottomLieux: links.lieux || "./lieux.html",
+          bottomSubmit: links.submit || "./submit.html",
+          bottomNotes: notesHref,
+          bottomMore: links.claw || "./claw.html"
+        };
+
+        Object.entries(map).forEach(([key, href]) => {
+          if(els[key]) els[key].href = href;
+        });
       }
 
       function buildActionText(ctx){
@@ -802,7 +932,7 @@
       function renderPills(ctx){
         const pills = [
           `Module : ${ctx.module}`,
-          ctx.slug ? `Slug : ${ctx.slug}` : "Slug : non détecté",
+          ctx.slug ? `Identifiant : ${ctx.slug}` : "Identifiant : non détecté",
           ctx.phone ? `Téléphone : ${ctx.phone}` : "Téléphone : non détecté",
           ctx.city ? `Ville : ${ctx.city}` : "",
           ctx.zone ? `Zone : ${ctx.zone}` : "",
@@ -869,8 +999,8 @@
         }
 
         els.linksText.textContent = [
-          "Mon espace", "Mes lieux", "Ajouter / éditer",
-          !ctx.access_ok ? "Retrouver mon accès" : ""
+          "Accueil", "Lieux", "Ajouter",
+          !ctx.access_ok ? "Accès" : ""
         ].filter(Boolean).join(" • ");
 
         refreshPrompt();
@@ -878,7 +1008,7 @@
 
       function buildFallbackPrompt(kind, ctx){
         const title = ctx.business_name || "Lieu non identifié";
-        const slug = ctx.slug || "slug-missing";
+        const slug = ctx.slug || "identifiant-manquant";
         const city = ctx.city || "ville non précisée";
         const zone = ctx.zone || "zone non précisée";
         const activity = ctx.activity || "catégorie non précisée";
@@ -887,7 +1017,7 @@
 
         const common = [
           "Contexte DIGIY EXPLORE",
-          `slug: ${slug}`,
+          `identifiant: ${slug}`,
           `phone: ${ctx.phone || "non détecté"}`,
           `lieu: ${title}`,
           `ville: ${city}`,
