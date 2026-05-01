@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
   <meta name="theme-color" content="#06130f"/>
   <meta name="description" content="Retrouve tes lieux, ta visibilité et la prochaine bonne action sans détour."/>
-  <title>Je fais découvrir mon lieu — Mon espace</title>
+  <title>Je fais découvrir mon lieu — Accueil</title>
 
   <script>
     window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
@@ -64,7 +64,7 @@
     .wrap{
       width:min(100%, 1240px);
       margin:0 auto;
-      padding:18px 14px 42px;
+      padding:18px 14px calc(104px + env(safe-area-inset-bottom,0px));
     }
 
     .topbar{
@@ -854,6 +854,88 @@
       text-decoration:none;
     }
 
+
+    #quickExploreNote, #placesBox, #mainPlaceName{scroll-margin-top:96px}
+
+    .bottomNav{
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:0;
+      z-index:99990;
+      padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));
+      background:rgba(6,19,15,.94);
+      border-top:1px solid rgba(255,255,255,.10);
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
+    }
+
+    .bottomNavInner{
+      width:min(100%,760px);
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:6px;
+    }
+
+    .bottomNav a{
+      min-height:58px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      align-content:center;
+      gap:3px;
+      color:rgba(248,250,252,.70);
+      font-size:11px;
+      font-weight:950;
+      text-align:center;
+      border:1px solid transparent;
+      text-decoration:none;
+    }
+
+    .bottomNav .ico{font-size:18px;line-height:1}
+
+    .bottomNav a.active{
+      color:#13200d;
+      background:linear-gradient(135deg,var(--gold),var(--gold2));
+      border-color:rgba(212,175,55,.30);
+      box-shadow:0 12px 26px rgba(212,175,55,.18);
+    }
+
+    .mobileFastRow{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .mobileFastRow a{
+      min-height:46px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.05);
+      color:var(--ink);
+      text-decoration:none;
+      font-weight:950;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:10px 12px;
+    }
+
+    .mobileFastRow a.primary{
+      background:linear-gradient(90deg,var(--gold),var(--gold2));
+      color:#13200d;
+      border:none;
+    }
+
+    @media (max-width:640px){
+      .mobileFastRow{grid-template-columns:1fr 1fr}
+      .nav{display:none}
+      .topActions{display:none}
+    }
+
     .hidden{display:none !important}
 
     .foot{
@@ -874,7 +956,7 @@
     }
 
     @media (max-width:640px){
-      .wrap{padding:14px 12px 34px}
+      .wrap{padding:14px 12px calc(104px + env(safe-area-inset-bottom,0px))}
       .topbar{flex-direction:column}
       .topActions{width:100%;justify-content:flex-start}
       .heroMain,.heroSide,.cardBody,.clawCard{padding:18px}
@@ -888,27 +970,27 @@
       <div class="brand">
         <img class="logo" src="https://digiylyfe.net/wp-content/uploads/2026/03/digiylyfe_logo_qr.jpeg" alt="Logo DIGIYLYFE"/>
         <div class="brandText">
-          <div class="kicker">DIGIYLYFE — Repères d'activité</div>
-          <div class="title">Je fais découvrir mon lieu • Mon espace</div>
-          <div class="sub" id="subline">Lecture simple de tes lieux, de leur visibilité et de la prochaine action utile.</div>
+          <div class="kicker">DIGIYLYFE — Découverte locale</div>
+          <div class="title">Je fais découvrir mon lieu • Accueil</div>
+          <div class="sub" id="subline">Lieux, ajout, notes, visibilité et prochaine action utile.</div>
         </div>
       </div>
 
       <div class="topActions">
-        <a class="btn primary" id="btnAccessTop" href="./submit.html">+ Ajouter un lieu</a>
-        <a class="btn secondary hidden" id="btnLieuxTop" href="./lieux.html">Mes lieux</a>
-        <a class="btn secondary hidden" id="btnSubmitTop" href="./submit.html">Ajouter / éditer</a>
-        <a class="btn info hidden" id="btnClawTop" href="./claw.html">Lecture utile</a>
-        <a class="btn warn hidden" id="btnPinTop" href="./pin.html">Retrouver mon accès</a>
+        <a class="btn primary" id="btnAccessTop" href="./submit.html">Ajouter</a>
+        <a class="btn secondary hidden" id="btnLieuxTop" href="./lieux.html">Lieux</a>
+        <a class="btn secondary hidden" id="btnSubmitTop" href="./submit.html">Ajouter</a>
+        <a class="btn info hidden" id="btnClawTop" href="./claw.html">Plus</a>
+        <a class="btn warn hidden" id="btnPinTop" href="./pin.html">Accès</a>
       </div>
     </header>
 
     <nav class="nav" aria-label="Navigation EXPLORE">
-      <a id="navCockpit" class="active" href="./cockpit.html">Ma gestion</a>
-      <a id="navLieux" href="./lieux.html">Mes lieux</a>
-      <a id="navSubmit" href="./submit.html">Ajouter / éditer</a>
-      <a id="navClaw" href="./claw.html">Lecture utile</a>
-      <a id="navPinRescue" class="hidden" href="./pin.html">Retrouver mon accès</a>
+      <a id="navCockpit" class="active" href="./cockpit.html">Accueil</a>
+      <a id="navLieux" href="./lieux.html">Lieux</a>
+      <a id="navSubmit" href="./submit.html">Ajouter</a>
+      <a id="navClaw" href="./claw.html">Plus</a>
+      <a id="navPinRescue" class="hidden" href="./pin.html">Accès</a>
     </nav>
 
     <div id="status" class="status info">Préparation de ton espace…</div>
@@ -927,9 +1009,16 @@
 
         <div class="heroActions">
           <a class="btn primary" id="btnPrimaryAction" href="./submit.html">Ajouter un lieu</a>
-          <a class="btn secondary" id="btnOpenLieux" href="./lieux.html">Mes lieux</a>
+          <a class="btn secondary" id="btnOpenLieux" href="./lieux.html">Lieux</a>
           <a class="btn secondary hidden" id="btnOpenClaw" href="./claw.html">Ouvrir la lecture utile</a>
-          <a class="btn warn hidden" id="btnOpenPin" href="./pin.html">Retrouver mon accès</a>
+          <a class="btn warn hidden" id="btnOpenPin" href="./pin.html">Accès</a>
+        </div>
+
+        <div class="mobileFastRow">
+          <a class="primary" id="fastHome" href="./cockpit.html">🏠 Accueil</a>
+          <a id="fastLieux" href="./lieux.html">📍 Lieux</a>
+          <a id="fastSubmit" href="./submit.html">➕ Ajouter</a>
+          <a id="fastNotes" href="#quickExploreNote">✍️ Notes</a>
         </div>
       </article>
 
@@ -947,7 +1036,7 @@
         </div>
 
         <div class="miniStat">
-          <div class="miniLabel">Lieu principal</div>
+          <div class="miniLabel">Lieu à suivre</div>
           <div class="miniValue" id="heroPlace">—</div>
           <div class="miniHint">Le lieu lu par l’identifiant ou la première fiche remontée.</div>
         </div>
@@ -978,12 +1067,12 @@
       <div class="cardBody">
         <div class="quickExploreHead">
           <div>
-            <h2>Note rapide activité</h2>
+            <h2>Notes rapides</h2>
             <div class="quickExploreLead">
               Écris comme tu parles. DIGIY prépare la trace, puis tu l’envoies vers <b>Mon argent</b> quand c’est bon.
             </div>
           </div>
-          <div class="quickTag">EXPLORE → PAY</div>
+          <div class="quickTag">EXPLORE → Mon argent</div>
         </div>
 
         <div class="quickGuide">
@@ -1026,8 +1115,8 @@
     <section class="layout">
       <article class="panel">
         <div class="cardBody">
-          <h2 class="sectionTitle">Lieu principal</h2>
-          <p class="sectionSub">Cet espace met en avant le lieu lu par l’identifiant, sinon la première fiche active du téléphone.</p>
+          <h2 class="sectionTitle">Lieu à suivre</h2>
+          <p class="sectionSub">Cet espace met en avant le lieu lu par l’identifiant ou la première fiche active du téléphone.</p>
 
           <div class="box">
             <strong id="mainPlaceName">Aucun lieu lu</strong>
@@ -1035,7 +1124,7 @@
           </div>
 
           <div class="box">
-            <strong>Navigation utile</strong>
+            <strong>Circulation utile</strong>
             <span id="linksText">Ton espace recoud tes lieux, l’édition et l’analyse sur le même contexte. Le code reste un secours seulement.</span>
           </div>
 
@@ -1045,7 +1134,7 @@
             <a class="btn info" id="btnClawCurrent" href="./claw.html">Ouvrir la lecture utile</a>
           </div>
 
-          <h2 class="sectionTitle">Mes lieux</h2>
+          <h2 class="sectionTitle">Lieux</h2>
           <p class="sectionSub">Lecture directe des lieux rattachés au téléphone actif.</p>
 
           <div class="places" id="placesBox">
@@ -1057,7 +1146,7 @@
       <aside>
         <section class="panel">
           <div class="cardBody">
-            <h2 class="sectionTitle">Repères utiles</h2>
+            <h2 class="sectionTitle">Repères terrain</h2>
             <p class="sectionSub">L’espace lit le terrain et pousse la prochaine action logique.</p>
 
             <div class="box">
@@ -1092,7 +1181,7 @@
             <div class="clawHead">
               <div>
                 <div class="clawKicker">Lecture terrain</div>
-                <h2 class="clawTitle">Lecture légère de ton espace</h2>
+                <h2 class="clawTitle">Lecture de ton espace</h2>
               </div>
               <div class="clawMode" id="clawMode">Analyse légère</div>
             </div>
@@ -1117,9 +1206,20 @@
     </section>
 
     <div class="foot">
-      DIGIY EXPLORE • mon espace • lecture simple • analyse recousue
+      DIGIY EXPLORE • accueil • lieux • notes • visibilité
     </div>
   </div>
+
+
+  <nav class="bottomNav" aria-label="Navigation EXPLORE">
+    <div class="bottomNavInner">
+      <a class="active" id="bottomHome" href="./cockpit.html"><span class="ico">🏠</span><span>Accueil</span></a>
+      <a id="bottomLieux" href="./lieux.html"><span class="ico">📍</span><span>Lieux</span></a>
+      <a id="bottomSubmit" href="./submit.html"><span class="ico">➕</span><span>Ajouter</span></a>
+      <a id="bottomNotes" href="#quickExploreNote"><span class="ico">✍️</span><span>Notes</span></a>
+      <a id="bottomMore" href="./claw.html"><span class="ico">⚙️</span><span>Plus</span></a>
+    </div>
+  </nav>
 
   <script>
     (() => {
@@ -1346,14 +1446,14 @@
         setClaw(
           "Chargement",
           "L’analyse attend le guard, le téléphone actif et le lieu principal pour pousser la prochaine action utile.",
-          ["Espace : EXPLORE", "Ma gestion", "Chargement en cours"],
+          ["Espace : EXPLORE", "Accueil", "Chargement en cours"],
           [
             {
               title:"Lecture de l’espace",
               text:"L’écran doit rester simple : accès, lieux, visibilité et direction utile."
             },
             {
-              title:"Navigation utile",
+              title:"Circulation utile",
               text:"Tes lieux, l’édition et l’analyse doivent suivre le même contexte. Le code reste un secours."
             }
           ]
@@ -1367,7 +1467,7 @@
           [
             CURRENT_SLUG ? `Identifiant : ${CURRENT_SLUG}` : "Identifiant absent",
             CURRENT_PHONE ? `Téléphone : ${CURRENT_PHONE}` : "Téléphone absent",
-            "Retrouver mon accès"
+            "Accès"
           ],
           [
             {
@@ -1402,14 +1502,14 @@
             {
               title:"Action utile",
               text: !place
-                ? "Ajoute un lieu ou ouvre Mes lieux pour enrichir ton espace."
+                ? "Ajoute un lieu ou ouvre Lieux pour enrichir ton espace."
                 : isPublished(place)
-                  ? "Passe par Analyse ou Ajouter / éditer pour affiner la micro-copy et la lecture."
+                  ? "Passe par Analyse ou Ajouter pour affiner la micro-copy et la lecture."
                   : "Le cran logique est la vérification puis la publication du lieu."
             },
             {
               title:"Navigation interne",
-              text:"Tu peux circuler entre Ma gestion, Mes lieux, Ajouter / éditer et Analyse tant que la session tient."
+              text:"Tu peux circuler entre Accueil, Lieux, Ajouter et Analyse tant que la session tient."
             }
           ]
         );
@@ -1447,6 +1547,26 @@
         $("btnOpenLieux").href = lieuxHref;
         $("btnOpenClaw").href = clawHref;
         $("btnOpenPin").href = pinHref;
+
+        const links = {
+          fastHome: cockpitHref,
+          fastLieux: lieuxHref,
+          fastSubmit: submitHref,
+          bottomHome: cockpitHref,
+          bottomLieux: lieuxHref,
+          bottomSubmit: submitHref,
+          bottomMore: clawHref
+        };
+
+        Object.entries(links).forEach(([id, href]) => {
+          const el = $(id);
+          if(el) el.href = href;
+        });
+
+        const fastNotes = $("fastNotes");
+        const bottomNotes = $("bottomNotes");
+        if(fastNotes) fastNotes.href = "#quickExploreNote";
+        if(bottomNotes) bottomNotes.href = "#quickExploreNote";
       }
 
       async function resolveGuardState(){
@@ -1588,7 +1708,7 @@
       function renderMainPlace(place){
         if(!place){
           $("mainPlaceName").textContent = "Aucun lieu lu";
-          $("mainPlaceText").textContent = "L’espace n’a pas trouvé de fiche principale. Passe par Ajouter / éditer ou relis Mes lieux.";
+          $("mainPlaceText").textContent = "L’espace n’a pas trouvé de fiche principale. Passe par Ajouter ou relis Lieux.";
           $("boxCity").textContent = "—";
           $("boxZone").textContent = "—";
           $("boxCategory").textContent = "—";
@@ -1630,7 +1750,7 @@
         if(!rows.length){
           box.innerHTML = `
             <div class="empty">
-              Aucun lieu n’est remonté pour le téléphone actif. Passe par <strong>Ajouter / éditer</strong> pour poser une première fiche.
+              Aucun lieu n’est remonté pour le téléphone actif. Passe par <strong>Ajouter</strong> pour poser une première fiche.
             </div>
           `;
           return;
@@ -1736,15 +1856,17 @@
         qsPay.set("direction", item?.direction === "in" ? "in" : "out");
         qsPay.set("scope", "pro");
         qsPay.set("amount", String(Math.round(Number(item?.amount_xof || 0))));
+        qsPay.set("amount_xof", String(Math.round(Number(item?.amount_xof || 0))));
         qsPay.set("kind", item?.kind || (item?.direction === "in" ? "sale" : "expense"));
         qsPay.set("channel", item?.channel && item.channel !== "manual" ? String(item.channel) : "other");
         qsPay.set("category", item?.category || "explore_note");
         qsPay.set("source_module", "EXPLORE");
+        if(CURRENT_SLUG) qsPay.set("source_slug", CURRENT_SLUG);
         qsPay.set("source_id", String(item?.memory_id || item?.created_at || "explore_quick_note"));
         qsPay.set("label", payExploreLabel(item));
         qsPay.set("note", String(item?.sentence || "").trim());
         qsPay.set("complement", String(item?.complement || "").trim());
-        qsPay.set("intent", "explore_quick_note");
+        qsPay.set("intent", "quick_note");
 
         return "https://pro-pay.digiylyfe.com/admin.html?" + qsPay.toString();
       }
@@ -1757,27 +1879,27 @@
         const amount = amountMatch ? Number(String(amountMatch[1]).replace(/[^\d]/g, "")) : 0;
 
         const lower = raw.toLowerCase();
-        let channel = "manual";
+        let channel = "other";
         if(/\bwave\b/.test(lower)) channel = "wave";
         else if(/\bcash\b|\besp[eè]ces?\b|\bliquide\b/.test(lower)) channel = "cash";
         else if(/\bom\b|orange\s*money/.test(lower)) channel = "orange_money";
 
         let direction = "in";
         let kind = "sale";
-        let category = "explore_income";
+        let category = "visit_income";
         let title = "Recette EXPLORE";
 
         if(/guide|pay[eé]|payer|transport|taxi|carburant|affiche|pub|d[eé]pense|achat|commission|mat[eé]riel|frais/.test(lower)){
           direction = "out";
           kind = "expense";
-          category = "explore_expense";
+          category = "content_expense";
           title = "Dépense EXPLORE";
         }
 
         if(/avance|acompte|r[eè]glement|visite|excursion|sortie|tour|client|ticket|entr[eé]e|r[eé]servation/.test(lower)){
           direction = "in";
           kind = "sale";
-          category = "explore_sale";
+          category = "visit_income";
           title = "Recette EXPLORE";
         }
 
@@ -1789,12 +1911,12 @@
         }else if(/transport|taxi|carburant/.test(lower)){
           direction = "out";
           kind = "expense";
-          category = "transport_expense";
+          category = "scouting_transport";
           title = "Transport payé";
         }else if(/affiche|pub|publicit[eé]|flyer/.test(lower)){
           direction = "out";
           kind = "expense";
-          category = "marketing_expense";
+          category = "content_expense";
           title = "Communication payée";
         }else if(/avance|acompte/.test(lower)){
           direction = "in";
@@ -1840,7 +1962,7 @@
         }
 
         const amountText = draft.amount_xof ? quickMoney(draft.amount_xof) : "montant à préciser";
-        const channelText = draft.channel === "manual" ? "canal à préciser" : draft.channel;
+        const channelText = draft.channel === "other" ? "canal à préciser" : draft.channel;
         const payUrl = buildPayFromExploreUrl({
           ...draft,
           memory_id: draft.memory_id || "explore_draft_" + Date.now()
@@ -1888,7 +2010,7 @@
 
         box.innerHTML = list.map(item => {
           const amount = item.amount_xof ? quickMoney(item.amount_xof) : "montant à préciser";
-          const channel = item.channel && item.channel !== "manual" ? item.channel : "canal à préciser";
+          const channel = item.channel && item.channel !== "other" ? item.channel : "canal à préciser";
           const payUrl = buildPayFromExploreUrl(item);
           return `
             <div class="memoryItem">
