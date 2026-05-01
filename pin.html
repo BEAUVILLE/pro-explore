@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Je fais découvrir mon lieu — Mon accès</title>
+  <title>Je fais découvrir mon lieu — Accès</title>
   <meta name="theme-color" content="#06130f" />
   <meta
     name="description"
@@ -56,7 +56,7 @@
     .wrap{
       width:min(100%, 1180px);
       margin:0 auto;
-      padding:24px 16px 48px;
+      padding:24px 16px calc(104px + env(safe-area-inset-bottom,0px));
     }
 
     .topbar{
@@ -452,6 +452,78 @@
       color:#d8f2ff;
     }
 
+
+    .bottomNav{
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:0;
+      z-index:99990;
+      padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));
+      background:rgba(6,19,15,.94);
+      border-top:1px solid rgba(255,255,255,.10);
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
+    }
+
+    .bottomNavInner{
+      width:min(100%,760px);
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:6px;
+    }
+
+    .bottomNav a{
+      min-height:58px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      align-content:center;
+      gap:3px;
+      color:rgba(248,250,252,.70);
+      font-size:11px;
+      font-weight:950;
+      text-align:center;
+      border:1px solid transparent;
+      text-decoration:none;
+    }
+
+    .bottomNav .ico{font-size:18px;line-height:1}
+
+    .bottomNav a.active{
+      color:#13200d;
+      background:linear-gradient(135deg,var(--gold),var(--gold2));
+      border-color:rgba(212,175,55,.30);
+      box-shadow:0 12px 26px rgba(212,175,55,.18);
+    }
+
+    .fastLinks{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:10px;
+      margin-top:12px;
+    }
+
+    .fastLinks a{
+      min-height:42px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.05);
+      color:var(--ink);
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      font-size:.86rem;
+      font-weight:900;
+      padding:9px 10px;
+    }
+
+    @media(max-width:560px){
+      .fastLinks{grid-template-columns:1fr 1fr}
+    }
+
     .hidden{display:none !important}
 
     .foot{
@@ -489,7 +561,7 @@
     }
 
     @media (max-width: 560px){
-      .wrap{padding:16px 12px 36px}
+      .wrap{padding:16px 12px calc(104px + env(safe-area-inset-bottom,0px))}
       .heroCard,.sessionCard{padding:18px}
       .pinRow{grid-template-columns:1fr}
       .topbar{align-items:flex-start;flex-direction:column}
@@ -509,22 +581,22 @@
         </div>
         <div class="brandText">
           <div class="kicker">DIGIYLYFE</div>
-          <div class="title">Je fais découvrir mon lieu • Mon accès</div>
+          <div class="title">Je fais découvrir mon lieu • Accès</div>
         </div>
       </div>
 
       <div class="topActions">
-        <a class="topBtn hidden" id="btnCockpitTop" href="./cockpit.html">Ma gestion</a>
-        <a class="topBtn hidden" id="btnLieuxTop" href="./lieux.html">Mes lieux</a>
-        <a class="topBtn hidden" id="btnSubmitTop" href="./submit.html">Ajouter un lieu</a>
-        <a class="topBtn info hidden" id="btnClawTop" href="./claw.html">Analyse</a>
+        <a class="topBtn hidden" id="btnCockpitTop" href="./cockpit.html">Accueil</a>
+        <a class="topBtn hidden" id="btnLieuxTop" href="./lieux.html">Lieux</a>
+        <a class="topBtn hidden" id="btnSubmitTop" href="./submit.html">Ajouter</a>
+        <a class="topBtn info hidden" id="btnClawTop" href="./claw.html">Plus</a>
       </div>
     </div>
 
     <section class="hero">
       <article class="panel heroCard">
         <div class="eyebrow">Accès sécurisé</div>
-        <h1>Entre et reprends ton travail.</h1>
+        <h1>Entre et reprends ton espace.</h1>
         <p class="lead">
           Cette page t’aide à entrer vite dans ton espace. Tu poses ton numéro, ton code,
           puis tu repars directement vers la bonne page pour continuer sans tourner en rond.
@@ -541,26 +613,33 @@
           </div>
           <div class="bullet">
             <span class="dot"></span>
-            <span>Tu peux reprendre ta gestion, voir tes lieux, ajouter un lieu ou ouvrir l’analyse.</span>
+            <span>Tu peux reprendre l’accueil, voir tes lieux, ajouter un lieu ou ouvrir Plus.</span>
           </div>
         </div>
 
         <div class="railBox">
           <strong>Après l’entrée</strong>
-          <span id="targetText">Ma gestion</span>
+          <span id="targetText">Accueil</span>
         </div>
 
         <div class="links">
-          <a class="linkBtn" id="linkDefaultCockpit" href="./cockpit.html">Ma gestion</a>
-          <a class="linkBtn" id="linkDefaultLieux" href="./lieux.html">Mes lieux</a>
-          <a class="linkBtn" id="linkDefaultSubmit" href="./submit.html">Ajouter un lieu</a>
-          <a class="linkBtn" id="linkDefaultClaw" href="./claw.html">Analyse</a>
+          <a class="linkBtn" id="linkDefaultCockpit" href="./cockpit.html">Accueil</a>
+          <a class="linkBtn" id="linkDefaultLieux" href="./lieux.html">Lieux</a>
+          <a class="linkBtn" id="linkDefaultSubmit" href="./submit.html">Ajouter</a>
+          <a class="linkBtn" id="linkDefaultClaw" href="./claw.html">Plus</a>
+        </div>
+
+        <div class="fastLinks">
+          <a id="fastHome" href="./cockpit.html">🏠 Accueil</a>
+          <a id="fastLieux" href="./lieux.html">📍 Lieux</a>
+          <a id="fastSubmit" href="./submit.html">➕ Ajouter</a>
+          <a id="fastNotes" href="./cockpit.html#quickExploreNote">✍️ Notes</a>
         </div>
       </article>
 
       <aside class="panel sessionCard">
         <div class="pinHead">
-          <h2 class="pinTitle">Entrer dans mon espace</h2>
+          <h2 class="pinTitle">Entrer dans EXPLORE</h2>
           <div class="badge">Accès</div>
         </div>
 
@@ -606,16 +685,16 @@
             <label class="label" for="nextSelect">Aller ensuite vers</label>
             <div class="inputWrap">
               <select id="nextSelect" class="input">
-                <option value="cockpit">Ma gestion</option>
-                <option value="lieux">Mes lieux</option>
-                <option value="submit">Ajouter un lieu</option>
-                <option value="claw">Analyse</option>
+                <option value="cockpit">Accueil</option>
+                <option value="lieux">Lieux</option>
+                <option value="submit">Ajouter</option>
+                <option value="claw">Plus</option>
               </select>
             </div>
           </div>
 
           <div class="actions">
-            <button id="submitBtn" class="mainBtn" type="submit">Entrer dans mon espace</button>
+            <button id="submitBtn" class="mainBtn" type="submit">Entrer dans EXPLORE</button>
             <div id="msg" class="msg info">Entre ton numéro et ton code.</div>
             <div class="mini">
               Ton accès est vérifié, puis tu es envoyé vers la bonne page.
@@ -632,21 +711,32 @@
             Une session existe déjà sur cet appareil.
           </div>
           <div class="sessionLinks">
-            <a class="sessionLink" id="sessionCockpit" href="./cockpit.html">Ma gestion</a>
-            <a class="sessionLink" id="sessionLieux" href="./lieux.html">Mes lieux</a>
-            <a class="sessionLink" id="sessionSubmit" href="./submit.html">Ajouter un lieu</a>
-            <a class="sessionLink info" id="sessionClaw" href="./claw.html">Analyse</a>
+            <a class="sessionLink" id="sessionCockpit" href="./cockpit.html">Accueil</a>
+            <a class="sessionLink" id="sessionLieux" href="./lieux.html">Lieux</a>
+            <a class="sessionLink" id="sessionSubmit" href="./submit.html">Ajouter</a>
+            <a class="sessionLink info" id="sessionClaw" href="./claw.html">Plus</a>
           </div>
         </div>
 
         <div class="foot">
           <div>Une fois entré, tu peux circuler librement entre les pages principales.</div>
           <div>Si ton accès tombe, reviens ici pour le rouvrir rapidement.</div>
-          <div>Ouverture prévue : <strong id="footTarget">Ma gestion</strong></div>
+          <div>Ouverture prévue : <strong id="footTarget">Accueil</strong></div>
         </div>
       </aside>
     </section>
   </div>
+
+
+  <nav class="bottomNav" aria-label="Navigation EXPLORE">
+    <div class="bottomNavInner">
+      <a id="bottomHome" href="./cockpit.html"><span class="ico">🏠</span><span>Accueil</span></a>
+      <a id="bottomLieux" href="./lieux.html"><span class="ico">📍</span><span>Lieux</span></a>
+      <a id="bottomSubmit" href="./submit.html"><span class="ico">➕</span><span>Ajouter</span></a>
+      <a id="bottomNotes" href="./cockpit.html#quickExploreNote"><span class="ico">✍️</span><span>Notes</span></a>
+      <a class="active" id="bottomMore" href="./pin.html"><span class="ico">🔐</span><span>Accès</span></a>
+    </div>
+  </nav>
 
   <script>
     (function(){
@@ -719,7 +809,7 @@
         pinInput.disabled = !!busy;
         togglePinBtn.disabled = !!busy;
         nextSelect.disabled = !!busy;
-        submitBtn.textContent = busy ? "Ouverture..." : "Entrer dans mon espace";
+        submitBtn.textContent = busy ? "Ouverture..." : "Entrer dans EXPLORE";
       }
 
       function digiyRpcLooksOk(data){
@@ -774,10 +864,10 @@
       }
 
       function routeLabel(route){
-        if(route === "lieux") return "Mes lieux";
-        if(route === "submit") return "Ajouter un lieu";
-        if(route === "claw") return "Analyse";
-        return "Ma gestion";
+        if(route === "lieux") return "Lieux";
+        if(route === "submit") return "Ajouter";
+        if(route === "claw") return "Plus";
+        return "Accueil";
       }
 
       function buildQuery(phone, slug){
@@ -824,6 +914,24 @@
         $("linkDefaultLieux").href = buildInternalHref("lieux", phone, slug);
         $("linkDefaultSubmit").href = buildInternalHref("submit", phone, slug);
         $("linkDefaultClaw").href = buildInternalHref("claw", phone, slug);
+
+        const notesHref = buildInternalHref("cockpit", phone, slug) + "#quickExploreNote";
+        const mobileLinks = {
+          fastHome: buildInternalHref("cockpit", phone, slug),
+          fastLieux: buildInternalHref("lieux", phone, slug),
+          fastSubmit: buildInternalHref("submit", phone, slug),
+          fastNotes: notesHref,
+          bottomHome: buildInternalHref("cockpit", phone, slug),
+          bottomLieux: buildInternalHref("lieux", phone, slug),
+          bottomSubmit: buildInternalHref("submit", phone, slug),
+          bottomNotes: notesHref,
+          bottomMore: "./pin.html" + buildQuery(phone, slug)
+        };
+
+        Object.entries(mobileLinks).forEach(function(pair){
+          const node = document.getElementById(pair[0]);
+          if(node) node.href = pair[1];
+        });
       }
 
       function setSessionVisibility(show){
@@ -1001,7 +1109,7 @@
         }
 
         if(!pin || pin.length < 4){
-          setMsg("Entre un PIN valide.", "bad");
+          setMsg("Entre un code valide.", "bad");
           pinInput.focus();
           return;
         }
@@ -1013,7 +1121,7 @@
           const result = await verifyAccess(phone, pin);
 
           if(!result || result.ok !== true){
-            setMsg("Accès refusé. Vérifie ton numéro ou ton PIN.", "bad");
+            setMsg("Accès refusé. Vérifie ton numéro ou ton code.", "bad");
             setBusy(false);
             return;
           }
@@ -1057,7 +1165,7 @@
           setMsg("Une session active existe déjà sur cet appareil.", "warn");
         }else{
           setSessionVisibility(false);
-          setMsg("Entre ton numéro et ton PIN.", "info");
+          setMsg("Entre ton numéro et ton code.", "info");
         }
       })();
     })();
