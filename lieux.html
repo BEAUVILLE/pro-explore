@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Je fais découvrir mes lieux — Mes lieux</title>
+  <title>Je fais découvrir mon lieu — Lieux</title>
   <meta name="theme-color" content="#06130f" />
   <meta
     name="description"
@@ -58,7 +58,7 @@
     .wrap{
       width:min(100%, 1240px);
       margin:0 auto;
-      padding:18px 14px 42px;
+      padding:18px 14px calc(104px + env(safe-area-inset-bottom,0px));
     }
 
     .topbar{
@@ -641,6 +641,88 @@
       font-size:14px;
     }
 
+
+    #list, #quickExploreNote{scroll-margin-top:96px}
+
+    .bottomNav{
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:0;
+      z-index:99990;
+      padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));
+      background:rgba(6,19,15,.94);
+      border-top:1px solid rgba(255,255,255,.10);
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
+    }
+
+    .bottomNavInner{
+      width:min(100%,760px);
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:6px;
+    }
+
+    .bottomNav a{
+      min-height:58px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      align-content:center;
+      gap:3px;
+      color:rgba(248,250,252,.70);
+      font-size:11px;
+      font-weight:950;
+      text-align:center;
+      border:1px solid transparent;
+      text-decoration:none;
+    }
+
+    .bottomNav .ico{font-size:18px;line-height:1}
+
+    .bottomNav a.active{
+      color:#13200d;
+      background:linear-gradient(135deg,var(--gold),var(--gold2));
+      border-color:rgba(212,175,55,.30);
+      box-shadow:0 12px 26px rgba(212,175,55,.18);
+    }
+
+    .mobileFastRow{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .mobileFastRow a{
+      min-height:46px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.05);
+      color:var(--ink);
+      text-decoration:none;
+      font-weight:950;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:10px 12px;
+    }
+
+    .mobileFastRow a.primary{
+      background:linear-gradient(90deg,var(--gold),var(--gold2));
+      color:#13200d;
+      border:none;
+    }
+
+    @media (max-width:640px){
+      .mobileFastRow{grid-template-columns:1fr 1fr}
+      .nav{display:none}
+      .topActions{display:none}
+    }
+
     .hidden{display:none !important}
 
 
@@ -726,7 +808,7 @@
     }
 
     @media (max-width: 640px){
-      .wrap{padding:14px 12px 34px}
+      .wrap{padding:14px 12px calc(104px + env(safe-area-inset-bottom,0px))}
       .topbar{flex-direction:column}
       .topActions{width:100%;justify-content:flex-start}
       .heroMain,.heroSide,.clawCard{padding:18px}
@@ -750,7 +832,7 @@
         <img class="logo" src="https://digiylyfe.net/wp-content/uploads/2026/03/digiylyfe_logo_qr.jpeg" alt="Logo DIGIYLYFE"/>
         <div class="brandText">
           <div class="kicker">JE FAIS DÉCOUVRIR MON LIEU</div>
-          <div class="title">Mes lieux</div>
+          <div class="title">Lieux</div>
           <div class="sub" id="subline">Voir, corriger, publier. Le reste reste rangé.</div>
         </div>
       </div>
@@ -758,9 +840,9 @@
       <div class="topActions">
         <a class="btn primary" id="btnSubmitTop" href="./submit.html">+ Ajouter</a>
         <a class="btn ghost hidden" id="btnAccessTop" href="./submit.html">+ Ajouter</a>
-        <a class="btn secondary hidden" id="btnCockpitTop" href="./cockpit.html">Ma gestion</a>
-        <a class="btn info hidden" id="btnClawTop" href="./claw.html">Aide DIGIY</a>
-        <a class="btn warn hidden" id="btnPinTop" href="./pin.html">Retrouver mon accès</a>
+        <a class="btn secondary hidden" id="btnCockpitTop" href="./cockpit.html">Accueil</a>
+        <a class="btn info hidden" id="btnClawTop" href="./claw.html">Plus</a>
+        <a class="btn warn hidden" id="btnPinTop" href="./pin.html">Accès</a>
       </div>
     </header>
 
@@ -773,10 +855,17 @@
         </p>
 
         <div class="heroActions">
-          <a class="btn primary" id="btnHeroSubmit" href="./submit.html">Ajouter / corriger</a>
-          <a class="btn secondary" id="btnHeroCockpit" href="./cockpit.html">Ma gestion</a>
+          <a class="btn primary" id="btnHeroSubmit" href="./submit.html">Ajouter</a>
+          <a class="btn secondary" id="btnHeroCockpit" href="./cockpit.html">Accueil</a>
           <a class="btn info hidden" id="btnHeroClaw" href="./claw.html">Ouvrir la lecture utile</a>
-          <a class="btn warn hidden" id="btnHeroPin" href="./pin.html">Retrouver mon accès</a>
+          <a class="btn warn hidden" id="btnHeroPin" href="./pin.html">Accès</a>
+        </div>
+
+        <div class="mobileFastRow">
+          <a id="fastHome" href="./cockpit.html">🏠 Accueil</a>
+          <a class="primary" id="fastLieux" href="./lieux.html">📍 Lieux</a>
+          <a id="fastSubmit" href="./submit.html">➕ Ajouter</a>
+          <a id="fastNotes" href="./cockpit.html#quickExploreNote">✍️ Notes</a>
         </div>
       </article>
 
@@ -802,11 +891,11 @@
     </section>
 
     <nav class="nav" aria-label="Navigation EXPLORE">
-      <a id="navCockpit" href="./cockpit.html">Ma gestion</a>
-      <a id="navLieux" class="active" href="./lieux.html">Mes lieux</a>
-      <a id="navSubmit" href="./submit.html">Ajouter / corriger</a>
-      <a id="navClaw" href="./claw.html">Aide DIGIY</a>
-      <a id="navPinRescue" class="hidden" href="./pin.html">Retrouver mon accès</a>
+      <a id="navCockpit" href="./cockpit.html">Accueil</a>
+      <a id="navLieux" class="active" href="./lieux.html">Lieux</a>
+      <a id="navSubmit" href="./submit.html">Ajouter</a>
+      <a id="navClaw" href="./claw.html">Plus</a>
+      <a id="navPinRescue" class="hidden" href="./pin.html">Accès</a>
     </nav>
 
     <div id="msg" class="msg info"></div>
@@ -837,7 +926,7 @@
     </section>
 
     <details class="foldPanel" id="clawDetails">
-      <summary>Ouvrir l’aide DIGIY<span class="foldHint">Lecture simple de tes lieux, sans prendre toute la page.</span></summary>
+      <summary>Ouvrir Plus<span class="foldHint">Lecture simple de tes lieux, sans prendre toute la page.</span></summary>
       <section class="clawGrid" id="clawSection">
       <article class="clawCard">
         <div class="clawHead">
@@ -845,7 +934,7 @@
             <div class="clawKicker">Lecture terrain</div>
             <h2 class="clawTitle">Lecture légère des lieux</h2>
           </div>
-          <div class="clawMode" id="clawMode">Aide DIGIY légère</div>
+          <div class="clawMode" id="clawMode">Plus légère</div>
         </div>
         <div class="clawText" id="clawSummary">
           L’analyse lit l’état de tes lieux, la publication et la prochaine action simple.
@@ -886,9 +975,20 @@
     </section>
 
     <div class="foot">
-      DIGIY EXPLORE • voir • corriger • publier • faire venir
+      DIGIY EXPLORE • lieux • ajouter • notes • visibilité
     </div>
   </div>
+
+
+  <nav class="bottomNav" aria-label="Navigation EXPLORE">
+    <div class="bottomNavInner">
+      <a id="bottomHome" href="./cockpit.html"><span class="ico">🏠</span><span>Accueil</span></a>
+      <a class="active" id="bottomLieux" href="./lieux.html"><span class="ico">📍</span><span>Lieux</span></a>
+      <a id="bottomSubmit" href="./submit.html"><span class="ico">➕</span><span>Ajouter</span></a>
+      <a id="bottomNotes" href="./cockpit.html#quickExploreNote"><span class="ico">✍️</span><span>Notes</span></a>
+      <a id="bottomMore" href="./claw.html"><span class="ico">⚙️</span><span>Plus</span></a>
+    </div>
+  </nav>
 
   <script>
     (function(){
@@ -938,7 +1038,7 @@
       }
 
       function setClaw(mode, summary, pills = [], items = []){
-        $("clawMode").textContent = mode || "Aide DIGIY légère";
+        $("clawMode").textContent = mode || "Plus légère";
         $("clawSummary").textContent = summary || "L’aide lit tes lieux sans bavarder.";
 
         $("clawPills").innerHTML = (Array.isArray(pills) ? pills : [])
@@ -961,10 +1061,10 @@
         setClaw(
           "Chargement",
           "L’analyse attend le téléphone pilote, la lecture du guard et la liste réelle des lieux.",
-          ["Espace prêt", "Mes lieux", "Données réelles"],
+          ["Espace prêt", "Lieux", "Données réelles"],
           [
             { title:"Lecture attendue", text:"L’écran relit le nombre de lieux, leur visibilité et l’action utile." },
-            { title:"Direction utile", text:"Quand le rail est ouvert, on passe vers Ajouter / corriger, Ma gestion ou Aide DIGIY selon le besoin." }
+            { title:"Direction utile", text:"Quand le rail est ouvert, on passe vers Ajouter, Accueil ou Plus selon le besoin." }
           ]
         );
       }
@@ -973,7 +1073,7 @@
         setClaw(
           "Accès à rouvrir",
           "L’aide reste sobre : l’accès n’est pas ouvert, donc la liste ne peut pas encore se charger.",
-          ["Retrouver mon accès", "Accès fermé"],
+          ["Accès", "Accès fermé"],
           [
             { title:"Point à régler", text:"La page attend ton entrée active pour relier les lieux au bon numéro." },
             { title:"Action utile", text:"Rouvre ton accès, puis reviens ici." }
@@ -1151,6 +1251,24 @@
         $("navSubmit").href = buildInternalHref("./submit.html");
         $("navClaw").href = buildInternalHref("./claw.html");
         $("navPinRescue").href = buildInternalHref("./pin.html");
+
+        const notesHref = buildInternalHref("./cockpit.html") + "#quickExploreNote";
+        const extraLinks = {
+          fastHome: buildInternalHref("./cockpit.html"),
+          fastLieux: buildInternalHref("./lieux.html"),
+          fastSubmit: buildInternalHref("./submit.html"),
+          fastNotes: notesHref,
+          bottomHome: buildInternalHref("./cockpit.html"),
+          bottomLieux: buildInternalHref("./lieux.html"),
+          bottomSubmit: buildInternalHref("./submit.html"),
+          bottomNotes: notesHref,
+          bottomMore: buildInternalHref("./claw.html")
+        };
+
+        Object.entries(extraLinks).forEach(([id, href]) => {
+          const el = $(id);
+          if(el) el.href = href;
+        });
       }
 
       function setRescueVisibility(show){
@@ -1242,7 +1360,7 @@
             {
               title:"Action utile",
               text: published
-                ? "Passe par Aide DIGIY ou Ajouter / corriger pour renforcer la lecture publique des lieux déjà publiés."
+                ? "Passe par Plus ou Ajouter pour renforcer la lecture publique des lieux déjà publiés."
                 : "Le cran logique est de publier au moins une fiche propre pour rendre le rail visible."
             },
             { title:"Navigation utile", text:"Tu peux passer de lieux à ma gestion, ajouter / éditer ou analyse sans quitter le même rail." }
@@ -1304,8 +1422,8 @@
 
                 <div class="actions">
                   <a class="btn secondary" href="${escapeHtml(buildInternalHref('./submit.html', { slug: safeSlug }))}">Corriger</a>
-                  <a class="btn ghost" href="${escapeHtml(buildInternalHref('./cockpit.html', { slug: safeSlug }))}">Ma gestion</a>
-                  <a class="btn info" href="${escapeHtml(buildInternalHref('./claw.html', { slug: safeSlug }))}">Aide DIGIY</a>
+                  <a class="btn ghost" href="${escapeHtml(buildInternalHref('./cockpit.html', { slug: safeSlug }))}">Accueil</a>
+                  <a class="btn info" href="${escapeHtml(buildInternalHref('./claw.html', { slug: safeSlug }))}">Plus</a>
                   <a class="btn ghost" href="${escapeHtml(publicHref)}" target="_blank" rel="noopener">🌍 Voir fiche publique</a>
                   ${isPublished
                     ? `<button class="btn secondary js-unpublish" data-slug="${escapeHtml(safeSlug)}">Retirer</button>`
@@ -1380,7 +1498,7 @@
 
         heroPhone.textContent = CURRENT_PHONE;
         heroSlug.textContent = CURRENT_SLUG || "—";
-        heroAction.textContent = "Aide DIGIY";
+        heroAction.textContent = "Plus";
         heroStatusHint.textContent = "Lecture des lieux en cours…";
         setMsg("Chargement de tes lieux…", "info");
         reloadBtn.disabled = true;
