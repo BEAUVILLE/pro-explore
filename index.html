@@ -410,6 +410,169 @@
       line-height:1.55;
     }
 
+
+
+    .routeNav{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      margin:-2px 0 14px;
+    }
+
+    .routeNav a{
+      min-height:42px;
+      padding:0 13px;
+      border-radius:999px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:7px;
+      font-weight:1000;
+      font-size:13px;
+      border:1px solid rgba(212,175,55,.22);
+      background:rgba(255,255,255,.045);
+      color:#fff6ce;
+      box-shadow:0 10px 24px rgba(0,0,0,.16);
+    }
+
+    .audioBox{
+      position:relative;
+      margin-bottom:14px;
+      border:1px solid rgba(212,175,55,.28);
+      border-radius:var(--radius);
+      background:
+        radial-gradient(circle at top right, rgba(243,212,107,.18), transparent 38%),
+        radial-gradient(circle at bottom left, rgba(34,197,94,.12), transparent 45%),
+        linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      padding:18px;
+    }
+
+    .audioTop{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:14px;
+      flex-wrap:wrap;
+      position:relative;
+      z-index:1;
+    }
+
+    .audioLead{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      margin-bottom:9px;
+      padding:7px 12px;
+      border-radius:999px;
+      background:rgba(212,175,55,.14);
+      border:1px solid rgba(212,175,55,.32);
+      color:#fff6ce;
+      font-size:11.5px;
+      font-weight:1000;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+    }
+
+    .audioLead .dot{
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      background:var(--gold2);
+      box-shadow:0 0 15px rgba(243,212,107,.80);
+      animation:audioPulse 1.55s ease-in-out infinite;
+    }
+
+    .audioTitle{
+      font-size:22px;
+      line-height:1.08;
+      font-weight:1000;
+      letter-spacing:-.03em;
+      color:#fff7d7;
+    }
+
+    .audioText{
+      margin-top:7px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.58;
+      max-width:680px;
+      font-weight:760;
+    }
+
+    .audioHint{
+      margin-top:8px;
+      color:#fff0b9;
+      font-size:12.5px;
+      line-height:1.45;
+      font-weight:950;
+    }
+
+    .audioActions{
+      display:flex;
+      gap:9px;
+      flex-wrap:wrap;
+    }
+
+    .audioBtn{
+      min-height:48px;
+      border:none;
+      border-radius:999px;
+      padding:0 17px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      font-weight:1000;
+      cursor:pointer;
+      background:linear-gradient(135deg,var(--gold),var(--gold2));
+      color:#13200d;
+      box-shadow:0 14px 30px rgba(212,175,55,.24);
+    }
+
+    .audioBtn.stop{
+      background:rgba(255,255,255,.045);
+      color:#fff0b9;
+      border:1px solid rgba(212,175,55,.22);
+      box-shadow:none;
+    }
+
+    .audioProgressWrap{
+      height:6px;
+      margin-top:14px;
+      border-radius:999px;
+      overflow:hidden;
+      background:rgba(255,255,255,.10);
+      position:relative;
+      z-index:1;
+    }
+
+    .audioProgress{
+      width:0%;
+      height:100%;
+      background:linear-gradient(90deg,var(--gold2),var(--ok));
+      transition:width .2s linear;
+    }
+
+    .audioGlow{
+      position:absolute;
+      right:10px;
+      bottom:-24px;
+      width:130px;
+      height:130px;
+      border-radius:999px;
+      background:radial-gradient(circle, rgba(212,175,55,.18), transparent 66%);
+      pointer-events:none;
+      filter:blur(3px);
+    }
+
+    @keyframes audioPulse{
+      0%,100%{transform:scale(1);opacity:1}
+      50%{transform:scale(1.25);opacity:.72}
+    }
+
     .footerNote{
       margin-top:18px;
       color:var(--muted);
@@ -429,6 +592,11 @@
       .topbar{flex-direction:column}
       .topActions{width:100%;justify-content:flex-start}
       .topActions > *{flex:1 1 auto}
+      .routeNav{justify-content:flex-start}
+      .routeNav a{flex:1 1 auto}
+      .audioActions,.audioBtn{width:100%}
+      .audioBtn{justify-content:center}
+      .audioGlow{display:none}
       .heroMain,.heroSide{padding:18px}
       .heroActions{grid-template-columns:1fr}
       .tile{min-height:auto}
@@ -458,6 +626,12 @@
         <a class="btn primary digiy-link" href="./lieux.html">Voir mes lieux</a>
       </div>
     </header>
+
+    <nav class="routeNav" aria-label="Navigation DIGIY">
+      <a href="https://digiylyfe.com/" rel="noopener noreferrer">🌍 Site</a>
+      <a id="hubRouteLink" href="https://pro-espace.digiylyfe.com/" rel="noopener noreferrer">🧭 HUB</a>
+      <a href="https://tarifs.digiylyfe.com/" rel="noopener noreferrer">📦 Tarifs</a>
+    </nav>
 
     <section class="hero">
       <article class="panel heroMain">
@@ -500,6 +674,27 @@
           <div class="miniHint">Pour lire l’ensemble sans se perdre dans les détails.</div>
         </div>
       </aside>
+    </section>
+
+    <section class="audioBox" aria-label="Explication audio DIGIY EXPLORE">
+      <div class="audioTop">
+        <div>
+          <div class="audioLead"><span class="dot"></span> Conseil DIGIY · écoute d’abord</div>
+          <div class="audioTitle">🎧 Comprendre EXPLORE avant de publier</div>
+          <div class="audioText">
+            Une voix explique comment te faire connaître, montrer ton lieu, booster sa visibilité et donner envie aux visiteurs de venir pour de vrai.
+          </div>
+          <div class="audioHint">👉 40 secondes pour transformer un lieu en vraie invitation.</div>
+        </div>
+        <div class="audioActions">
+          <button class="audioBtn" id="btnExploreAudio" type="button">🎧 Écouter DIGIY</button>
+          <button class="audioBtn stop" id="btnExploreAudioStop" type="button">⏹ Stop</button>
+        </div>
+      </div>
+      <div class="audioProgressWrap" aria-hidden="true">
+        <div class="audioProgress" id="exploreAudioProgress"></div>
+      </div>
+      <div class="audioGlow" aria-hidden="true"></div>
     </section>
 
     <section class="quickGrid" aria-label="Actions principales EXPLORE">
@@ -611,6 +806,106 @@
       DIGIY EXPLORE • voir • ajouter • corriger • faire venir
     </div>
   </div>
+
+  <script>
+    (function(){
+      "use strict";
+
+      const HUB_BASE = "https://pro-espace.digiylyfe.com/";
+      const AUDIO_TEXT =
+        "Bienvenue dans EXPLORE by DIGIY. Ici, ton lieu ne reste pas invisible. Tu peux montrer un spot, une activité, une adresse ou une expérience locale. Le but est simple : aider les visiteurs à comprendre pourquoi venir, où aller, et comment te contacter. Commence par voir tes lieux. Ensuite ajoute ou corrige une fiche. Si tu veux accélérer, le boost sert à mettre ton lieu en avant. DIGIY ne remplace pas le terrain : DIGIY donne de la lumière au terrain.";
+
+      const btnPlay = document.getElementById("btnExploreAudio");
+      const btnStop = document.getElementById("btnExploreAudioStop");
+      const progress = document.getElementById("exploreAudioProgress");
+      let playing = false;
+      let timer = null;
+
+      function getBestVoice(){
+        const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+        return voices.find(v => /^fr/i.test(v.lang || "") && /audrey|amelie|hortense|julie|thomas|paul|french/i.test(v.name || ""))
+          || voices.find(v => /^fr/i.test(v.lang || ""))
+          || null;
+      }
+
+      function stopAudio(){
+        try{ window.speechSynthesis && window.speechSynthesis.cancel(); }catch(_){}
+        clearInterval(timer);
+        playing = false;
+        if(btnPlay) btnPlay.textContent = "🎧 Écouter DIGIY";
+        if(progress) progress.style.width = "0%";
+      }
+
+      function playAudio(){
+        if(!("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)){
+          alert("Audio indisponible sur ce navigateur.");
+          return;
+        }
+
+        if(playing){
+          stopAudio();
+          return;
+        }
+
+        stopAudio();
+
+        const utter = new SpeechSynthesisUtterance(AUDIO_TEXT);
+        utter.lang = "fr-FR";
+        utter.rate = 0.86;
+        utter.pitch = 1.04;
+        utter.volume = 1;
+
+        const voice = getBestVoice();
+        if(voice) utter.voice = voice;
+
+        let elapsed = 0;
+        const expected = Math.max(12000, AUDIO_TEXT.split(/\s+/).length * 430);
+
+        utter.onstart = function(){
+          playing = true;
+          if(btnPlay) btnPlay.textContent = "⏸️ Lecture en cours";
+          timer = setInterval(function(){
+            elapsed += 250;
+            if(progress) progress.style.width = Math.min(96, (elapsed / expected) * 100) + "%";
+          }, 250);
+        };
+
+        utter.onend = function(){
+          if(progress) progress.style.width = "100%";
+          setTimeout(stopAudio, 300);
+        };
+
+        utter.onerror = stopAudio;
+
+        window.speechSynthesis.speak(utter);
+      }
+
+      function syncHub(){
+        const params = new URLSearchParams(window.location.search);
+        const phone = params.get("phone") || params.get("tel") || "";
+        const link = document.getElementById("hubRouteLink");
+        if(!link) return;
+
+        try{
+          const u = new URL(HUB_BASE);
+          if(phone) u.searchParams.set("phone", phone.replace(/[^\d]/g, ""));
+          link.href = u.toString();
+        }catch(_){
+          link.href = HUB_BASE;
+        }
+      }
+
+      if(btnPlay) btnPlay.addEventListener("click", playAudio);
+      if(btnStop) btnStop.addEventListener("click", stopAudio);
+      if(window.speechSynthesis && typeof window.speechSynthesis.onvoiceschanged !== "undefined"){
+        window.speechSynthesis.onvoiceschanged = getBestVoice;
+      }
+
+      syncHub();
+      window.addEventListener("beforeunload", stopAudio);
+      document.addEventListener("visibilitychange", function(){ if(document.hidden) stopAudio(); });
+    })();
+  </script>
 
   <script>
     (function(){
