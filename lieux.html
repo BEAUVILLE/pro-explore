@@ -838,6 +838,9 @@
       </div>
 
       <div class="topActions">
+        <a class="btn ghost" href="https://digiylyfe.com/">Site</a>
+        <a class="btn secondary" href="https://digiy-hub.digiylyfe.com/">HUB</a>
+        <a class="btn secondary" href="https://tarifs.digiylyfe.com/" target="_blank" rel="noopener noreferrer">Tarifs</a>
         <a class="btn primary" id="btnSubmitTop" href="./submit.html">+ Ajouter</a>
         <a class="btn ghost hidden" id="btnAccessTop" href="./submit.html">+ Ajouter</a>
         <a class="btn secondary hidden" id="btnCockpitTop" href="./cockpit.html">Accueil</a>
@@ -871,15 +874,15 @@
 
       <aside class="panel heroSide">
         <div class="miniStat">
-          <div class="miniLabel">Téléphone actif</div>
-          <div class="miniValue" id="heroPhone">—</div>
-          <div class="miniHint">Le numéro de ton espace ouvert.</div>
+          <div class="miniLabel">Session</div>
+          <div class="miniValue" id="heroPhone">Protégée</div>
+          <div class="miniHint">Le numéro reste dans le coffre et ne circule pas dans l’adresse.</div>
         </div>
 
         <div class="miniStat">
-          <div class="miniLabel">Lieu repéré</div>
-          <div class="miniValue" id="heroSlug">—</div>
-          <div class="miniHint">Le lieu repris automatiquement entre les pages.</div>
+          <div class="miniLabel">Fiche</div>
+          <div class="miniValue" id="heroSlug">Repérée</div>
+          <div class="miniHint">La fiche sélectionnée reste en session locale, sans paramètre visible.</div>
         </div>
 
         <div class="miniStat">
@@ -1162,21 +1165,60 @@
         };
       }
 
+      function cleanVisibleUrl(){
+        try{
+          const url = new URL(window.location.href);
+          let changed = false;
+          ["slug","phone","tel","owner_phone","owner_id","business_code","access_note","keybox_code","keybox_location"].forEach(function(key){
+            if(url.searchParams.has(key)){
+              url.searchParams.delete(key);
+              changed = true;
+            }
+          });
+          if(changed){
+            history.replaceState({}, document.title, url.pathname + url.search + url.hash);
+          }
+        }catch(_){}
+      }
+
+      function rememberSelectedPlaceSlug(value){
+        const clean = normalizeSlug(value || "");
+        if(!clean) return;
+        try{
+          sessionStorage.setItem("digiy_explore_selected_place_slug", clean);
+          localStorage.setItem("digiy_explore_selected_place_slug", clean);
+          sessionStorage.setItem("digiy_explore_slug", clean);
+          localStorage.setItem("digiy_explore_slug", clean);
+        }catch(_){}
+      }
+
+      function getSelectedPlaceSlug(){
+        try{
+          return normalizeSlug(
+            sessionStorage.getItem("digiy_explore_selected_place_slug") ||
+            localStorage.getItem("digiy_explore_selected_place_slug") ||
+            ""
+          );
+        }catch(_){
+          return "";
+        }
+      }
+
       function getPhone(){
-        const url = new URL(window.location.href);
-        const fromUrl = normalizePhone(url.searchParams.get("phone"));
-        if(fromUrl) return fromUrl;
         const guard = getGuardState();
         if(guard.phone) return guard.phone;
         const session = getSession();
         if(session?.phone) return normalizePhone(session.phone);
+        try{
+          const saved = sessionStorage.getItem("digiy_explore_phone") || localStorage.getItem("digiy_explore_phone");
+          if(saved) return normalizePhone(saved);
+        }catch(_){}
         return "";
       }
 
       function getSlug(){
-        const url = new URL(window.location.href);
-        const fromUrl = normalizeSlug(url.searchParams.get("slug"));
-        if(fromUrl) return fromUrl;
+        const selected = getSelectedPlaceSlug();
+        if(selected) return selected;
         const guard = getGuardState();
         if(guard.slug) return guard.slug;
         const session = getSession();
@@ -1185,13 +1227,11 @@
       }
 
       function resolveAccess(){
-        const url = new URL(window.location.href);
-        const urlPhone = normalizePhone(url.searchParams.get("phone"));
         const guard = getGuardState();
         const session = getSession();
         if(typeof guard.access_ok === "boolean") return guard.access_ok;
         if(typeof session?.access_ok === "boolean") return session.access_ok;
-        return !!(urlPhone || guard.phone || session?.phone);
+        return !!(guard.phone || session?.phone);
       }
 
       function fmtDate(v){
@@ -1213,18 +1253,12 @@
           .replaceAll("'", "&#039;");
       }
 
-      function buildQuery(params = {}){
-        const q = new URLSearchParams();
-        const safePhone = normalizePhone(params.phone ?? CURRENT_PHONE);
-        const safeSlug = normalizeSlug(params.slug ?? CURRENT_SLUG);
-        if(safeSlug) q.set("slug", safeSlug);
-        if(safePhone) q.set("phone", safePhone);
-        const s = q.toString();
-        return s ? ("?" + s) : "";
+      function buildQuery(){
+        return "";
       }
 
-      function buildInternalHref(path, params = {}){
-        return path + buildQuery(params);
+      function buildInternalHref(path){
+        return path;
       }
 
       function buildPublicFicheHref(slug){
@@ -1309,8 +1343,8 @@
         const archived = items.filter(x => x?.status === "archived").length;
         const drafts = items.filter(x => x?.status === "draft" || (x?.is_published !== true && x?.status !== "archived")).length;
 
-        heroPhone.textContent = CURRENT_PHONE || "—";
-        heroSlug.textContent = CURRENT_SLUG || "—";
+        heroPhone.textContent = CURRENT_PHONE ? "Ouverte" : "À rouvrir";
+        heroSlug.textContent = CURRENT_SLUG ? "Fiche repérée" : "—";
 
         if(!CURRENT_ACCESS_OK || !CURRENT_PHONE){
           heroAction.textContent = "Entrer par PIN";
@@ -1325,7 +1359,7 @@
           setClaw(
             "Rail vivant",
             "Le numéro pilote est reconnu, mais aucun lieu n’est encore visible.",
-            [`Téléphone : ${CURRENT_PHONE}`, CURRENT_SLUG ? `Identifiant : ${CURRENT_SLUG}` : "", "0 lieu", "Action : ajouter"].filter(Boolean),
+            ["Session ouverte", "0 lieu", "Action : ajouter"].filter(Boolean),
             [
               { title:"Lecture du rail", text:"L’accès répond, mais aucun lieu n’est encore lié à ce numéro." },
               { title:"Action utile", text:"Ajoute une première fiche pour lancer ton espace." }
@@ -1348,8 +1382,8 @@
           "Lecture vivante",
           "L’analyse relit la densité du rail EXPLORE : lieux, publiés, brouillons et prochaine action terrain.",
           [
-            `Téléphone : ${CURRENT_PHONE}`,
-            CURRENT_SLUG ? `Lieu repéré : ${CURRENT_SLUG}` : "",
+            "Session ouverte",
+            CURRENT_SLUG ? "Fiche repérée" : "",
             `${total} lieu(x)`,
             `${published} publié(s)`,
             `${drafts} brouillon(s)`,
@@ -1409,21 +1443,19 @@
                     <div class="meta">
                       <b>Lieu :</b> ${escapeHtml(zoneLine || "Zone non précisée")}<br>
                       <b>Catégorie :</b> ${escapeHtml(item?.category_code || "—")}<br>
-                      <b>Identifiant :</b> ${escapeHtml(safeSlug || "—")}<br>
                       <b>Mise à jour :</b> ${escapeHtml(fmtDate(item?.updated_at))}
                     </div>
                   </div>
                   <div class="statusRow">
                     <div class="status ${statusClass}">${escapeHtml(statusText)}</div>
-                    <div class="slug">${escapeHtml(safeSlug || "—")}</div>
                     ${featured}
                   </div>
                 </div>
 
                 <div class="actions">
-                  <a class="btn secondary" href="${escapeHtml(buildInternalHref('./submit.html', { slug: safeSlug }))}">Corriger</a>
-                  <a class="btn ghost" href="${escapeHtml(buildInternalHref('./cockpit.html', { slug: safeSlug }))}">Accueil</a>
-                  <a class="btn info" href="${escapeHtml(buildInternalHref('./claw.html', { slug: safeSlug }))}">Plus</a>
+                  <a class="btn secondary js-select-place" data-slug="${escapeHtml(safeSlug)}" href="./submit.html">Corriger</a>
+                  <a class="btn ghost js-select-place" data-slug="${escapeHtml(safeSlug)}" href="./cockpit.html">Accueil</a>
+                  <a class="btn info js-select-place" data-slug="${escapeHtml(safeSlug)}" href="./claw.html">Plus</a>
                   <a class="btn ghost" href="${escapeHtml(publicHref)}" target="_blank" rel="noopener">🌍 Voir fiche publique</a>
                   ${isPublished
                     ? `<button class="btn secondary js-unpublish" data-slug="${escapeHtml(safeSlug)}">Retirer</button>`
@@ -1440,6 +1472,12 @@
       }
 
       function bindActions(){
+        list.querySelectorAll(".js-select-place").forEach(function(link){
+          link.addEventListener("click", function(){
+            rememberSelectedPlaceSlug(link.getAttribute("data-slug") || "");
+          });
+        });
+
         list.querySelectorAll(".js-publish").forEach(function(btn){
           btn.addEventListener("click", async function(){
             await publishSlug(btn.getAttribute("data-slug") || "", true);
@@ -1486,8 +1524,8 @@
 
       async function refresh(){
         if(!CURRENT_ACCESS_OK || !CURRENT_PHONE){
-          heroPhone.textContent = CURRENT_PHONE || "—";
-          heroSlug.textContent = CURRENT_SLUG || "—";
+          heroPhone.textContent = CURRENT_PHONE ? "Ouverte" : "À rouvrir";
+          heroSlug.textContent = CURRENT_SLUG ? "Fiche repérée" : "—";
           heroAction.textContent = "Entrer par PIN";
           heroStatusHint.textContent = "Passe d’abord par pin.html pour ouvrir la session.";
           setMsg("Aucun accès ouvert. Rouvre ton accès.", "bad");
@@ -1496,8 +1534,8 @@
           return;
         }
 
-        heroPhone.textContent = CURRENT_PHONE;
-        heroSlug.textContent = CURRENT_SLUG || "—";
+        heroPhone.textContent = "Ouverte";
+        heroSlug.textContent = CURRENT_SLUG ? "Fiche repérée" : "—";
         heroAction.textContent = "Plus";
         heroStatusHint.textContent = "Lecture des lieux en cours…";
         setMsg("Chargement de tes lieux…", "info");
@@ -1509,6 +1547,7 @@
 
           if(!CURRENT_SLUG && items.length){
             CURRENT_SLUG = normalizeSlug(items[0]?.slug || "");
+            rememberSelectedPlaceSlug(CURRENT_SLUG);
             saveSession({ phone: CURRENT_PHONE, slug: CURRENT_SLUG });
             refreshNavLinks();
           }
@@ -1524,7 +1563,7 @@
           list.innerHTML = `<div class="card"><div class="cardInner"><div class="empty">La liste n’a pas pu être chargée. Rouvre ton accès, puis recharge.</div></div></div>`;
           setMsg("Impossible de charger tes lieux pour le moment.", "bad");
           setClaw("Erreur", "L’aide a détecté un blocage pendant la lecture de tes lieux.",
-            [CURRENT_PHONE ? `Téléphone : ${CURRENT_PHONE}` : "Téléphone : —", CURRENT_SLUG ? `Identifiant : ${CURRENT_SLUG}` : "", "Contrôle à faire"].filter(Boolean),
+            [CURRENT_PHONE ? "Session ouverte" : "Session absente", CURRENT_SLUG ? "Fiche repérée" : "", "Contrôle à faire"].filter(Boolean),
             [
               { title:"Point à régler", text:"La page n’a pas pu relire ta liste de lieux." },
               { title:"Action utile", text:"Recharge la page, puis rouvre ton accès si besoin." }
@@ -1543,6 +1582,7 @@
           if(!res || res.ok !== true) throw new Error("RPC publish invalide");
           if(!CURRENT_SLUG){
             CURRENT_SLUG = normalizeSlug(slug);
+            rememberSelectedPlaceSlug(CURRENT_SLUG);
             saveSession({ phone: CURRENT_PHONE, slug: CURRENT_SLUG });
             refreshNavLinks();
           }
@@ -1571,6 +1611,7 @@
       }
 
       async function boot(){
+        cleanVisibleUrl();
         setClawLoading();
         await waitGuard();
 
@@ -1586,8 +1627,8 @@
         setRescueVisibility(!CURRENT_ACCESS_OK);
 
         if(!CURRENT_ACCESS_OK || !CURRENT_PHONE){
-          heroPhone.textContent = CURRENT_PHONE || "—";
-          heroSlug.textContent = CURRENT_SLUG || "—";
+          heroPhone.textContent = CURRENT_PHONE ? "Ouverte" : "À rouvrir";
+          heroSlug.textContent = CURRENT_SLUG ? "Fiche repérée" : "—";
           heroAction.textContent = "Entrer par PIN";
           heroStatusHint.textContent = "Passe d’abord par pin.html pour ouvrir la session.";
           subline.textContent = "Aucune session active détectée.";
@@ -1598,9 +1639,9 @@
           return;
         }
 
-        heroPhone.textContent = CURRENT_PHONE;
-        heroSlug.textContent = CURRENT_SLUG || "—";
-        subline.textContent = "Gestion des lieux rattachés au téléphone " + CURRENT_PHONE + ".";
+        heroPhone.textContent = "Ouverte";
+        heroSlug.textContent = CURRENT_SLUG ? "Fiche repérée" : "—";
+        subline.textContent = "Gestion des lieux rattachés à ta session protégée.";
         searchInput.addEventListener("input", renderList);
         statusFilter.addEventListener("change", renderList);
         reloadBtn.addEventListener("click", refresh);
