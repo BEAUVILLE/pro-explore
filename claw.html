@@ -543,6 +543,9 @@
       </div>
 
       <div class="topActions">
+        <a class="btn ghost" href="https://digiylyfe.com/">Site</a>
+        <a class="btn secondary" href="https://digiy-hub.digiylyfe.com/">HUB</a>
+        <a class="btn secondary" href="https://tarifs.digiylyfe.com/" target="_blank" rel="noopener noreferrer">Tarifs</a>
         <a class="btn secondary" id="btnCockpitTop" href="./cockpit.html">Accueil</a>
         <a class="btn secondary" id="btnLieuxTop" href="./lieux.html">Lieux</a>
         <a class="btn secondary" id="btnSubmitTop" href="./submit.html">Ajouter</a>
@@ -565,7 +568,7 @@
         <div class="badge" id="modeBadge">Lecture légère</div>
         <h1 id="heroTitle">Voir le terrain sans bruit.</h1>
         <p class="heroLead" id="heroLead">
-          Cette page relit l’identifiant actif, l’état d’entrée, le lieu chargé et la prochaine action utile.
+          Cette page relit la session active, la fiche chargée et la prochaine action utile sans exposer les coulisses.
         </p>
 
         <div class="pills" id="heroPills">
@@ -590,9 +593,9 @@
 
       <aside class="panel heroSide">
         <div class="miniStat">
-          <div class="miniLabel">Identifiant</div>
-          <div class="miniValue" id="heroSlug">—</div>
-          <div class="miniHint">Identifiant repris automatiquement pour garder une lecture continue.</div>
+          <div class="miniLabel">Fiche</div>
+          <div class="miniValue" id="heroSlug">Repérée</div>
+          <div class="miniHint">La fiche reste en session locale, sans paramètre visible.</div>
         </div>
 
         <div class="miniStat">
@@ -627,7 +630,7 @@
 
           <div class="box">
             <strong>Navigation utile</strong>
-            <span id="linksText">Accueil, les lieux, l'édition et l'entrée seront recousus ici avec le bon identifiant.</span>
+            <span id="linksText">Accueil, les lieux, l'édition et l'entrée restent recousus sans identifiant visible.</span>
           </div>
 
           <div class="actions">
@@ -778,24 +781,53 @@
 
       function normalizeSlug(v){ return slugify(v); }
 
-      function getUrlSeed(){
-        const url = new URL(window.location.href);
-        return {
-          identifiant: normalizeSlug(url.searchParams.get("slug")),
-          phone: normalizePhone(url.searchParams.get("phone"))
-        };
+      function cleanVisibleUrl(){
+        try{
+          const url = new URL(window.location.href);
+          let changed = false;
+          ["slug","phone","tel","owner_phone","owner_id","business_code","access_note","keybox_code","keybox_location"].forEach(function(key){
+            if(url.searchParams.has(key)){
+              url.searchParams.delete(key);
+              changed = true;
+            }
+          });
+          if(changed){
+            history.replaceState({}, document.title, url.pathname + url.search + url.hash);
+          }
+        }catch(_){}
       }
 
       function getStoredSeed(){
         try{
-          const raw = localStorage.getItem(STORAGE_KEY);
+          const raw = localStorage.getItem(STORAGE_KEY) || sessionStorage.getItem(STORAGE_KEY);
           const parsed = safeJsonParse(raw);
-          if(!parsed) return { identifiant:"", phone:"" };
+          if(!parsed) return { slug:"", phone:"" };
           return {
-            identifiant: normalizeSlug(parsed.slug),
-            phone: normalizePhone(parsed.phone)
+            slug: normalizeSlug(parsed.slug || parsed.identifiant || ""),
+            phone: normalizePhone(parsed.phone || "")
           };
-        }catch(_){ return { identifiant:"", phone:"" }; }
+        }catch(_){ return { slug:"", phone:"" }; }
+      }
+
+      function getSelectedPlaceSeed(){
+        try{
+          return {
+            slug: normalizeSlug(
+              sessionStorage.getItem("digiy_explore_selected_place_slug") ||
+              localStorage.getItem("digiy_explore_selected_place_slug") ||
+              sessionStorage.getItem("digiy_explore_slug") ||
+              localStorage.getItem("digiy_explore_slug") ||
+              ""
+            ),
+            phone: normalizePhone(
+              sessionStorage.getItem("digiy_explore_phone") ||
+              localStorage.getItem("digiy_explore_phone") ||
+              ""
+            )
+          };
+        }catch(_){
+          return { slug:"", phone:"" };
+        }
       }
 
       function getGuardSeed(){
@@ -803,56 +835,60 @@
           const guard = window.DIGIY_GUARD || {};
           const state = guard.state || (typeof guard.getState === "function" ? guard.getState() : {}) || {};
           return {
-            identifiant: normalizeSlug(state.slug || state.current_slug || state.owner_slug || ""),
+            slug: normalizeSlug(state.slug || state.current_slug || state.owner_slug || ""),
             phone: normalizePhone(state.phone || state.owner_phone || "")
           };
-        }catch(_){ return { identifiant:"", phone:"" }; }
+        }catch(_){ return { slug:"", phone:"" }; }
       }
 
       function getSeedContext(){
-        const fromUrl = getUrlSeed();
+        const selected = getSelectedPlaceSeed();
         const fromGuard = getGuardSeed();
         const fromStore = getStoredSeed();
         return {
-          identifiant: normalizeSlug(fromUrl.slug || fromGuard.slug || fromStore.slug || ""),
-          phone: normalizePhone(fromUrl.phone || fromGuard.phone || fromStore.phone || "")
+          slug: normalizeSlug(selected.slug || fromGuard.slug || fromStore.slug || ""),
+          phone: normalizePhone(fromGuard.phone || selected.phone || fromStore.phone || "")
         };
       }
 
       function saveSeedContext(ctx){
         const payload = {
-          identifiant: normalizeSlug(ctx?.slug || ""),
+          slug: normalizeSlug(ctx?.slug || ""),
           phone: normalizePhone(ctx?.phone || ""),
           module: "EXPLORE",
           ts: Date.now()
         };
         try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(payload)); }catch(_){}
+        try{ sessionStorage.setItem(STORAGE_KEY, JSON.stringify(payload)); }catch(_){}
+        if(payload.slug){
+          try{ localStorage.setItem("digiy_explore_selected_place_slug", payload.slug); }catch(_){}
+          try{ sessionStorage.setItem("digiy_explore_selected_place_slug", payload.slug); }catch(_){}
+        }
       }
 
-      function buildQuery(params){
-        const q = new URLSearchParams();
-        const safeSlug = normalizeSlug(params?.slug || "");
-        const safePhone = normalizePhone(params?.phone || "");
-        if(safeSlug) q.set("slug", safeSlug);
-        if(safePhone) q.set("phone", safePhone);
-        const str = q.toString();
-        return str ? ("?" + str) : "";
+      function buildQuery(){
+        return "";
       }
 
       function computeLinks(slug, phone, provided){
-        const cleanSlug = normalizeSlug(slug);
-        const cleanPhone = normalizePhone(phone);
-        const q = buildQuery({ identifiant: cleanSlug, phone: cleanPhone });
-
         const fallback = {
-          cockpit: "./cockpit.html" + q,
-          lieux: "./lieux.html" + q,
-          submit: "./submit.html" + q,
-          claw: "./claw.html" + q,
-          pin: cleanPhone ? ("./pin.html?phone=" + encodeURIComponent(cleanPhone)) : "./pin.html"
+          cockpit: "./cockpit.html",
+          lieux: "./lieux.html",
+          submit: "./submit.html",
+          claw: "./claw.html",
+          pin: "./pin.html"
         };
 
-        return Object.assign({}, fallback, provided || {});
+        const safeProvided = {};
+        Object.entries(provided || {}).forEach(function(pair){
+          const key = pair[0];
+          const value = String(pair[1] || "");
+          if(!value) return;
+          if(/[?&](slug|phone|tel|owner_phone|owner_id|business_code)=/i.test(value)) return;
+          safeProvided[key] = value;
+        });
+
+        return Object.assign({}, fallback, safeProvided);
       }
 
       function normalizeContext(raw){
@@ -924,7 +960,7 @@
       function buildActionText(ctx){
         if(!ctx.access_ok) return "Passe d'abord par le PIN ou vérifie l'abonnement EXPLORE.";
         if(!ctx.slug) return "Il manque encore un slug propre pour travailler le rail.";
-        if(!ctx.business_name) return "Le slug est vivant, mais il faut enrichir ou vérifier la fiche lieu.";
+        if(!ctx.business_name) return "La fiche est vivant, mais il faut enrichir ou vérifier la fiche lieu.";
         if(!ctx.is_published) return "La fiche existe, mais le prochain cran logique est le contrôle avant publication.";
         return "Le rail est vivant. Lis la fiche, affine la micro-copy, puis pilote depuis cockpit ou lieux.";
       }
@@ -932,8 +968,8 @@
       function renderPills(ctx){
         const pills = [
           `Module : ${ctx.module}`,
-          ctx.slug ? `Identifiant : ${ctx.slug}` : "Identifiant : non détecté",
-          ctx.phone ? `Téléphone : ${ctx.phone}` : "Téléphone : non détecté",
+          ctx.slug ? "Fiche : repérée en session" : "Fiche : non détectée",
+          ctx.phone ? "Session : ouverte" : "Session : non détectée",
           ctx.city ? `Ville : ${ctx.city}` : "",
           ctx.zone ? `Zone : ${ctx.zone}` : "",
           ctx.activity ? `Catégorie : ${ctx.activity}` : "",
@@ -960,7 +996,7 @@
         renderPills(ctx);
         setRescueVisibility(!ctx.access_ok);
 
-        els.heroSlug.textContent = ctx.slug || "—";
+        els.heroSlug.textContent = ctx.slug ? "Fiche repérée" : "—";
         els.heroPlace.textContent = ctx.business_name || "Lieu non détecté";
         els.heroAccess.textContent = ctx.access_ok ? "Accès actif" : "Accès à vérifier";
         els.heroAccessHint.textContent = ctx.access_ok
@@ -977,14 +1013,14 @@
         if(!ctx.access_ok){
           els.modeBadge.textContent = "Lecture prudente";
           els.heroTitle.textContent = "CLAW voit le rail, mais l'accès reste à confirmer.";
-          els.heroLead.textContent = "Ici on ne force rien. On lit le slug, on garde la navigation propre, puis on pousse la prochaine action utile.";
+          els.heroLead.textContent = "Ici on ne force rien. On lit la fiche, on garde la navigation propre, puis on pousse la prochaine action utile.";
           els.briefTitle.textContent = "Accès ou session à vérifier";
           els.briefText.textContent = "Le guard EXPLORE existe bien, mais CLAW ne prétend pas ouvrir un rail fermé. Passe par PIN si nécessaire.";
           setStatus("Lecture CLAW chargée en mode prudent.", "warn");
         }else if(!ctx.business_name){
           els.modeBadge.textContent = "Rail vivant";
           els.heroTitle.textContent = "CLAW voit un rail actif, mais peu de matière lieu.";
-          els.heroLead.textContent = "Le slug existe et l'accès tient. Le prochain cran logique est de vérifier les lieux ou d'ajouter une fiche propre.";
+          els.heroLead.textContent = "La fiche existe et l'accès tient. Le prochain cran logique est de vérifier les lieux ou d'ajouter une fiche propre.";
           els.briefTitle.textContent = "Slug vivant, fiche faible";
           els.briefText.textContent = "Le guard est bon. Il faut maintenant enrichir la lecture terrain via lieux.html ou submit.html.";
           setStatus("Accès actif. Lecture lieu encore légère.", "ok");
@@ -1008,7 +1044,6 @@
 
       function buildFallbackPrompt(kind, ctx){
         const title = ctx.business_name || "Lieu non identifié";
-        const slug = ctx.slug || "identifiant-manquant";
         const city = ctx.city || "ville non précisée";
         const zone = ctx.zone || "zone non précisée";
         const activity = ctx.activity || "catégorie non précisée";
@@ -1017,8 +1052,8 @@
 
         const common = [
           "Contexte DIGIY EXPLORE",
-          `identifiant: ${slug}`,
-          `phone: ${ctx.phone || "non détecté"}`,
+          `repère interne: ${ctx.slug ? "fiche repérée en session" : "non détecté"}`,
+          `session: ${ctx.phone ? "ouverte" : "non détectée"}`,
           `lieu: ${title}`,
           `ville: ${city}`,
           `zone: ${zone}`,
@@ -1048,9 +1083,17 @@
         try{ await navigator.clipboard.writeText(text || ""); return true; }catch(_){ return false; }
       }
 
+      function sanitizePrompt(text){
+        return String(text || "")
+          .replace(/^SLUG:.*$/gmi, "REPÈRE INTERNE: fiche repérée en session")
+          .replace(/^PHONE:.*$/gmi, "SESSION: ouverte")
+          .replace(/^identifiant:.*$/gmi, "repère interne: fiche repérée en session")
+          .replace(/^phone:.*$/gmi, "session: ouverte");
+      }
+
       function refreshPrompt(){
         const ctx = CURRENT_CTX || normalizeContext({});
-        els.promptBox.value = buildPrompt(CURRENT_KIND, ctx);
+        els.promptBox.value = sanitizePrompt(buildPrompt(CURRENT_KIND, ctx));
       }
 
       async function waitGuard(){
@@ -1067,6 +1110,8 @@
       }
 
       async function boot(){
+        cleanVisibleUrl();
+
         try{
           await waitGuard();
           const rawCtx = await loadToolContext();
