@@ -977,6 +977,9 @@
       </div>
 
       <div class="topActions">
+        <a class="btn warn" href="https://digiylyfe.com/">Site</a>
+        <a class="btn info" href="https://digiy-hub.digiylyfe.com/">HUB</a>
+        <a class="btn secondary" href="https://tarifs.digiylyfe.com/" target="_blank" rel="noopener noreferrer">Tarifs</a>
         <a class="btn primary" id="btnAccessTop" href="./submit.html">Ajouter</a>
         <a class="btn secondary hidden" id="btnLieuxTop" href="./lieux.html">Lieux</a>
         <a class="btn secondary hidden" id="btnSubmitTop" href="./submit.html">Ajouter</a>
@@ -1000,7 +1003,7 @@
         <div class="heroBadge" id="heroBadge">Lecture terrain</div>
         <h1 class="heroTitle" id="heroTitle">Voir tes lieux, sans usine à gaz.</h1>
         <p class="heroLead" id="heroLead">
-          Ici tu lis rapidement ton espace : entrée, identifiant, lieux rattachés, visibilité et prochaine action simple.
+          Ici tu lis rapidement ton espace : accès, lieux rattachés, visibilité et prochaine action simple.
         </p>
 
         <div class="heroPills" id="heroPills">
@@ -1024,21 +1027,21 @@
 
       <aside class="panel heroSide">
         <div class="miniStat">
-          <div class="miniLabel">Repère du lieu</div>
-          <div class="miniValue" id="heroSlug">—</div>
-          <div class="miniHint">Le repère repris automatiquement pour garder la bonne lecture d'une page à l'autre.</div>
+          <div class="miniLabel">Session</div>
+          <div class="miniValue" id="heroSlug">Protégée</div>
+          <div class="miniHint">Le repère interne reste dans le coffre et n’apparaît pas dans l’adresse.</div>
         </div>
 
         <div class="miniStat">
-          <div class="miniLabel">Téléphone actif</div>
-          <div class="miniValue" id="heroPhone">—</div>
-          <div class="miniHint">Le numéro relié à la session ouverte.</div>
+          <div class="miniLabel">Accès</div>
+          <div class="miniValue" id="heroPhone">Non affiché</div>
+          <div class="miniHint">Le contact reste en session locale, jamais affiché dans l’écran ni dans les liens.</div>
         </div>
 
         <div class="miniStat">
           <div class="miniLabel">Lieu à suivre</div>
           <div class="miniValue" id="heroPlace">—</div>
-          <div class="miniHint">Le lieu lu par l’identifiant ou la première fiche remontée.</div>
+          <div class="miniHint">Le lieu lu par la session ou la première fiche remontée.</div>
         </div>
       </aside>
     </section>
@@ -1116,11 +1119,11 @@
       <article class="panel">
         <div class="cardBody">
           <h2 class="sectionTitle">Lieu à suivre</h2>
-          <p class="sectionSub">Cet espace met en avant le lieu lu par l’identifiant ou la première fiche active du téléphone.</p>
+          <p class="sectionSub">Cet espace met en avant le lieu lu par l’repère interne ou la première fiche active du téléphone.</p>
 
           <div class="box">
             <strong id="mainPlaceName">Aucun lieu lu</strong>
-            <span id="mainPlaceText">L’identifiant ou la liste des lieux n’a pas encore donné de lecture utile.</span>
+            <span id="mainPlaceText">L’repère interne ou la liste des lieux n’a pas encore donné de lecture utile.</span>
           </div>
 
           <div class="box">
@@ -1135,7 +1138,7 @@
           </div>
 
           <h2 class="sectionTitle">Lieux</h2>
-          <p class="sectionSub">Lecture directe des lieux rattachés au téléphone actif.</p>
+          <p class="sectionSub">Lecture directe des lieux rattachés à la session active.</p>
 
           <div class="places" id="placesBox">
             <div class="empty">Chargement des fiches…</div>
@@ -1187,7 +1190,7 @@
             </div>
 
             <div class="clawText" id="clawSummary">
-              L’analyse attend l’identifiant, l’accès et le lieu principal pour pousser le bon cran.
+              L’analyse attend l’repère interne, l’accès et le lieu principal pour pousser le bon cran.
             </div>
 
             <div class="clawPills" id="clawPills"></div>
@@ -1237,6 +1240,18 @@
         pin: "./pin.html",
         claw: "./claw.html"
       };
+
+      const SENSITIVE_QUERY_KEYS = [
+        "slug",
+        "phone",
+        "tel",
+        "owner_phone",
+        "owner_id",
+        "business_code",
+        "access_note",
+        "keybox_code",
+        "keybox_location"
+      ];
 
       const supabase = window.supabase.createClient(
         window.DIGIY_SUPABASE_URL,
@@ -1343,24 +1358,37 @@
         );
       }
 
-      function buildQuery(slug = "", phone = ""){
-        const q = new URLSearchParams();
-        const cleanSlug = normalizeSlug(slug);
-        const cleanPhone = normalizePhone(phone);
+      function cleanVisibleUrl(){
+        try{
+          const url = new URL(window.location.href);
+          let changed = false;
 
-        if(cleanSlug) q.set("slug", cleanSlug);
-        if(cleanPhone) q.set("phone", cleanPhone);
+          SENSITIVE_QUERY_KEYS.forEach((key) => {
+            if(url.searchParams.has(key)){
+              url.searchParams.delete(key);
+              changed = true;
+            }
+          });
 
-        const s = q.toString();
-        return s ? `?${s}` : "";
+          if(changed){
+            history.replaceState({}, document.title, url.pathname + url.search + url.hash);
+          }
+        }catch(_){}
       }
 
-      function buildInternalHref(path, slug = "", phone = ""){
-        return `${path}${buildQuery(slug, phone)}`;
+      function buildInternalHref(path){
+        return path;
       }
 
-      function buildPinHref(slug = "", phone = ""){
-        return `${PATHS.pin}${buildQuery(slug, phone)}`;
+      function buildPinHref(){
+        return PATHS.pin;
+      }
+
+      function rememberSelectedPlace(slug){
+        const s = normalizeSlug(slug);
+        if(!s) return;
+        storageSet("digiy_explore_selected_place_slug", s);
+        storageSet(`${MODULE_PREFIX}_selected_place_slug`, s);
       }
 
       function placeName(place){
@@ -1465,8 +1493,8 @@
           "Aperçu",
           "L’analyse voit une coquille propre, mais l’accès ou l’identité restent à confirmer.",
           [
-            CURRENT_SLUG ? `Identifiant : ${CURRENT_SLUG}` : "Identifiant absent",
-            CURRENT_PHONE ? `Téléphone : ${CURRENT_PHONE}` : "Téléphone absent",
+            "Session : protégée",
+            "Contact : protégé",
             "Accès"
           ],
           [
@@ -1487,8 +1515,8 @@
           "Lecture vivante",
           "L’analyse lit ton espace EXPLORE sans créer une usine : nombre de lieux, état de visibilité et prochaine action terrain.",
           [
-            CURRENT_SLUG ? `Identifiant : ${CURRENT_SLUG}` : "Identifiant : —",
-            CURRENT_PHONE ? `Téléphone : ${CURRENT_PHONE}` : "Téléphone : —",
+            "Session : protégée",
+            "Contact : protégé",
             `${CURRENT_PLACES.length} lieu(x)`,
             place && isPublished(place) ? "Lieu publié" : "Lieu à publier"
           ],
@@ -1523,14 +1551,11 @@
       }
 
       function buildLinks(){
-        const slug = CURRENT_SLUG;
-        const phone = CURRENT_PHONE;
-
-        const cockpitHref = buildInternalHref(PATHS.cockpit, slug, phone);
-        const lieuxHref = buildInternalHref(PATHS.lieux, slug, phone);
-        const submitHref = buildInternalHref(PATHS.submit, slug, phone);
-        const clawHref = buildInternalHref(PATHS.claw, slug, phone);
-        const pinHref = buildPinHref(slug, phone);
+        const cockpitHref = buildInternalHref(PATHS.cockpit);
+        const lieuxHref = buildInternalHref(PATHS.lieux);
+        const submitHref = buildInternalHref(PATHS.submit);
+        const clawHref = buildInternalHref(PATHS.claw);
+        const pinHref = buildPinHref();
 
         $("navCockpit").href = cockpitHref;
         $("navLieux").href = lieuxHref;
@@ -1667,14 +1692,13 @@
       }
 
       function renderHero(place){
-        $("heroSlug").textContent = CURRENT_SLUG || "—";
-        $("heroPhone").textContent = CURRENT_PHONE || "—";
+        $("heroSlug").textContent = CURRENT_STATE?.access_ok ? "Session ouverte" : "À confirmer";
+        $("heroPhone").textContent = CURRENT_STATE?.access_ok ? "Protégé" : "Non affiché";
         $("heroPlace").textContent = place ? placeName(place) : "Aucun lieu lu";
 
         const pills = [
           "Espace : EXPLORE",
-          CURRENT_SLUG ? `Identifiant : ${CURRENT_SLUG}` : "Identifiant absent",
-          CURRENT_PHONE ? `Téléphone : ${CURRENT_PHONE}` : "Téléphone absent",
+          CURRENT_STATE?.access_ok ? "Accès : ouvert" : "Accès : à confirmer",
           place ? `Ville : ${placeCity(place)}` : "",
           place ? `Catégorie : ${placeCategory(place)}` : ""
         ].filter(Boolean);
@@ -1684,7 +1708,7 @@
         if(!CURRENT_STATE?.access_ok){
           $("heroBadge").textContent = "Mode aperçu";
           $("heroTitle").textContent = "Ton espace EXPLORE existe, mais l’accès reste à confirmer.";
-          $("heroLead").textContent = "L’écran reste propre : aucune démo inutile, juste la bonne porte vers le PIN ou l’activation si besoin.";
+          $("heroLead").textContent = "L’écran reste propre : aucune donnée sensible visible, juste la bonne porte vers le PIN.";
           $("btnPrimaryAction").textContent = "Entrer par PIN";
           $("btnPrimaryAction").href = $("navPinRescue").href;
           return;
@@ -1696,12 +1720,16 @@
           $("heroTitle").textContent = placeName(place);
           $("heroLead").textContent = placeShort(place);
           $("btnPrimaryAction").textContent = "Éditer ce lieu";
-          $("btnPrimaryAction").href = buildInternalHref(PATHS.submit, place.slug || CURRENT_SLUG, CURRENT_PHONE);
+          $("btnPrimaryAction").href = buildInternalHref(PATHS.submit);
+          $("btnPrimaryAction").onclick = function(){
+            rememberSelectedPlace(place.slug || CURRENT_SLUG);
+          };
         }else{
           $("heroTitle").textContent = "EXPLORE actif";
           $("heroLead").textContent = "L’accès est ouvert, mais aucun lieu n’est encore visible ici. Ajoute ou recharge une fiche terrain.";
           $("btnPrimaryAction").textContent = "Ajouter un lieu";
           $("btnPrimaryAction").href = $("navSubmit").href;
+          $("btnPrimaryAction").onclick = null;
         }
       }
 
@@ -1736,11 +1764,15 @@
           ? "Affiner la lecture ou passer par Analyse pour améliorer la micro-copy."
           : "Contrôler la fiche puis publier quand la lecture est propre.";
 
-        $("btnEditCurrent").href = buildInternalHref(PATHS.submit, place.slug || CURRENT_SLUG, CURRENT_PHONE);
-        $("btnViewCurrent").href = buildInternalHref(PATHS.submit, place.slug || CURRENT_SLUG, CURRENT_PHONE);
-        $("btnClawCurrent").href = buildInternalHref(PATHS.claw, place.slug || CURRENT_SLUG, CURRENT_PHONE);
+        $("btnEditCurrent").href = buildInternalHref(PATHS.submit);
+        $("btnViewCurrent").href = buildInternalHref(PATHS.submit);
+        $("btnClawCurrent").href = buildInternalHref(PATHS.claw);
+        ["btnEditCurrent","btnViewCurrent","btnClawCurrent"].forEach((id) => {
+          const node = $(id);
+          if(node) node.onclick = function(){ rememberSelectedPlace(place.slug || CURRENT_SLUG); };
+        });
         $("linksText").textContent =
-          `Repère utile : gestion → lieux → édition de ${place.slug || CURRENT_SLUG || "—"} → analyse.`;
+          "Repère utile : gestion → lieux → édition → analyse. Le repère interne reste en session.";
       }
 
       function renderPlaces(){
@@ -1750,7 +1782,7 @@
         if(!rows.length){
           box.innerHTML = `
             <div class="empty">
-              Aucun lieu n’est remonté pour le téléphone actif. Passe par <strong>Ajouter</strong> pour poser une première fiche.
+              Aucun lieu n’est remonté pour la session active. Passe par <strong>Ajouter</strong> pour poser une première fiche.
             </div>
           `;
           return;
@@ -1758,8 +1790,8 @@
 
         box.innerHTML = rows.map((place) => {
           const slug = normalizeSlug(place.slug || "");
-          const editHref = buildInternalHref(PATHS.submit, slug, CURRENT_PHONE);
-          const clawHref = buildInternalHref(PATHS.claw, slug || CURRENT_SLUG, CURRENT_PHONE);
+          const editHref = buildInternalHref(PATHS.submit);
+          const clawHref = buildInternalHref(PATHS.claw);
 
           return `
             <article class="placeCard">
@@ -1770,7 +1802,7 @@
                     <span class="metaTag">${escapeHtml(placeCategory(place))}</span>
                     <span class="metaTag">${escapeHtml(placeCity(place))}</span>
                     <span class="metaTag">${escapeHtml(placeZone(place))}</span>
-                    <span class="metaTag">${escapeHtml(slug || "identifiant absent")}</span>
+                    <span class="metaTag">Repère protégé</span>
                   </div>
                 </div>
                 <div class="placeMeta">
@@ -1782,12 +1814,18 @@
               <div class="placeDesc">${escapeHtml(placeShort(place))}</div>
 
               <div class="placeActions">
-                <a class="btn secondary" href="${escapeHtml(editHref)}">Gérer</a>
-                <a class="btn info" href="${escapeHtml(clawHref)}">Analyse</a>
+                <a class="btn secondary js-place-action" href="${escapeHtml(editHref)}" data-place-slug="${escapeHtml(slug)}">Gérer</a>
+                <a class="btn info js-place-action" href="${escapeHtml(clawHref)}" data-place-slug="${escapeHtml(slug)}">Analyse</a>
               </div>
             </article>
           `;
         }).join("");
+
+        box.querySelectorAll(".js-place-action").forEach((node) => {
+          node.addEventListener("click", () => {
+            rememberSelectedPlace(node.dataset.placeSlug || "");
+          });
+        });
       }
 
 
@@ -1834,7 +1872,7 @@
       }
 
       function paySlugFromExplorePhone(){
-        const p = normalizePhone(CURRENT_PHONE || new URLSearchParams(location.search).get("phone") || "");
+        const p = normalizePhone(CURRENT_PHONE || "");
         return p ? "pay-" + p : "";
       }
 
@@ -1845,7 +1883,7 @@
       }
 
       function buildPayFromExploreUrl(item){
-        const p = normalizePhone(CURRENT_PHONE || new URLSearchParams(location.search).get("phone") || "");
+        const p = normalizePhone(CURRENT_PHONE || "");
         const paySlug = paySlugFromExplorePhone();
         const qsPay = new URLSearchParams();
 
@@ -1861,7 +1899,7 @@
         qsPay.set("channel", item?.channel && item.channel !== "manual" ? String(item.channel) : "other");
         qsPay.set("category", item?.category || "explore_note");
         qsPay.set("source_module", "EXPLORE");
-        if(CURRENT_SLUG) qsPay.set("source_slug", CURRENT_SLUG);
+        // Le repère source reste en session EXPLORE ; ne pas l’exposer dans l’URL PAY.
         qsPay.set("source_id", String(item?.memory_id || item?.created_at || "explore_quick_note"));
         qsPay.set("label", payExploreLabel(item));
         qsPay.set("note", String(item?.sentence || "").trim());
@@ -1967,7 +2005,7 @@
           ...draft,
           memory_id: draft.memory_id || "explore_draft_" + Date.now()
         });
-        const canSendPay = !!normalizePhone(CURRENT_PHONE || new URLSearchParams(location.search).get("phone") || "");
+        const canSendPay = !!normalizePhone(CURRENT_PHONE || "");
 
         box.style.display = "block";
         if(confirmBtn) confirmBtn.style.display = "inline-flex";
@@ -1982,7 +2020,7 @@
           <br>
           ${canSendPay
             ? `<a class="memoryPayAction" href="${escapeHtml(payUrl)}">Envoyer vers Mon argent</a>`
-            : `<span style="color:#fde68a">Téléphone absent : ouvre l’accès pour envoyer vers Mon argent.</span>`
+            : `<span style="color:#fde68a">Contact protégé : ouvre l’accès pour envoyer vers Mon argent.</span>`
           }
         `;
       }
@@ -2093,6 +2131,7 @@
       async function boot(){
         setClawLoading();
         bindQuickExploreNote();
+        cleanVisibleUrl();
 
         try{
           CURRENT_STATE = await resolveGuardState();
@@ -2148,20 +2187,20 @@
           if(!CURRENT_STATE?.access_ok){
             setStatus(
               CURRENT_SLUG
-                ? `Identifiant détecté (${CURRENT_SLUG}) mais accès non confirmé. Passe par la porte PIN pour ouvrir l’espace.`
+                ? "Repère interne détecté, mais accès non confirmé. Passe par la porte PIN pour ouvrir l’espace."
                 : "Aucun accès confirmé pour le moment. L’espace reste en aperçu propre.",
               CURRENT_SLUG ? "warn" : "info"
             );
             setClawPreview(
               CURRENT_SLUG
-                ? `L’identifiant ${CURRENT_SLUG} est visible, mais l’accès EXPLORE n’est pas encore confirmé.`
+                ? "Un repère interne existe, mais l’accès EXPLORE n’est pas encore confirmé."
                 : "L’espace attend une identité ou une session valide."
             );
           }else{
             setStatus(
               CURRENT_MAIN
                 ? `Espace actif pour ${placeName(CURRENT_MAIN)}.`
-                : `Espace actif pour le téléphone ${CURRENT_PHONE || "pilote"}.`,
+                : "Espace actif. Contact protégé en session locale.",
               "ok"
             );
             setClawLive(CURRENT_MAIN);
@@ -2177,8 +2216,8 @@
             "Erreur",
             "L’analyse a détecté un blocage au chargement de ton espace EXPLORE.",
             [
-              CURRENT_SLUG ? `Identifiant : ${CURRENT_SLUG}` : "Identifiant : —",
-              CURRENT_PHONE ? `Téléphone : ${CURRENT_PHONE}` : "Téléphone : —",
+              "Session : protégée",
+              "Contact : protégé",
               "Contrôle à faire"
             ],
             [
