@@ -234,9 +234,7 @@
       gap:8px;
     }
 
-    .railBox strong{
-      font-size:14px;
-    }
+    .railBox strong{font-size:14px}
 
     .railBox span{
       color:var(--muted);
@@ -287,15 +285,9 @@
       line-height:1.55;
     }
 
-    .grid{
-      display:grid;
-      gap:14px;
-    }
+    .grid{display:grid;gap:14px}
 
-    .field{
-      display:grid;
-      gap:8px;
-    }
+    .field{display:grid;gap:8px}
 
     .label{
       font-size:13px;
@@ -304,9 +296,7 @@
       letter-spacing:.02em;
     }
 
-    .inputWrap{
-      position:relative;
-    }
+    .inputWrap{position:relative}
 
     .input{
       width:100%;
@@ -327,9 +317,7 @@
       background:rgba(255,255,255,.05);
     }
 
-    .input::placeholder{
-      color:rgba(248,250,252,.38);
-    }
+    .input::placeholder{color:rgba(248,250,252,.38)}
 
     .pinRow{
       display:grid;
@@ -363,9 +351,7 @@
       box-shadow:0 14px 34px rgba(212,175,55,.24);
     }
 
-    .mainBtn:hover,.ghostBtn:hover{
-      filter:brightness(1.04);
-    }
+    .mainBtn:hover,.ghostBtn:hover{filter:brightness(1.04)}
 
     .actions{
       display:grid;
@@ -451,7 +437,6 @@
       background:rgba(56,189,248,.10);
       color:#d8f2ff;
     }
-
 
     .bottomNav{
       position:fixed;
@@ -555,9 +540,7 @@
     }
 
     @media (max-width: 920px){
-      .hero{
-        grid-template-columns:1fr;
-      }
+      .hero{grid-template-columns:1fr}
     }
 
     @media (max-width: 560px){
@@ -586,6 +569,9 @@
       </div>
 
       <div class="topActions">
+        <a class="topBtn warn" href="https://digiylyfe.com/">Site</a>
+        <a class="topBtn info" href="https://digiy-hub.digiylyfe.com/">HUB</a>
+        <a class="topBtn" href="https://tarifs.digiylyfe.com/" target="_blank" rel="noopener noreferrer">Tarifs</a>
         <a class="topBtn hidden" id="btnCockpitTop" href="./cockpit.html">Accueil</a>
         <a class="topBtn hidden" id="btnLieuxTop" href="./lieux.html">Lieux</a>
         <a class="topBtn hidden" id="btnSubmitTop" href="./submit.html">Ajouter</a>
@@ -598,8 +584,8 @@
         <div class="eyebrow">Accès sécurisé</div>
         <h1>Entre et reprends ton espace.</h1>
         <p class="lead">
-          Cette page t’aide à entrer vite dans ton espace. Tu poses ton numéro, ton code,
-          puis tu repars directement vers la bonne page pour continuer sans tourner en rond.
+          Cette page ouvre ton coffre EXPLORE. Tu entres ton numéro et ton code,
+          puis tu repars vers la bonne page sans exposer ton téléphone dans l’adresse.
         </p>
 
         <div class="bullets">
@@ -609,11 +595,11 @@
           </div>
           <div class="bullet">
             <span class="dot"></span>
-            <span>Le code sert d’entrée ou de secours. Une fois dedans, tu circules sans le retaper partout.</span>
+            <span>Le code ouvre une session de travail sur cet appareil.</span>
           </div>
           <div class="bullet">
             <span class="dot"></span>
-            <span>Tu peux reprendre l’accueil, voir tes lieux, ajouter un lieu ou ouvrir Plus.</span>
+            <span>Après validation, les pages internes lisent la session. Les routes restent propres.</span>
           </div>
         </div>
 
@@ -640,7 +626,7 @@
       <aside class="panel sessionCard">
         <div class="pinHead">
           <h2 class="pinTitle">Entrer dans EXPLORE</h2>
-          <div class="badge">Accès</div>
+          <div class="badge">Coffre PRO</div>
         </div>
 
         <p class="hint">
@@ -727,7 +713,6 @@
     </section>
   </div>
 
-
   <nav class="bottomNav" aria-label="Navigation EXPLORE">
     <div class="bottomNavInner">
       <a id="bottomHome" href="./cockpit.html"><span class="ico">🏠</span><span>Accueil</span></a>
@@ -745,6 +730,18 @@
       const MODULE = "EXPLORE";
       const SESSION_KEY = "digiy_explore_session";
       const MAX_AGE_MS = 8 * 60 * 60 * 1000;
+
+      const SENSITIVE_QUERY_KEYS = [
+        "slug",
+        "phone",
+        "tel",
+        "owner_phone",
+        "owner_id",
+        "business_code",
+        "access_note",
+        "keybox_code",
+        "keybox_location"
+      ];
 
       const ROUTES = {
         cockpit: "./cockpit.html",
@@ -788,6 +785,29 @@
           .replace(/[^a-z0-9-]/g, "")
           .replace(/-+/g, "-")
           .replace(/^-|-$/g, "");
+      }
+
+      function cleanVisibleUrl(){
+        try{
+          const url = new URL(window.location.href);
+          let changed = false;
+
+          SENSITIVE_QUERY_KEYS.forEach(function(key){
+            if(url.searchParams.has(key)){
+              url.searchParams.delete(key);
+              changed = true;
+            }
+          });
+
+          if(url.searchParams.has("next")){
+            url.searchParams.delete("next");
+            changed = true;
+          }
+
+          if(changed){
+            history.replaceState({}, document.title, url.pathname + url.search + url.hash);
+          }
+        }catch(_){}
       }
 
       function safeJsonParse(raw){
@@ -870,19 +890,12 @@
         return "Accueil";
       }
 
-      function buildQuery(phone, slug){
-        const q = new URLSearchParams();
-        const cleanPhone = normalizePhone(phone);
-        const cleanSlug = normalizeSlug(slug);
-        if(cleanSlug) q.set("slug", cleanSlug);
-        if(cleanPhone) q.set("phone", cleanPhone);
-        const str = q.toString();
-        return str ? ("?" + str) : "";
+      function buildInternalHref(route){
+        return ROUTES[route] || ROUTES.cockpit;
       }
 
-      function buildInternalHref(route, phone, slug){
-        const path = ROUTES[route] || ROUTES.cockpit;
-        return path + buildQuery(phone, slug);
+      function buildNotesHref(){
+        return ROUTES.cockpit + "#quickExploreNote";
       }
 
       function updateTargetUi(){
@@ -892,40 +905,37 @@
         footTarget.textContent = label;
       }
 
-      function setTopLinks(phone, slug){
-        const hasSession = !!(normalizePhone(phone) || normalizeSlug(slug));
-
+      function setTopLinks(hasSession){
         const btnCockpitTop = $("btnCockpitTop");
         const btnLieuxTop = $("btnLieuxTop");
         const btnSubmitTop = $("btnSubmitTop");
         const btnClawTop = $("btnClawTop");
 
-        btnCockpitTop.href = buildInternalHref("cockpit", phone, slug);
-        btnLieuxTop.href = buildInternalHref("lieux", phone, slug);
-        btnSubmitTop.href = buildInternalHref("submit", phone, slug);
-        btnClawTop.href = buildInternalHref("claw", phone, slug);
+        btnCockpitTop.href = buildInternalHref("cockpit");
+        btnLieuxTop.href = buildInternalHref("lieux");
+        btnSubmitTop.href = buildInternalHref("submit");
+        btnClawTop.href = buildInternalHref("claw");
 
         btnCockpitTop.classList.toggle("hidden", !hasSession);
         btnLieuxTop.classList.toggle("hidden", !hasSession);
         btnSubmitTop.classList.toggle("hidden", !hasSession);
         btnClawTop.classList.toggle("hidden", !hasSession);
 
-        $("linkDefaultCockpit").href = buildInternalHref("cockpit", phone, slug);
-        $("linkDefaultLieux").href = buildInternalHref("lieux", phone, slug);
-        $("linkDefaultSubmit").href = buildInternalHref("submit", phone, slug);
-        $("linkDefaultClaw").href = buildInternalHref("claw", phone, slug);
+        $("linkDefaultCockpit").href = buildInternalHref("cockpit");
+        $("linkDefaultLieux").href = buildInternalHref("lieux");
+        $("linkDefaultSubmit").href = buildInternalHref("submit");
+        $("linkDefaultClaw").href = buildInternalHref("claw");
 
-        const notesHref = buildInternalHref("cockpit", phone, slug) + "#quickExploreNote";
         const mobileLinks = {
-          fastHome: buildInternalHref("cockpit", phone, slug),
-          fastLieux: buildInternalHref("lieux", phone, slug),
-          fastSubmit: buildInternalHref("submit", phone, slug),
-          fastNotes: notesHref,
-          bottomHome: buildInternalHref("cockpit", phone, slug),
-          bottomLieux: buildInternalHref("lieux", phone, slug),
-          bottomSubmit: buildInternalHref("submit", phone, slug),
-          bottomNotes: notesHref,
-          bottomMore: "./pin.html" + buildQuery(phone, slug)
+          fastHome: buildInternalHref("cockpit"),
+          fastLieux: buildInternalHref("lieux"),
+          fastSubmit: buildInternalHref("submit"),
+          fastNotes: buildNotesHref(),
+          bottomHome: buildInternalHref("cockpit"),
+          bottomLieux: buildInternalHref("lieux"),
+          bottomSubmit: buildInternalHref("submit"),
+          bottomNotes: buildNotesHref(),
+          bottomMore: "./pin.html"
         };
 
         Object.entries(mobileLinks).forEach(function(pair){
@@ -992,12 +1002,15 @@
         const url = new URL(window.location.href);
         const fromUrl = normalizePhone(url.searchParams.get("phone"));
         if(fromUrl) return fromUrl;
+
         const session = getSession();
         if(session?.phone) return normalizePhone(session.phone);
+
         try{
           const saved = normalizePhone(localStorage.getItem("digiy_explore_phone"));
           if(saved) return saved;
         }catch(_){}
+
         return "";
       }
 
@@ -1005,12 +1018,15 @@
         const url = new URL(window.location.href);
         const fromUrl = normalizeSlug(url.searchParams.get("slug"));
         if(fromUrl) return fromUrl;
+
         const session = getSession();
         if(session?.slug) return normalizeSlug(session.slug);
+
         try{
           const saved = normalizeSlug(localStorage.getItem("digiy_explore_slug"));
           if(saved) return saved;
         }catch(_){}
+
         return "";
       }
 
@@ -1021,8 +1037,8 @@
         return getRouteName(match ? match[1] : url.searchParams.get("route"));
       }
 
-      function redirectToRoute(route, phone, slug){
-        window.location.href = buildInternalHref(route, phone, slug);
+      function redirectToRoute(route){
+        window.location.href = buildInternalHref(route);
       }
 
       function renderSessionBox(session){
@@ -1031,16 +1047,12 @@
           return;
         }
 
-        const cleanPhone = normalizePhone(session.phone);
-        const cleanSlug = normalizeSlug(session.slug || "");
+        $("sessionCockpit").href = buildInternalHref("cockpit");
+        $("sessionLieux").href = buildInternalHref("lieux");
+        $("sessionSubmit").href = buildInternalHref("submit");
+        $("sessionClaw").href = buildInternalHref("claw");
 
-        $("sessionCockpit").href = buildInternalHref("cockpit", cleanPhone, cleanSlug);
-        $("sessionLieux").href = buildInternalHref("lieux", cleanPhone, cleanSlug);
-        $("sessionSubmit").href = buildInternalHref("submit", cleanPhone, cleanSlug);
-        $("sessionClaw").href = buildInternalHref("claw", cleanPhone, cleanSlug);
-
-        sessionText.textContent = `Une session est déjà ouverte pour ${cleanPhone}.`;
-
+        sessionText.textContent = "Une session est déjà ouverte sur cet appareil.";
         setSessionVisibility(true);
       }
 
@@ -1128,11 +1140,12 @@
 
           const session = saveSession(phone, result, preferredSlug);
           renderSessionBox(session);
-          setTopLinks(session.phone, session.slug || "");
+          setTopLinks(true);
           setMsg("Accès validé. Ouverture en cours...", "ok");
+          cleanVisibleUrl();
 
           setTimeout(function(){
-            redirectToRoute(route, session.phone, session.slug || preferredSlug || null);
+            redirectToRoute(route);
           }, 320);
         }catch(err){
           console.error("[PRO-EXPLORE PIN] error:", err);
@@ -1150,15 +1163,16 @@
       nextSelect.addEventListener("change", updateTargetUi);
 
       (function boot(){
-        const session = getSession();
-        const seedPhone = readSeedPhone();
-        const seedSlug = readSeedSlug();
         const target = readTargetRoute();
+        const seedPhone = readSeedPhone();
+        const session = getSession();
+
+        cleanVisibleUrl();
 
         if(seedPhone) phoneInput.value = seedPhone;
         nextSelect.value = target;
         updateTargetUi();
-        setTopLinks(seedPhone, seedSlug);
+        setTopLinks(!!session?.phone);
 
         if(session?.phone){
           renderSessionBox(session);
