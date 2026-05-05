@@ -1,4 +1,3 @@
-<script>
 (() => {
   "use strict";
 
@@ -10,7 +9,6 @@
   const SUPABASE_ANON_KEY = window.DIGIY_SUPABASE_ANON || window.DIGIY_SUPABASE_ANON_KEY || "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
 
   const PATHS = {
-    /* FIX : vitrine publique → explore.digiylyfe.com */
     access: "https://explore.digiylyfe.com/",
     cockpit: "./cockpit.html",
     lieux: "./lieux.html",
@@ -71,14 +69,45 @@
     return "";
   }
 
+  function cleanVisibleUrl(){
+    try{
+      const url = new URL(location.href);
+      let changed = false;
+      ["slug","phone","tel","owner_phone","owner_id","business_code","access_note","keybox_code","keybox_location"].forEach((key) => {
+        if(url.searchParams.has(key)){
+          url.searchParams.delete(key);
+          changed = true;
+        }
+      });
+      if(changed){
+        history.replaceState({}, document.title, url.pathname + url.search + url.hash);
+      }
+    }catch(_){}
+  }
+
+  function readSelectedPlaceSlug(){
+    return normalizeSlug(
+      storageGet(`${MODULE_PREFIX}_selected_place_slug`) ||
+      storageGet("digiy_explore_selected_place_slug") ||
+      ""
+    );
+  }
+
+  function persistSelectedPlaceSlug(slug){
+    const s = normalizeSlug(slug);
+    if(!s) return "";
+    try{ sessionStorage.setItem("digiy_explore_selected_place_slug", s); }catch(_){}
+    try{ localStorage.setItem("digiy_explore_selected_place_slug", s); }catch(_){}
+    return s;
+  }
+
   function persistSlug(slug){
     const s = normalizeSlug(slug);
     if(!s) return "";
     try{ sessionStorage.setItem(`${MODULE_PREFIX}_slug`, s); }catch(_){}
     try{ sessionStorage.setItem(`${MODULE_PREFIX}_last_slug`, s); }catch(_){}
     try{ localStorage.setItem(`${MODULE_PREFIX}_last_slug`, s); }catch(_){}
-    try{ localStorage.setItem("digiy_last_slug", s); }catch(_){}
-    try{ localStorage.setItem("DIGIY_SLUG", s); }catch(_){}
+    persistSelectedPlaceSlug(s);
     return s;
   }
 
@@ -105,13 +134,12 @@
     const fromGuard = normalizeSlug(window.DIGIY_GUARD?.getSlug?.() || window.DIGIY_GUARD?.state?.slug || "");
     const fromSession = readStoredSession();
     return normalizeSlug(
-      qs.get("slug") ||
+      readSelectedPlaceSlug() ||
       fromGuard ||
       storageGet(`${MODULE_PREFIX}_slug`) ||
       storageGet(`${MODULE_PREFIX}_last_slug`) ||
-      storageGet("digiy_last_slug") ||
-      storageGet("DIGIY_SLUG") ||
       fromSession?.slug ||
+      qs.get("slug") ||
       ""
     );
   }
@@ -121,39 +149,39 @@
     const fromGuard = normalizePhone(window.DIGIY_GUARD?.getPhone?.() || window.DIGIY_GUARD?.state?.phone || "");
     const fromSession = readStoredSession();
     return normalizePhone(
-      qs.get("phone") ||
       fromGuard ||
       storageGet(`${MODULE_PREFIX}_phone`) ||
-      storageGet("digiy_last_phone") ||
-      storageGet("DIGIY_PHONE") ||
       fromSession?.phone ||
+      qs.get("phone") ||
       ""
     );
   }
 
   function withSlug(path, slug, extra = {}){
     const s = normalizeSlug(slug);
+    if(s) persistSelectedPlaceSlug(s);
+
     const url = new URL(path, location.href);
-    if(s) url.searchParams.set("slug", s);
     Object.entries(extra || {}).forEach(([k, v]) => {
-      if(v !== null && v !== undefined && String(v).trim() !== ""){
-        url.searchParams.set(k, String(v));
-      }
+      if(v === null || v === undefined || String(v).trim() === "") return;
+      if(["slug","phone","tel","owner_phone","owner_id","business_code","access_note","keybox_code","keybox_location"].includes(String(k))) return;
+      url.searchParams.set(k, String(v));
     });
+
     return url.origin === location.origin
       ? `${url.pathname.split("/").pop()}${url.search}`
       : url.toString();
   }
 
   function buildLinks(slug){
+    if(slug) persistSelectedPlaceSlug(slug);
     return {
-      /* FIX : access → vitrine publique, pas modifiée par withSlug */
       access: PATHS.access,
-      cockpit: withSlug(PATHS.cockpit, slug),
-      lieux: withSlug(PATHS.lieux, slug),
-      submit: withSlug(PATHS.submit, slug),
-      pin: withSlug(PATHS.pin, slug),
-      claw: withSlug(PATHS.claw, slug)
+      cockpit: PATHS.cockpit,
+      lieux: PATHS.lieux,
+      submit: PATHS.submit,
+      pin: PATHS.pin,
+      claw: PATHS.claw
     };
   }
 
@@ -222,6 +250,8 @@
   }
 
   async function loadContext(){
+    cleanVisibleUrl();
+
     const slug = persistSlug(resolveSlug());
     const phone = resolvePhone();
     const page = getPageName();
@@ -280,8 +310,8 @@
     const lines = [];
     lines.push(`MODULE: ${data.module}`);
     lines.push(`PAGE: ${data.page}`);
-    lines.push(`SLUG: ${data.slug || "non détecté"}`);
-    lines.push(`PHONE: ${data.phone || "non détecté"}`);
+    lines.push(`REPÈRE INTERNE: ${data.slug ? "fiche repérée en session" : "non détecté"}`);
+    lines.push(`SESSION: ${data.phone ? "ouverte" : "non détectée"}`);
     lines.push(`LIEU: ${data.business_name || "non détecté"}`);
     if(data.city) lines.push(`VILLE: ${data.city}`);
     if(data.zone) lines.push(`ZONE: ${data.zone}`);
@@ -297,7 +327,7 @@
     if(kind === ACTIONS.territory_brief){
       lines.push("Donne-moi une lecture terrain rapide de ce rail EXPLORE.");
       lines.push("Je veux :");
-      lines.push("1. ce que raconte ce lieu ou ce slug,");
+      lines.push("1. ce que raconte ce lieu ou cette fiche,");
       lines.push("2. ce qu'il manque pour une fiche plus forte,");
       lines.push("3. la prochaine action simple à faire,");
       lines.push("4. un résumé mobile en 3 lignes.");
@@ -355,5 +385,7 @@
       return ok;
     }
   }
+
+  cleanVisibleUrl();
+
 })();
-</script>
