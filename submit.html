@@ -634,6 +634,9 @@
       </div>
 
       <div class="topActions">
+        <a class="btn ghost" href="https://digiylyfe.com/">Site</a>
+        <a class="btn secondary" href="https://digiy-hub.digiylyfe.com/">HUB</a>
+        <a class="btn secondary" href="https://tarifs.digiylyfe.com/" target="_blank" rel="noopener noreferrer">Tarifs</a>
         <a class="btn ghost" id="publicHomeBtn" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener">Voir public</a>
         <a class="btn secondary" id="backToClawBtn" href="./claw.html">Plus</a>
         <a class="btn secondary" id="backToLieuxBtn" href="./lieux.html">Lieux</a>
@@ -661,9 +664,9 @@
 
       <aside class="panel heroSide">
         <div class="miniStat">
-          <div class="miniLabel">Téléphone actif</div>
-          <div class="miniValue" id="heroPhone">—</div>
-          <div class="miniHint">Le lieu sera rattaché à ce numéro.</div>
+          <div class="miniLabel">Session</div>
+          <div class="miniValue" id="heroPhone">Protégée</div>
+          <div class="miniHint">Le téléphone reste dans le coffre et n’est pas affiché dans l’adresse.</div>
         </div>
 
         <div class="miniStat">
@@ -673,9 +676,9 @@
         </div>
 
         <div class="miniStat">
-          <div class="miniLabel">Lien public</div>
+          <div class="miniLabel">Fiche</div>
           <div class="miniValue" id="heroSlug">Nouveau lieu</div>
-          <div class="miniHint">Nom court utilisé pour ouvrir la fiche côté public.</div>
+          <div class="miniHint">La fiche publique reste propre. Les repères internes restent en session.</div>
         </div>
       </aside>
     </section>
@@ -1032,30 +1035,48 @@
         return payload;
       }
 
-      function getPhoneFromContext(){
-        const url = new URL(window.location.href);
-        const fromUrl = normalizePhone(url.searchParams.get("phone"));
-        if(fromUrl) return fromUrl;
+      function cleanVisibleUrl(){
+        try{
+          const url = new URL(window.location.href);
+          let changed = false;
+          ["slug","phone","tel","owner_phone","owner_id","business_code","access_note","keybox_code","keybox_location"].forEach(function(key){
+            if(url.searchParams.has(key)){
+              url.searchParams.delete(key);
+              changed = true;
+            }
+          });
+          if(changed){
+            history.replaceState({}, document.title, url.pathname + url.search + url.hash);
+          }
+        }catch(_){}
+      }
 
+      function getPhoneFromContext(){
         const guardState = window.DIGIY_GUARD?.state || null;
         if(guardState?.phone) return normalizePhone(guardState.phone);
 
         const session = getSession();
         if(session?.phone) return session.phone;
 
+        try{
+          const raw = localStorage.getItem("digiy_explore_phone") || sessionStorage.getItem("digiy_explore_phone");
+          if(raw) return normalizePhone(raw);
+        }catch(_){}
+
         return "";
       }
 
       function getSlugFromContext(){
-        const url = new URL(window.location.href);
-        const fromUrl = normalizeSlug(url.searchParams.get("slug"));
-        if(fromUrl) return fromUrl;
-
         const guardState = window.DIGIY_GUARD?.state || null;
         if(guardState?.slug) return normalizeSlug(guardState.slug);
 
         const session = getSession();
         if(session?.slug) return session.slug;
+
+        try{
+          const raw = localStorage.getItem("digiy_explore_selected_place_slug") || sessionStorage.getItem("digiy_explore_selected_place_slug") || localStorage.getItem("digiy_explore_slug") || sessionStorage.getItem("digiy_explore_slug");
+          if(raw) return normalizeSlug(raw);
+        }catch(_){}
 
         return "";
       }
@@ -1067,16 +1088,17 @@
           : PUBLIC_VITRINE_BASE;
       }
 
-      function buildQuery(params){
-        const q = new URLSearchParams();
-        const safeSlug = normalizeSlug(params?.slug ?? CURRENT_SLUG);
-        const safePhone = normalizePhone(params?.phone ?? CURRENT_PHONE);
+      function buildQuery(){
+        return "";
+      }
 
-        if(safeSlug) q.set("slug", safeSlug);
-        if(safePhone) q.set("phone", safePhone);
-
-        const str = q.toString();
-        return str ? ("?" + str) : "";
+      function rememberCurrentPlaceSlug(value){
+        const clean = normalizeSlug(value || "");
+        if(!clean) return;
+        try{
+          sessionStorage.setItem("digiy_explore_selected_place_slug", clean);
+          localStorage.setItem("digiy_explore_selected_place_slug", clean);
+        }catch(_){}
       }
 
       function setBusy(busy){
@@ -1118,37 +1140,18 @@
       }
 
       function updateNavLinks(){
-        const cockpitQuery = buildQuery({
-          slug: CURRENT_SLUG || "",
-          phone: CURRENT_PHONE || ""
-        });
-
-        const lieuxQuery = buildQuery({
-          phone: CURRENT_PHONE || ""
-        });
-
-        const submitQuery = buildQuery({
-          slug: CURRENT_SLUG || "",
-          phone: CURRENT_PHONE || ""
-        });
-
-        const clawQuery = buildQuery({
-          slug: CURRENT_SLUG || "",
-          phone: CURRENT_PHONE || ""
-        });
-
         const publicFicheUrl = buildPublicFicheUrl(CURRENT_SLUG);
 
-        navCockpit.href = "./cockpit.html" + cockpitQuery;
-        backToCockpitBtn.href = "./cockpit.html" + cockpitQuery;
+        navCockpit.href = "./cockpit.html";
+        backToCockpitBtn.href = "./cockpit.html";
 
-        navLieux.href = "./lieux.html" + lieuxQuery;
-        backToLieuxBtn.href = "./lieux.html" + lieuxQuery;
+        navLieux.href = "./lieux.html";
+        backToLieuxBtn.href = "./lieux.html";
 
-        navSubmit.href = "./submit.html" + submitQuery;
+        navSubmit.href = "./submit.html";
 
-        navClaw.href = "./claw.html" + clawQuery;
-        backToClawBtn.href = "./claw.html" + clawQuery;
+        navClaw.href = "./claw.html";
+        backToClawBtn.href = "./claw.html";
 
         navPreview.href = publicFicheUrl;
         navPreview.target = "_blank";
@@ -1162,20 +1165,20 @@
         publicHomeBtn.target = "_blank";
         publicHomeBtn.rel = "noopener";
 
-        rescuePinBtn.href = "./pin.html" + buildQuery({ slug: CURRENT_SLUG || "", phone: CURRENT_PHONE || "" });
-        navPinRescue.href = "./pin.html" + buildQuery({ slug: CURRENT_SLUG || "", phone: CURRENT_PHONE || "" });
+        rescuePinBtn.href = "./pin.html";
+        navPinRescue.href = "./pin.html";
 
-        const notesHref = "./cockpit.html" + buildQuery({ slug: CURRENT_SLUG || "", phone: CURRENT_PHONE || "" }) + "#quickExploreNote";
+        const notesHref = "./cockpit.html#quickExploreNote";
         const mobileLinks = {
-          fastHome: "./cockpit.html" + cockpitQuery,
-          fastLieux: "./lieux.html" + lieuxQuery,
-          fastSubmit: "./submit.html" + submitQuery,
+          fastHome: "./cockpit.html",
+          fastLieux: "./lieux.html",
+          fastSubmit: "./submit.html",
           fastNotes: notesHref,
-          bottomHome: "./cockpit.html" + cockpitQuery,
-          bottomLieux: "./lieux.html" + lieuxQuery,
-          bottomSubmit: "./submit.html" + submitQuery,
+          bottomHome: "./cockpit.html",
+          bottomLieux: "./lieux.html",
+          bottomSubmit: "./submit.html",
           bottomNotes: notesHref,
-          bottomMore: "./claw.html" + clawQuery
+          bottomMore: "./claw.html"
         };
 
         Object.entries(mobileLinks).forEach(function(pair){
@@ -1185,23 +1188,23 @@
       }
 
       function updateModeUi(){
-        heroPhone.textContent = CURRENT_PHONE || "—";
-        heroSlug.textContent = CURRENT_SLUG || "Nouveau lieu";
+        heroPhone.textContent = CURRENT_PHONE ? "Ouverte" : "À rouvrir";
+        heroSlug.textContent = IS_EDIT_MODE ? "Fiche en correction" : "Nouveau lieu";
 
         if(IS_EDIT_MODE){
           pageTitle.textContent = "Corriger un lieu";
           heroTitle.textContent = "Corriger ce lieu sans te perdre."; 
           heroMode.textContent = "Correction";
           heroModeHint.textContent = "Le formulaire recharge une fiche déjà liée à ta session active.";
-          subline.textContent = "Tu corriges maintenant la fiche " + CURRENT_SLUG + ".";
+          subline.textContent = "Tu corriges une fiche liée à ton espace EXPLORE.";
           stateBox.textContent = "Mode correction actif. Tu peux ajuster, republier ou remettre en brouillon.";
         } else {
           pageTitle.textContent = "Ajouter un lieu";
           heroTitle.textContent = "Préparer un lieu clair, prêt à montrer."; 
           heroMode.textContent = "Création";
           heroModeHint.textContent = "Nouveau lieu en préparation.";
-          subline.textContent = "Création d'une nouvelle fiche liée au téléphone " + (CURRENT_PHONE || "—") + ".";
-          stateBox.textContent = "Mode création actif. L'identifiant peut être généré depuis le nom public.";
+          subline.textContent = "Création d'une nouvelle fiche liée à ta session protégée.";
+          stateBox.textContent = "Mode création actif. Le lien public peut être généré depuis le nom public.";
         }
       }
 
@@ -1431,7 +1434,8 @@
 
           CURRENT_SLUG = normalizeSlug(data.slug || payload.p_slug);
           slug.value = CURRENT_SLUG;
-          heroSlug.textContent = CURRENT_SLUG;
+          rememberCurrentPlaceSlug(CURRENT_SLUG);
+          heroSlug.textContent = "Fiche enregistrée";
           IS_EDIT_MODE = true;
 
           saveSession({
@@ -1484,6 +1488,8 @@
       }
 
       async function boot(){
+        cleanVisibleUrl();
+
         try{
           if(window.DIGIY_GUARD?.ready && typeof window.DIGIY_GUARD.ready === "function"){
             await window.DIGIY_GUARD.ready();
@@ -1507,7 +1513,7 @@
 
         if(!CURRENT_PHONE){
           updateRescueVisibility(true);
-          heroPhone.textContent = "—";
+          heroPhone.textContent = "À rouvrir";
           heroMode.textContent = "Accès manquant";
           heroModeHint.textContent = "Passe par l'accès secours pour rouvrir la session.";
           stateBox.textContent = "Session absente. Le formulaire reste verrouillé tant que l'accès n'est pas rouvert.";
