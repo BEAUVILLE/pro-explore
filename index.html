@@ -629,8 +629,9 @@
 
     <nav class="routeNav" aria-label="Navigation DIGIY">
       <a href="https://digiylyfe.com/" rel="noopener noreferrer">🌍 Site</a>
-      <a id="hubRouteLink" href="https://pro-espace.digiylyfe.com/" rel="noopener noreferrer">🧭 HUB</a>
+      <a id="hubRouteLink" href="https://digiy-hub.digiylyfe.com/" rel="noopener noreferrer">🧭 HUB</a>
       <a href="https://tarifs.digiylyfe.com/" rel="noopener noreferrer">📦 Tarifs</a>
+      <a href="https://pro-espace.digiylyfe.com/" rel="noopener noreferrer">🏢 Espace pro</a>
     </nav>
 
     <section class="hero">
@@ -811,7 +812,7 @@
     (function(){
       "use strict";
 
-      const HUB_BASE = "https://pro-espace.digiylyfe.com/";
+      const HUB_BASE = "https://digiy-hub.digiylyfe.com/";
       const AUDIO_TEXT =
         "Bienvenue dans EXPLORE by DIGIY. Ici, ton lieu ne reste pas invisible. Tu peux montrer un spot, une activité, une adresse ou une expérience locale. Le but est simple : aider les visiteurs à comprendre pourquoi venir, où aller, et comment te contacter. Commence par voir tes lieux. Ensuite ajoute ou corrige une fiche. Si tu veux accélérer, le boost sert à mettre ton lieu en avant. DIGIY ne remplace pas le terrain : DIGIY donne de la lumière au terrain.";
 
@@ -881,18 +882,9 @@
       }
 
       function syncHub(){
-        const params = new URLSearchParams(window.location.search);
-        const phone = params.get("phone") || params.get("tel") || "";
         const link = document.getElementById("hubRouteLink");
         if(!link) return;
-
-        try{
-          const u = new URL(HUB_BASE);
-          if(phone) u.searchParams.set("phone", phone.replace(/[^\d]/g, ""));
-          link.href = u.toString();
-        }catch(_){
-          link.href = HUB_BASE;
-        }
+        link.href = HUB_BASE;
       }
 
       if(btnPlay) btnPlay.addEventListener("click", playAudio);
