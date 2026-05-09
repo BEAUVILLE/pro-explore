@@ -1,1662 +1,327 @@
-<!doctype html>
-<html lang="fr">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Je fais découvrir mon lieu — Lieux</title>
-  <meta name="theme-color" content="#06130f" />
-  <meta
-    name="description"
-    content="Retrouve tes lieux, vois ce qui est visible et avance sans détour sur la bonne fiche."
-  />
-
-  <script>
-    window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
-    window.DIGIY_SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
-    window.DIGIY_SUPABASE_ANON = window.DIGIY_SUPABASE_ANON_KEY;
-    window.DIGIY_MODULE = "EXPLORE";
-    window.DIGIY_LOGIN_URL = "./pin.html";
-    document.documentElement.style.visibility = "hidden";
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="./guard.js?v=explore-lieux-guard-3"></script>
-
-  <style>
-    :root{
-      --bg:#06130f;
-      --bg2:#0a1f18;
-      --card:#0b241b;
-      --card2:#102b22;
-      --line:rgba(255,255,255,.08);
-      --ink:#f8fafc;
-      --muted:rgba(248,250,252,.72);
-      --soft:rgba(248,250,252,.52);
-      --gold:#d4af37;
-      --gold2:#f3d46b;
-      --blue:#38bdf8;
-      --ok:#22c55e;
-      --warn:#f59e0b;
-      --bad:#ef4444;
-      --radius:22px;
-      --shadow:0 24px 60px rgba(0,0,0,.28);
-    }
-
-    *{box-sizing:border-box}
-    html,body{margin:0;padding:0}
-    body{
-      min-height:100vh;
-      color:var(--ink);
-      font-family:Outfit, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background:
-        radial-gradient(circle at top, rgba(212,175,55,.09), transparent 26%),
-        linear-gradient(180deg, #071510 0%, #06130f 48%, #04100c 100%);
-    }
-
-    a{color:inherit;text-decoration:none}
-    button,input,select{font:inherit}
-
-    .wrap{
-      width:min(100%, 1240px);
-      margin:0 auto;
-      padding:18px 14px calc(104px + env(safe-area-inset-bottom,0px));
-    }
-
-    .topbar{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:14px;
-      margin-bottom:16px;
-      flex-wrap:wrap;
-    }
-
-    .brand{
-      display:flex;
-      gap:12px;
-      align-items:center;
-      min-width:0;
-    }
-
-    .logo{
-      width:56px;
-      height:56px;
-      border-radius:18px;
-      object-fit:cover;
-      display:block;
-      background:#fff;
-      border:1px solid rgba(212,175,55,.22);
-      box-shadow:0 10px 28px rgba(0,0,0,.18);
-      flex:0 0 auto;
-    }
-
-    .brandText{min-width:0}
-    .kicker{
-      color:var(--gold2);
-      font-size:12px;
-      font-weight:800;
-      letter-spacing:.18em;
-      text-transform:uppercase;
-      margin-bottom:3px;
-      white-space:nowrap;
-    }
-
-    .title{
-      font-size:clamp(18px, 2vw, 28px);
-      font-weight:900;
-      line-height:1.08;
-      letter-spacing:-.03em;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .sub{
-      margin-top:4px;
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.45;
-    }
-
-    .topActions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-
-    .btn{
-      min-height:44px;
-      border:none;
-      border-radius:14px;
-      padding:0 14px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      font-weight:800;
-      cursor:pointer;
-      transition:filter .18s ease, transform .04s ease, opacity .18s ease;
-      white-space:nowrap;
-    }
-
-    .btn:active{transform:translateY(1px)}
-    .btn[disabled]{opacity:.6;cursor:not-allowed}
-
-    .btn.primary{
-      background:linear-gradient(135deg, var(--gold), var(--gold2));
-      color:#13200d;
-      box-shadow:0 14px 30px rgba(212,175,55,.22);
-    }
-
-    .btn.secondary{
-      background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.08);
-      color:var(--ink);
-    }
-
-    .btn.ghost{
-      background:transparent;
-      border:1px solid var(--line);
-      color:var(--ink);
-    }
-
-    .btn.info{
-      background:rgba(56,189,248,.10);
-      border:1px solid rgba(56,189,248,.22);
-      color:#d8f2ff;
-    }
-
-    .btn.warn{
-      background:rgba(245,158,11,.12);
-      border:1px solid rgba(245,158,11,.26);
-      color:#fde68a;
-    }
-
-    .hero{
-      display:grid;
-      grid-template-columns:1.1fr .9fr;
-      gap:16px;
-      margin-bottom:16px;
-    }
-
-    .panel{
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      overflow:hidden;
-    }
-
-    .heroMain{
-      padding:22px;
-      background:
-        linear-gradient(180deg, rgba(212,175,55,.06), transparent 28%),
-        linear-gradient(180deg, var(--card), var(--card2));
-    }
-
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 12px;
-      border-radius:999px;
-      border:1px solid rgba(212,175,55,.22);
-      background:rgba(212,175,55,.08);
-      color:var(--gold2);
-      font-size:12px;
-      font-weight:900;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      margin-bottom:14px;
-    }
-
-    .heroTitle{
-      margin:0 0 10px;
-      font-size:clamp(26px, 4vw, 42px);
-      line-height:1.02;
-      letter-spacing:-.04em;
-    }
-
-    .heroLead{
-      margin:0;
-      color:var(--muted);
-      font-size:16px;
-      line-height:1.65;
-      max-width:60ch;
-    }
-
-    .heroActions{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:16px;
-    }
-
-    .heroSide{
-      padding:20px;
-      display:grid;
-      gap:12px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015)),
-        linear-gradient(180deg, #0a1c16, #0d241c);
-    }
-
-    .miniStat{
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:18px;
-      padding:14px;
-      background:rgba(255,255,255,.03);
-    }
-
-    .miniLabel{
-      color:var(--soft);
-      font-size:12px;
-      font-weight:800;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-      margin-bottom:8px;
-    }
-
-    .miniValue{
-      font-size:22px;
-      font-weight:900;
-      line-height:1.1;
-      letter-spacing:-.03em;
-      word-break:break-word;
-    }
-
-    .miniHint{
-      margin-top:6px;
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.45;
-    }
-
-    .nav{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-bottom:16px;
-    }
-
-    .nav a{
-      min-height:42px;
-      display:inline-flex;
-      align-items:center;
-      padding:0 14px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.04);
-      color:#eef4f1;
-      font-size:13px;
-      font-weight:800;
-    }
-
-    .nav a.active{
-      border-color:rgba(212,175,55,.22);
-      background:rgba(212,175,55,.08);
-      color:var(--gold2);
-    }
-
-    .msg{
-      margin-bottom:16px;
-      border-radius:18px;
-      padding:14px 16px;
-      font-size:14px;
-      line-height:1.5;
-      font-weight:700;
-      display:none;
-    }
-
-    .msg.show{display:block}
-    .msg.info{
-      color:#dbeafe;
-      border:1px solid rgba(96,165,250,.18);
-      background:rgba(59,130,246,.08);
-    }
-    .msg.bad{
-      color:#fecaca;
-      border:1px solid rgba(239,68,68,.18);
-      background:rgba(239,68,68,.08);
-    }
-    .msg.ok{
-      color:#bbf7d0;
-      border:1px solid rgba(34,197,94,.18);
-      background:rgba(34,197,94,.08);
-    }
-    .msg.warn{
-      color:#fde68a;
-      border:1px solid rgba(245,158,11,.18);
-      background:rgba(245,158,11,.08);
-    }
-
-    .toolbar{
-      display:grid;
-      grid-template-columns:1fr auto auto;
-      gap:12px;
-      margin-bottom:16px;
-    }
-
-    .searchWrap,.filterWrap{
-      background:rgba(255,255,255,.04);
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:16px;
-      min-height:52px;
-      display:flex;
-      align-items:center;
-      padding:0 14px;
-    }
-
-    .input,.select{
-      width:100%;
-      border:none;
-      background:transparent;
-      color:var(--ink);
-      outline:none;
-      font-size:15px;
-    }
-
-    .select option{
-      background:#0d1f19;
-      color:var(--ink);
-    }
-
-    .stats{
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:14px;
-      margin-bottom:16px;
-    }
-
-    .statCard{
-      padding:18px;
-      border-radius:22px;
-      border:1px solid var(--line);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-      box-shadow:var(--shadow);
-    }
-
-    .statLabel{
-      color:var(--soft);
-      font-size:12px;
-      font-weight:800;
-      text-transform:uppercase;
-      letter-spacing:.09em;
-      margin-bottom:10px;
-    }
-
-    .statValue{
-      font-size:32px;
-      line-height:1;
-      font-weight:900;
-      letter-spacing:-.04em;
-    }
-
-    .statFoot{
-      margin-top:10px;
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.45;
-    }
-
-    .clawGrid{
-      display:grid;
-      gap:14px;
-      margin:0 0 16px;
-      grid-template-columns:1.08fr .92fr;
-    }
-
-    .clawCard{
-      padding:18px;
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      background:linear-gradient(180deg, rgba(96,165,250,.08), rgba(34,197,94,.05));
-      box-shadow:var(--shadow);
-    }
-
-    .clawHead{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-bottom:10px;
-    }
-
-    .clawKicker{
-      font-size:11px;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      color:#b7ecff;
-      font-weight:1000;
-      margin-bottom:6px;
-    }
-
-    .clawTitle{
-      margin:0;
-      font-size:20px;
-      font-weight:1000;
-    }
-
-    .clawMode{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:9px 12px;
-      border-radius:999px;
-      border:1px solid rgba(96,165,250,.18);
-      background:rgba(96,165,250,.08);
-      color:#d7efff;
-      font-size:12px;
-      font-weight:950;
-    }
-
-    .clawText{
-      color:var(--muted);
-      font-size:14px;
-      font-weight:800;
-      line-height:1.65;
-    }
-
-    .clawPills{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      margin-top:12px;
-    }
-
-    .clawPill{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:8px 10px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(0,0,0,.16);
-      color:var(--ink);
-      font-size:12px;
-      font-weight:950;
-    }
-
-    .clawList{
-      display:grid;
-      gap:10px;
-      margin-top:12px;
-    }
-
-    .clawItem{
-      padding:14px;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(0,0,0,.16);
-    }
-
-    .clawItem strong{
-      display:block;
-      margin-bottom:6px;
-      font-size:14px;
-      font-weight:1000;
-      color:#ecfff4;
-    }
-
-    .clawItem span{
-      color:var(--muted);
-      font-size:13px;
-      font-weight:800;
-      line-height:1.55;
-      display:block;
-    }
-
-    .list{
-      display:grid;
-      gap:12px;
-    }
-
-    .card{
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:22px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-      box-shadow:var(--shadow);
-      overflow:hidden;
-    }
-
-    .cardInner{
-      padding:18px;
-      display:grid;
-      gap:14px;
-    }
-
-    .cardTop{
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
-      align-items:flex-start;
-    }
-
-    .cardMain{
-      min-width:0;
-      flex:1 1 auto;
-    }
-
-    .cardTitle{
-      font-size:20px;
-      line-height:1.2;
-      font-weight:900;
-      letter-spacing:-.02em;
-      margin:0 0 6px;
-      word-break:break-word;
-    }
-
-    .meta{
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.55;
-      word-break:break-word;
-    }
-
-    .meta b{color:#eef6f2}
-
-    .statusRow{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      align-items:center;
-    }
-
-    .status{
-      display:inline-flex;
-      align-items:center;
-      gap:7px;
-      padding:7px 11px;
-      border-radius:999px;
-      font-size:12px;
-      font-weight:900;
-      letter-spacing:.04em;
-      text-transform:uppercase;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.04);
-    }
-
-    .status.ok{
-      color:#86efac;
-      border-color:rgba(34,197,94,.25);
-      background:rgba(34,197,94,.08);
-    }
-
-    .status.warn{
-      color:#fde68a;
-      border-color:rgba(245,158,11,.22);
-      background:rgba(245,158,11,.08);
-    }
-
-    .status.bad{
-      color:#fca5a5;
-      border-color:rgba(239,68,68,.22);
-      background:rgba(239,68,68,.08);
-    }
-
-    .slug{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:7px 11px;
-      border-radius:999px;
-      border:1px solid rgba(212,175,55,.18);
-      background:rgba(212,175,55,.08);
-      color:var(--gold2);
-      font-size:12px;
-      font-weight:900;
-      letter-spacing:.03em;
-    }
-
-    .actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-    }
-
-    .actions .btn{
-      min-height:40px;
-      border-radius:12px;
-      padding:0 12px;
-      font-size:13px;
-    }
-
-    .empty{
-      border:1px dashed rgba(255,255,255,.12);
-      border-radius:18px;
-      padding:18px;
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.6;
-      background:rgba(255,255,255,.02);
-    }
-
-    .loading{
-      padding:18px;
-      color:var(--muted);
-      font-size:14px;
-    }
-
-
-    #list, #quickExploreNote{scroll-margin-top:96px}
-
-    .bottomNav{
-      position:fixed;
-      left:0;
-      right:0;
-      bottom:0;
-      z-index:99990;
-      padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));
-      background:rgba(6,19,15,.94);
-      border-top:1px solid rgba(255,255,255,.10);
-      backdrop-filter:blur(16px);
-      -webkit-backdrop-filter:blur(16px);
-    }
-
-    .bottomNavInner{
-      width:min(100%,760px);
-      margin:0 auto;
-      display:grid;
-      grid-template-columns:repeat(5,1fr);
-      gap:6px;
-    }
-
-    .bottomNav a{
-      min-height:58px;
-      border-radius:16px;
-      display:grid;
-      place-items:center;
-      align-content:center;
-      gap:3px;
-      color:rgba(248,250,252,.70);
-      font-size:11px;
-      font-weight:950;
-      text-align:center;
-      border:1px solid transparent;
-      text-decoration:none;
-    }
-
-    .bottomNav .ico{font-size:18px;line-height:1}
-
-    .bottomNav a.active{
-      color:#13200d;
-      background:linear-gradient(135deg,var(--gold),var(--gold2));
-      border-color:rgba(212,175,55,.30);
-      box-shadow:0 12px 26px rgba(212,175,55,.18);
-    }
-
-    .mobileFastRow{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:10px;
-      margin-top:14px;
-    }
-
-    .mobileFastRow a{
-      min-height:46px;
-      border-radius:14px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.05);
-      color:var(--ink);
-      text-decoration:none;
-      font-weight:950;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      padding:10px 12px;
-    }
-
-    .mobileFastRow a.primary{
-      background:linear-gradient(90deg,var(--gold),var(--gold2));
-      color:#13200d;
-      border:none;
-    }
-
-    @media (max-width:640px){
-      .mobileFastRow{grid-template-columns:1fr 1fr}
-      .nav{display:none}
-      .topActions{display:none}
-    }
-
-    .hidden{display:none !important}
-
-
-    .foldPanel{
-      margin:0 0 16px;
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      background:linear-gradient(180deg, rgba(96,165,250,.06), rgba(34,197,94,.035));
-      box-shadow:var(--shadow);
-      overflow:hidden;
-    }
-
-    .foldPanel > summary{
-      min-height:58px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      padding:15px 18px;
-      cursor:pointer;
-      list-style:none;
-      font-size:15px;
-      font-weight:1000;
-      color:#ecfff4;
-    }
-
-    .foldPanel > summary::-webkit-details-marker{display:none}
-
-    .foldPanel > summary::after{
-      content:"Ouvrir";
-      color:#d7efff;
-      font-size:12px;
-      font-weight:950;
-      padding:8px 10px;
-      border-radius:999px;
-      border:1px solid rgba(96,165,250,.18);
-      background:rgba(96,165,250,.08);
-      flex:0 0 auto;
-    }
-
-    .foldPanel[open] > summary::after{content:"Fermer"}
-
-    .foldHint{
-      display:block;
-      margin-top:4px;
-      color:var(--muted);
-      font-size:12px;
-      font-weight:800;
-      line-height:1.35;
-    }
-
-    .mobileNudge{
-      margin:0 0 16px;
-      padding:14px 16px;
-      border-radius:18px;
-      border:1px solid rgba(212,175,55,.18);
-      background:rgba(212,175,55,.07);
-      color:#fff4ba;
-      font-size:14px;
-      font-weight:850;
-      line-height:1.5;
-    }
-
-    .foot{
-      margin-top:18px;
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.6;
-      text-align:center;
-    }
-
-    @media (max-width: 1080px){
-      .stats{grid-template-columns:repeat(2,1fr)}
-      .hero,.clawGrid{grid-template-columns:1fr}
-    }
-
-    @media (max-width: 760px){
-      .toolbar{grid-template-columns:1fr}
-      .stats{grid-template-columns:repeat(2,1fr)}
-      .statCard{padding:14px}
-      .statValue{font-size:28px}
-      .statFoot{display:none}
-    }
-
-    @media (max-width: 640px){
-      .wrap{padding:14px 12px calc(104px + env(safe-area-inset-bottom,0px))}
-      .topbar{flex-direction:column}
-      .topActions{width:100%;justify-content:flex-start}
-      .heroMain,.heroSide,.clawCard{padding:18px}
-      .heroSide{display:none}
-      .heroLead{font-size:14px;line-height:1.55}
-      .badge{margin-bottom:10px}
-      .heroActions > *, .topActions > *, .nav > *{flex:1 1 auto}
-      .nav{overflow:auto;flex-wrap:nowrap;padding-bottom:2px}
-      .nav > *{flex:0 0 auto}
-      .cardTop{flex-direction:column}
-      .clawGrid{gap:10px;margin:0 0 14px}
-      .foldPanel > summary{align-items:flex-start;flex-direction:column}
-      .foldPanel > summary::after{align-self:flex-start}
-    }
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <header class="topbar">
-      <div class="brand">
-        <img class="logo" src="https://digiylyfe.net/wp-content/uploads/2026/03/digiylyfe_logo_qr.jpeg" alt="Logo DIGIYLYFE"/>
-        <div class="brandText">
-          <div class="kicker">JE FAIS DÉCOUVRIR MON LIEU</div>
-          <div class="title">Lieux</div>
-          <div class="sub" id="subline">Voir, corriger, publier. Le reste reste rangé.</div>
-        </div>
+<!-- DIGIY EXPLORE PRO — AJOUT PROPRE POUR lieux.html -->
+
+<!-- 1) À mettre dans <head>, sans doublon avec Supabase/guard existants -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./guard.js?v=explore-guard"></script>
+<script src="./claw-tools-explore.js?v=explore-claw"></script>
+<script src="./explore-alerts.js?v=explore-alerts"></script>
+
+<!-- 2) CSS à coller avant </style> -->
+<style>
+.exploreActionPanel{
+  margin-bottom:16px;
+  border-color:rgba(212,175,55,.18);
+  background:
+    radial-gradient(800px 320px at 100% 0%, rgba(212,175,55,.10), transparent 55%),
+    linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
+}
+
+.exploreActionHead{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
+.exploreActionBadge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:34px;
+  padding:0 12px;
+  border-radius:999px;
+  border:1px solid rgba(212,175,55,.26);
+  background:rgba(212,175,55,.10);
+  color:var(--gold2);
+  font-size:12px;
+  font-weight:1000;
+  white-space:nowrap;
+}
+
+#digiyExploreCamembert{
+  position:fixed;
+  left:14px;
+  bottom:calc(86px + env(safe-area-inset-bottom,0px));
+  width:84px;
+  height:84px;
+  z-index:99999;
+  font-family:Outfit, Inter, system-ui, sans-serif;
+}
+
+#digiyExploreCamembert .digiyExploreCenter{
+  position:absolute;
+  inset:0;
+  width:84px;
+  height:84px;
+  border:none;
+  border-radius:50%;
+  cursor:pointer;
+  color:#fff;
+  box-shadow:0 18px 40px rgba(0,0,0,.34);
+  background:
+    radial-gradient(circle at center, rgba(6,19,15,.95) 0 42%, transparent 43%),
+    conic-gradient(
+      from -90deg,
+      rgba(212,175,55,.96) 0 33%,
+      rgba(34,197,94,.90) 33% 66%,
+      rgba(56,189,248,.88) 66% 100%
+    );
+  overflow:hidden;
+}
+
+#digiyExploreCamembert .digiyExploreCenter::before{
+  content:"";
+  position:absolute;
+  inset:13px;
+  border-radius:50%;
+  background:rgba(6,19,15,.97);
+  border:1px solid rgba(255,255,255,.10);
+}
+
+#digiyExploreCamembert .digiyExploreCenter span,
+#digiyExploreCamembert .digiyExploreCenter strong{
+  position:relative;
+  z-index:2;
+  display:block;
+  text-align:center;
+}
+
+#digiyExploreCamembert .digiyExploreCenter span{
+  font-size:20px;
+  line-height:1;
+  margin-bottom:2px;
+}
+
+#digiyExploreCamembert .digiyExploreCenter strong{
+  font-size:11px;
+  font-weight:1000;
+}
+
+#digiyExploreCamembert.playing .digiyExploreCenter{
+  background:
+    radial-gradient(circle at center, rgba(6,19,15,.95) 0 42%, transparent 43%),
+    conic-gradient(
+      from -90deg,
+      rgba(248,113,113,.96) 0 50%,
+      rgba(212,175,55,.90) 50% 100%
+    );
+}
+
+#digiyExploreCamembert .digiyExploreMenu{
+  position:absolute;
+  left:94px;
+  bottom:4px;
+  width:228px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  padding:10px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(6,19,15,.94);
+  box-shadow:0 18px 48px rgba(0,0,0,.32);
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  opacity:0;
+  transform:translateX(-8px) scale(.96);
+  pointer-events:none;
+  transition:.18s ease;
+}
+
+#digiyExploreCamembert.open .digiyExploreMenu{
+  opacity:1;
+  transform:translateX(0) scale(1);
+  pointer-events:auto;
+}
+
+#digiyExploreCamembert .digiyExploreMenu button{
+  min-height:44px;
+  border:none;
+  border-radius:15px;
+  background:rgba(255,255,255,.07);
+  color:#f7fbf8;
+  padding:9px 10px;
+  font-size:12px;
+  font-weight:1000;
+  cursor:pointer;
+}
+
+#digiyExploreCamembert .digiyExploreMenu .gold{
+  background:linear-gradient(135deg,#d4af37,#f3d46b);
+  color:#13200d;
+}
+
+#digiyExploreCamembert .digiyExploreMenu .green{
+  background:rgba(34,197,94,.16);
+  color:#dffcea;
+  border:1px solid rgba(34,197,94,.25);
+}
+
+#digiyExploreCamembert .digiyExploreMenu .blue{
+  background:rgba(56,189,248,.14);
+  color:#d9f4ff;
+  border:1px solid rgba(56,189,248,.24);
+}
+
+@media (max-width:640px){
+  #digiyExploreCamembert{
+    left:10px;
+    bottom:calc(84px + env(safe-area-inset-bottom,0px));
+    width:76px;
+    height:76px;
+  }
+
+  #digiyExploreCamembert .digiyExploreCenter{
+    width:76px;
+    height:76px;
+  }
+
+  #digiyExploreCamembert .digiyExploreCenter::before{
+    inset:12px;
+  }
+
+  #digiyExploreCamembert .digiyExploreMenu{
+    left:0;
+    bottom:86px;
+    width:min(260px, calc(100vw - 20px));
+  }
+}
+</style>
+
+<!-- 3) À placer juste après : <div id="msg" class="msg info"></div> -->
+<section class="panel exploreActionPanel" aria-label="Actions utiles EXPLORE">
+  <div class="cardBody">
+    <div class="exploreActionHead">
+      <div>
+        <h2 class="sectionTitle">Actions utiles</h2>
+        <p class="sectionSub">DIGIY lit derrière et remonte seulement ce qui mérite ton attention.</p>
       </div>
-
-      <div class="topActions">
-        <a class="btn ghost" href="https://digiylyfe.com/">Site</a>
-        <a class="btn secondary" href="https://digiy-hub.digiylyfe.com/">HUB</a>
-        <a class="btn secondary" href="https://tarifs.digiylyfe.com/" target="_blank" rel="noopener noreferrer">Tarifs</a>
-        <a class="btn primary" id="btnSubmitTop" href="./submit.html">+ Ajouter</a>
-        <a class="btn ghost hidden" id="btnAccessTop" href="./submit.html">+ Ajouter</a>
-        <a class="btn secondary hidden" id="btnCockpitTop" href="./cockpit.html">Accueil</a>
-        <a class="btn info hidden" id="btnClawTop" href="./claw.html">Plus</a>
-        <a class="btn warn hidden" id="btnPinTop" href="./pin.html">Accès</a>
-      </div>
-    </header>
-
-    <section class="hero">
-      <article class="panel heroMain">
-        <div class="badge">Lecture terrain</div>
-        <h1 class="heroTitle">Tes lieux, vite et clair.</h1>
-        <p class="heroLead">
-          Regarde ce qui est visible, corrige ce qui fatigue, ajoute ce qui manque.
-        </p>
-
-        <div class="heroActions">
-          <a class="btn primary" id="btnHeroSubmit" href="./submit.html">Ajouter</a>
-          <a class="btn secondary" id="btnHeroCockpit" href="./cockpit.html">Accueil</a>
-          <a class="btn info hidden" id="btnHeroClaw" href="./claw.html">Ouvrir la lecture utile</a>
-          <a class="btn warn hidden" id="btnHeroPin" href="./pin.html">Accès</a>
-        </div>
-
-        <div class="mobileFastRow">
-          <a id="fastHome" href="./cockpit.html">🏠 Accueil</a>
-          <a class="primary" id="fastLieux" href="./lieux.html">📍 Lieux</a>
-          <a id="fastSubmit" href="./submit.html">➕ Ajouter</a>
-          <a id="fastNotes" href="./cockpit.html#quickExploreNote">✍️ Notes</a>
-        </div>
-      </article>
-
-      <aside class="panel heroSide">
-        <div class="miniStat">
-          <div class="miniLabel">Session</div>
-          <div class="miniValue" id="heroPhone">Protégée</div>
-          <div class="miniHint">Le numéro reste dans le coffre et ne circule pas dans l’adresse.</div>
-        </div>
-
-        <div class="miniStat">
-          <div class="miniLabel">Fiche</div>
-          <div class="miniValue" id="heroSlug">Repérée</div>
-          <div class="miniHint">La fiche sélectionnée reste en session locale, sans paramètre visible.</div>
-        </div>
-
-        <div class="miniStat">
-          <div class="miniLabel">Action utile</div>
-          <div class="miniValue" id="heroAction">—</div>
-          <div class="miniHint" id="heroStatusHint">La prochaine action simple.</div>
-        </div>
-      </aside>
-    </section>
-
-    <nav class="nav" aria-label="Navigation EXPLORE">
-      <a id="navCockpit" href="./cockpit.html">Accueil</a>
-      <a id="navLieux" class="active" href="./lieux.html">Lieux</a>
-      <a id="navSubmit" href="./submit.html">Ajouter</a>
-      <a id="navClaw" href="./claw.html">Plus</a>
-      <a id="navPinRescue" class="hidden" href="./pin.html">Accès</a>
-    </nav>
-
-    <div id="msg" class="msg info"></div>
-
-    <div class="mobileNudge">Un lieu publié donne envie. Un brouillon attend ta main. Ici tu vois vite où agir.</div>
-
-    <section class="stats">
-      <article class="statCard">
-        <div class="statLabel">Lieux</div>
-        <div class="statValue" id="statTotal">—</div>
-        <div class="statFoot">Total.</div>
-      </article>
-      <article class="statCard">
-        <div class="statLabel">Publiés</div>
-        <div class="statValue" id="statPublished">—</div>
-        <div class="statFoot">Visibles.</div>
-      </article>
-      <article class="statCard">
-        <div class="statLabel">Brouillons</div>
-        <div class="statValue" id="statDraft">—</div>
-        <div class="statFoot">À finir.</div>
-      </article>
-      <article class="statCard">
-        <div class="statLabel">Archivés</div>
-        <div class="statValue" id="statArchived">—</div>
-        <div class="statFoot">Rangés.</div>
-      </article>
-    </section>
-
-    <details class="foldPanel" id="clawDetails">
-      <summary>Ouvrir Plus<span class="foldHint">Lecture simple de tes lieux, sans prendre toute la page.</span></summary>
-      <section class="clawGrid" id="clawSection">
-      <article class="clawCard">
-        <div class="clawHead">
-          <div>
-            <div class="clawKicker">Lecture terrain</div>
-            <h2 class="clawTitle">Lecture légère des lieux</h2>
-          </div>
-          <div class="clawMode" id="clawMode">Plus légère</div>
-        </div>
-        <div class="clawText" id="clawSummary">
-          L’analyse lit l’état de tes lieux, la publication et la prochaine action simple.
-        </div>
-        <div class="clawPills" id="clawPills"></div>
-      </article>
-
-      <article class="clawCard">
-        <div class="clawList" id="clawList">
-          <div class="clawItem">
-            <strong>Chargement</strong>
-            <span>L’analyse attend le téléphone pilote et la liste réelle des lieux.</span>
-          </div>
-        </div>
-      </article>
-      </section>
-    </details>
-
-    <section class="toolbar">
-      <div class="searchWrap">
-        <input id="searchInput" class="input" type="text" placeholder="Chercher un lieu…" />
-      </div>
-      <div class="filterWrap">
-        <select id="statusFilter" class="select">
-          <option value="all">Tous</option>
-          <option value="published">Publiés</option>
-          <option value="draft">Brouillons</option>
-          <option value="archived">Archivés</option>
-        </select>
-      </div>
-      <button id="reloadBtn" class="btn secondary" type="button">↻ Recharger</button>
-    </section>
-
-    <section id="list" class="list">
-      <div class="card">
-        <div class="loading">Chargement des lieux…</div>
-      </div>
-    </section>
-
-    <div class="foot">
-      DIGIY EXPLORE • lieux • ajouter • notes • visibilité
+      <span class="exploreActionBadge">Chef de passe</span>
     </div>
+
+    <div id="exploreAlerts" data-digiy-explore-alerts></div>
   </div>
+</section>
 
+<!-- 4) À placer avant </body> -->
+<div id="digiyExploreCamembert" aria-label="Guide vocal DIGIY EXPLORE">
+  <button class="digiyExploreCenter" id="digiyExploreCenter" type="button" aria-expanded="false" aria-pressed="false">
+    <span>🎧</span>
+    <strong>DIGIY</strong>
+  </button>
 
-  <nav class="bottomNav" aria-label="Navigation EXPLORE">
-    <div class="bottomNavInner">
-      <a id="bottomHome" href="./cockpit.html"><span class="ico">🏠</span><span>Accueil</span></a>
-      <a class="active" id="bottomLieux" href="./lieux.html"><span class="ico">📍</span><span>Lieux</span></a>
-      <a id="bottomSubmit" href="./submit.html"><span class="ico">➕</span><span>Ajouter</span></a>
-      <a id="bottomNotes" href="./cockpit.html#quickExploreNote"><span class="ico">✍️</span><span>Notes</span></a>
-      <a id="bottomMore" href="./claw.html"><span class="ico">⚙️</span><span>Plus</span></a>
-    </div>
-  </nav>
+  <div class="digiyExploreMenu" id="digiyExploreMenu">
+    <button class="gold" id="digiyExploreListen" type="button">Écouter</button>
+    <button id="digiyExploreClose" type="button">Fermer</button>
+    <button class="green" id="digiyExplorePlaces" type="button">Mes lieux</button>
+    <button class="blue" id="digiyExploreAdd" type="button">Ajouter</button>
+  </div>
+</div>
 
-  <script>
-    (function(){
-      "use strict";
+<script>
+  (function(){
+    "use strict";
 
-      const PUBLIC_VITRINE_BASE = "https://explore.digiylyfe.com/";
-      const SESSION_KEY = "digiy_explore_session";
-      const MAX_AGE_MS = 8 * 60 * 60 * 1000;
+    const root = document.getElementById("digiyExploreCamembert");
+    const center = document.getElementById("digiyExploreCenter");
+    const listen = document.getElementById("digiyExploreListen");
+    const close = document.getElementById("digiyExploreClose");
+    const places = document.getElementById("digiyExplorePlaces");
+    const add = document.getElementById("digiyExploreAdd");
 
-      const supabase = window.supabase.createClient(
-        window.DIGIY_SUPABASE_URL,
-        window.DIGIY_SUPABASE_ANON_KEY
-      );
+    const AUDIO_TEXT =
+      "Bienvenue dans Mes lieux EXPLORE by DIGIY. Ici, tu ne dois pas te perdre dans les détails. Regarde d’abord les fiches déjà posées. Un lieu publié doit donner envie. Un brouillon attend ta main. Une fiche archivée reste rangée. Clique seulement sur ce qui mérite une action : voir, corriger, publier ou revenir à la fiche publique. L’écran montre les lieux. DIGIY t’aide à comprendre où agir.";
 
-      const $ = (id) => document.getElementById(id);
+    let playing = false;
 
-      const msg = $("msg");
-      const heroPhone = $("heroPhone");
-      const heroSlug = $("heroSlug");
-      const heroAction = $("heroAction");
-      const heroStatusHint = $("heroStatusHint");
-      const subline = $("subline");
+    function setOpen(open){
+      if(!root || !center) return;
+      root.classList.toggle("open", !!open);
+      center.setAttribute("aria-expanded", open ? "true" : "false");
+    }
 
-      const statTotal = $("statTotal");
-      const statPublished = $("statPublished");
-      const statDraft = $("statDraft");
-      const statArchived = $("statArchived");
+    function setPlaying(state){
+      playing = !!state;
+      if(!root || !center) return;
+      root.classList.toggle("playing", playing);
+      center.setAttribute("aria-pressed", playing ? "true" : "false");
+      center.innerHTML = playing
+        ? "<span>⏹</span><strong>Stop</strong>"
+        : "<span>🎧</span><strong>DIGIY</strong>";
+    }
 
-      const searchInput = $("searchInput");
-      const statusFilter = $("statusFilter");
-      const reloadBtn = $("reloadBtn");
-      const list = $("list");
+    function getVoice(){
+      const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+      return voices.find(v => /^fr/i.test(v.lang || "")) || null;
+    }
 
-      let ALL_ITEMS = [];
-      let CURRENT_PHONE = "";
-      let CURRENT_SLUG = "";
-      let CURRENT_ACCESS_OK = false;
+    function stop(){
+      try{ window.speechSynthesis && window.speechSynthesis.cancel(); }catch(_){}
+      setPlaying(false);
+    }
 
-      function setMsg(text, type){
-        if(!text){
-          msg.className = "msg";
-          msg.textContent = "";
-          return;
-        }
-        msg.className = "msg show " + (type || "info");
-        msg.textContent = text;
+    function speak(){
+      if(!("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)){
+        alert("Audio indisponible sur ce navigateur.");
+        return;
       }
 
-      function setClaw(mode, summary, pills = [], items = []){
-        $("clawMode").textContent = mode || "Plus légère";
-        $("clawSummary").textContent = summary || "L’aide lit tes lieux sans bavarder.";
-
-        $("clawPills").innerHTML = (Array.isArray(pills) ? pills : [])
-          .filter(Boolean)
-          .map(p => `<div class="clawPill">${escapeHtml(p)}</div>`)
-          .join("");
-
-        $("clawList").innerHTML = (Array.isArray(items) ? items : [])
-          .filter(Boolean)
-          .map(item => `
-            <div class="clawItem">
-              <strong>${escapeHtml(item.title || "Point utile")}</strong>
-              <span>${escapeHtml(item.text || "—")}</span>
-            </div>
-          `)
-          .join("");
+      if(playing){
+        stop();
+        return;
       }
 
-      function setClawLoading(){
-        setClaw(
-          "Chargement",
-          "L’analyse attend le téléphone pilote, la lecture du guard et la liste réelle des lieux.",
-          ["Espace prêt", "Lieux", "Données réelles"],
-          [
-            { title:"Lecture attendue", text:"L’écran relit le nombre de lieux, leur visibilité et l’action utile." },
-            { title:"Direction utile", text:"Quand le rail est ouvert, on passe vers Ajouter, Accueil ou Plus selon le besoin." }
-          ]
-        );
+      stop();
+
+      const utter = new SpeechSynthesisUtterance(AUDIO_TEXT);
+      utter.lang = "fr-FR";
+      utter.rate = 0.86;
+      utter.pitch = 1.04;
+      utter.volume = 1;
+
+      const voice = getVoice();
+      if(voice) utter.voice = voice;
+
+      utter.onstart = () => setPlaying(true);
+      utter.onend = () => setTimeout(stop, 120);
+      utter.onerror = stop;
+
+      window.speechSynthesis.speak(utter);
+    }
+
+    center && center.addEventListener("click", function(){
+      setOpen(!root.classList.contains("open"));
+    });
+
+    listen && listen.addEventListener("click", speak);
+
+    close && close.addEventListener("click", function(){
+      stop();
+      setOpen(false);
+    });
+
+    places && places.addEventListener("click", function(){
+      location.href = "./lieux.html";
+    });
+
+    add && add.addEventListener("click", function(){
+      location.href = "./submit.html";
+    });
+
+    document.addEventListener("click", function(e){
+      if(root && !root.contains(e.target)){
+        setOpen(false);
       }
-
-      function setClawMissingAccess(){
-        setClaw(
-          "Accès à rouvrir",
-          "L’aide reste sobre : l’accès n’est pas ouvert, donc la liste ne peut pas encore se charger.",
-          ["Accès", "Accès fermé"],
-          [
-            { title:"Point à régler", text:"La page attend ton entrée active pour relier les lieux au bon numéro." },
-            { title:"Action utile", text:"Rouvre ton accès, puis reviens ici." }
-          ]
-        );
-      }
-
-      function normalizePhone(v){
-        return String(v || "").replace(/[^\d]/g, "");
-      }
-
-      function normalizeSlug(v){
-        return String(v || "")
-          .trim()
-          .toLowerCase()
-          .replace(/\s+/g, "-")
-          .replace(/[^a-z0-9-]/g, "")
-          .replace(/-+/g, "-")
-          .replace(/^-|-$/g, "");
-      }
-
-      function safeJsonParse(raw){
-        try{ return JSON.parse(raw); }catch(_){ return null; }
-      }
-
-      async function waitGuard(){
-        try{
-          if(window.DIGIY_GUARD?.ready && typeof window.DIGIY_GUARD.ready === "function"){
-            await window.DIGIY_GUARD.ready();
-          }
-        }catch(_){}
-      }
-
-      function getSession(){
-        try{
-          const rawSession = sessionStorage.getItem(SESSION_KEY);
-          if(rawSession){
-            const parsed = safeJsonParse(rawSession);
-            if(parsed && parsed.phone && parsed.ts && (Date.now() - parsed.ts) <= MAX_AGE_MS){
-              return parsed;
-            }
-          }
-        }catch(_){}
-
-        try{
-          const rawLocal = localStorage.getItem(SESSION_KEY);
-          if(rawLocal){
-            const parsed = safeJsonParse(rawLocal);
-            if(parsed && parsed.phone && parsed.ts && (Date.now() - parsed.ts) <= MAX_AGE_MS){
-              return parsed;
-            }
-          }
-        }catch(_){}
-
-        const guardState = window.DIGIY_GUARD?.state || null;
-        if(guardState?.phone || guardState?.slug){
-          return {
-            phone: normalizePhone(guardState.phone || ""),
-            slug: normalizeSlug(guardState.slug || ""),
-            access_ok: typeof guardState.access_ok === "boolean" ? guardState.access_ok : undefined,
-            ts: Date.now()
-          };
-        }
-
-        return null;
-      }
-
-      function saveSession(next){
-        const payload = {
-          phone: normalizePhone(next?.phone || ""),
-          slug: normalizeSlug(next?.slug || ""),
-          module: "EXPLORE",
-          ts: Date.now()
-        };
-        const raw = JSON.stringify(payload);
-        try{ sessionStorage.setItem(SESSION_KEY, raw); }catch(_){}
-        try{ localStorage.setItem(SESSION_KEY, raw); }catch(_){}
-      }
-
-      function getGuardState(){
-        const st = window.DIGIY_GUARD?.state || {};
-        return {
-          phone: normalizePhone(st.phone || ""),
-          slug: normalizeSlug(st.slug || ""),
-          access_ok: typeof st.access_ok === "boolean" ? st.access_ok : null
-        };
-      }
-
-      function cleanVisibleUrl(){
-        try{
-          const url = new URL(window.location.href);
-          let changed = false;
-          ["slug","phone","tel","owner_phone","owner_id","business_code","access_note","keybox_code","keybox_location"].forEach(function(key){
-            if(url.searchParams.has(key)){
-              url.searchParams.delete(key);
-              changed = true;
-            }
-          });
-          if(changed){
-            history.replaceState({}, document.title, url.pathname + url.search + url.hash);
-          }
-        }catch(_){}
-      }
-
-      function rememberSelectedPlaceSlug(value){
-        const clean = normalizeSlug(value || "");
-        if(!clean) return;
-        try{
-          sessionStorage.setItem("digiy_explore_selected_place_slug", clean);
-          localStorage.setItem("digiy_explore_selected_place_slug", clean);
-          sessionStorage.setItem("digiy_explore_slug", clean);
-          localStorage.setItem("digiy_explore_slug", clean);
-        }catch(_){}
-      }
-
-      function getSelectedPlaceSlug(){
-        try{
-          return normalizeSlug(
-            sessionStorage.getItem("digiy_explore_selected_place_slug") ||
-            localStorage.getItem("digiy_explore_selected_place_slug") ||
-            ""
-          );
-        }catch(_){
-          return "";
-        }
-      }
-
-      function getPhone(){
-        const guard = getGuardState();
-        if(guard.phone) return guard.phone;
-        const session = getSession();
-        if(session?.phone) return normalizePhone(session.phone);
-        try{
-          const saved = sessionStorage.getItem("digiy_explore_phone") || localStorage.getItem("digiy_explore_phone");
-          if(saved) return normalizePhone(saved);
-        }catch(_){}
-        return "";
-      }
-
-      function getSlug(){
-        const selected = getSelectedPlaceSlug();
-        if(selected) return selected;
-        const guard = getGuardState();
-        if(guard.slug) return guard.slug;
-        const session = getSession();
-        if(session?.slug) return normalizeSlug(session.slug);
-        return "";
-      }
-
-      function resolveAccess(){
-        const guard = getGuardState();
-        const session = getSession();
-        if(typeof guard.access_ok === "boolean") return guard.access_ok;
-        if(typeof session?.access_ok === "boolean") return session.access_ok;
-        return !!(guard.phone || session?.phone);
-      }
-
-      function fmtDate(v){
-        try{
-          if(!v) return "—";
-          return new Date(v).toLocaleString("fr-FR", {
-            year:"numeric", month:"2-digit", day:"2-digit",
-            hour:"2-digit", minute:"2-digit"
-          });
-        }catch(_){ return String(v || "—"); }
-      }
-
-      function escapeHtml(value){
-        return String(value ?? "")
-          .replaceAll("&", "&amp;")
-          .replaceAll("<", "&lt;")
-          .replaceAll(">", "&gt;")
-          .replaceAll('"', "&quot;")
-          .replaceAll("'", "&#039;");
-      }
-
-      function buildQuery(){
-        return "";
-      }
-
-      function buildInternalHref(path){
-        return path;
-      }
-
-      function buildPublicFicheHref(slug){
-        const safeSlug = normalizeSlug(slug);
-        return safeSlug
-          ? PUBLIC_VITRINE_BASE + "?slug=" + encodeURIComponent(safeSlug)
-          : PUBLIC_VITRINE_BASE;
-      }
-
-      function refreshNavLinks(){
-        $("btnAccessTop").href = buildInternalHref("./submit.html");
-        $("btnCockpitTop").href = buildInternalHref("./cockpit.html");
-        $("btnClawTop").href = buildInternalHref("./claw.html");
-        $("btnSubmitTop").href = buildInternalHref("./submit.html");
-        $("btnPinTop").href = buildInternalHref("./pin.html");
-
-        $("btnHeroCockpit").href = buildInternalHref("./cockpit.html");
-        $("btnHeroSubmit").href = buildInternalHref("./submit.html");
-        $("btnHeroClaw").href = buildInternalHref("./claw.html");
-        $("btnHeroPin").href = buildInternalHref("./pin.html");
-
-        $("navCockpit").href = buildInternalHref("./cockpit.html");
-        $("navLieux").href = buildInternalHref("./lieux.html");
-        $("navSubmit").href = buildInternalHref("./submit.html");
-        $("navClaw").href = buildInternalHref("./claw.html");
-        $("navPinRescue").href = buildInternalHref("./pin.html");
-
-        const notesHref = buildInternalHref("./cockpit.html") + "#quickExploreNote";
-        const extraLinks = {
-          fastHome: buildInternalHref("./cockpit.html"),
-          fastLieux: buildInternalHref("./lieux.html"),
-          fastSubmit: buildInternalHref("./submit.html"),
-          fastNotes: notesHref,
-          bottomHome: buildInternalHref("./cockpit.html"),
-          bottomLieux: buildInternalHref("./lieux.html"),
-          bottomSubmit: buildInternalHref("./submit.html"),
-          bottomNotes: notesHref,
-          bottomMore: buildInternalHref("./claw.html")
-        };
-
-        Object.entries(extraLinks).forEach(([id, href]) => {
-          const el = $(id);
-          if(el) el.href = href;
-        });
-      }
-
-      function setRescueVisibility(show){
-        $("btnPinTop").classList.toggle("hidden", !show);
-        $("btnHeroPin").classList.toggle("hidden", !show);
-        $("navPinRescue").classList.toggle("hidden", !show);
-      }
-
-      function computeStats(items){
-        const total = items.length;
-        const published = items.filter(x => x?.is_published === true && x?.status === "published").length;
-        const archived = items.filter(x => x?.status === "archived").length;
-        const draft = items.filter(x => x?.status === "draft" || (x?.is_published !== true && x?.status !== "archived")).length;
-        statTotal.textContent = String(total);
-        statPublished.textContent = String(published);
-        statDraft.textContent = String(draft);
-        statArchived.textContent = String(archived);
-      }
-
-      function getFilteredItems(){
-        const q = String(searchInput.value || "").trim().toLowerCase();
-        const status = statusFilter.value || "all";
-
-        return ALL_ITEMS.filter(function(item){
-          const hay = [item?.public_name, item?.slug, item?.category_code, item?.city, item?.zone].join(" ").toLowerCase();
-          const matchSearch = !q || hay.includes(q);
-          let matchStatus = true;
-          if(status === "published") matchStatus = item?.is_published === true && item?.status === "published";
-          else if(status === "draft") matchStatus = item?.status === "draft" || (item?.is_published !== true && item?.status !== "archived");
-          else if(status === "archived") matchStatus = item?.status === "archived";
-          return matchSearch && matchStatus;
-        });
-      }
-
-      function updateHeroAndClaw(items){
-        const total = items.length;
-        const published = items.filter(x => x?.is_published === true && x?.status === "published").length;
-        const archived = items.filter(x => x?.status === "archived").length;
-        const drafts = items.filter(x => x?.status === "draft" || (x?.is_published !== true && x?.status !== "archived")).length;
-
-        heroPhone.textContent = CURRENT_PHONE ? "Ouverte" : "À rouvrir";
-        heroSlug.textContent = CURRENT_SLUG ? "Fiche repérée" : "—";
-
-        if(!CURRENT_ACCESS_OK || !CURRENT_PHONE){
-          heroAction.textContent = "Entrer par PIN";
-          heroStatusHint.textContent = "Passe d’abord par pin.html pour ouvrir la session.";
-          setClawMissingAccess();
-          return;
-        }
-
-        if(!total){
-          heroAction.textContent = "Ajouter un lieu";
-          heroStatusHint.textContent = "Le rail est actif mais aucun lieu n’est encore remonté.";
-          setClaw(
-            "Rail vivant",
-            "Le numéro pilote est reconnu, mais aucun lieu n’est encore visible.",
-            ["Session ouverte", "0 lieu", "Action : ajouter"].filter(Boolean),
-            [
-              { title:"Lecture du rail", text:"L’accès répond, mais aucun lieu n’est encore lié à ce numéro." },
-              { title:"Action utile", text:"Ajoute une première fiche pour lancer ton espace." }
-            ]
-          );
-          return;
-        }
-
-        heroStatusHint.textContent = `${total} lieu(x) chargé(s) sur le backend réel.`;
-        heroAction.textContent = published ? "Affiner les fiches publiées" : "Publier un premier lieu";
-
-        const first = CURRENT_SLUG
-          ? items.find(x => normalizeSlug(x?.slug) === CURRENT_SLUG) || items[0]
-          : items[0];
-
-        const firstName = first?.public_name || "Lieu pilote";
-        const firstSlug = normalizeSlug(first?.slug || "");
-
-        setClaw(
-          "Lecture vivante",
-          "L’analyse relit la densité du rail EXPLORE : lieux, publiés, brouillons et prochaine action terrain.",
-          [
-            "Session ouverte",
-            CURRENT_SLUG ? "Fiche repérée" : "",
-            `${total} lieu(x)`,
-            `${published} publié(s)`,
-            `${drafts} brouillon(s)`,
-            archived ? `${archived} archivé(s)` : ""
-          ].filter(Boolean),
-          [
-            { title:"Lieu pilote", text:`${firstName}${firstSlug ? " (" + firstSlug + ")" : ""} ouvre la marche de la liste actuelle.` },
-            {
-              title:"Action utile",
-              text: published
-                ? "Passe par Plus ou Ajouter pour renforcer la lecture publique des lieux déjà publiés."
-                : "Le cran logique est de publier au moins une fiche propre pour rendre le rail visible."
-            },
-            { title:"Navigation utile", text:"Tu peux passer de lieux à ma gestion, ajouter / éditer ou analyse sans quitter le même rail." }
-          ]
-        );
-      }
-
-      function renderList(){
-        const items = getFilteredItems();
-
-        if(!items.length){
-          list.innerHTML = `
-            <div class="card">
-              <div class="cardInner">
-                <div class="empty">
-                  Aucun lieu ne correspond au filtre actuel. Essaie un autre filtre, ou ajoute une nouvelle fiche dans <b>submit.html</b>.
-                </div>
-              </div>
-            </div>
-          `;
-          return;
-        }
-
-        list.innerHTML = items.map(function(item){
-          const safeSlug = normalizeSlug(item?.slug || "");
-          const isPublished = item?.is_published === true && item?.status === "published";
-          const isArchived = item?.status === "archived";
-
-          let statusClass = "warn";
-          let statusText = item?.status || "draft";
-
-          if(isPublished){ statusClass = "ok"; statusText = "Publié"; }
-          else if(isArchived){ statusClass = "bad"; statusText = "Archivé"; }
-          else { statusText = "Brouillon"; }
-
-          const zoneLine = [item?.city, item?.zone].filter(Boolean).join(" — ");
-          const featured = item?.is_featured ? '<span class="slug">Mis en avant</span>' : "";
-          const publicHref = buildPublicFicheHref(safeSlug);
-
-          return `
-            <article class="card">
-              <div class="cardInner">
-                <div class="cardTop">
-                  <div class="cardMain">
-                    <h2 class="cardTitle">${escapeHtml(item?.public_name || "Lieu sans nom")}</h2>
-                    <div class="meta">
-                      <b>Lieu :</b> ${escapeHtml(zoneLine || "Zone non précisée")}<br>
-                      <b>Catégorie :</b> ${escapeHtml(item?.category_code || "—")}<br>
-                      <b>Mise à jour :</b> ${escapeHtml(fmtDate(item?.updated_at))}
-                    </div>
-                  </div>
-                  <div class="statusRow">
-                    <div class="status ${statusClass}">${escapeHtml(statusText)}</div>
-                    ${featured}
-                  </div>
-                </div>
-
-                <div class="actions">
-                  <a class="btn secondary js-select-place" data-slug="${escapeHtml(safeSlug)}" href="./submit.html">Corriger</a>
-                  <a class="btn ghost js-select-place" data-slug="${escapeHtml(safeSlug)}" href="./cockpit.html">Accueil</a>
-                  <a class="btn info js-select-place" data-slug="${escapeHtml(safeSlug)}" href="./claw.html">Plus</a>
-                  <a class="btn ghost" href="${escapeHtml(publicHref)}" target="_blank" rel="noopener">🌍 Voir fiche publique</a>
-                  ${isPublished
-                    ? `<button class="btn secondary js-unpublish" data-slug="${escapeHtml(safeSlug)}">Retirer</button>`
-                    : `<button class="btn primary js-publish" data-slug="${escapeHtml(safeSlug)}">Publier</button>`
-                  }
-                  <button class="btn ghost js-archive" data-slug="${escapeHtml(safeSlug)}">Ranger</button>
-                </div>
-              </div>
-            </article>
-          `;
-        }).join("");
-
-        bindActions();
-      }
-
-      function bindActions(){
-        list.querySelectorAll(".js-select-place").forEach(function(link){
-          link.addEventListener("click", function(){
-            rememberSelectedPlaceSlug(link.getAttribute("data-slug") || "");
-          });
-        });
-
-        list.querySelectorAll(".js-publish").forEach(function(btn){
-          btn.addEventListener("click", async function(){
-            await publishSlug(btn.getAttribute("data-slug") || "", true);
-          });
-        });
-        list.querySelectorAll(".js-unpublish").forEach(function(btn){
-          btn.addEventListener("click", async function(){
-            await publishSlug(btn.getAttribute("data-slug") || "", false);
-          });
-        });
-        list.querySelectorAll(".js-archive").forEach(function(btn){
-          btn.addEventListener("click", async function(){
-            await archiveSlug(btn.getAttribute("data-slug") || "");
-          });
-        });
-      }
-
-      async function loadPlaces(phone){
-        const { data, error } = await supabase.rpc("digiy_explore_list_places_by_phone", {
-          p_owner_phone: phone
-        });
-        if(error) throw error;
-        return Array.isArray(data) ? data : [];
-      }
-
-      async function rpcSetPublish(phone, slug, publish){
-        const { data, error } = await supabase.rpc("digiy_explore_set_publish", {
-          p_owner_phone: phone,
-          p_slug: slug,
-          p_publish: publish
-        });
-        if(error) throw error;
-        return data;
-      }
-
-      async function rpcArchive(phone, slug){
-        const { data, error } = await supabase.rpc("digiy_explore_archive_place", {
-          p_owner_phone: phone,
-          p_slug: slug
-        });
-        if(error) throw error;
-        return data;
-      }
-
-      async function refresh(){
-        if(!CURRENT_ACCESS_OK || !CURRENT_PHONE){
-          heroPhone.textContent = CURRENT_PHONE ? "Ouverte" : "À rouvrir";
-          heroSlug.textContent = CURRENT_SLUG ? "Fiche repérée" : "—";
-          heroAction.textContent = "Entrer par PIN";
-          heroStatusHint.textContent = "Passe d’abord par pin.html pour ouvrir la session.";
-          setMsg("Aucun accès ouvert. Rouvre ton accès.", "bad");
-          list.innerHTML = `<div class="card"><div class="cardInner"><div class="empty">Pas d’accès actif. Reviens sur <b>Mon accès</b> pour entrer.</div></div></div>`;
-          setClawMissingAccess();
-          return;
-        }
-
-        heroPhone.textContent = "Ouverte";
-        heroSlug.textContent = CURRENT_SLUG ? "Fiche repérée" : "—";
-        heroAction.textContent = "Plus";
-        heroStatusHint.textContent = "Lecture des lieux en cours…";
-        setMsg("Chargement de tes lieux…", "info");
-        reloadBtn.disabled = true;
-
-        try{
-          const items = await loadPlaces(CURRENT_PHONE);
-          ALL_ITEMS = items;
-
-          if(!CURRENT_SLUG && items.length){
-            CURRENT_SLUG = normalizeSlug(items[0]?.slug || "");
-            rememberSelectedPlaceSlug(CURRENT_SLUG);
-            saveSession({ phone: CURRENT_PHONE, slug: CURRENT_SLUG });
-            refreshNavLinks();
-          }
-
-          computeStats(items);
-          renderList();
-          updateHeroAndClaw(items);
-          setMsg("Tes lieux sont chargés.", "ok");
-        }catch(err){
-          console.error("[EXPLORE lieux] load error:", err);
-          heroAction.textContent = "Vérifier le rail";
-          heroStatusHint.textContent = "Impossible de lire la liste réelle.";
-          list.innerHTML = `<div class="card"><div class="cardInner"><div class="empty">La liste n’a pas pu être chargée. Rouvre ton accès, puis recharge.</div></div></div>`;
-          setMsg("Impossible de charger tes lieux pour le moment.", "bad");
-          setClaw("Erreur", "L’aide a détecté un blocage pendant la lecture de tes lieux.",
-            [CURRENT_PHONE ? "Session ouverte" : "Session absente", CURRENT_SLUG ? "Fiche repérée" : "", "Contrôle à faire"].filter(Boolean),
-            [
-              { title:"Point à régler", text:"La page n’a pas pu relire ta liste de lieux." },
-              { title:"Action utile", text:"Recharge la page, puis rouvre ton accès si besoin." }
-            ]
-          );
-        }finally{
-          reloadBtn.disabled = false;
-        }
-      }
-
-      async function publishSlug(slug, publish){
-        if(!CURRENT_PHONE || !slug) return;
-        setMsg((publish ? "Publication" : "Dépublication") + " en cours pour " + slug + "...", "info");
-        try{
-          const res = await rpcSetPublish(CURRENT_PHONE, slug, publish);
-          if(!res || res.ok !== true) throw new Error("RPC publish invalide");
-          if(!CURRENT_SLUG){
-            CURRENT_SLUG = normalizeSlug(slug);
-            rememberSelectedPlaceSlug(CURRENT_SLUG);
-            saveSession({ phone: CURRENT_PHONE, slug: CURRENT_SLUG });
-            refreshNavLinks();
-          }
-          setMsg(publish ? "Lieu publié avec succès." : "Le lieu est retiré du public.", "ok");
-          await refresh();
-        }catch(err){
-          console.error("[EXPLORE lieux] publish error:", err);
-          setMsg("L’action n’a pas abouti.", "bad");
-        }
-      }
-
-      async function archiveSlug(slug){
-        if(!CURRENT_PHONE || !slug) return;
-        const confirmed = window.confirm("Ranger ce lieu ? Il sera retiré de la lecture active.");
-        if(!confirmed) return;
-        setMsg("Rangement en cours pour " + slug + "...", "info");
-        try{
-          const res = await rpcArchive(CURRENT_PHONE, slug);
-          if(!res || res.ok !== true) throw new Error("RPC archive invalide");
-          setMsg("Lieu rangé avec succès.", "ok");
-          await refresh();
-        }catch(err){
-          console.error("[EXPLORE lieux] archive error:", err);
-          setMsg("Le rangement a échoué.", "bad");
-        }
-      }
-
-      async function boot(){
-        cleanVisibleUrl();
-        setClawLoading();
-        await waitGuard();
-
-        CURRENT_PHONE = getPhone();
-        CURRENT_SLUG = getSlug();
-        CURRENT_ACCESS_OK = resolveAccess();
-
-        if(CURRENT_PHONE || CURRENT_SLUG){
-          saveSession({ phone: CURRENT_PHONE, slug: CURRENT_SLUG });
-        }
-
-        refreshNavLinks();
-        setRescueVisibility(!CURRENT_ACCESS_OK);
-
-        if(!CURRENT_ACCESS_OK || !CURRENT_PHONE){
-          heroPhone.textContent = CURRENT_PHONE ? "Ouverte" : "À rouvrir";
-          heroSlug.textContent = CURRENT_SLUG ? "Fiche repérée" : "—";
-          heroAction.textContent = "Entrer par PIN";
-          heroStatusHint.textContent = "Passe d’abord par pin.html pour ouvrir la session.";
-          subline.textContent = "Aucune session active détectée.";
-          setMsg("Aucun téléphone trouvé. Rouvre d’abord ton accès.", "bad");
-          list.innerHTML = `<div class="card"><div class="cardInner"><div class="empty">Pas d’accès actif. Reviens sur <b>Mon accès</b> pour entrer.</div></div></div>`;
-          setClawMissingAccess();
-          document.documentElement.style.visibility = "";
-          return;
-        }
-
-        heroPhone.textContent = "Ouverte";
-        heroSlug.textContent = CURRENT_SLUG ? "Fiche repérée" : "—";
-        subline.textContent = "Gestion des lieux rattachés à ta session protégée.";
-        searchInput.addEventListener("input", renderList);
-        statusFilter.addEventListener("change", renderList);
-        reloadBtn.addEventListener("click", refresh);
-
-        await refresh();
-        document.documentElement.style.visibility = "";
-      }
-
-      boot().catch(function(err){
-        console.error("[EXPLORE lieux] boot error:", err);
-        setMsg("Le chargement a échoué.", "bad");
-        setClawMissingAccess();
-        document.documentElement.style.visibility = "";
-      });
-    })();
-  </script>
-</body>
-</html>
+    });
+
+    if(window.speechSynthesis && typeof window.speechSynthesis.onvoiceschanged !== "undefined"){
+      window.speechSynthesis.onvoiceschanged = getVoice;
+    }
+
+    window.addEventListener("beforeunload", stop);
+    document.addEventListener("visibilitychange", function(){
+      if(document.hidden) stop();
+    });
+  })();
+</script>
