@@ -1594,10 +1594,17 @@ const $ = (id) => document.getElementById(id);
       }
 
       function buildPublicPlaceHref(place){
-        const slug = normalizeSlug(place?.slug || "");
-        if(!slug || !isPublished(place)) return "";
+        const publicSlug = normalizeSlug(
+          place?.public_slug ||
+          place?.publicSlug ||
+          place?.public_url_slug ||
+          ""
+        );
+
+        if(!publicSlug || !isPublished(place)) return "";
+
         const url = new URL(PUBLIC_EXPLORE_BASE);
-        url.searchParams.set("slug", slug);
+        url.searchParams.set("slug", publicSlug);
         return url.toString();
       }
 
