@@ -1,327 +1,2244 @@
-<!-- DIGIY EXPLORE PRO — AJOUT PROPRE POUR cockpit.html -->
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <meta name="theme-color" content="#06130f"/>
+  <meta name="description" content="Retrouve tes lieux, ta visibilité et la prochaine bonne action sans détour."/>
+  <title>Je fais découvrir mon lieu — Accueil</title>
 
-<!-- 1) À mettre dans <head>, sans doublon avec Supabase/guard existants -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./guard.js?v=explore-guard"></script>
-<script src="./claw-tools-explore.js?v=explore-claw"></script>
-<script src="./explore-alerts.js?v=explore-alerts"></script>
+  <script>
+    window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
+    window.DIGIY_SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
+    window.DIGIY_SUPABASE_ANON = window.DIGIY_SUPABASE_ANON_KEY;
+    window.DIGIY_MODULE = "EXPLORE";
+    window.DIGIY_LOGIN_URL = "./pin.html";
+    document.documentElement.style.visibility = "hidden";
+  </script>
 
-<!-- 2) CSS à coller avant </style> -->
-<style>
-.exploreActionPanel{
-  margin-bottom:16px;
-  border-color:rgba(212,175,55,.18);
-  background:
-    radial-gradient(800px 320px at 100% 0%, rgba(212,175,55,.10), transparent 55%),
-    linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
-}
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 
-.exploreActionHead{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
-  gap:12px;
-  flex-wrap:wrap;
-}
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./guard.js?v=explore-cockpit-guard-4"></script>
 
-.exploreActionBadge{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  min-height:34px;
-  padding:0 12px;
-  border-radius:999px;
-  border:1px solid rgba(212,175,55,.26);
-  background:rgba(212,175,55,.10);
-  color:var(--gold2);
-  font-size:12px;
-  font-weight:1000;
-  white-space:nowrap;
-}
+  <style>
+    :root{
+      --bg:#06130f;
+      --bg2:#0a1f18;
+      --card:#0b241b;
+      --card2:#102b22;
+      --line:rgba(255,255,255,.08);
+      --ink:#f8fafc;
+      --muted:rgba(248,250,252,.72);
+      --soft:rgba(248,250,252,.52);
+      --gold:#d4af37;
+      --gold2:#f3d46b;
+      --blue:#38bdf8;
+      --blue2:#7dd3fc;
+      --ok:#22c55e;
+      --warn:#f59e0b;
+      --bad:#ef4444;
+      --radius:22px;
+      --shadow:0 24px 60px rgba(0,0,0,.28);
+      --focus:rgba(212,175,55,.32);
+    }
 
-#digiyExploreCamembert{
-  position:fixed;
-  left:14px;
-  bottom:calc(86px + env(safe-area-inset-bottom,0px));
-  width:84px;
-  height:84px;
-  z-index:99999;
-  font-family:Outfit, Inter, system-ui, sans-serif;
-}
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
 
-#digiyExploreCamembert .digiyExploreCenter{
-  position:absolute;
-  inset:0;
-  width:84px;
-  height:84px;
-  border:none;
-  border-radius:50%;
-  cursor:pointer;
-  color:#fff;
-  box-shadow:0 18px 40px rgba(0,0,0,.34);
-  background:
-    radial-gradient(circle at center, rgba(6,19,15,.95) 0 42%, transparent 43%),
-    conic-gradient(
-      from -90deg,
-      rgba(212,175,55,.96) 0 33%,
-      rgba(34,197,94,.90) 33% 66%,
-      rgba(56,189,248,.88) 66% 100%
-    );
-  overflow:hidden;
-}
+    body{
+      min-height:100vh;
+      color:var(--ink);
+      font-family:Outfit, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(212,175,55,.08), transparent 24%),
+        radial-gradient(circle at right bottom, rgba(56,189,248,.08), transparent 22%),
+        linear-gradient(180deg, #071510 0%, #06130f 48%, #04100c 100%);
+    }
 
-#digiyExploreCamembert .digiyExploreCenter::before{
-  content:"";
-  position:absolute;
-  inset:13px;
-  border-radius:50%;
-  background:rgba(6,19,15,.97);
-  border:1px solid rgba(255,255,255,.10);
-}
+    a{color:inherit;text-decoration:none}
+    button{font:inherit}
 
-#digiyExploreCamembert .digiyExploreCenter span,
-#digiyExploreCamembert .digiyExploreCenter strong{
-  position:relative;
-  z-index:2;
-  display:block;
-  text-align:center;
-}
+    .wrap{
+      width:min(100%, 1240px);
+      margin:0 auto;
+      padding:18px 14px calc(104px + env(safe-area-inset-bottom,0px));
+    }
 
-#digiyExploreCamembert .digiyExploreCenter span{
-  font-size:20px;
-  line-height:1;
-  margin-bottom:2px;
-}
+    .topbar{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-bottom:16px;
+    }
 
-#digiyExploreCamembert .digiyExploreCenter strong{
-  font-size:11px;
-  font-weight:1000;
-}
+    .brand{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      min-width:0;
+    }
 
-#digiyExploreCamembert.playing .digiyExploreCenter{
-  background:
-    radial-gradient(circle at center, rgba(6,19,15,.95) 0 42%, transparent 43%),
-    conic-gradient(
-      from -90deg,
-      rgba(248,113,113,.96) 0 50%,
-      rgba(212,175,55,.90) 50% 100%
-    );
-}
+    .logo{
+      width:56px;
+      height:56px;
+      border-radius:18px;
+      object-fit:cover;
+      display:block;
+      background:#fff;
+      border:1px solid rgba(212,175,55,.22);
+      box-shadow:0 10px 28px rgba(0,0,0,.18);
+      flex:0 0 auto;
+    }
 
-#digiyExploreCamembert .digiyExploreMenu{
-  position:absolute;
-  left:94px;
-  bottom:4px;
-  width:228px;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-  padding:10px;
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(6,19,15,.94);
-  box-shadow:0 18px 48px rgba(0,0,0,.32);
-  backdrop-filter:blur(14px);
-  -webkit-backdrop-filter:blur(14px);
-  opacity:0;
-  transform:translateX(-8px) scale(.96);
-  pointer-events:none;
-  transition:.18s ease;
-}
+    .brandText{min-width:0}
 
-#digiyExploreCamembert.open .digiyExploreMenu{
-  opacity:1;
-  transform:translateX(0) scale(1);
-  pointer-events:auto;
-}
+    .kicker{
+      color:var(--gold2);
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      margin-bottom:3px;
+      white-space:nowrap;
+    }
 
-#digiyExploreCamembert .digiyExploreMenu button{
-  min-height:44px;
-  border:none;
-  border-radius:15px;
-  background:rgba(255,255,255,.07);
-  color:#f7fbf8;
-  padding:9px 10px;
-  font-size:12px;
-  font-weight:1000;
-  cursor:pointer;
-}
+    .title{
+      font-size:clamp(18px, 2vw, 30px);
+      font-weight:1000;
+      line-height:1.08;
+      letter-spacing:-.03em;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
 
-#digiyExploreCamembert .digiyExploreMenu .gold{
-  background:linear-gradient(135deg,#d4af37,#f3d46b);
-  color:#13200d;
-}
+    .sub{
+      margin-top:4px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.45;
+    }
 
-#digiyExploreCamembert .digiyExploreMenu .green{
-  background:rgba(34,197,94,.16);
-  color:#dffcea;
-  border:1px solid rgba(34,197,94,.25);
-}
+    .topActions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
 
-#digiyExploreCamembert .digiyExploreMenu .blue{
-  background:rgba(56,189,248,.14);
-  color:#d9f4ff;
-  border:1px solid rgba(56,189,248,.24);
-}
+    .btn{
+      min-height:44px;
+      border:none;
+      border-radius:14px;
+      padding:0 14px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      font-weight:800;
+      cursor:pointer;
+      transition:filter .18s ease, transform .04s ease, opacity .18s ease;
+      white-space:nowrap;
+    }
 
-@media (max-width:640px){
-  #digiyExploreCamembert{
-    left:10px;
-    bottom:calc(84px + env(safe-area-inset-bottom,0px));
-    width:76px;
-    height:76px;
-  }
+    .btn:active{transform:translateY(1px)}
+    .btn[disabled]{opacity:.6;cursor:not-allowed}
 
-  #digiyExploreCamembert .digiyExploreCenter{
-    width:76px;
-    height:76px;
-  }
+    .btn.primary{
+      background:linear-gradient(135deg, var(--gold), var(--gold2));
+      color:#13200d;
+      box-shadow:0 14px 30px rgba(212,175,55,.22);
+    }
 
-  #digiyExploreCamembert .digiyExploreCenter::before{
-    inset:12px;
-  }
+    .btn.secondary{
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      color:var(--ink);
+    }
 
-  #digiyExploreCamembert .digiyExploreMenu{
-    left:0;
-    bottom:86px;
-    width:min(260px, calc(100vw - 20px));
-  }
-}
-</style>
+    .btn.ghost{
+      background:transparent;
+      border:1px solid var(--line);
+      color:var(--ink);
+    }
 
-<!-- 3) À placer juste après : <div id="status" class="status info">...</div> -->
-<section class="panel exploreActionPanel" aria-label="Actions utiles EXPLORE">
-  <div class="cardBody">
-    <div class="exploreActionHead">
-      <div>
-        <h2 class="sectionTitle">Actions utiles</h2>
-        <p class="sectionSub">DIGIY lit derrière et remonte seulement la prochaine action utile.</p>
+    .btn.info{
+      background:rgba(56,189,248,.10);
+      border:1px solid rgba(56,189,248,.22);
+      color:#d8f2ff;
+    }
+
+    .btn.warn{
+      background:rgba(245,158,11,.12);
+      border:1px solid rgba(245,158,11,.26);
+      color:#fde68a;
+    }
+
+    .nav{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .nav a{
+      min-height:42px;
+      display:inline-flex;
+      align-items:center;
+      padding:0 14px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+      color:#eef4f1;
+      font-size:13px;
+      font-weight:800;
+    }
+
+    .nav a.active{
+      border-color:rgba(212,175,55,.22);
+      background:rgba(212,175,55,.08);
+      color:var(--gold2);
+    }
+
+    .status{
+      margin-bottom:16px;
+      border-radius:18px;
+      padding:14px 16px;
+      font-size:14px;
+      line-height:1.5;
+      font-weight:700;
+      display:block;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+    }
+
+    .status.info{
+      color:#dbeafe;
+      border-color:rgba(96,165,250,.18);
+      background:rgba(59,130,246,.08);
+    }
+
+    .status.ok{
+      color:#bbf7d0;
+      border-color:rgba(34,197,94,.18);
+      background:rgba(34,197,94,.08);
+    }
+
+    .status.warn{
+      color:#fde68a;
+      border-color:rgba(245,158,11,.18);
+      background:rgba(245,158,11,.08);
+    }
+
+    .status.bad{
+      color:#fecaca;
+      border-color:rgba(239,68,68,.18);
+      background:rgba(239,68,68,.08);
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:16px;
+      margin-bottom:16px;
+    }
+
+    .panel{
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .heroMain{
+      padding:22px;
+      background:
+        linear-gradient(180deg, rgba(212,175,55,.06), transparent 28%),
+        linear-gradient(180deg, var(--card), var(--card2));
+    }
+
+    .heroBadge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(212,175,55,.22);
+      background:rgba(212,175,55,.08);
+      color:var(--gold2);
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      margin-bottom:14px;
+    }
+
+    .heroTitle{
+      margin:0 0 10px;
+      font-size:clamp(26px, 4vw, 42px);
+      line-height:1.02;
+      letter-spacing:-.04em;
+    }
+
+    .heroLead{
+      margin:0;
+      color:var(--muted);
+      font-size:16px;
+      line-height:1.65;
+      max-width:60ch;
+    }
+
+    .heroPills{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:14px;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.04);
+      color:var(--ink);
+      font-size:12px;
+      font-weight:900;
+      max-width:100%;
+      word-break:break-word;
+    }
+
+    .heroActions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:16px;
+    }
+
+    .heroSide{
+      padding:20px;
+      display:grid;
+      gap:12px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015)),
+        linear-gradient(180deg, #0a1c16, #0d241c);
+    }
+
+    .miniStat{
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      padding:14px;
+      background:rgba(255,255,255,.03);
+    }
+
+    .miniLabel{
+      color:var(--soft);
+      font-size:12px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      margin-bottom:8px;
+    }
+
+    .miniValue{
+      font-size:20px;
+      font-weight:900;
+      line-height:1.15;
+      letter-spacing:-.03em;
+      word-break:break-word;
+    }
+
+    .miniHint{
+      margin-top:6px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.45;
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:12px;
+      margin-bottom:16px;
+    }
+
+    .stat{
+      padding:16px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+      box-shadow:var(--shadow);
+    }
+
+    .statLabel{
+      color:var(--muted);
+      font-size:12px;
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      margin-bottom:8px;
+    }
+
+    .statValue{
+      font-size:28px;
+      font-weight:1000;
+      line-height:1;
+      letter-spacing:-.04em;
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:16px;
+    }
+
+    .cardBody{padding:20px}
+
+    .sectionTitle{
+      margin:0 0 14px;
+      font-size:20px;
+      font-weight:900;
+      letter-spacing:-.02em;
+    }
+
+    .sectionSub{
+      margin:-4px 0 14px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    .box{
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+      border-radius:18px;
+      padding:14px;
+      display:grid;
+      gap:8px;
+      margin-bottom:12px;
+    }
+
+    .box strong{
+      font-size:14px;
+    }
+
+    .box span{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.55;
+      word-break:break-word;
+    }
+
+    .places{
+      display:grid;
+      gap:12px;
+    }
+
+    .placeCard{
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+      border-radius:18px;
+      padding:14px;
+      display:grid;
+      gap:10px;
+    }
+
+    .placeTop{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:flex-start;
+    }
+
+    .placeName{
+      font-size:17px;
+      font-weight:1000;
+      line-height:1.2;
+    }
+
+    .placeMeta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+
+    .metaTag{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.04);
+      color:var(--ink);
+      font-size:11px;
+      font-weight:900;
+    }
+
+    .placeDesc{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.6;
+    }
+
+    .placeActions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .empty{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.6;
+      border:1px dashed rgba(255,255,255,.12);
+      border-radius:18px;
+      padding:18px;
+      background:rgba(255,255,255,.02);
+    }
+
+    .clawGrid{
+      display:grid;
+      gap:14px;
+      margin-top:16px;
+      grid-template-columns:1.08fr .92fr;
+    }
+
+    .clawCard{
+      padding:18px;
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      background:linear-gradient(180deg, rgba(96,165,250,.08), rgba(34,197,94,.05));
+      box-shadow:var(--shadow);
+    }
+
+    .clawHead{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+
+    .clawKicker{
+      font-size:11px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:#b7ecff;
+      font-weight:1000;
+      margin-bottom:6px;
+    }
+
+    .clawTitle{
+      margin:0;
+      font-size:20px;
+      font-weight:1000;
+    }
+
+    .clawMode{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:9px 12px;
+      border-radius:999px;
+      border:1px solid rgba(96,165,250,.18);
+      background:rgba(96,165,250,.08);
+      color:#d7efff;
+      font-size:12px;
+      font-weight:950;
+    }
+
+    .clawText{
+      color:var(--muted);
+      font-size:14px;
+      font-weight:800;
+      line-height:1.65;
+    }
+
+    .clawPills{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:12px;
+    }
+
+    .clawPill{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.16);
+      color:var(--ink);
+      font-size:12px;
+      font-weight:950;
+    }
+
+    .clawList{
+      display:grid;
+      gap:10px;
+      margin-top:12px;
+    }
+
+    .clawItem{
+      padding:14px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.16);
+    }
+
+    .clawItem strong{
+      display:block;
+      margin-bottom:6px;
+      font-size:14px;
+      font-weight:1000;
+      color:#ecfff4;
+    }
+
+    .clawItem span{
+      color:var(--muted);
+      font-size:13px;
+      font-weight:800;
+      line-height:1.55;
+      display:block;
+    }
+
+
+    .btn.gold{
+      background:rgba(212,175,55,.14);
+      border:1px solid rgba(212,175,55,.28);
+      color:#fff0a7;
+    }
+
+    .textarea{
+      width:100%;
+      min-height:92px;
+      resize:vertical;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:16px;
+      background:rgba(255,255,255,.045);
+      color:var(--ink);
+      padding:13px 14px;
+      outline:none;
+      font:inherit;
+      line-height:1.55;
+    }
+
+    .textarea:focus{
+      border-color:rgba(212,175,55,.40);
+      box-shadow:0 0 0 4px rgba(212,175,55,.12);
+    }
+
+    .quickExplore{
+      margin-bottom:16px;
+      border-color:rgba(212,175,55,.22);
+      background:
+        radial-gradient(900px 360px at 100% 0%, rgba(212,175,55,.11), transparent 55%),
+        linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
+    }
+
+    .quickExploreHead{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:12px;
+    }
+
+    .quickExploreHead h2{
+      margin:0 0 6px;
+      font-size:20px;
+      line-height:1.15;
+      font-weight:1000;
+      letter-spacing:-.02em;
+    }
+
+    .quickExploreLead{
+      color:var(--muted);
+      font-size:13px;
+      font-weight:800;
+      line-height:1.55;
+      max-width:70ch;
+    }
+
+    .quickTag{
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      padding:8px 11px;
+      border-radius:999px;
+      border:1px solid rgba(212,175,55,.28);
+      background:rgba(212,175,55,.10);
+      color:var(--gold2);
+      font-size:12px;
+      font-weight:1000;
+      white-space:nowrap;
+    }
+
+    .quickGuide{
+      padding:13px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.12);
+      display:grid;
+      gap:8px;
+      margin:12px 0;
+    }
+
+    .quickGuide strong{
+      color:var(--gold2);
+      font-size:13px;
+      font-weight:1000;
+    }
+
+    .quickGuide p{
+      margin:0;
+      color:var(--muted);
+      font-size:13px;
+      font-weight:800;
+      line-height:1.55;
+    }
+
+    .quickExamples{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .quickExamples button{
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.05);
+      color:var(--ink);
+      border-radius:999px;
+      padding:8px 11px;
+      font-size:12px;
+      font-weight:900;
+      cursor:pointer;
+    }
+
+    .quickExamples button:hover{
+      border-color:rgba(212,175,55,.30);
+      color:var(--gold2);
+    }
+
+    .quickDraft{
+      display:none;
+      margin-top:12px;
+      padding:13px;
+      border-radius:18px;
+      border:1px solid rgba(34,197,94,.28);
+      background:rgba(34,197,94,.08);
+      color:#d7ffe1;
+      font-size:13px;
+      font-weight:800;
+      line-height:1.55;
+    }
+
+    .quickDraft strong{color:#fff}
+
+    .memoryBox{
+      margin-top:12px;
+      padding:13px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.12);
+      display:grid;
+      gap:10px;
+    }
+
+    .memoryHead{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:flex-start;
+    }
+
+    .memoryTitle{
+      font-size:13px;
+      font-weight:1000;
+      color:var(--gold2);
+      line-height:1.25;
+    }
+
+    .memoryHelp{
+      margin-top:4px;
+      color:var(--muted);
+      font-size:12px;
+      font-weight:800;
+      line-height:1.45;
+    }
+
+    .memoryList{
+      display:grid;
+      gap:8px;
+    }
+
+    .memoryItem{
+      padding:11px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.04);
+      display:grid;
+      gap:5px;
+    }
+
+    .memoryItemTop{
+      display:flex;
+      justify-content:space-between;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:flex-start;
+    }
+
+    .memoryItemTitle{
+      font-size:13px;
+      font-weight:1000;
+      color:var(--ink);
+      line-height:1.35;
+    }
+
+    .memoryItemAmount{
+      font-size:12px;
+      font-weight:1000;
+      color:#d7ffe1;
+      white-space:nowrap;
+    }
+
+    .memoryItemMeta{
+      color:var(--muted);
+      font-size:12px;
+      font-weight:800;
+      line-height:1.4;
+    }
+
+    .memoryEmpty{
+      padding:11px;
+      border-radius:16px;
+      border:1px dashed rgba(255,255,255,.16);
+      color:var(--muted);
+      font-size:12px;
+      font-weight:800;
+      line-height:1.45;
+    }
+
+    .memoryPayAction{
+      margin-top:6px;
+      display:inline-flex;
+      width:max-content;
+      max-width:100%;
+      min-height:36px;
+      align-items:center;
+      justify-content:center;
+      gap:7px;
+      padding:8px 11px;
+      border-radius:999px;
+      border:1px solid rgba(212,175,55,.28);
+      background:rgba(212,175,55,.10);
+      color:var(--gold2);
+      font-size:12px;
+      font-weight:1000;
+      text-decoration:none;
+    }
+
+
+    #quickExploreNote, #placesBox, #mainPlaceName{scroll-margin-top:96px}
+
+    .bottomNav{
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:0;
+      z-index:99990;
+      padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));
+      background:rgba(6,19,15,.94);
+      border-top:1px solid rgba(255,255,255,.10);
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
+    }
+
+    .bottomNavInner{
+      width:min(100%,760px);
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:6px;
+    }
+
+    .bottomNav a{
+      min-height:58px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      align-content:center;
+      gap:3px;
+      color:rgba(248,250,252,.70);
+      font-size:11px;
+      font-weight:950;
+      text-align:center;
+      border:1px solid transparent;
+      text-decoration:none;
+    }
+
+    .bottomNav .ico{font-size:18px;line-height:1}
+
+    .bottomNav a.active{
+      color:#13200d;
+      background:linear-gradient(135deg,var(--gold),var(--gold2));
+      border-color:rgba(212,175,55,.30);
+      box-shadow:0 12px 26px rgba(212,175,55,.18);
+    }
+
+    .mobileFastRow{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .mobileFastRow a{
+      min-height:46px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.05);
+      color:var(--ink);
+      text-decoration:none;
+      font-weight:950;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:10px 12px;
+    }
+
+    .mobileFastRow a.primary{
+      background:linear-gradient(90deg,var(--gold),var(--gold2));
+      color:#13200d;
+      border:none;
+    }
+
+    @media (max-width:640px){
+      .mobileFastRow{grid-template-columns:1fr 1fr}
+      .nav{display:none}
+      .topActions{display:none}
+    }
+
+    .hidden{display:none !important}
+
+    .foot{
+      margin-top:18px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.6;
+      text-align:center;
+    }
+
+    @media (max-width:1080px){
+      .hero,.layout,.clawGrid{grid-template-columns:1fr}
+      .stats{grid-template-columns:1fr 1fr}
+    }
+
+    @media (max-width:760px){
+      .stats{grid-template-columns:1fr}
+    }
+
+    @media (max-width:640px){
+      .wrap{padding:14px 12px calc(104px + env(safe-area-inset-bottom,0px))}
+      .topbar{flex-direction:column}
+      .topActions{width:100%;justify-content:flex-start}
+      .heroMain,.heroSide,.cardBody,.clawCard{padding:18px}
+      .topActions > *, .heroActions > *, .nav > *{flex:1 1 auto}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="topbar">
+      <div class="brand">
+        <img class="logo" src="https://digiylyfe.net/wp-content/uploads/2026/03/digiylyfe_logo_qr.jpeg" alt="Logo DIGIYLYFE"/>
+        <div class="brandText">
+          <div class="kicker">DIGIYLYFE — Découverte locale</div>
+          <div class="title">Je fais découvrir mon lieu • Accueil</div>
+          <div class="sub" id="subline">Lieux, ajout, notes, visibilité et prochaine action utile.</div>
+        </div>
       </div>
-      <span class="exploreActionBadge">Chef de passe</span>
+
+      <div class="topActions">
+        <a class="btn warn" href="https://digiylyfe.com/">Site</a>
+        <a class="btn info" href="https://digiy-hub.digiylyfe.com/">HUB</a>
+        <a class="btn secondary" href="https://tarifs.digiylyfe.com/" target="_blank" rel="noopener noreferrer">Tarifs</a>
+        <a class="btn primary" id="btnAccessTop" href="./submit.html">Ajouter</a>
+        <a class="btn secondary hidden" id="btnLieuxTop" href="./lieux.html">Lieux</a>
+        <a class="btn secondary hidden" id="btnSubmitTop" href="./submit.html">Ajouter</a>
+        <a class="btn info hidden" id="btnClawTop" href="./claw.html">Plus</a>
+        <a class="btn warn hidden" id="btnPinTop" href="./pin.html">Accès</a>
+      </div>
+    </header>
+
+    <nav class="nav" aria-label="Navigation EXPLORE">
+      <a id="navCockpit" class="active" href="./cockpit.html">Accueil</a>
+      <a id="navLieux" href="./lieux.html">Lieux</a>
+      <a id="navSubmit" href="./submit.html">Ajouter</a>
+      <a id="navClaw" href="./claw.html">Plus</a>
+      <a id="navPinRescue" class="hidden" href="./pin.html">Accès</a>
+    </nav>
+
+    <div id="status" class="status info">Préparation de ton espace…</div>
+
+    <section class="hero">
+      <article class="panel heroMain">
+        <div class="heroBadge" id="heroBadge">Lecture terrain</div>
+        <h1 class="heroTitle" id="heroTitle">Voir tes lieux, sans usine à gaz.</h1>
+        <p class="heroLead" id="heroLead">
+          Ici tu lis rapidement ton espace : accès, lieux rattachés, visibilité et prochaine action simple.
+        </p>
+
+        <div class="heroPills" id="heroPills">
+          <div class="pill">Espace prêt</div>
+        </div>
+
+        <div class="heroActions">
+          <a class="btn primary" id="btnPrimaryAction" href="./submit.html">Ajouter un lieu</a>
+          <a class="btn secondary" id="btnOpenLieux" href="./lieux.html">Lieux</a>
+          <a class="btn secondary hidden" id="btnOpenClaw" href="./claw.html">Ouvrir la lecture utile</a>
+          <a class="btn warn hidden" id="btnOpenPin" href="./pin.html">Accès</a>
+        </div>
+
+        <div class="mobileFastRow">
+          <a class="primary" id="fastHome" href="./cockpit.html">🏠 Accueil</a>
+          <a id="fastLieux" href="./lieux.html">📍 Lieux</a>
+          <a id="fastSubmit" href="./submit.html">➕ Ajouter</a>
+          <a id="fastNotes" href="#quickExploreNote">✍️ Notes</a>
+        </div>
+      </article>
+
+      <aside class="panel heroSide">
+        <div class="miniStat">
+          <div class="miniLabel">Session</div>
+          <div class="miniValue" id="heroSlug">Protégée</div>
+          <div class="miniHint">Le repère interne reste dans le coffre et n’apparaît pas dans l’adresse.</div>
+        </div>
+
+        <div class="miniStat">
+          <div class="miniLabel">Accès</div>
+          <div class="miniValue" id="heroPhone">Non affiché</div>
+          <div class="miniHint">Le contact reste en session locale, jamais affiché dans l’écran ni dans les liens.</div>
+        </div>
+
+        <div class="miniStat">
+          <div class="miniLabel">Lieu à suivre</div>
+          <div class="miniValue" id="heroPlace">—</div>
+          <div class="miniHint">Le lieu lu par la session ou la première fiche remontée.</div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="stats">
+      <article class="stat">
+        <div class="statLabel">Lieux</div>
+        <div class="statValue" id="sPlaces">0</div>
+      </article>
+      <article class="stat">
+        <div class="statLabel">Publiés</div>
+        <div class="statValue" id="sPublished">0</div>
+      </article>
+      <article class="stat">
+        <div class="statLabel">Brouillons</div>
+        <div class="statValue" id="sDrafts">0</div>
+      </article>
+      <article class="stat">
+        <div class="statLabel">Mis en avant</div>
+        <div class="statValue" id="sFeatured">0</div>
+      </article>
+    </section>
+
+
+    <section class="panel quickExplore" id="quickExploreNote">
+      <div class="cardBody">
+        <div class="quickExploreHead">
+          <div>
+            <h2>Notes rapides</h2>
+            <div class="quickExploreLead">
+              Écris comme tu parles. DIGIY prépare la trace, puis tu l’envoies vers <b>Mon argent</b> quand c’est bon.
+            </div>
+          </div>
+          <div class="quickTag">EXPLORE → Mon argent</div>
+        </div>
+
+        <div class="quickGuide">
+          <strong>Une phrase suffit.</strong>
+          <p>Exemples : visite, avance, guide payé, transport, affiche, petite dépense liée au lieu.</p>
+          <div class="quickExamples" id="quickExploreExamples">
+            <button type="button">Visite lagune 15000 wave</button>
+            <button type="button">Avance excursion 10000 wave</button>
+            <button type="button">Guide payé 5000 cash</button>
+            <button type="button">Transport client 3000 cash</button>
+            <button type="button">Dépense affiche 2000 cash</button>
+          </div>
+        </div>
+
+        <textarea class="textarea" id="quickExploreInput" placeholder="Ex : Visite lagune 15000 wave"></textarea>
+
+        <div class="placeActions" style="margin-top:12px">
+          <button class="btn gold" id="btnQuickExplorePrepare" type="button">Préparer</button>
+          <button class="btn primary" id="btnQuickExploreConfirm" type="button" style="display:none">✅ Confirmer</button>
+          <button class="btn ghost" id="btnQuickExploreClear" type="button">Effacer</button>
+        </div>
+
+        <div class="quickDraft" id="quickExploreDraft"></div>
+
+        <div class="memoryBox">
+          <div class="memoryHead">
+            <div>
+              <div class="memoryTitle">🧠 Aide-mémoire EXPLORE</div>
+              <div class="memoryHelp">Dernières notes confirmées ici. Elles restent locales sur le téléphone, puis peuvent partir vers Mon argent.</div>
+            </div>
+            <button class="btn ghost" id="btnQuickExploreMemoryClear" type="button">Vider</button>
+          </div>
+          <div class="memoryList" id="quickExploreMemoryList">
+            <div class="memoryEmpty">Aucune note confirmée pour le moment.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="layout">
+      <article class="panel">
+        <div class="cardBody">
+          <h2 class="sectionTitle">Lieu à suivre</h2>
+          <p class="sectionSub">Cet espace met en avant le lieu lu par l’repère interne ou la première fiche active du téléphone.</p>
+
+          <div class="box">
+            <strong id="mainPlaceName">Aucun lieu lu</strong>
+            <span id="mainPlaceText">L’repère interne ou la liste des lieux n’a pas encore donné de lecture utile.</span>
+          </div>
+
+          <div class="box">
+            <strong>Circulation utile</strong>
+            <span id="linksText">Ton espace recoud tes lieux, l’édition et l’analyse sur le même contexte. Le code reste un secours seulement.</span>
+          </div>
+
+          <div class="placeActions" style="margin-bottom:14px">
+            <a class="btn secondary" id="btnEditCurrent" href="./submit.html">Éditer ce lieu</a>
+            <a class="btn secondary" id="btnViewCurrent" href="./submit.html">Ouvrir ma fiche</a>
+            <a class="btn info" id="btnClawCurrent" href="./claw.html">Ouvrir la lecture utile</a>
+          </div>
+
+          <h2 class="sectionTitle">Lieux</h2>
+          <p class="sectionSub">Lecture directe des lieux rattachés à la session active.</p>
+
+          <div class="places" id="placesBox">
+            <div class="empty">Chargement des fiches…</div>
+          </div>
+        </div>
+      </article>
+
+      <aside>
+        <section class="panel">
+          <div class="cardBody">
+            <h2 class="sectionTitle">Repères terrain</h2>
+            <p class="sectionSub">L’espace lit le terrain et pousse la prochaine action logique.</p>
+
+            <div class="box">
+              <strong>Ville</strong>
+              <span id="boxCity">—</span>
+            </div>
+
+            <div class="box">
+              <strong>Zone</strong>
+              <span id="boxZone">—</span>
+            </div>
+
+            <div class="box">
+              <strong>Catégorie</strong>
+              <span id="boxCategory">—</span>
+            </div>
+
+            <div class="box">
+              <strong>Visibilité</strong>
+              <span id="boxPublished">—</span>
+            </div>
+
+            <div class="box">
+              <strong>Action simple</strong>
+              <span id="boxAction">—</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="clawGrid" id="clawSection">
+          <article class="clawCard">
+            <div class="clawHead">
+              <div>
+                <div class="clawKicker">Lecture terrain</div>
+                <h2 class="clawTitle">Lecture de ton espace</h2>
+              </div>
+              <div class="clawMode" id="clawMode">Analyse légère</div>
+            </div>
+
+            <div class="clawText" id="clawSummary">
+              L’analyse attend l’repère interne, l’accès et le lieu principal pour pousser le bon cran.
+            </div>
+
+            <div class="clawPills" id="clawPills"></div>
+          </article>
+
+          <article class="clawCard">
+            <div class="clawList" id="clawList">
+              <div class="clawItem">
+                <strong>Chargement</strong>
+                <span>L’analyse prépare la lecture terrain de cet espace.</span>
+              </div>
+            </div>
+          </article>
+        </section>
+      </aside>
+    </section>
+
+    <div class="foot">
+      DIGIY EXPLORE • accueil • lieux • notes • visibilité
     </div>
-
-    <div id="exploreAlerts" data-digiy-explore-alerts></div>
   </div>
-</section>
 
-<!-- 4) À placer avant </body> -->
-<div id="digiyExploreCamembert" aria-label="Guide vocal DIGIY EXPLORE">
-  <button class="digiyExploreCenter" id="digiyExploreCenter" type="button" aria-expanded="false" aria-pressed="false">
-    <span>🎧</span>
-    <strong>DIGIY</strong>
-  </button>
 
-  <div class="digiyExploreMenu" id="digiyExploreMenu">
-    <button class="gold" id="digiyExploreListen" type="button">Écouter</button>
-    <button id="digiyExploreClose" type="button">Fermer</button>
-    <button class="green" id="digiyExplorePlaces" type="button">Mes lieux</button>
-    <button class="blue" id="digiyExploreAdd" type="button">Ajouter</button>
-  </div>
-</div>
+  <nav class="bottomNav" aria-label="Navigation EXPLORE">
+    <div class="bottomNavInner">
+      <a class="active" id="bottomHome" href="./cockpit.html"><span class="ico">🏠</span><span>Accueil</span></a>
+      <a id="bottomLieux" href="./lieux.html"><span class="ico">📍</span><span>Lieux</span></a>
+      <a id="bottomSubmit" href="./submit.html"><span class="ico">➕</span><span>Ajouter</span></a>
+      <a id="bottomNotes" href="#quickExploreNote"><span class="ico">✍️</span><span>Notes</span></a>
+      <a id="bottomMore" href="./claw.html"><span class="ico">⚙️</span><span>Plus</span></a>
+    </div>
+  </nav>
 
-<script>
-  (function(){
-    "use strict";
+  <script>
+    (() => {
+      "use strict";
 
-    const root = document.getElementById("digiyExploreCamembert");
-    const center = document.getElementById("digiyExploreCenter");
-    const listen = document.getElementById("digiyExploreListen");
-    const close = document.getElementById("digiyExploreClose");
-    const places = document.getElementById("digiyExplorePlaces");
-    const add = document.getElementById("digiyExploreAdd");
+      const MODULE = "EXPLORE";
+      const MODULE_PREFIX = "digiy_explore";
+      const SESSION_KEY = "digiy_explore_session";
+      const MAX_AGE_MS = 8 * 60 * 60 * 1000;
 
-    const AUDIO_TEXT =
-      "Bienvenue dans ta gestion EXPLORE by DIGIY. Ici, tu ne dois pas tout lire ni tout porter dans ta tête. DIGIY regarde derrière et te montre seulement la prochaine action utile. Mes lieux te montre ce qui existe. Ajouter te permet de poser un nouveau lieu. Les notes gardent une trace rapide. Le cockpit reste simple : regarder, comprendre, cliquer. Le terrain garde son âme, toi tu gardes la main.";
+      const PATHS = {
+        cockpit: "./cockpit.html",
+        lieux: "./lieux.html",
+        submit: "./submit.html",
+        pin: "./pin.html",
+        claw: "./claw.html"
+      };
 
-    let playing = false;
+      const SENSITIVE_QUERY_KEYS = [
+        "slug",
+        "phone",
+        "tel",
+        "owner_phone",
+        "owner_id",
+        "business_code",
+        "access_note",
+        "keybox_code",
+        "keybox_location"
+      ];
 
-    function setOpen(open){
-      if(!root || !center) return;
-      root.classList.toggle("open", !!open);
-      center.setAttribute("aria-expanded", open ? "true" : "false");
-    }
+      const supabase = window.supabase.createClient(
+        window.DIGIY_SUPABASE_URL,
+        window.DIGIY_SUPABASE_ANON_KEY || window.DIGIY_SUPABASE_ANON
+      );
 
-    function setPlaying(state){
-      playing = !!state;
-      if(!root || !center) return;
-      root.classList.toggle("playing", playing);
-      center.setAttribute("aria-pressed", playing ? "true" : "false");
-      center.innerHTML = playing
-        ? "<span>⏹</span><strong>Stop</strong>"
-        : "<span>🎧</span><strong>DIGIY</strong>";
-    }
+      const $ = (id) => document.getElementById(id);
 
-    function getVoice(){
-      const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
-      return voices.find(v => /^fr/i.test(v.lang || "")) || null;
-    }
+      let CURRENT_STATE = null;
+      let CURRENT_PHONE = "";
+      let CURRENT_SLUG = "";
+      let CURRENT_PLACES = [];
+      let CURRENT_MAIN = null;
 
-    function stop(){
-      try{ window.speechSynthesis && window.speechSynthesis.cancel(); }catch(_){}
-      setPlaying(false);
-    }
-
-    function speak(){
-      if(!("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)){
-        alert("Audio indisponible sur ce navigateur.");
-        return;
+      function normalizeSlug(v){
+        return String(v || "")
+          .trim()
+          .toLowerCase()
+          .replace(/\s+/g, "-")
+          .replace(/[^a-z0-9-]/g, "")
+          .replace(/-+/g, "-")
+          .replace(/^-|-$/g, "");
       }
 
-      if(playing){
-        stop();
-        return;
+      function normalizePhone(v){
+        return String(v || "").replace(/[^\d]/g, "");
       }
 
-      stop();
-
-      const utter = new SpeechSynthesisUtterance(AUDIO_TEXT);
-      utter.lang = "fr-FR";
-      utter.rate = 0.86;
-      utter.pitch = 1.04;
-      utter.volume = 1;
-
-      const voice = getVoice();
-      if(voice) utter.voice = voice;
-
-      utter.onstart = () => setPlaying(true);
-      utter.onend = () => setTimeout(stop, 120);
-      utter.onerror = stop;
-
-      window.speechSynthesis.speak(utter);
-    }
-
-    center && center.addEventListener("click", function(){
-      setOpen(!root.classList.contains("open"));
-    });
-
-    listen && listen.addEventListener("click", speak);
-
-    close && close.addEventListener("click", function(){
-      stop();
-      setOpen(false);
-    });
-
-    places && places.addEventListener("click", function(){
-      location.href = "./lieux.html";
-    });
-
-    add && add.addEventListener("click", function(){
-      location.href = "./submit.html";
-    });
-
-    document.addEventListener("click", function(e){
-      if(root && !root.contains(e.target)){
-        setOpen(false);
+      function safeJsonParse(raw){
+        try{ return JSON.parse(raw); }catch(_){ return null; }
       }
-    });
 
-    if(window.speechSynthesis && typeof window.speechSynthesis.onvoiceschanged !== "undefined"){
-      window.speechSynthesis.onvoiceschanged = getVoice;
-    }
+      function storageGet(key){
+        try{
+          const s = sessionStorage.getItem(key);
+          if(s) return s;
+        }catch(_){}
+        try{
+          const l = localStorage.getItem(key);
+          if(l) return l;
+        }catch(_){}
+        return "";
+      }
 
-    window.addEventListener("beforeunload", stop);
-    document.addEventListener("visibilitychange", function(){
-      if(document.hidden) stop();
-    });
-  })();
-</script>
+      function storageSet(key, value){
+        try{ sessionStorage.setItem(key, String(value ?? "")); }catch(_){}
+        try{ localStorage.setItem(key, String(value ?? "")); }catch(_){}
+      }
+
+      function saveSessionPayload(slug, phone){
+        const payload = {
+          slug: normalizeSlug(slug || ""),
+          phone: normalizePhone(phone || ""),
+          module: MODULE,
+          ts: Date.now()
+        };
+        const raw = JSON.stringify(payload);
+        try{ sessionStorage.setItem(SESSION_KEY, raw); }catch(_){}
+        try{ localStorage.setItem(SESSION_KEY, raw); }catch(_){}
+      }
+
+      function getSession(){
+        const direct = safeJsonParse(storageGet(SESSION_KEY));
+        if(direct?.phone && direct?.ts && (Date.now() - Number(direct.ts)) <= MAX_AGE_MS){
+          return direct;
+        }
+
+        const guardSession = window.DIGIY_GUARD?.getSession?.();
+        if(guardSession?.phone){
+          return guardSession;
+        }
+
+        return null;
+      }
+
+      function getFallbackSlug(){
+        const qs = new URLSearchParams(location.search);
+        const saved = getSession();
+
+        return normalizeSlug(
+          qs.get("slug") ||
+          window.DIGIY_GUARD?.state?.slug ||
+          storageGet(`${MODULE_PREFIX}_slug`) ||
+          storageGet(`${MODULE_PREFIX}_last_slug`) ||
+          storageGet("digiy_last_slug") ||
+          storageGet("DIGIY_SLUG") ||
+          saved?.slug ||
+          ""
+        );
+      }
+
+      function getFallbackPhone(){
+        const qs = new URLSearchParams(location.search);
+        const saved = getSession();
+
+        return normalizePhone(
+          qs.get("phone") ||
+          window.DIGIY_GUARD?.state?.phone ||
+          storageGet(`${MODULE_PREFIX}_phone`) ||
+          storageGet("digiy_last_phone") ||
+          storageGet("DIGIY_PHONE") ||
+          saved?.phone ||
+          ""
+        );
+      }
+
+      function cleanVisibleUrl(){
+        try{
+          const url = new URL(window.location.href);
+          let changed = false;
+
+          SENSITIVE_QUERY_KEYS.forEach((key) => {
+            if(url.searchParams.has(key)){
+              url.searchParams.delete(key);
+              changed = true;
+            }
+          });
+
+          if(changed){
+            history.replaceState({}, document.title, url.pathname + url.search + url.hash);
+          }
+        }catch(_){}
+      }
+
+      function buildInternalHref(path){
+        return path;
+      }
+
+      function buildPinHref(){
+        return PATHS.pin;
+      }
+
+      function rememberSelectedPlace(slug){
+        const s = normalizeSlug(slug);
+        if(!s) return;
+        storageSet("digiy_explore_selected_place_slug", s);
+        storageSet(`${MODULE_PREFIX}_selected_place_slug`, s);
+      }
+
+      function placeName(place){
+        return (
+          place?.public_name ||
+          place?.name ||
+          place?.title ||
+          "Lieu sans nom"
+        );
+      }
+
+      function placeCategory(place){
+        return (
+          place?.category_label ||
+          place?.category_name ||
+          place?.category_code ||
+          place?.subcategory ||
+          "Catégorie non précisée"
+        );
+      }
+
+      function placeCity(place){
+        return place?.city || "Ville non précisée";
+      }
+
+      function placeZone(place){
+        return place?.zone || place?.district || "Zone non précisée";
+      }
+
+      function placeShort(place){
+        return (
+          place?.short_description ||
+          place?.full_description ||
+          place?.description ||
+          "Lecture légère indisponible pour ce lieu."
+        );
+      }
+
+      function isPublished(place){
+        return place?.is_published === true || place?.published === true || place?.status === "published";
+      }
+
+      function isFeatured(place){
+        return place?.is_featured === true;
+      }
+
+      function setStatus(text, type = "info"){
+        const box = $("status");
+        box.textContent = text || "";
+        box.className = `status ${type}`;
+      }
+
+      function escapeHtml(value){
+        return String(value ?? "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#39;");
+      }
+
+      function setClaw(mode, summary, pills = [], items = []){
+        $("clawMode").textContent = mode || "Analyse légère";
+        $("clawSummary").textContent = summary || "L’analyse lit le rail sans bavarder.";
+
+        $("clawPills").innerHTML = (Array.isArray(pills) ? pills : [])
+          .filter(Boolean)
+          .map(p => `<div class="clawPill">${escapeHtml(p)}</div>`)
+          .join("");
+
+        $("clawList").innerHTML = (Array.isArray(items) ? items : [])
+          .filter(Boolean)
+          .map(item => `
+            <div class="clawItem">
+              <strong>${escapeHtml(item.title || "Point utile")}</strong>
+              <span>${escapeHtml(item.text || "—")}</span>
+            </div>
+          `)
+          .join("");
+      }
+
+      function setClawLoading(){
+        setClaw(
+          "Chargement",
+          "L’analyse attend le guard, le téléphone actif et le lieu principal pour pousser la prochaine action utile.",
+          ["Espace : EXPLORE", "Accueil", "Chargement en cours"],
+          [
+            {
+              title:"Lecture de l’espace",
+              text:"L’écran doit rester simple : accès, lieux, visibilité et direction utile."
+            },
+            {
+              title:"Circulation utile",
+              text:"Tes lieux, l’édition et l’analyse doivent suivre le même contexte. Le code reste un secours."
+            }
+          ]
+        );
+      }
+
+      function setClawPreview(message){
+        setClaw(
+          "Aperçu",
+          "L’analyse voit une coquille propre, mais l’accès ou l’identité restent à confirmer.",
+          [
+            "Session : protégée",
+            "Contact : protégé",
+            "Accès"
+          ],
+          [
+            {
+              title:"État actuel",
+              text: message || "L’espace reste en aperçu tant que l’accès n’est pas ouvert."
+            },
+            {
+              title:"Action utile",
+              text:"Passe par l’entrée pour ouvrir proprement la session."
+            }
+          ]
+        );
+      }
+
+      function setClawLive(place){
+        setClaw(
+          "Lecture vivante",
+          "L’analyse lit ton espace EXPLORE sans créer une usine : nombre de lieux, état de visibilité et prochaine action terrain.",
+          [
+            "Session : protégée",
+            "Contact : protégé",
+            `${CURRENT_PLACES.length} lieu(x)`,
+            place && isPublished(place) ? "Lieu publié" : "Lieu à publier"
+          ],
+          [
+            {
+              title:"Lecture du terrain",
+              text: place
+                ? `${placeName(place)} est le point principal lu dans ta gestion.`
+                : "L’espace est vivant mais aucun lieu principal n’a encore été lu."
+            },
+            {
+              title:"Action utile",
+              text: !place
+                ? "Ajoute un lieu ou ouvre Lieux pour enrichir ton espace."
+                : isPublished(place)
+                  ? "Passe par Analyse ou Ajouter pour affiner la micro-copy et la lecture."
+                  : "Le cran logique est la vérification puis la publication du lieu."
+            },
+            {
+              title:"Navigation interne",
+              text:"Tu peux circuler entre Accueil, Lieux, Ajouter et Analyse tant que la session tient."
+            }
+          ]
+        );
+      }
+
+      function setRescueVisibility(show){
+        const visible = !!show;
+        $("btnPinTop").classList.toggle("hidden", !visible);
+        $("btnOpenPin").classList.toggle("hidden", !visible);
+        $("navPinRescue").classList.toggle("hidden", !visible);
+      }
+
+      function buildLinks(){
+        const cockpitHref = buildInternalHref(PATHS.cockpit);
+        const lieuxHref = buildInternalHref(PATHS.lieux);
+        const submitHref = buildInternalHref(PATHS.submit);
+        const clawHref = buildInternalHref(PATHS.claw);
+        const pinHref = buildPinHref();
+
+        $("navCockpit").href = cockpitHref;
+        $("navLieux").href = lieuxHref;
+        $("navSubmit").href = submitHref;
+        $("navClaw").href = clawHref;
+        $("navPinRescue").href = pinHref;
+
+        $("btnAccessTop").href = submitHref;
+        $("btnLieuxTop").href = lieuxHref;
+        $("btnSubmitTop").href = submitHref;
+        $("btnClawTop").href = clawHref;
+        $("btnPinTop").href = pinHref;
+
+        $("btnOpenLieux").href = lieuxHref;
+        $("btnOpenClaw").href = clawHref;
+        $("btnOpenPin").href = pinHref;
+
+        const links = {
+          fastHome: cockpitHref,
+          fastLieux: lieuxHref,
+          fastSubmit: submitHref,
+          bottomHome: cockpitHref,
+          bottomLieux: lieuxHref,
+          bottomSubmit: submitHref,
+          bottomMore: clawHref
+        };
+
+        Object.entries(links).forEach(([id, href]) => {
+          const el = $(id);
+          if(el) el.href = href;
+        });
+
+        const fastNotes = $("fastNotes");
+        const bottomNotes = $("bottomNotes");
+        if(fastNotes) fastNotes.href = "#quickExploreNote";
+        if(bottomNotes) bottomNotes.href = "#quickExploreNote";
+      }
+
+      async function resolveGuardState(){
+        const fallbackSlug = getFallbackSlug();
+        const fallbackPhone = getFallbackPhone();
+
+        if(!window.DIGIY_GUARD || typeof window.DIGIY_GUARD.ready !== "function"){
+          return {
+            preview:true,
+            access_ok:false,
+            slug:fallbackSlug,
+            phone:fallbackPhone,
+            reason:"guard_missing"
+          };
+        }
+
+        try{
+          await window.DIGIY_GUARD.ready();
+        }catch{
+          return {
+            preview:true,
+            access_ok:false,
+            slug:fallbackSlug,
+            phone:fallbackPhone,
+            reason:"guard_error"
+          };
+        }
+
+        const st = window.DIGIY_GUARD?.state || null;
+        if(!st){
+          return {
+            preview:true,
+            access_ok:false,
+            slug:fallbackSlug,
+            phone:fallbackPhone,
+            reason:"guard_empty"
+          };
+        }
+
+        return {
+          ...st,
+          slug: normalizeSlug(st.slug || fallbackSlug || ""),
+          phone: normalizePhone(st.phone || fallbackPhone || "")
+        };
+      }
+
+      async function loadPlacesByPhone(phone){
+        const clean = normalizePhone(phone);
+        if(!clean) return [];
+
+        const { data, error } = await supabase.rpc("digiy_explore_list_places_by_phone", {
+          p_owner_phone: clean
+        });
+
+        if(error) throw error;
+        return Array.isArray(data) ? data : [];
+      }
+
+      async function loadPlaceBySlug(slug){
+        const clean = normalizeSlug(slug);
+        if(!clean) return null;
+
+        const { data, error } = await supabase.rpc("digiy_explore_public_place_by_slug", {
+          p_slug: clean
+        });
+
+        if(error) throw error;
+
+        if(data?.ok === true && data.place){
+          return data.place;
+        }
+
+        if(data && typeof data === "object" && data.slug){
+          return data;
+        }
+
+        return null;
+      }
+
+      function pickMainPlace(places, slugPlace){
+        if(slugPlace) return slugPlace;
+
+        if(Array.isArray(places) && CURRENT_SLUG){
+          const found = places.find(p => normalizeSlug(p?.slug) === CURRENT_SLUG);
+          if(found) return found;
+        }
+
+        if(Array.isArray(places) && places.length) return places[0];
+        return null;
+      }
+
+      function renderStats(){
+        const rows = CURRENT_PLACES || [];
+        $("sPlaces").textContent = String(rows.length);
+        $("sPublished").textContent = String(rows.filter(isPublished).length);
+        $("sDrafts").textContent = String(rows.filter(r => !isPublished(r)).length);
+        $("sFeatured").textContent = String(rows.filter(isFeatured).length);
+      }
+
+      function renderHero(place){
+        $("heroSlug").textContent = CURRENT_STATE?.access_ok ? "Session ouverte" : "À confirmer";
+        $("heroPhone").textContent = CURRENT_STATE?.access_ok ? "Protégé" : "Non affiché";
+        $("heroPlace").textContent = place ? placeName(place) : "Aucun lieu lu";
+
+        const pills = [
+          "Espace : EXPLORE",
+          CURRENT_STATE?.access_ok ? "Accès : ouvert" : "Accès : à confirmer",
+          place ? `Ville : ${placeCity(place)}` : "",
+          place ? `Catégorie : ${placeCategory(place)}` : ""
+        ].filter(Boolean);
+
+        $("heroPills").innerHTML = pills.map(p => `<div class="pill">${escapeHtml(p)}</div>`).join("");
+
+        if(!CURRENT_STATE?.access_ok){
+          $("heroBadge").textContent = "Mode aperçu";
+          $("heroTitle").textContent = "Ton espace EXPLORE existe, mais l’accès reste à confirmer.";
+          $("heroLead").textContent = "L’écran reste propre : aucune donnée sensible visible, juste la bonne porte vers le PIN.";
+          $("btnPrimaryAction").textContent = "Entrer par PIN";
+          $("btnPrimaryAction").href = $("navPinRescue").href;
+          return;
+        }
+
+        $("heroBadge").textContent = "Espace vivant";
+
+        if(place){
+          $("heroTitle").textContent = placeName(place);
+          $("heroLead").textContent = placeShort(place);
+          $("btnPrimaryAction").textContent = "Éditer ce lieu";
+          $("btnPrimaryAction").href = buildInternalHref(PATHS.submit);
+          $("btnPrimaryAction").onclick = function(){
+            rememberSelectedPlace(place.slug || CURRENT_SLUG);
+          };
+        }else{
+          $("heroTitle").textContent = "EXPLORE actif";
+          $("heroLead").textContent = "L’accès est ouvert, mais aucun lieu n’est encore visible ici. Ajoute ou recharge une fiche terrain.";
+          $("btnPrimaryAction").textContent = "Ajouter un lieu";
+          $("btnPrimaryAction").href = $("navSubmit").href;
+          $("btnPrimaryAction").onclick = null;
+        }
+      }
+
+      function renderMainPlace(place){
+        if(!place){
+          $("mainPlaceName").textContent = "Aucun lieu lu";
+          $("mainPlaceText").textContent = "L’espace n’a pas trouvé de fiche principale. Passe par Ajouter ou relis Lieux.";
+          $("boxCity").textContent = "—";
+          $("boxZone").textContent = "—";
+          $("boxCategory").textContent = "—";
+          $("boxPublished").textContent = "—";
+          $("boxAction").textContent = CURRENT_STATE?.access_ok
+            ? "Ajoute un lieu ou recharge une fiche existante."
+            : "Ouvre d’abord l’accès par PIN.";
+
+          $("btnEditCurrent").href = $("navSubmit").href;
+          $("btnViewCurrent").href = $("navSubmit").href;
+          $("btnClawCurrent").href = $("navClaw").href;
+          $("linksText").textContent = "Ta gestion recoud tes lieux, l’édition et l’analyse sur le même contexte. Le PIN reste un secours seulement.";
+          return;
+        }
+
+        $("mainPlaceName").textContent = placeName(place);
+        $("mainPlaceText").textContent =
+          `${placeShort(place)} • ${placeCity(place)} • ${placeZone(place)} • ${placeCategory(place)}.`;
+
+        $("boxCity").textContent = placeCity(place);
+        $("boxZone").textContent = placeZone(place);
+        $("boxCategory").textContent = placeCategory(place);
+        $("boxPublished").textContent = isPublished(place) ? "Publié" : "Brouillon / à publier";
+        $("boxAction").textContent = isPublished(place)
+          ? "Affiner la lecture ou passer par Analyse pour améliorer la micro-copy."
+          : "Contrôler la fiche puis publier quand la lecture est propre.";
+
+        $("btnEditCurrent").href = buildInternalHref(PATHS.submit);
+        $("btnViewCurrent").href = buildInternalHref(PATHS.submit);
+        $("btnClawCurrent").href = buildInternalHref(PATHS.claw);
+        ["btnEditCurrent","btnViewCurrent","btnClawCurrent"].forEach((id) => {
+          const node = $(id);
+          if(node) node.onclick = function(){ rememberSelectedPlace(place.slug || CURRENT_SLUG); };
+        });
+        $("linksText").textContent =
+          "Repère utile : gestion → lieux → édition → analyse. Le repère interne reste en session.";
+      }
+
+      function renderPlaces(){
+        const box = $("placesBox");
+        const rows = CURRENT_PLACES || [];
+
+        if(!rows.length){
+          box.innerHTML = `
+            <div class="empty">
+              Aucun lieu n’est remonté pour la session active. Passe par <strong>Ajouter</strong> pour poser une première fiche.
+            </div>
+          `;
+          return;
+        }
+
+        box.innerHTML = rows.map((place) => {
+          const slug = normalizeSlug(place.slug || "");
+          const editHref = buildInternalHref(PATHS.submit);
+          const clawHref = buildInternalHref(PATHS.claw);
+
+          return `
+            <article class="placeCard">
+              <div class="placeTop">
+                <div>
+                  <div class="placeName">${escapeHtml(placeName(place))}</div>
+                  <div class="placeMeta">
+                    <span class="metaTag">${escapeHtml(placeCategory(place))}</span>
+                    <span class="metaTag">${escapeHtml(placeCity(place))}</span>
+                    <span class="metaTag">${escapeHtml(placeZone(place))}</span>
+                    <span class="metaTag">Repère protégé</span>
+                  </div>
+                </div>
+                <div class="placeMeta">
+                  <span class="metaTag">${isPublished(place) ? "Publié" : "Brouillon"}</span>
+                  ${isFeatured(place) ? `<span class="metaTag">Mis en avant</span>` : ``}
+                </div>
+              </div>
+
+              <div class="placeDesc">${escapeHtml(placeShort(place))}</div>
+
+              <div class="placeActions">
+                <a class="btn secondary js-place-action" href="${escapeHtml(editHref)}" data-place-slug="${escapeHtml(slug)}">Gérer</a>
+                <a class="btn info js-place-action" href="${escapeHtml(clawHref)}" data-place-slug="${escapeHtml(slug)}">Analyse</a>
+              </div>
+            </article>
+          `;
+        }).join("");
+
+        box.querySelectorAll(".js-place-action").forEach((node) => {
+          node.addEventListener("click", () => {
+            rememberSelectedPlace(node.dataset.placeSlug || "");
+          });
+        });
+      }
+
+
+      function quickExploreDraftKey(){
+        return "digiy_explore_quick_note_draft_" + (CURRENT_PHONE || "local");
+      }
+
+      function quickExploreMemoryKey(){
+        return "digiy_explore_quick_note_memory_" + (CURRENT_PHONE || "local");
+      }
+
+      function quickMoney(v){
+        const n = Number(v || 0);
+        return Number.isFinite(n) ? n.toLocaleString("fr-FR") + " F CFA" : "—";
+      }
+
+      function readQuickExploreMemory(){
+        try{
+          const raw = localStorage.getItem(quickExploreMemoryKey());
+          const list = JSON.parse(raw || "[]");
+          return Array.isArray(list) ? list : [];
+        }catch{
+          return [];
+        }
+      }
+
+      function writeQuickExploreMemory(list){
+        try{
+          localStorage.setItem(quickExploreMemoryKey(), JSON.stringify(Array.isArray(list) ? list : []));
+        }catch(_){}
+      }
+
+      function saveQuickExploreDraft(draft, confirmed = false){
+        try{
+          localStorage.setItem(quickExploreDraftKey(), JSON.stringify({
+            ...draft,
+            status: confirmed ? "confirmed_local" : "draft",
+            confirmed_at: confirmed ? new Date().toISOString() : null
+          }));
+          return true;
+        }catch{
+          return false;
+        }
+      }
+
+      function paySlugFromExplorePhone(){
+        const p = normalizePhone(CURRENT_PHONE || "");
+        return p ? "pay-" + p : "";
+      }
+
+      function payExploreLabel(item){
+        const title = String(item?.title || "Note EXPLORE").trim();
+        const comp = String(item?.complement || "").trim();
+        return comp ? `${title} — ${comp}` : title;
+      }
+
+      function buildPayFromExploreUrl(item){
+        const p = normalizePhone(CURRENT_PHONE || "");
+        const paySlug = paySlugFromExplorePhone();
+        const qsPay = new URLSearchParams();
+
+        if(paySlug) qsPay.set("slug", paySlug);
+        if(p) qsPay.set("phone", p);
+
+        qsPay.set("fromDraft", "1");
+        qsPay.set("direction", item?.direction === "in" ? "in" : "out");
+        qsPay.set("scope", "pro");
+        qsPay.set("amount", String(Math.round(Number(item?.amount_xof || 0))));
+        qsPay.set("amount_xof", String(Math.round(Number(item?.amount_xof || 0))));
+        qsPay.set("kind", item?.kind || (item?.direction === "in" ? "sale" : "expense"));
+        qsPay.set("channel", item?.channel && item.channel !== "manual" ? String(item.channel) : "other");
+        qsPay.set("category", item?.category || "explore_note");
+        qsPay.set("source_module", "EXPLORE");
+        // Le repère source reste en session EXPLORE ; ne pas l’exposer dans l’URL PAY.
+        qsPay.set("source_id", String(item?.memory_id || item?.created_at || "explore_quick_note"));
+        qsPay.set("label", payExploreLabel(item));
+        qsPay.set("note", String(item?.sentence || "").trim());
+        qsPay.set("complement", String(item?.complement || "").trim());
+        qsPay.set("intent", "quick_note");
+
+        return "https://pro-pay.digiylyfe.com/admin.html?" + qsPay.toString();
+      }
+
+      function parseQuickExploreSentence(sentence){
+        const raw = String(sentence || "").trim();
+        if(!raw) return null;
+
+        const amountMatch = raw.match(/(\d[\d\s.,]*)\s*(?:f|fcfa|xof)?\b/i);
+        const amount = amountMatch ? Number(String(amountMatch[1]).replace(/[^\d]/g, "")) : 0;
+
+        const lower = raw.toLowerCase();
+        let channel = "other";
+        if(/\bwave\b/.test(lower)) channel = "wave";
+        else if(/\bcash\b|\besp[eè]ces?\b|\bliquide\b/.test(lower)) channel = "cash";
+        else if(/\bom\b|orange\s*money/.test(lower)) channel = "orange_money";
+
+        let direction = "in";
+        let kind = "sale";
+        let category = "visit_income";
+        let title = "Recette EXPLORE";
+
+        if(/guide|pay[eé]|payer|transport|taxi|carburant|affiche|pub|d[eé]pense|achat|commission|mat[eé]riel|frais/.test(lower)){
+          direction = "out";
+          kind = "expense";
+          category = "content_expense";
+          title = "Dépense EXPLORE";
+        }
+
+        if(/avance|acompte|r[eè]glement|visite|excursion|sortie|tour|client|ticket|entr[eé]e|r[eé]servation/.test(lower)){
+          direction = "in";
+          kind = "sale";
+          category = "visit_income";
+          title = "Recette EXPLORE";
+        }
+
+        if(/guide/.test(lower)){
+          direction = "out";
+          kind = "expense";
+          category = "guide_payment";
+          title = "Guide payé";
+        }else if(/transport|taxi|carburant/.test(lower)){
+          direction = "out";
+          kind = "expense";
+          category = "scouting_transport";
+          title = "Transport payé";
+        }else if(/affiche|pub|publicit[eé]|flyer/.test(lower)){
+          direction = "out";
+          kind = "expense";
+          category = "content_expense";
+          title = "Communication payée";
+        }else if(/avance|acompte/.test(lower)){
+          direction = "in";
+          kind = "sale";
+          category = "advance_income";
+          title = "Avance reçue";
+        }else if(/visite|excursion|sortie|tour|ticket|entr[eé]e/.test(lower)){
+          direction = "in";
+          kind = "sale";
+          category = "visit_income";
+          title = "Visite payée";
+        }
+
+        const complement = raw
+          .replace(amountMatch ? amountMatch[0] : "", "")
+          .replace(/\b(wave|cash|esp[eè]ces?|liquide|om|orange\s*money|fcfa|xof)\b/gi, "")
+          .trim();
+
+        return {
+          sentence: raw,
+          title,
+          complement,
+          amount_xof: amount || 0,
+          channel,
+          direction,
+          kind,
+          category,
+          impact: direction === "in" ? "argent qui entre" : "argent qui sort",
+          created_at: new Date().toISOString()
+        };
+      }
+
+      function renderQuickExploreDraft(draft){
+        const box = $("quickExploreDraft");
+        const confirmBtn = $("btnQuickExploreConfirm");
+        if(!box) return;
+
+        if(!draft || !draft.sentence){
+          box.style.display = "none";
+          box.innerHTML = "";
+          if(confirmBtn) confirmBtn.style.display = "none";
+          return;
+        }
+
+        const amountText = draft.amount_xof ? quickMoney(draft.amount_xof) : "montant à préciser";
+        const channelText = draft.channel === "other" ? "canal à préciser" : draft.channel;
+        const payUrl = buildPayFromExploreUrl({
+          ...draft,
+          memory_id: draft.memory_id || "explore_draft_" + Date.now()
+        });
+        const canSendPay = !!normalizePhone(CURRENT_PHONE || "");
+
+        box.style.display = "block";
+        if(confirmBtn) confirmBtn.style.display = "inline-flex";
+
+        box.innerHTML = `
+          <strong>Voilà ce que DIGIY a préparé :</strong><br>
+          Type : ${escapeHtml(draft.title)}<br>
+          Montant : ${escapeHtml(amountText)}<br>
+          Canal : ${escapeHtml(channelText)}<br>
+          Impact : ${escapeHtml(draft.impact)}<br>
+          ${draft.complement ? `Détail : ${escapeHtml(draft.complement)}<br>` : ``}
+          <br>
+          ${canSendPay
+            ? `<a class="memoryPayAction" href="${escapeHtml(payUrl)}">Envoyer vers Mon argent</a>`
+            : `<span style="color:#fde68a">Contact protégé : ouvre l’accès pour envoyer vers Mon argent.</span>`
+          }
+        `;
+      }
+
+      function addQuickExploreMemory(draft){
+        const item = {
+          ...draft,
+          memory_id: "explore_" + Date.now(),
+          confirmed_at: new Date().toISOString()
+        };
+        const list = [item, ...readQuickExploreMemory()].slice(0, 10);
+        writeQuickExploreMemory(list);
+        return item;
+      }
+
+      function renderQuickExploreMemory(){
+        const box = $("quickExploreMemoryList");
+        if(!box) return;
+
+        const list = readQuickExploreMemory();
+        if(!list.length){
+          box.innerHTML = `<div class="memoryEmpty">Aucune note confirmée pour le moment.</div>`;
+          return;
+        }
+
+        box.innerHTML = list.map(item => {
+          const amount = item.amount_xof ? quickMoney(item.amount_xof) : "montant à préciser";
+          const channel = item.channel && item.channel !== "other" ? item.channel : "canal à préciser";
+          const payUrl = buildPayFromExploreUrl(item);
+          return `
+            <div class="memoryItem">
+              <div class="memoryItemTop">
+                <div class="memoryItemTitle">${escapeHtml(item.title || "Note EXPLORE")}</div>
+                <div class="memoryItemAmount">${escapeHtml(amount)}</div>
+              </div>
+              <div class="memoryItemMeta">${escapeHtml(item.sentence || "")}</div>
+              <div class="memoryItemMeta">${escapeHtml(channel)} · ${escapeHtml(item.impact || "")}</div>
+              <a class="memoryPayAction" href="${escapeHtml(payUrl)}">Envoyer vers Mon argent</a>
+            </div>
+          `;
+        }).join("");
+      }
+
+      function bindQuickExploreNote(){
+        const input = $("quickExploreInput");
+        const prepare = $("btnQuickExplorePrepare");
+        const confirm = $("btnQuickExploreConfirm");
+        const clear = $("btnQuickExploreClear");
+        const clearMemory = $("btnQuickExploreMemoryClear");
+        const examples = $("quickExploreExamples");
+        if(!input || !prepare) return;
+
+        examples?.querySelectorAll("button").forEach(btn => {
+          btn.addEventListener("click", () => {
+            input.value = btn.textContent.trim();
+            const draft = parseQuickExploreSentence(input.value);
+            saveQuickExploreDraft(draft, false);
+            renderQuickExploreDraft(draft);
+          });
+        });
+
+        prepare.addEventListener("click", () => {
+          const draft = parseQuickExploreSentence(input.value);
+          if(!draft){
+            setStatus("Écris une note simple avant de préparer la trace.", "warn");
+            return;
+          }
+          saveQuickExploreDraft(draft, false);
+          renderQuickExploreDraft(draft);
+          setStatus("Note préparée. Vérifie, puis envoie vers Mon argent si c’est bon.", "ok");
+        });
+
+        confirm?.addEventListener("click", () => {
+          const draft = parseQuickExploreSentence(input.value);
+          if(!draft){
+            setStatus("Aucune note à confirmer.", "warn");
+            return;
+          }
+          const item = addQuickExploreMemory(draft);
+          saveQuickExploreDraft(item, true);
+          renderQuickExploreDraft(item);
+          renderQuickExploreMemory();
+          setStatus("Note confirmée localement. Tu peux l’envoyer vers Mon argent.", "ok");
+        });
+
+        clear?.addEventListener("click", () => {
+          input.value = "";
+          try{ localStorage.removeItem(quickExploreDraftKey()); }catch(_){}
+          renderQuickExploreDraft(null);
+          setStatus("Note rapide effacée.", "info");
+        });
+
+        clearMemory?.addEventListener("click", () => {
+          writeQuickExploreMemory([]);
+          renderQuickExploreMemory();
+          setStatus("Aide-mémoire EXPLORE vidé sur ce téléphone.", "info");
+        });
+
+        const saved = safeJsonParse(storageGet(quickExploreDraftKey()));
+        if(saved?.sentence){
+          input.value = saved.sentence;
+          renderQuickExploreDraft(saved);
+        }
+        renderQuickExploreMemory();
+      }
+
+
+      async function boot(){
+        setClawLoading();
+        bindQuickExploreNote();
+        cleanVisibleUrl();
+
+        try{
+          CURRENT_STATE = await resolveGuardState();
+          CURRENT_SLUG = normalizeSlug(CURRENT_STATE?.slug || getFallbackSlug());
+          CURRENT_PHONE = normalizePhone(CURRENT_STATE?.phone || getFallbackPhone());
+
+          if(CURRENT_SLUG){
+            storageSet(`${MODULE_PREFIX}_slug`, CURRENT_SLUG);
+            storageSet(`${MODULE_PREFIX}_last_slug`, CURRENT_SLUG);
+            storageSet("digiy_last_slug", CURRENT_SLUG);
+            storageSet("DIGIY_SLUG", CURRENT_SLUG);
+          }
+
+          if(CURRENT_PHONE){
+            storageSet(`${MODULE_PREFIX}_phone`, CURRENT_PHONE);
+            storageSet("digiy_last_phone", CURRENT_PHONE);
+            storageSet("DIGIY_PHONE", CURRENT_PHONE);
+          }
+
+          if(CURRENT_SLUG || CURRENT_PHONE){
+            saveSessionPayload(CURRENT_SLUG, CURRENT_PHONE);
+          }
+
+          buildLinks();
+          setRescueVisibility(!CURRENT_STATE?.access_ok);
+
+          let places = [];
+          if(CURRENT_PHONE){
+            try{
+              places = await loadPlacesByPhone(CURRENT_PHONE);
+            }catch(err){
+              console.error("[EXPLORE cockpit] places error:", err);
+            }
+          }
+
+          let slugPlace = null;
+          if(CURRENT_SLUG){
+            try{
+              slugPlace = await loadPlaceBySlug(CURRENT_SLUG);
+            }catch(err){
+              console.error("[EXPLORE cockpit] place by slug error:", err);
+            }
+          }
+
+          CURRENT_PLACES = Array.isArray(places) ? places : [];
+          CURRENT_MAIN = pickMainPlace(CURRENT_PLACES, slugPlace);
+
+          renderStats();
+          renderHero(CURRENT_MAIN);
+          renderMainPlace(CURRENT_MAIN);
+          renderPlaces();
+
+          if(!CURRENT_STATE?.access_ok){
+            setStatus(
+              CURRENT_SLUG
+                ? "Repère interne détecté, mais accès non confirmé. Passe par la porte PIN pour ouvrir l’espace."
+                : "Aucun accès confirmé pour le moment. L’espace reste en aperçu propre.",
+              CURRENT_SLUG ? "warn" : "info"
+            );
+            setClawPreview(
+              CURRENT_SLUG
+                ? "Un repère interne existe, mais l’accès EXPLORE n’est pas encore confirmé."
+                : "L’espace attend une identité ou une session valide."
+            );
+          }else{
+            setStatus(
+              CURRENT_MAIN
+                ? `Espace actif pour ${placeName(CURRENT_MAIN)}.`
+                : "Espace actif. Contact protégé en session locale.",
+              "ok"
+            );
+            setClawLive(CURRENT_MAIN);
+          }
+        }catch(err){
+          console.error("[EXPLORE cockpit] boot error:", err);
+          setStatus("L’espace n’a pas pu charger le rail EXPLORE pour le moment.", "bad");
+          setRescueVisibility(true);
+          renderHero(null);
+          renderMainPlace(null);
+          renderPlaces();
+          setClaw(
+            "Erreur",
+            "L’analyse a détecté un blocage au chargement de ton espace EXPLORE.",
+            [
+              "Session : protégée",
+              "Contact : protégé",
+              "Contrôle à faire"
+            ],
+            [
+              {
+                title:"Blocage principal",
+                text:"L’écran n’a pas pu lire correctement le guard ou les RPC du rail EXPLORE."
+              },
+              {
+                title:"Action utile",
+                text:"Recharge la page, puis repasse par l’entrée PIN si nécessaire."
+              }
+            ]
+          );
+        }finally{
+          document.documentElement.style.visibility = "";
+        }
+      }
+
+      boot();
+    })();
+  </script>
+</body>
+</html>
+
