@@ -1447,12 +1447,30 @@
         "keybox_location"
       ];
 
-      const supabase = window.supabase.createClient(
-        window.DIGIY_SUPABASE_URL,
-        window.DIGIY_SUPABASE_ANON_KEY || window.DIGIY_SUPABASE_ANON
-      );
+      const supabase =
+        window.DIGIY_SUPABASE_CLIENT ||
+        window.DIGIY_CLAW_EXPLORE_SB ||
+        window.supabase.createClient(
+          window.DIGIY_SUPABASE_URL,
+          window.DIGIY_SUPABASE_ANON_KEY || window.DIGIY_SUPABASE_ANON,
+          {
+            auth:{
+              persistSession:false,
+              autoRefreshToken:false,
+              detectSessionInUrl:false,
+              storageKey:"digiy-explore-cockpit-noauth",
+              storage:{
+                getItem:() => null,
+                setItem:() => {},
+                removeItem:() => {}
+              }
+            }
+          }
+        );
 
-      const $ = (id) => document.getElementById(id);
+      window.DIGIY_SUPABASE_CLIENT = supabase;
+      window.DIGIY_COCKPIT_SB = supabase;
+const $ = (id) => document.getElementById(id);
 
       let CURRENT_STATE = null;
       let CURRENT_PHONE = "";
