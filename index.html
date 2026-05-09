@@ -17,12 +17,11 @@
       --card2:#102b22;
       --line:rgba(255,255,255,.08);
       --ink:#f8fafc;
-      --muted:rgba(248,250,252,.78);
-      --soft:rgba(248,250,252,.58);
+      --muted:rgba(248,250,252,.72);
+      --soft:rgba(248,250,252,.54);
       --gold:#d4af37;
       --gold2:#f3d46b;
       --ok:#22c55e;
-      --blue:#38bdf8;
       --radius:24px;
       --shadow:0 24px 60px rgba(0,0,0,.30);
     }
@@ -80,7 +79,6 @@
     }
 
     .brandText{min-width:0}
-
     .kicker{
       color:var(--gold2);
       font-size:12px;
@@ -92,7 +90,7 @@
     }
 
     .title{
-      font-size:clamp(20px, 2.2vw, 30px);
+      font-size:clamp(18px, 2vw, 27px);
       font-weight:1000;
       line-height:1.08;
       letter-spacing:-.03em;
@@ -102,10 +100,10 @@
     }
 
     .sub{
-      margin-top:5px;
+      margin-top:4px;
       color:var(--muted);
-      font-size:14px;
-      line-height:1.5;
+      font-size:13px;
+      line-height:1.45;
     }
 
     .topActions{
@@ -116,10 +114,10 @@
     }
 
     .btn{
-      min-height:48px;
+      min-height:46px;
       border:none;
-      border-radius:16px;
-      padding:0 16px;
+      border-radius:15px;
+      padding:0 15px;
       display:inline-flex;
       align-items:center;
       justify-content:center;
@@ -129,11 +127,9 @@
       transition:filter .18s ease, transform .04s ease;
       white-space:nowrap;
       text-align:center;
-      font-size:14px;
     }
 
     .btn:active{transform:translateY(1px)}
-
     .btn.primary{
       background:linear-gradient(135deg, var(--gold), var(--gold2));
       color:#13200d;
@@ -168,7 +164,7 @@
     }
 
     .heroMain{
-      padding:24px;
+      padding:22px;
       background:
         linear-gradient(180deg, rgba(212,175,55,.07), transparent 30%),
         linear-gradient(180deg, var(--card), var(--card2));
@@ -192,7 +188,7 @@
 
     h1{
       margin:0 0 10px;
-      font-size:clamp(34px, 4.6vw, 56px);
+      font-size:clamp(30px, 4vw, 48px);
       line-height:1.02;
       letter-spacing:-.045em;
     }
@@ -200,34 +196,32 @@
     .lead{
       margin:0;
       color:var(--muted);
-      font-size:17px;
-      line-height:1.66;
-      max-width:56ch;
-      font-weight:700;
+      font-size:15.5px;
+      line-height:1.62;
+      max-width:58ch;
     }
 
     .heroActions{
       display:grid;
-      grid-template-columns:1fr 1fr;
+      grid-template-columns:repeat(3, minmax(0, 1fr));
       gap:10px;
       margin-top:18px;
     }
 
     .heroActions .btn{
-      min-height:56px;
-      border-radius:18px;
-      font-size:15px;
+      min-height:52px;
+      border-radius:17px;
     }
 
     .heroTags{
       display:flex;
       flex-wrap:wrap;
       gap:9px;
-      margin-top:15px;
+      margin-top:14px;
     }
 
     .pill{
-      min-height:38px;
+      min-height:36px;
       padding:0 12px;
       border-radius:999px;
       display:inline-flex;
@@ -237,11 +231,11 @@
       border:1px solid rgba(255,255,255,.08);
       color:#eef6f2;
       font-weight:800;
-      font-size:13px;
+      font-size:12.5px;
     }
 
     .heroSide{
-      padding:20px;
+      padding:18px;
       display:grid;
       gap:10px;
       background:
@@ -252,13 +246,13 @@
     .miniStat{
       border:1px solid rgba(255,255,255,.08);
       border-radius:18px;
-      padding:15px;
+      padding:14px;
       background:rgba(255,255,255,.03);
     }
 
     .miniLabel{
       color:var(--soft);
-      font-size:12px;
+      font-size:11.5px;
       font-weight:900;
       text-transform:uppercase;
       letter-spacing:.08em;
@@ -266,7 +260,7 @@
     }
 
     .miniValue{
-      font-size:22px;
+      font-size:20px;
       font-weight:1000;
       line-height:1.15;
       letter-spacing:-.03em;
@@ -275,8 +269,8 @@
     .miniHint{
       margin-top:6px;
       color:var(--muted);
-      font-size:14px;
-      line-height:1.5;
+      font-size:13px;
+      line-height:1.45;
     }
 
     .quickGrid{
@@ -291,10 +285,10 @@
       border-radius:22px;
       background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
       box-shadow:var(--shadow);
-      padding:18px;
+      padding:16px;
       display:grid;
       gap:12px;
-      min-height:184px;
+      min-height:172px;
     }
 
     .tileTop{
@@ -305,12 +299,12 @@
     }
 
     .tileIcon{
-      width:42px;
-      height:42px;
+      width:40px;
+      height:40px;
       border-radius:14px;
       display:grid;
       place-items:center;
-      font-size:20px;
+      font-size:19px;
       background:rgba(212,175,55,.10);
       border:1px solid rgba(212,175,55,.18);
       color:var(--gold2);
@@ -319,14 +313,14 @@
 
     .tileLabel{
       color:var(--soft);
-      font-size:12px;
+      font-size:11.5px;
       font-weight:900;
       text-transform:uppercase;
       letter-spacing:.08em;
     }
 
     .tileTitle{
-      font-size:22px;
+      font-size:20px;
       font-weight:1000;
       line-height:1.15;
       letter-spacing:-.03em;
@@ -334,9 +328,8 @@
 
     .tileText{
       color:var(--muted);
-      font-size:14.5px;
-      line-height:1.62;
-      font-weight:650;
+      font-size:13.5px;
+      line-height:1.55;
     }
 
     .tileActions{
@@ -347,10 +340,10 @@
     }
 
     .tileActions .btn{
-      min-height:42px;
-      border-radius:13px;
+      min-height:40px;
+      border-radius:12px;
       padding:0 12px;
-      font-size:14px;
+      font-size:13px;
       flex:1 1 auto;
     }
 
@@ -375,14 +368,13 @@
       align-items:center;
       gap:12px;
       font-weight:1000;
-      font-size:20px;
+      font-size:18px;
     }
 
     summary::-webkit-details-marker{display:none}
-
     summary span{
       color:var(--muted);
-      font-size:14px;
+      font-size:13px;
       font-weight:800;
       line-height:1.45;
     }
@@ -403,20 +395,22 @@
       border:1px solid rgba(255,255,255,.08);
       background:rgba(255,255,255,.03);
       border-radius:16px;
-      padding:14px;
+      padding:13px;
     }
 
     .item strong,.rule strong{
       display:block;
-      font-size:15px;
+      font-size:14px;
       margin-bottom:6px;
     }
 
     .item span,.rule span{
       color:var(--muted);
-      font-size:14px;
-      line-height:1.58;
+      font-size:13.5px;
+      line-height:1.55;
     }
+
+
 
     .routeNav{
       display:flex;
@@ -427,7 +421,7 @@
     }
 
     .routeNav a{
-      min-height:44px;
+      min-height:42px;
       padding:0 13px;
       border-radius:999px;
       display:inline-flex;
@@ -442,15 +436,8 @@
       box-shadow:0 10px 24px rgba(0,0,0,.16);
     }
 
-    .footerNote{
-      margin-top:18px;
-      color:var(--muted);
-      font-size:12.5px;
-      line-height:1.6;
-      text-align:center;
-    }
 
-    /* Camembert audio discret */
+    /* Camembert audio discret DIGIY */
     #audioCamembert{
       position:fixed;
       left:14px;
@@ -548,8 +535,7 @@
       pointer-events:auto;
     }
 
-    #audioCamembert .menu button,
-    #audioCamembert .menu a{
+    #audioCamembert .menu button{
       min-height:44px;
       border:none;
       border-radius:15px;
@@ -562,7 +548,6 @@
       padding:9px 10px;
       font-size:12px;
       font-weight:1000;
-      text-decoration:none;
       cursor:pointer;
     }
 
@@ -583,6 +568,99 @@
       border:1px solid rgba(56,189,248,.24);
     }
 
+    .footerNote{
+      margin-top:18px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.6;
+      text-align:center;
+    }
+
+    /* ── side-card reprise du héro public ── */
+    .sideCover{
+      border-radius:18px;
+      overflow:hidden;
+      aspect-ratio:4/3;
+      border:1px solid rgba(255,255,255,.08);
+      background:#0b2018;
+      position:relative;
+    }
+
+    .sideCover img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .sideCoverBadge{
+      position:absolute;
+      left:11px;
+      top:11px;
+      z-index:2;
+      display:inline-flex;
+      align-items:center;
+      min-height:30px;
+      padding:0 11px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:900;
+      background:rgba(6,19,15,.74);
+      border:1px solid rgba(255,255,255,.14);
+      backdrop-filter:blur(6px);
+    }
+
+    .sideKicker{
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+      color:var(--gold2);
+      font-weight:900;
+    }
+
+    .sideTitle{
+      font-size:20px;
+      line-height:1.15;
+      font-weight:1000;
+      margin:0;
+      letter-spacing:-.02em;
+    }
+
+    .sideText{
+      color:var(--muted);
+      line-height:1.68;
+      font-size:14px;
+    }
+
+    .quickList{
+      display:grid;
+      gap:9px;
+    }
+
+    .quickItem{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      padding:11px 13px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+    }
+
+    .quickItem strong{
+      display:block;
+      font-size:13.5px;
+      font-weight:900;
+      margin-bottom:3px;
+    }
+
+    .quickItem span{
+      display:block;
+      color:var(--muted);
+      font-size:12.5px;
+      line-height:1.5;
+    }
+
     @media (max-width: 980px){
       .hero{grid-template-columns:1fr}
       .quickGrid{grid-template-columns:1fr}
@@ -590,12 +668,15 @@
     }
 
     @media (max-width: 640px){
-      .wrap{padding:14px 12px 100px}
+      .wrap{padding:14px 12px 34px}
       .topbar{flex-direction:column}
       .topActions{width:100%;justify-content:flex-start}
       .topActions > *{flex:1 1 auto}
       .routeNav{justify-content:flex-start}
       .routeNav a{flex:1 1 auto}
+      .audioActions,.audioBtn{width:100%}
+      .audioBtn{justify-content:center}
+      .audioGlow{display:none}
       .heroMain,.heroSide{padding:18px}
       .heroActions{grid-template-columns:1fr}
       .tile{min-height:auto}
@@ -667,6 +748,7 @@
         <div class="heroActions">
           <a class="btn primary digiy-link" href="./lieux.html">📍 Voir mes lieux</a>
           <a class="btn secondary digiy-link" href="./submit.html">➕ Ajouter un lieu</a>
+          <a class="btn ghost" id="publicPlaceLink" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener noreferrer">🌍 Fiche du lieu</a>
         </div>
 
         <div class="heroTags">
@@ -678,28 +760,51 @@
       </article>
 
       <aside class="panel heroSide">
-        <div class="miniStat">
-          <div class="miniLabel">Geste maître</div>
-          <div class="miniValue">Voir mes lieux</div>
-          <div class="miniHint">Avant d’ajouter, regarde ce qui est déjà posé.</div>
+        <div class="sideCover">
+          <span class="sideCoverBadge">🌊 Ambiance terrain</span>
+          <img
+            src="https://orange-pig-270004.hostingersite.com/wp-content/uploads/2025/07/DIGIY-EXPLORE-Boat.gif"
+            alt="Sortie en mer sur la Petite Côte"
+          />
         </div>
 
-        <div class="miniStat">
-          <div class="miniLabel">Action rapide</div>
-          <div class="miniValue">Ajouter un lieu</div>
-          <div class="miniHint">Une fiche simple pour rendre un endroit visible et compréhensible.</div>
+        <div class="sideKicker">Ce qu’on veut faire ressentir</div>
+        <p class="sideTitle">Pas une vitrine vide. Une invitation à vivre le lieu.</p>
+        <p class="sideText">
+          Un visiteur doit comprendre vite : où il est, ce qu’il peut vivre, pourquoi c’est intéressant,
+          et comment contacter la bonne personne sans passer par un labyrinthe.
+        </p>
+
+        <div class="quickList">
+          <div class="quickItem">
+            <div>📍</div>
+            <div>
+              <strong>Le lieu doit parler</strong>
+              <span>On montre l’ambiance, pas une fiche froide.</span>
+            </div>
+          </div>
+          <div class="quickItem">
+            <div>✨</div>
+            <div>
+              <strong>L’exemple doit donner envie</strong>
+              <span>Sortie, coin calme, balade, adresse utile, vraie expérience.</span>
+            </div>
+          </div>
+          <div class="quickItem">
+            <div>📲</div>
+            <div>
+              <strong>Le contact doit être simple</strong>
+              <span>Un geste, un message, une action claire.</span>
+            </div>
+          </div>
         </div>
 
-        <div class="miniStat">
-          <div class="miniLabel">Lecture</div>
-          <div class="miniValue">Ma gestion</div>
-          <div class="miniHint">Pour lire l’ensemble sans se perdre dans les détails.</div>
-        </div>
+        <a class="btn primary digiy-link" href="./lieux.html">Voir mes lieux</a>
       </aside>
     </section>
 
     <section class="quickGrid" aria-label="Actions principales EXPLORE">
-      <article class="tile" id="spots">
+      <article class="tile">
         <div class="tileTop">
           <div>
             <div class="tileLabel">Travail réel</div>
@@ -715,7 +820,7 @@
         </div>
       </article>
 
-      <article class="tile" id="addSpot">
+      <article class="tile">
         <div class="tileTop">
           <div>
             <div class="tileLabel">Création</div>
@@ -799,6 +904,7 @@
           <a class="btn secondary digiy-link" href="./cockpit.html">🧭 Ma gestion</a>
           <a class="btn secondary digiy-link" href="./lieux.html">📍 Mes lieux</a>
           <a class="btn secondary digiy-link" href="./submit.html">➕ Ajouter</a>
+          <a class="btn secondary" id="publicPlaceLinkBottom" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener noreferrer">🌍 Fiche du lieu</a>
         </div>
       </div>
     </section>
@@ -807,6 +913,7 @@
       DIGIY EXPLORE • voir • ajouter • corriger • faire venir
     </div>
   </div>
+
 
   <!-- Camembert audio discret -->
   <div id="audioCamembert" aria-label="Accueil vocal DIGIY EXPLORE">
@@ -828,12 +935,12 @@
       "use strict";
 
       const HUB_BASE = "https://digiy-hub.digiylyfe.com/";
+      const PUBLIC_EXPLORE_BASE = "https://explore.digiylyfe.com/";
       const AUDIO_TEXT =
-        "Bienvenue dans EXPLORE by DIGIY. Ici, ton lieu ne reste pas invisible. Tu peux montrer un spot, une activité, une adresse ou une expérience locale. Le but est simple : aider les visiteurs à comprendre pourquoi venir, où aller, et comment te contacter. Commence par voir tes lieux. Ensuite ajoute ou corrige une fiche. Si tu veux accélérer, le boost sert à mettre ton lieu en avant. DIGIY ne remplace pas le terrain : DIGIY donne de la lumière au terrain.";
+        "Bienvenue dans EXPLORE by DIGIY. Ici, ton lieu ne reste pas dans l’ombre. Tu n’as pas besoin d’écrire beaucoup ni de te perdre dans des réglages. Regarde d’abord ce qui existe déjà dans Mes lieux. Si une fiche est déjà posée, vérifie si elle donne envie de venir. Si quelque chose manque, corrige simplement. Si ton lieu n’existe pas encore, clique sur Ajouter un lieu. DIGIY t’aide à transformer un endroit réel en vitrine claire : une image, un nom, une zone, une raison de venir, et un contact utile. Le client doit comprendre vite. Le terrain garde son âme. Toi, tu gardes la main. Ici, on regarde d’abord, on comprend vite, on clique ensuite… et miracle, DIGIY parle pour guider le chemin.";
 
       const root = document.getElementById("audioCamembert");
       const centerBtn = document.getElementById("audioCenterBtn");
-      const menu = document.getElementById("audioMenu");
       const listenBtn = document.getElementById("camListenBtn");
       const closeBtn = document.getElementById("camCloseBtn");
       const spotsBtn = document.getElementById("camSpotsBtn");
@@ -899,9 +1006,43 @@
         window.speechSynthesis.speak(utter);
       }
 
-      function goTo(selector){
-        const node = document.querySelector(selector);
-        if(node) node.scrollIntoView({behavior:"smooth", block:"start"});
+      function readStored(key){
+        try{ return localStorage.getItem(key) || sessionStorage.getItem(key) || ""; }catch(_){ return ""; }
+      }
+
+      function normalizeSlug(value){
+        return String(value || "").trim().toLowerCase();
+      }
+
+      function getSafeSlug(){
+        try{
+          const params = new URLSearchParams(window.location.search);
+          return normalizeSlug(
+            params.get("slug") ||
+            readStored("digiy_explore_slug") ||
+            readStored("explore_slug") ||
+            readStored("digiy_slug") ||
+            readStored("slug")
+          );
+        }catch(_){
+          return "";
+        }
+      }
+
+      function syncPublicPlaceLink(){
+        const slug = getSafeSlug();
+        const href = slug
+          ? PUBLIC_EXPLORE_BASE + "?slug=" + encodeURIComponent(slug)
+          : PUBLIC_EXPLORE_BASE;
+
+        ["publicPlaceLink", "publicPlaceLinkBottom"].forEach(function(id){
+          const link = document.getElementById(id);
+          if(!link) return;
+          link.href = href;
+          link.title = slug
+            ? "Voir la fiche publique du lieu"
+            : "Voir la vitrine publique EXPLORE";
+        });
       }
 
       function syncHub(){
@@ -918,9 +1059,7 @@
       }
 
       if(listenBtn){
-        listenBtn.addEventListener("click", function(){
-          playAudio();
-        });
+        listenBtn.addEventListener("click", playAudio);
       }
 
       if(closeBtn){
@@ -933,13 +1072,14 @@
       if(spotsBtn){
         spotsBtn.addEventListener("click", function(){
           setOpen(false);
-          goTo("#spots");
+          const target = document.querySelector(".quickGrid") || document.querySelector('[href="./lieux.html"]');
+          if(target && target.scrollIntoView) target.scrollIntoView({behavior:"smooth", block:"start"});
         });
       }
 
       if(addBtn){
         addBtn.addEventListener("click", function(){
-          window.location.href = keepContext("./submit.html");
+          window.location.href = "./submit.html";
         });
       }
 
@@ -954,31 +1094,11 @@
       }
 
       syncHub();
+      syncPublicPlaceLink();
       window.addEventListener("beforeunload", stopAudio);
-      document.addEventListener("visibilitychange", function(){ if(document.hidden) stopAudio(); });
-
-      window.DIGIY_EXPLORE_AUDIO = {
-        play: playAudio,
-        stop: stopAudio
-      };
-
-      function keepContext(href){
-        try{
-          const current = new URLSearchParams(window.location.search);
-          const next = new URL(href, window.location.href);
-          ["slug", "phone", "tel", "module"].forEach((key) => {
-            const val = current.get(key);
-            if(val && !next.searchParams.get(key)){
-              next.searchParams.set(key, val);
-            }
-          });
-          return next.pathname + next.search + next.hash;
-        }catch(_){
-          return href;
-        }
-      }
-
-      window.keepContext = keepContext;
+      document.addEventListener("visibilitychange", function(){
+        if(document.hidden) stopAudio();
+      });
     })();
   </script>
 
