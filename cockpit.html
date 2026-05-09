@@ -16,16 +16,15 @@
     document.documentElement.style.visibility = "hidden";
   </script>
 
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./guard.js?v=explore-guard"></script>
+  <script src="./claw-tools-explore.js?v=explore-claw"></script>
+  <script src="./explore-alerts.js?v=explore-alerts"></script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./guard.js?v=explore-guard"></script>
-<script src="./claw-tools-explore.js?v=explore-claw"></script>
-<script src="./explore-alerts.js?v=explore-alerts"></script>
-  
-  <style>
+<style>
     :root{
       --bg:#06130f;
       --bg2:#0a1f18;
@@ -1435,6 +1434,8 @@
         claw: "./claw.html"
       };
 
+      const PUBLIC_EXPLORE_BASE = "https://explore.digiylyfe.com/";
+
       const SENSITIVE_QUERY_KEYS = [
         "slug",
         "phone",
@@ -1590,6 +1591,14 @@ const $ = (id) => document.getElementById(id);
 
       function buildInternalHref(path){
         return path;
+      }
+
+      function buildPublicPlaceHref(place){
+        const slug = normalizeSlug(place?.slug || "");
+        if(!slug || !isPublished(place)) return "";
+        const url = new URL(PUBLIC_EXPLORE_BASE);
+        url.searchParams.set("slug", slug);
+        return url.toString();
       }
 
       function buildPinHref(){
@@ -1976,15 +1985,29 @@ const $ = (id) => document.getElementById(id);
           ? "Affiner la lecture ou passer par Analyse pour améliorer la micro-copy."
           : "Contrôler la fiche puis publier quand la lecture est propre.";
 
+        const publicHref = buildPublicPlaceHref(place);
+
         $("btnEditCurrent").href = buildInternalHref(PATHS.submit);
-        $("btnViewCurrent").href = buildInternalHref(PATHS.submit);
+        $("btnViewCurrent").href = publicHref || buildInternalHref(PATHS.submit);
+        $("btnViewCurrent").textContent = publicHref ? "Voir la fiche publique" : "Préparer la publication";
+        if(publicHref){
+          $("btnViewCurrent").target = "_blank";
+          $("btnViewCurrent").rel = "noopener noreferrer";
+        }else{
+          $("btnViewCurrent").removeAttribute("target");
+          $("btnViewCurrent").removeAttribute("rel");
+        }
+
         $("btnClawCurrent").href = buildInternalHref(PATHS.claw);
+
         ["btnEditCurrent","btnViewCurrent","btnClawCurrent"].forEach((id) => {
           const node = $(id);
           if(node) node.onclick = function(){ rememberSelectedPlace(place.slug || CURRENT_SLUG); };
         });
-        $("linksText").textContent =
-          "Repère utile : gestion → lieux → édition → analyse. Le repère interne reste en session.";
+
+        $("linksText").textContent = publicHref
+          ? "Repère utile : gestion → lieux → édition → fiche publique. Le repère interne reste en session."
+          : "La fiche n’est pas encore publique. Termine la fiche puis publie avant d’envoyer un lien public.";
       }
 
       function renderPlaces(){
@@ -2004,6 +2027,7 @@ const $ = (id) => document.getElementById(id);
           const slug = normalizeSlug(place.slug || "");
           const editHref = buildInternalHref(PATHS.submit);
           const clawHref = buildInternalHref(PATHS.claw);
+          const publicHref = buildPublicPlaceHref(place);
 
           return `
             <article class="placeCard">
@@ -2028,6 +2052,11 @@ const $ = (id) => document.getElementById(id);
               <div class="placeActions">
                 <a class="btn secondary js-place-action" href="${escapeHtml(editHref)}" data-place-slug="${escapeHtml(slug)}">Gérer</a>
                 <a class="btn info js-place-action" href="${escapeHtml(clawHref)}" data-place-slug="${escapeHtml(slug)}">Analyse</a>
+                ${
+                  publicHref
+                    ? `<a class="btn primary js-place-action" href="${escapeHtml(publicHref)}" target="_blank" rel="noopener noreferrer" data-place-slug="${escapeHtml(slug)}">Voir public</a>`
+                    : `<a class="btn ghost js-place-action" href="${escapeHtml(editHref)}" data-place-slug="${escapeHtml(slug)}">Préparer publication</a>`
+                }
               </div>
             </article>
           `;
@@ -2574,4 +2603,3 @@ const $ = (id) => document.getElementById(id);
   
 </body>
 </html>
-
