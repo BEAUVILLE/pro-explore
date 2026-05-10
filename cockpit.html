@@ -2607,6 +2607,383 @@ const $ = (id) => document.getElementById(id);
     });
   })();
 </script>
-  
+  <!-- DIGIY EXPLORE — PATCH PUBLIC : lien Mon lieu → cockpit + camembert discret
+À coller juste avant </body> dans BEAUVILLE/digiy-explore/index.html
+Objectif :
+- "Mon lieu", "Ma fiche", "Espace pro", "Je veux montrer mon lieu" ouvrent le vrai cockpit PRO
+- pas de slug / phone dans l’URL PRO
+- camembert audio discret avec actions utiles
+-->
+
+<style>
+  #digiyExploreProCamembert{
+    position:fixed;
+    left:14px;
+    bottom:calc(86px + env(safe-area-inset-bottom,0px));
+    width:84px;
+    height:84px;
+    z-index:99999;
+    font-family:Outfit,Inter,system-ui,sans-serif;
+  }
+
+  #digiyExploreProCamembert .digiyExploreCenter{
+    position:absolute;
+    inset:0;
+    width:84px;
+    height:84px;
+    border:none;
+    border-radius:50%;
+    cursor:pointer;
+    color:#fff;
+    box-shadow:0 18px 40px rgba(0,0,0,.34);
+    background:
+      radial-gradient(circle at center, rgba(6,19,15,.95) 0 42%, transparent 43%),
+      conic-gradient(
+        from -90deg,
+        rgba(212,175,55,.96) 0 33%,
+        rgba(34,197,94,.90) 33% 66%,
+        rgba(56,189,248,.88) 66% 100%
+      );
+    overflow:hidden;
+  }
+
+  #digiyExploreProCamembert .digiyExploreCenter::before{
+    content:"";
+    position:absolute;
+    inset:13px;
+    border-radius:50%;
+    background:rgba(6,19,15,.97);
+    border:1px solid rgba(255,255,255,.10);
+  }
+
+  #digiyExploreProCamembert .digiyExploreCenter span,
+  #digiyExploreProCamembert .digiyExploreCenter strong{
+    position:relative;
+    z-index:2;
+    display:block;
+    text-align:center;
+  }
+
+  #digiyExploreProCamembert .digiyExploreCenter span{
+    font-size:20px;
+    line-height:1;
+    margin-bottom:2px;
+  }
+
+  #digiyExploreProCamembert .digiyExploreCenter strong{
+    font-size:11px;
+    font-weight:1000;
+  }
+
+  #digiyExploreProCamembert.playing .digiyExploreCenter{
+    background:
+      radial-gradient(circle at center, rgba(6,19,15,.95) 0 42%, transparent 43%),
+      conic-gradient(from -90deg, rgba(248,113,113,.96) 0 50%, rgba(212,175,55,.90) 50% 100%);
+  }
+
+  #digiyExploreProCamembert .digiyExploreMenu{
+    position:absolute;
+    left:94px;
+    bottom:4px;
+    width:248px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    padding:10px;
+    border-radius:22px;
+    border:1px solid rgba(255,255,255,.12);
+    background:rgba(6,19,15,.94);
+    box-shadow:0 18px 48px rgba(0,0,0,.32);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    opacity:0;
+    transform:translateX(-8px) scale(.96);
+    pointer-events:none;
+    transition:.18s ease;
+  }
+
+  #digiyExploreProCamembert.open .digiyExploreMenu{
+    opacity:1;
+    transform:translateX(0) scale(1);
+    pointer-events:auto;
+  }
+
+  #digiyExploreProCamembert .digiyExploreMenu button,
+  #digiyExploreProCamembert .digiyExploreMenu a{
+    min-height:44px;
+    border:none;
+    border-radius:15px;
+    background:rgba(255,255,255,.07);
+    color:#f7fbf8;
+    padding:9px 10px;
+    font-size:12px;
+    font-weight:1000;
+    cursor:pointer;
+    text-decoration:none;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    font-family:inherit;
+  }
+
+  #digiyExploreProCamembert .digiyExploreMenu .gold{
+    background:linear-gradient(135deg,#d4af37,#f3d46b);
+    color:#13200d;
+  }
+
+  #digiyExploreProCamembert .digiyExploreMenu .green{
+    background:rgba(34,197,94,.16);
+    color:#dffcea;
+    border:1px solid rgba(34,197,94,.25);
+  }
+
+  #digiyExploreProCamembert .digiyExploreMenu .blue{
+    background:rgba(56,189,248,.14);
+    color:#d9f4ff;
+    border:1px solid rgba(56,189,248,.24);
+  }
+
+  .digiy-pro-cockpit-link{
+    cursor:pointer;
+  }
+
+  @media(max-width:640px){
+    #digiyExploreProCamembert{
+      left:10px;
+      bottom:calc(84px + env(safe-area-inset-bottom,0px));
+      width:76px;
+      height:76px;
+    }
+
+    #digiyExploreProCamembert .digiyExploreCenter{
+      width:76px;
+      height:76px;
+    }
+
+    #digiyExploreProCamembert .digiyExploreCenter::before{
+      inset:12px;
+    }
+
+    #digiyExploreProCamembert .digiyExploreMenu{
+      left:0;
+      bottom:86px;
+      width:min(270px, calc(100vw - 20px));
+    }
+  }
+</style>
+
+<div id="digiyExploreProCamembert" aria-label="Guide DIGIY EXPLORE">
+  <button class="digiyExploreCenter" id="digiyExploreProCenter" type="button" aria-expanded="false" aria-pressed="false">
+    <span>🎧</span>
+    <strong>DIGIY</strong>
+  </button>
+
+  <div class="digiyExploreMenu" id="digiyExploreProMenu">
+    <button class="gold" id="digiyExploreProListen" type="button">Écouter</button>
+    <button id="digiyExploreProClose" type="button">Fermer</button>
+    <a class="green" href="https://pro-explore.digiylyfe.com/cockpit.html">Cockpit</a>
+    <a class="blue" href="https://pro-explore.digiylyfe.com/lieux.html">Mes lieux</a>
+    <a class="blue" href="https://pro-explore.digiylyfe.com/submit.html">Ajouter</a>
+    <a href="https://pro-explore.digiylyfe.com/pin.html">PIN</a>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const PRO_COCKPIT = "https://pro-explore.digiylyfe.com/cockpit.html";
+  const PRO_PIN = "https://pro-explore.digiylyfe.com/pin.html";
+  const PRO_LIEUX = "https://pro-explore.digiylyfe.com/lieux.html";
+  const PRO_SUBMIT = "https://pro-explore.digiylyfe.com/submit.html";
+
+  function textOf(node){
+    return String(node?.textContent || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function setLink(node, href){
+    if(!node) return;
+    node.setAttribute("href", href);
+    node.classList.add("digiy-pro-cockpit-link");
+    node.removeAttribute("target");
+    node.removeAttribute("rel");
+  }
+
+  function patchProLinks(){
+    document.querySelectorAll('a[href="#proSection"], a[href*="#proSection"]').forEach(function(a){
+      setLink(a, PRO_COCKPIT);
+    });
+
+    document.querySelectorAll("a, button").forEach(function(node){
+      const t = textOf(node);
+
+      const isMonLieu =
+        t === "mon lieu" ||
+        t.includes("mon lieu") ||
+        t.includes("ma fiche") ||
+        t.includes("espace pro") ||
+        t.includes("je veux montrer mon lieu") ||
+        t.includes("mon acces");
+
+      const isLieux =
+        t.includes("voir mes lieux") ||
+        t === "lieux" ||
+        t.includes("mes lieux");
+
+      const isAjouter =
+        t.includes("ajouter un lieu") ||
+        t === "ajouter";
+
+      if(node.tagName === "A"){
+        if(isAjouter){
+          setLink(node, PRO_SUBMIT);
+        }else if(isLieux){
+          setLink(node, PRO_LIEUX);
+        }else if(isMonLieu){
+          setLink(node, PRO_COCKPIT);
+        }
+      }else if(node.tagName === "BUTTON"){
+        if(isAjouter || isLieux || isMonLieu){
+          node.addEventListener("click", function(e){
+            e.preventDefault();
+            if(isAjouter) window.location.href = PRO_SUBMIT;
+            else if(isLieux) window.location.href = PRO_LIEUX;
+            else window.location.href = PRO_COCKPIT;
+          });
+        }
+      }
+    });
+
+    document.querySelectorAll("[data-pro-entry], .js-pro-entry").forEach(function(node){
+      node.addEventListener("click", function(e){
+        e.preventDefault();
+        window.location.href = PRO_COCKPIT;
+      });
+    });
+  }
+
+  function cleanVisibleUrlIfProHash(){
+    try{
+      const url = new URL(window.location.href);
+      if(url.hash === "#proSection"){
+        history.replaceState({}, document.title, url.pathname + url.search);
+      }
+    }catch(_){}
+  }
+
+  const root = document.getElementById("digiyExploreProCamembert");
+  const center = document.getElementById("digiyExploreProCenter");
+  const listen = document.getElementById("digiyExploreProListen");
+  const close = document.getElementById("digiyExploreProClose");
+
+  const AUDIO_TEXT =
+    "Bienvenue dans EXPLORE by DIGIY. Cette page fait découvrir le lieu au public. Pour gérer ton lieu, ouvre le cockpit pro. Le public regarde la fiche. Le professionnel pilote dans son espace sécurisé. Pas de téléphone dans la barre. Pas de slug interne dehors. Le terrain garde la main. Clique sur Cockpit, Mes lieux ou Ajouter selon ton besoin.";
+
+  let playing = false;
+
+  function setOpen(open){
+    if(!root || !center) return;
+    root.classList.toggle("open", !!open);
+    center.setAttribute("aria-expanded", open ? "true" : "false");
+  }
+
+  function setPlaying(state){
+    playing = !!state;
+    if(!root || !center) return;
+    root.classList.toggle("playing", playing);
+    center.setAttribute("aria-pressed", playing ? "true" : "false");
+    center.innerHTML = playing
+      ? "<span>⏹</span><strong>Stop</strong>"
+      : "<span>🎧</span><strong>DIGIY</strong>";
+  }
+
+  function stop(){
+    try{ window.speechSynthesis && window.speechSynthesis.cancel(); }catch(_){}
+    setPlaying(false);
+  }
+
+  function getVoice(){
+    const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+    return voices.find(v => /^fr/i.test(v.lang || "")) || null;
+  }
+
+  function speak(){
+    if(!("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)){
+      alert("Audio indisponible sur ce navigateur.");
+      return;
+    }
+
+    if(playing){
+      stop();
+      return;
+    }
+
+    stop();
+
+    const utter = new SpeechSynthesisUtterance(AUDIO_TEXT);
+    utter.lang = "fr-FR";
+    utter.rate = 0.86;
+    utter.pitch = 1.04;
+    utter.volume = 1;
+
+    const voice = getVoice();
+    if(voice) utter.voice = voice;
+
+    utter.onstart = () => setPlaying(true);
+    utter.onend = () => setTimeout(stop, 120);
+    utter.onerror = stop;
+
+    window.speechSynthesis.speak(utter);
+  }
+
+  center && center.addEventListener("click", function(){
+    setOpen(!root.classList.contains("open"));
+  });
+
+  listen && listen.addEventListener("click", speak);
+
+  close && close.addEventListener("click", function(){
+    stop();
+    setOpen(false);
+  });
+
+  document.addEventListener("click", function(e){
+    if(root && !root.contains(e.target)){
+      setOpen(false);
+    }
+  });
+
+  if(window.speechSynthesis && typeof window.speechSynthesis.onvoiceschanged !== "undefined"){
+    window.speechSynthesis.onvoiceschanged = getVoice;
+  }
+
+  window.addEventListener("beforeunload", stop);
+  document.addEventListener("visibilitychange", function(){
+    if(document.hidden) stop();
+  });
+
+  function boot(){
+    cleanVisibleUrlIfProHash();
+    patchProLinks();
+
+    /* Si la page reconstruit des cartes après chargement, on repatche après. */
+    setTimeout(patchProLinks, 500);
+    setTimeout(patchProLinks, 1500);
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", boot);
+  }else{
+    boot();
+  }
+})();
+</script>
+
 </body>
 </html>
