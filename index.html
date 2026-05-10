@@ -1418,6 +1418,35 @@
     });
   })();
 </script>
+<script>
+(function(){
+  "use strict";
+
+  const PRO_EXPLORE_URL = "https://pro-explore.digiylyfe.com/";
+
+  function cleanProEntry(){
+    document.querySelectorAll('a[href="#proSection"], a[href*="#proSection"]').forEach(function(link){
+      link.href = PRO_EXPLORE_URL;
+      link.removeAttribute("target");
+      link.removeAttribute("rel");
+    });
+
+    document.querySelectorAll("[data-pro-entry], .js-pro-entry").forEach(function(node){
+      node.addEventListener("click", function(e){
+        e.preventDefault();
+        window.location.href = PRO_EXPLORE_URL;
+      });
+    });
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", cleanProEntry);
+  }else{
+    cleanProEntry();
+  }
+})();
+</script>
+  
   
 </body>
 </html>
