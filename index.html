@@ -1,73 +1,99 @@
-<!doctype html>
+from pathlib import Path
+
+html = """<!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Je fais découvrir mon lieu — Mon espace</title>
-  <meta name="theme-color" content="#06130f" />
-  <meta
-    name="description"
-    content="Retrouve vite tes lieux, ajoute une fiche et avance sans te disperser."
-  />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <meta name="theme-color" content="#06130f"/>
+  <meta name="description" content="Entrée directe vers le cockpit de travail EXPLORE PRO."/>
+  <title>DIGIY EXPLORE PRO — Cockpit</title>
+
+  <script>
+    window.DIGIY_MODULE = "EXPLORE";
+    window.DIGIY_LOGIN_URL = "./pin.html";
+
+    (function(){
+      "use strict";
+
+      const TARGET = "./cockpit.html";
+
+      function cleanAndGo(){
+        try{
+          const url = new URL(window.location.href);
+
+          [
+            "slug",
+            "phone",
+            "tel",
+            "owner_phone",
+            "owner_id",
+            "business_code",
+            "access_note",
+            "keybox_code",
+            "keybox_location"
+          ].forEach(function(key){
+            url.searchParams.delete(key);
+          });
+
+          const hash = url.hash && url.hash !== "#proSection" ? url.hash : "";
+          window.location.replace(TARGET + hash);
+        }catch(_){
+          window.location.replace(TARGET);
+        }
+      }
+
+      cleanAndGo();
+    })();
+  </script>
 
   <style>
     :root{
       --bg:#06130f;
       --card:#0b241b;
-      --card2:#102b22;
-      --line:rgba(255,255,255,.08);
+      --line:rgba(255,255,255,.10);
       --ink:#f8fafc;
       --muted:rgba(248,250,252,.72);
-      --soft:rgba(248,250,252,.54);
       --gold:#d4af37;
       --gold2:#f3d46b;
-      --ok:#22c55e;
-      --radius:24px;
-      --shadow:0 24px 60px rgba(0,0,0,.30);
     }
 
     *{box-sizing:border-box}
-    html,body{margin:0;padding:0}
+
+    html,body{
+      margin:0;
+      min-height:100%;
+      background:
+        radial-gradient(circle at top, rgba(212,175,55,.12), transparent 30%),
+        linear-gradient(180deg,#071510,#06130f);
+      color:var(--ink);
+      font-family:Outfit, Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
     body{
       min-height:100vh;
-      color:var(--ink);
-      font-family:Outfit, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background:
-        radial-gradient(circle at top, rgba(212,175,55,.10), transparent 26%),
-        linear-gradient(180deg, #071510 0%, #06130f 48%, #04100c 100%);
+      display:grid;
+      place-items:center;
+      padding:22px;
     }
 
-    a{color:inherit;text-decoration:none}
-
-    .wrap{
-      width:min(100%, 1120px);
-      margin:0 auto;
-      padding:16px 12px 34px;
-    }
-
-    .topbar{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:14px;
-      margin-bottom:14px;
-    }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      min-width:0;
+    main{
+      width:min(100%,700px);
+      border:1px solid var(--line);
+      border-radius:28px;
+      background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));
+      box-shadow:0 24px 60px rgba(0,0,0,.30);
+      padding:24px;
+      text-align:center;
     }
 
     .logo{
-      width:54px;
-      height:54px;
-      border-radius:18px;
+      width:72px;
+      height:72px;
+      border-radius:22px;
       overflow:hidden;
-      border:1px solid rgba(212,175,55,.22);
-      box-shadow:0 10px 28px rgba(0,0,0,.18);
-      flex:0 0 auto;
+      margin:0 auto 14px;
+      border:1px solid rgba(212,175,55,.24);
       background:#fff;
     }
 
@@ -78,1376 +104,86 @@
       display:block;
     }
 
-    .brandText{min-width:0}
     .kicker{
       color:var(--gold2);
       font-size:12px;
-      font-weight:900;
-      letter-spacing:.16em;
-      text-transform:uppercase;
-      margin-bottom:4px;
-      white-space:nowrap;
-    }
-
-    .title{
-      font-size:clamp(18px, 2vw, 27px);
       font-weight:1000;
-      line-height:1.08;
-      letter-spacing:-.03em;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .sub{
-      margin-top:4px;
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.45;
-    }
-
-    .topActions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      justify-content:flex-end;
-    }
-
-    .btn{
-      min-height:46px;
-      border:none;
-      border-radius:15px;
-      padding:0 15px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      font-weight:900;
-      cursor:pointer;
-      transition:filter .18s ease, transform .04s ease;
-      white-space:nowrap;
-      text-align:center;
-    }
-
-    .btn:active{transform:translateY(1px)}
-    .btn.primary{
-      background:linear-gradient(135deg, var(--gold), var(--gold2));
-      color:#13200d;
-      box-shadow:0 14px 30px rgba(212,175,55,.22);
-    }
-
-    .btn.secondary{
-      background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.08);
-      color:var(--ink);
-    }
-
-    .btn.ghost{
-      background:transparent;
-      border:1px solid var(--line);
-      color:var(--ink);
-    }
-
-    .hero{
-      display:grid;
-      grid-template-columns:1.18fr .82fr;
-      gap:14px;
-      margin-bottom:14px;
-    }
-
-    .panel{
-      border:1px solid var(--line);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      overflow:hidden;
-      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-    }
-
-    .heroMain{
-      padding:22px;
-      background:
-        linear-gradient(180deg, rgba(212,175,55,.07), transparent 30%),
-        linear-gradient(180deg, var(--card), var(--card2));
-    }
-
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 12px;
-      border-radius:999px;
-      border:1px solid rgba(212,175,55,.22);
-      background:rgba(212,175,55,.08);
-      color:var(--gold2);
-      font-size:12px;
-      font-weight:1000;
-      letter-spacing:.08em;
+      letter-spacing:.18em;
       text-transform:uppercase;
-      margin-bottom:14px;
+      margin-bottom:8px;
     }
 
     h1{
       margin:0 0 10px;
-      font-size:clamp(30px, 4vw, 48px);
-      line-height:1.02;
-      letter-spacing:-.045em;
+      font-size:clamp(1.8rem,4vw,2.9rem);
+      line-height:1.05;
+      letter-spacing:-.04em;
     }
 
-    .lead{
-      margin:0;
+    p{
+      margin:0 auto 18px;
+      max-width:54ch;
       color:var(--muted);
-      font-size:15.5px;
-      line-height:1.62;
-      max-width:58ch;
+      line-height:1.65;
+      font-weight:750;
     }
 
-    .heroActions{
-      display:grid;
-      grid-template-columns:repeat(3, minmax(0, 1fr));
-      gap:10px;
-      margin-top:18px;
-    }
-
-    .heroActions .btn{
-      min-height:52px;
-      border-radius:17px;
-    }
-
-    .heroTags{
+    .actions{
       display:flex;
+      gap:10px;
+      justify-content:center;
       flex-wrap:wrap;
-      gap:9px;
-      margin-top:14px;
     }
 
-    .pill{
-      min-height:36px;
-      padding:0 12px;
+    a{
+      min-height:46px;
       border-radius:999px;
       display:inline-flex;
       align-items:center;
-      gap:8px;
+      justify-content:center;
+      padding:0 16px;
+      text-decoration:none;
+      font-weight:950;
+      color:var(--ink);
+      border:1px solid var(--line);
       background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.08);
-      color:#eef6f2;
-      font-weight:800;
-      font-size:12.5px;
     }
 
-    .heroSide{
-      padding:18px;
-      display:grid;
-      gap:10px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015)),
-        linear-gradient(180deg, #0a1c16, #0d241c);
-    }
-
-    .miniStat{
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:18px;
-      padding:14px;
-      background:rgba(255,255,255,.03);
-    }
-
-    .miniLabel{
-      color:var(--soft);
-      font-size:11.5px;
-      font-weight:900;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-      margin-bottom:7px;
-    }
-
-    .miniValue{
-      font-size:20px;
-      font-weight:1000;
-      line-height:1.15;
-      letter-spacing:-.03em;
-    }
-
-    .miniHint{
-      margin-top:6px;
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.45;
-    }
-
-    .quickGrid{
-      display:grid;
-      grid-template-columns:repeat(3, 1fr);
-      gap:12px;
-      margin-bottom:14px;
-    }
-
-    .tile{
-      border:1px solid var(--line);
-      border-radius:22px;
-      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-      box-shadow:var(--shadow);
-      padding:16px;
-      display:grid;
-      gap:12px;
-      min-height:172px;
-    }
-
-    .tileTop{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      align-items:flex-start;
-    }
-
-    .tileIcon{
-      width:40px;
-      height:40px;
-      border-radius:14px;
-      display:grid;
-      place-items:center;
-      font-size:19px;
-      background:rgba(212,175,55,.10);
-      border:1px solid rgba(212,175,55,.18);
-      color:var(--gold2);
-      flex:0 0 auto;
-    }
-
-    .tileLabel{
-      color:var(--soft);
-      font-size:11.5px;
-      font-weight:900;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-    }
-
-    .tileTitle{
-      font-size:20px;
-      font-weight:1000;
-      line-height:1.15;
-      letter-spacing:-.03em;
-    }
-
-    .tileText{
-      color:var(--muted);
-      font-size:13.5px;
-      line-height:1.55;
-    }
-
-    .tileActions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:auto;
-    }
-
-    .tileActions .btn{
-      min-height:40px;
-      border-radius:12px;
-      padding:0 12px;
-      font-size:13px;
-      flex:1 1 auto;
-    }
-
-    .guide{
-      margin-bottom:14px;
-    }
-
-    details{
-      border:1px solid var(--line);
-      border-radius:22px;
-      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-      box-shadow:var(--shadow);
-      overflow:hidden;
-    }
-
-    summary{
-      list-style:none;
-      cursor:pointer;
-      padding:18px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      font-weight:1000;
-      font-size:18px;
-    }
-
-    summary::-webkit-details-marker{display:none}
-    summary span{
-      color:var(--muted);
-      font-size:13px;
-      font-weight:800;
-      line-height:1.45;
-    }
-
-    .detailsBody{
-      padding:0 18px 18px;
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:14px;
-    }
-
-    .list{
-      display:grid;
-      gap:10px;
-    }
-
-    .item,.rule{
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.03);
-      border-radius:16px;
-      padding:13px;
-    }
-
-    .item strong,.rule strong{
-      display:block;
-      font-size:14px;
-      margin-bottom:6px;
-    }
-
-    .item span,.rule span{
-      color:var(--muted);
-      font-size:13.5px;
-      line-height:1.55;
-    }
-
-
-
-    .routeNav{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      margin:-2px 0 14px;
-    }
-
-    .routeNav a{
-      min-height:42px;
-      padding:0 13px;
-      border-radius:999px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:7px;
-      font-weight:1000;
-      font-size:13px;
-      border:1px solid rgba(212,175,55,.22);
-      background:rgba(255,255,255,.045);
-      color:#fff6ce;
-      box-shadow:0 10px 24px rgba(0,0,0,.16);
-    }
-
-
-    /* Camembert audio discret DIGIY */
-    #audioCamembert{
-      position:fixed;
-      left:14px;
-      bottom:14px;
-      width:84px;
-      height:84px;
-      z-index:9999;
-      font-family:Outfit, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-
-    #audioCamembert .centerBtn{
-      position:absolute;
-      inset:0;
-      width:84px;
-      height:84px;
-      border:none;
-      border-radius:50%;
-      cursor:pointer;
-      color:#fff;
-      box-shadow:0 18px 40px rgba(0,0,0,.34);
-      background:
-        radial-gradient(circle at center, rgba(6,19,15,.95) 0 42%, transparent 43%),
-        conic-gradient(
-          from -90deg,
-          rgba(212,175,55,.96) 0 33%,
-          rgba(34,197,94,.90) 33% 66%,
-          rgba(56,189,248,.88) 66% 100%
-        );
-      overflow:hidden;
-    }
-
-    #audioCamembert .centerBtn::before{
-      content:"";
-      position:absolute;
-      inset:13px;
-      border-radius:50%;
-      background:rgba(6,19,15,.97);
-      border:1px solid rgba(255,255,255,.10);
-    }
-
-    #audioCamembert .centerBtn span,
-    #audioCamembert .centerBtn strong{
-      position:relative;
-      z-index:2;
-      display:block;
-      text-align:center;
-    }
-
-    #audioCamembert .centerBtn span{
-      font-size:20px;
-      line-height:1;
-      margin-bottom:2px;
-    }
-
-    #audioCamembert .centerBtn strong{
-      font-size:11px;
-      font-weight:1000;
-      letter-spacing:.02em;
-    }
-
-    #audioCamembert.playing .centerBtn{
-      background:
-        radial-gradient(circle at center, rgba(6,19,15,.95) 0 42%, transparent 43%),
-        conic-gradient(
-          from -90deg,
-          rgba(248,113,113,.96) 0 50%,
-          rgba(212,175,55,.90) 50% 100%
-        );
-    }
-
-    #audioCamembert .menu{
-      position:absolute;
-      left:94px;
-      bottom:4px;
-      width:228px;
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:8px;
-      padding:10px;
-      border-radius:22px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(6,19,15,.94);
-      box-shadow:0 18px 48px rgba(0,0,0,.32);
-      backdrop-filter:blur(14px);
-      -webkit-backdrop-filter:blur(14px);
-      opacity:0;
-      transform:translateX(-8px) scale(.96);
-      pointer-events:none;
-      transition:.18s ease;
-    }
-
-    #audioCamembert.open .menu{
-      opacity:1;
-      transform:translateX(0) scale(1);
-      pointer-events:auto;
-    }
-
-    #audioCamembert .menu button{
-      min-height:44px;
-      border:none;
-      border-radius:15px;
-      background:rgba(255,255,255,.07);
-      color:#f7fbf8;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      padding:9px 10px;
-      font-size:12px;
-      font-weight:1000;
-      cursor:pointer;
-    }
-
-    #audioCamembert .menu .gold{
-      background:linear-gradient(135deg,#d4af37,#f3d46b);
+    a.primary{
       color:#13200d;
-    }
-
-    #audioCamembert .menu .green{
-      background:rgba(34,197,94,.16);
-      color:#dffcea;
-      border:1px solid rgba(34,197,94,.25);
-    }
-
-    #audioCamembert .menu .blue{
-      background:rgba(56,189,248,.14);
-      color:#d9f4ff;
-      border:1px solid rgba(56,189,248,.24);
-    }
-
-    .footerNote{
-      margin-top:18px;
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.6;
-      text-align:center;
-    }
-
-    /* ── side-card reprise du héro public ── */
-    .sideCover{
-      border-radius:18px;
-      overflow:hidden;
-      aspect-ratio:4/3;
-      border:1px solid rgba(255,255,255,.08);
-      background:#0b2018;
-      position:relative;
-    }
-
-    .sideCover img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-    }
-
-    .sideCoverBadge{
-      position:absolute;
-      left:11px;
-      top:11px;
-      z-index:2;
-      display:inline-flex;
-      align-items:center;
-      min-height:30px;
-      padding:0 11px;
-      border-radius:999px;
-      font-size:12px;
-      font-weight:900;
-      background:rgba(6,19,15,.74);
-      border:1px solid rgba(255,255,255,.14);
-      backdrop-filter:blur(6px);
-    }
-
-    .sideKicker{
-      font-size:12px;
-      text-transform:uppercase;
-      letter-spacing:.06em;
-      color:var(--gold2);
-      font-weight:900;
-    }
-
-    .sideTitle{
-      font-size:20px;
-      line-height:1.15;
-      font-weight:1000;
-      margin:0;
-      letter-spacing:-.02em;
-    }
-
-    .sideText{
-      color:var(--muted);
-      line-height:1.68;
-      font-size:14px;
-    }
-
-    .quickList{
-      display:grid;
-      gap:9px;
-    }
-
-    .quickItem{
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-      padding:11px 13px;
-      border-radius:16px;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.04);
-    }
-
-    .quickItem strong{
-      display:block;
-      font-size:13.5px;
-      font-weight:900;
-      margin-bottom:3px;
-    }
-
-    .quickItem span{
-      display:block;
-      color:var(--muted);
-      font-size:12.5px;
-      line-height:1.5;
-    }
-
-    @media (max-width: 980px){
-      .hero{grid-template-columns:1fr}
-      .quickGrid{grid-template-columns:1fr}
-      .detailsBody{grid-template-columns:1fr}
-    }
-
-    @media (max-width: 640px){
-      .wrap{padding:14px 12px 34px}
-      .topbar{flex-direction:column}
-      .topActions{width:100%;justify-content:flex-start}
-      .topActions > *{flex:1 1 auto}
-      .routeNav{justify-content:flex-start}
-      .routeNav a{flex:1 1 auto}
-      .audioActions,.audioBtn{width:100%}
-      .audioBtn{justify-content:center}
-      .audioGlow{display:none}
-      .heroMain,.heroSide{padding:18px}
-      .heroActions{grid-template-columns:1fr}
-      .tile{min-height:auto}
-      summary{
-        align-items:flex-start;
-        flex-direction:column;
-      }
-
-      #audioCamembert{
-        left:10px;
-        bottom:10px;
-        width:76px;
-        height:76px;
-      }
-
-      #audioCamembert .centerBtn{
-        width:76px;
-        height:76px;
-      }
-
-      #audioCamembert .centerBtn::before{
-        inset:12px;
-      }
-
-      #audioCamembert .menu{
-        left:0;
-        bottom:86px;
-        width:min(260px, calc(100vw - 20px));
-      }
+      border:none;
+      background:linear-gradient(135deg,var(--gold),var(--gold2));
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header class="topbar">
-      <div class="brand">
-        <div class="logo">
-          <img src="https://digiylyfe.net/wp-content/uploads/2026/03/digiylyfe_logo_qr.jpeg" alt="Logo DIGIYLYFE" />
-        </div>
-        <div class="brandText">
-          <div class="kicker">DIGIYLYFE</div>
-          <div class="title">Je fais découvrir mon lieu</div>
-          <div class="sub">Tes lieux, tes actions utiles, sans détour.</div>
-        </div>
-      </div>
-
-      <div class="topActions">
-        <a class="btn secondary digiy-link" href="./pin.html">Mon accès</a>
-        <a class="btn primary digiy-link" href="./lieux.html">Voir mes lieux</a>
-      </div>
-    </header>
-
-    <nav class="routeNav" aria-label="Navigation DIGIY">
-      <a href="https://digiylyfe.com/" rel="noopener noreferrer">🌍 Site</a>
-      <a id="hubRouteLink" href="https://digiy-hub.digiylyfe.com/" rel="noopener noreferrer">🧭 HUB</a>
-      <a href="https://tarifs.digiylyfe.com/" rel="noopener noreferrer">📦 Tarifs</a>
-      <a href="https://pro-espace.digiylyfe.com/" rel="noopener noreferrer">🏢 Espace pro</a>
-    </nav>
-
-    <section class="hero">
-      <article class="panel heroMain">
-        <div class="badge">Point d’entrée</div>
-        <h1>Fais découvrir ton lieu, simplement.</h1>
-        <p class="lead">
-          Commence par voir ce qui existe déjà. Ensuite tu ajoutes, corriges ou mets en avant le bon lieu.
-          Ici, on avance proprement : une action claire à la fois.
-        </p>
-
-        <div class="heroActions">
-          <a class="btn primary digiy-link" href="./lieux.html">📍 Voir mes lieux</a>
-          <a class="btn secondary digiy-link" href="./submit.html">➕ Ajouter un lieu</a>
-          <a class="btn ghost" id="publicPlaceLink" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener noreferrer">🌍 Fiche du lieu</a>
-        </div>
-
-        <div class="heroTags">
-          <div class="pill">📍 Voir</div>
-          <div class="pill">➕ Ajouter</div>
-          <div class="pill">✏️ Corriger</div>
-          <div class="pill">🌍 Faire venir</div>
-        </div>
-      </article>
-
-      <aside class="panel heroSide">
-        <div class="sideCover">
-          <span class="sideCoverBadge">🌊 Ambiance terrain</span>
-          <img
-            src="https://orange-pig-270004.hostingersite.com/wp-content/uploads/2025/07/DIGIY-EXPLORE-Boat.gif"
-            alt="Sortie en mer sur la Petite Côte"
-          />
-        </div>
-
-        <div class="sideKicker">Ce qu’on veut faire ressentir</div>
-        <p class="sideTitle">Pas une vitrine vide. Une invitation à vivre le lieu.</p>
-        <p class="sideText">
-          Un visiteur doit comprendre vite : où il est, ce qu’il peut vivre, pourquoi c’est intéressant,
-          et comment contacter la bonne personne sans passer par un labyrinthe.
-        </p>
-
-        <div class="quickList">
-          <div class="quickItem">
-            <div>📍</div>
-            <div>
-              <strong>Le lieu doit parler</strong>
-              <span>On montre l’ambiance, pas une fiche froide.</span>
-            </div>
-          </div>
-          <div class="quickItem">
-            <div>✨</div>
-            <div>
-              <strong>L’exemple doit donner envie</strong>
-              <span>Sortie, coin calme, balade, adresse utile, vraie expérience.</span>
-            </div>
-          </div>
-          <div class="quickItem">
-            <div>📲</div>
-            <div>
-              <strong>Le contact doit être simple</strong>
-              <span>Un geste, un message, une action claire.</span>
-            </div>
-          </div>
-        </div>
-
-        <a class="btn primary digiy-link" href="./lieux.html">Voir mes lieux</a>
-      </aside>
-    </section>
-
-    <section class="quickGrid" aria-label="Actions principales EXPLORE">
-      <article class="tile">
-        <div class="tileTop">
-          <div>
-            <div class="tileLabel">Travail réel</div>
-            <div class="tileTitle">Mes lieux</div>
-          </div>
-          <div class="tileIcon">📍</div>
-        </div>
-        <div class="tileText">
-          Retrouve les fiches déjà posées, vois ce qui est visible et ce qui mérite une correction.
-        </div>
-        <div class="tileActions">
-          <a class="btn primary digiy-link" href="./lieux.html">Voir mes lieux</a>
-        </div>
-      </article>
-
-      <article class="tile">
-        <div class="tileTop">
-          <div>
-            <div class="tileLabel">Création</div>
-            <div class="tileTitle">Ajouter</div>
-          </div>
-          <div class="tileIcon">➕</div>
-        </div>
-        <div class="tileText">
-          Ajoute un lieu utile : spot, activité, adresse, expérience ou endroit à faire connaître.
-        </div>
-        <div class="tileActions">
-          <a class="btn primary digiy-link" href="./submit.html">Ajouter un lieu</a>
-        </div>
-      </article>
-
-      <article class="tile">
-        <div class="tileTop">
-          <div>
-            <div class="tileLabel">Lecture simple</div>
-            <div class="tileTitle">Ma gestion</div>
-          </div>
-          <div class="tileIcon">🧭</div>
-        </div>
-        <div class="tileText">
-          Lis ton espace, reprends la bonne fiche et garde une vue claire de ce qui avance.
-        </div>
-        <div class="tileActions">
-          <a class="btn secondary digiy-link" href="./cockpit.html">Ouvrir ma gestion</a>
-        </div>
-      </article>
-    </section>
-
-    <section class="guide">
-      <details>
-        <summary>
-          <div>
-            Chemin conseillé
-            <span>À ouvrir seulement si tu veux te rappeler l’ordre simple.</span>
-          </div>
-          <div>⌄</div>
-        </summary>
-
-        <div class="detailsBody">
-          <div class="list">
-            <div class="item">
-              <strong>1. Voir mes lieux</strong>
-              <span>Commence par lire ce qui existe déjà.</span>
-            </div>
-            <div class="item">
-              <strong>2. Ajouter ou corriger</strong>
-              <span>Travaille une fiche à la fois, sans mélanger.</span>
-            </div>
-            <div class="item">
-              <strong>3. Vérifier la lecture</strong>
-              <span>Le client doit comprendre vite où aller et pourquoi venir.</span>
-            </div>
-          </div>
-
-          <div class="list">
-            <div class="rule">
-              <strong>Règle DIGIY</strong>
-              <span>Moins de texte ouvert, plus d’action directe.</span>
-            </div>
-            <div class="rule">
-              <strong>Mobile terrain</strong>
-              <span>Un bouton doit mener à un geste clair sous le pouce.</span>
-            </div>
-            <div class="rule">
-              <strong>Sans casser</strong>
-              <span>On garde les pages existantes, on améliore seulement la circulation.</span>
-            </div>
-          </div>
-        </div>
-      </details>
-    </section>
-
-    <section class="panel">
-      <div style="padding:18px">
-        <div class="topActions" style="justify-content:flex-start;">
-          <a class="btn secondary digiy-link" href="./pin.html">🔐 Mon accès</a>
-          <a class="btn secondary digiy-link" href="./cockpit.html">🧭 Ma gestion</a>
-          <a class="btn secondary digiy-link" href="./lieux.html">📍 Mes lieux</a>
-          <a class="btn secondary digiy-link" href="./submit.html">➕ Ajouter</a>
-          <a class="btn secondary" id="publicPlaceLinkBottom" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener noreferrer">🌍 Fiche du lieu</a>
-        </div>
-      </div>
-    </section>
-
-    <div class="footerNote">
-      DIGIY EXPLORE • voir • ajouter • corriger • faire venir
+  <main>
+    <div class="logo">
+      <img src="https://digiylyfe.net/wp-content/uploads/2026/03/digiylyfe_logo_qr.jpeg" alt="Logo DIGIYLYFE"/>
     </div>
-  </div>
 
+    <div class="kicker">DIGIY EXPLORE PRO</div>
+    <h1>Ouverture du cockpit…</h1>
+    <p>
+      Cette porte n’est pas une vitrine. Elle ouvre directement l’outil de travail EXPLORE.
+      Si la session n’est pas ouverte, DIGIY te ramène au PIN.
+    </p>
 
-  <!-- Camembert audio discret -->
-  <div id="audioCamembert" aria-label="Accueil vocal DIGIY EXPLORE">
-    <button class="centerBtn" id="audioCenterBtn" type="button" aria-expanded="false" aria-pressed="false">
-      <span>🎧</span>
-      <strong>DIGIY</strong>
-    </button>
-
-    <div class="menu" id="audioMenu">
-      <button class="gold" id="camListenBtn" type="button">Écouter</button>
-      <button type="button" id="camCloseBtn">Fermer</button>
-      <button class="green" id="camSpotsBtn" type="button">Mes lieux</button>
-      <button class="blue" id="camAddBtn" type="button">Ajouter</button>
+    <div class="actions">
+      <a class="primary" href="./cockpit.html">Ouvrir le cockpit</a>
+      <a href="./pin.html">Entrer par PIN</a>
+      <a href="./lieux.html">Voir mes lieux</a>
     </div>
-  </div>
-
-  <script>
-    (function(){
-      "use strict";
-
-      const HUB_BASE = "https://digiy-hub.digiylyfe.com/";
-      const PUBLIC_EXPLORE_BASE = "https://explore.digiylyfe.com/";
-      const AUDIO_TEXT =
-        "Bienvenue dans EXPLORE by DIGIY. Ici, ton lieu ne reste pas dans l’ombre. Tu n’as pas besoin d’écrire beaucoup ni de te perdre dans des réglages. Regarde d’abord ce qui existe déjà dans Mes lieux. Si une fiche est déjà posée, vérifie si elle donne envie de venir. Si quelque chose manque, corrige simplement. Si ton lieu n’existe pas encore, clique sur Ajouter un lieu. DIGIY t’aide à transformer un endroit réel en vitrine claire : une image, un nom, une zone, une raison de venir, et un contact utile. Le client doit comprendre vite. Le terrain garde son âme. Toi, tu gardes la main. Ici, on regarde d’abord, on comprend vite, on clique ensuite… et miracle, DIGIY parle pour guider le chemin.";
-
-      const root = document.getElementById("audioCamembert");
-      const centerBtn = document.getElementById("audioCenterBtn");
-      const listenBtn = document.getElementById("camListenBtn");
-      const closeBtn = document.getElementById("camCloseBtn");
-      const spotsBtn = document.getElementById("camSpotsBtn");
-      const addBtn = document.getElementById("camAddBtn");
-
-      let playing = false;
-
-      function getBestVoice(){
-        const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
-        return voices.find(v => /^fr/i.test(v.lang || "") && /audrey|amelie|hortense|julie|thomas|paul|french/i.test(v.name || ""))
-          || voices.find(v => /^fr/i.test(v.lang || ""))
-          || null;
-      }
-
-      function setOpen(open){
-        if(!root || !centerBtn) return;
-        root.classList.toggle("open", !!open);
-        centerBtn.setAttribute("aria-expanded", open ? "true" : "false");
-      }
-
-      function setPlaying(state){
-        playing = !!state;
-        if(!root || !centerBtn) return;
-
-        root.classList.toggle("playing", playing);
-        centerBtn.setAttribute("aria-pressed", playing ? "true" : "false");
-        centerBtn.innerHTML = playing
-          ? '<span>⏹</span><strong>Stop</strong>'
-          : '<span>🎧</span><strong>DIGIY</strong>';
-      }
-
-      function stopAudio(){
-        try{ window.speechSynthesis && window.speechSynthesis.cancel(); }catch(_){}
-        setPlaying(false);
-      }
-
-      function playAudio(){
-        if(!("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)){
-          alert("Audio indisponible sur ce navigateur.");
-          return;
-        }
-
-        if(playing){
-          stopAudio();
-          return;
-        }
-
-        stopAudio();
-
-        const utter = new SpeechSynthesisUtterance(AUDIO_TEXT);
-        utter.lang = "fr-FR";
-        utter.rate = 0.86;
-        utter.pitch = 1.04;
-        utter.volume = 1;
-
-        const voice = getBestVoice();
-        if(voice) utter.voice = voice;
-
-        utter.onstart = function(){ setPlaying(true); };
-        utter.onend = function(){ setTimeout(stopAudio, 150); };
-        utter.onerror = stopAudio;
-
-        window.speechSynthesis.speak(utter);
-      }
-
-      function readStored(key){
-        try{ return localStorage.getItem(key) || sessionStorage.getItem(key) || ""; }catch(_){ return ""; }
-      }
-
-      function normalizeSlug(value){
-        return String(value || "").trim().toLowerCase();
-      }
-
-      function getSafeSlug(){
-        try{
-          const params = new URLSearchParams(window.location.search);
-          return normalizeSlug(
-            params.get("slug") ||
-            readStored("digiy_explore_slug") ||
-            readStored("explore_slug") ||
-            readStored("digiy_slug") ||
-            readStored("slug")
-          );
-        }catch(_){
-          return "";
-        }
-      }
-
-      function syncPublicPlaceLink(){
-        const slug = getSafeSlug();
-        const href = slug
-          ? PUBLIC_EXPLORE_BASE + "?slug=" + encodeURIComponent(slug)
-          : PUBLIC_EXPLORE_BASE;
-
-        ["publicPlaceLink", "publicPlaceLinkBottom"].forEach(function(id){
-          const link = document.getElementById(id);
-          if(!link) return;
-          link.href = href;
-          link.title = slug
-            ? "Voir la fiche publique du lieu"
-            : "Voir la vitrine publique EXPLORE";
-        });
-      }
-
-      function syncHub(){
-        const link = document.getElementById("hubRouteLink");
-        if(!link) return;
-        link.href = HUB_BASE;
-      }
-
-      if(centerBtn){
-        centerBtn.addEventListener("click", function(){
-          const isOpen = root.classList.contains("open");
-          setOpen(!isOpen);
-        });
-      }
-
-      if(listenBtn){
-        listenBtn.addEventListener("click", playAudio);
-      }
-
-      if(closeBtn){
-        closeBtn.addEventListener("click", function(){
-          stopAudio();
-          setOpen(false);
-        });
-      }
-
-      if(spotsBtn){
-        spotsBtn.addEventListener("click", function(){
-          setOpen(false);
-          const target = document.querySelector(".quickGrid") || document.querySelector('[href="./lieux.html"]');
-          if(target && target.scrollIntoView) target.scrollIntoView({behavior:"smooth", block:"start"});
-        });
-      }
-
-      if(addBtn){
-        addBtn.addEventListener("click", function(){
-          window.location.href = "./submit.html";
-        });
-      }
-
-      document.addEventListener("click", function(e){
-        if(root && !root.contains(e.target)){
-          setOpen(false);
-        }
-      });
-
-      if(window.speechSynthesis && typeof window.speechSynthesis.onvoiceschanged !== "undefined"){
-        window.speechSynthesis.onvoiceschanged = getBestVoice;
-      }
-
-      syncHub();
-      syncPublicPlaceLink();
-      window.addEventListener("beforeunload", stopAudio);
-      document.addEventListener("visibilitychange", function(){
-        if(document.hidden) stopAudio();
-      });
-    })();
-  </script>
-
-  <script>
-    (function(){
-      "use strict";
-
-      const PASS_PARAMS = ["slug", "phone", "tel", "module"];
-
-      function keepContext(href){
-        try{
-          const current = new URLSearchParams(window.location.search);
-          const next = new URL(href, window.location.href);
-
-          PASS_PARAMS.forEach((key) => {
-            const val = current.get(key);
-            if(val && !next.searchParams.get(key)){
-              next.searchParams.set(key, val);
-            }
-          });
-
-          return next.pathname + next.search + next.hash;
-        }catch(_){
-          return href;
-        }
-      }
-
-      document.querySelectorAll("a.digiy-link[href]").forEach((a) => {
-        a.setAttribute("href", keepContext(a.getAttribute("href")));
-      });
-    })();
-  
-</script>
-<!-- Camembert DIGIY EXPLORE PRO — lecture claire -->
-<div id="digiyExploreCamembert" aria-label="Guide vocal DIGIY EXPLORE">
-  <button class="digiyExploreCenter" id="digiyExploreCenter" type="button" aria-expanded="false" aria-pressed="false">
-    <span>🎧</span>
-    <strong>DIGIY</strong>
-  </button>
-
-  <div class="digiyExploreMenu" id="digiyExploreMenu">
-    <button class="gold" id="digiyExploreListen" type="button">Écouter</button>
-    <button id="digiyExploreClose" type="button">Fermer</button>
-    <button class="green" id="digiyExplorePlaces" type="button">Mes lieux</button>
-    <button class="blue" id="digiyExploreAdd" type="button">Ajouter</button>
-  </div>
-</div>
-
-<style>
-  #digiyExploreCamembert{
-    position:fixed;
-    left:14px;
-    bottom:14px;
-    width:84px;
-    height:84px;
-    z-index:99999;
-    font-family:Outfit, Inter, system-ui, sans-serif;
-  }
-
-  #digiyExploreCamembert .digiyExploreCenter{
-    position:absolute;
-    inset:0;
-    width:84px;
-    height:84px;
-    border:none;
-    border-radius:50%;
-    cursor:pointer;
-    color:#fff;
-    box-shadow:0 18px 40px rgba(0,0,0,.34);
-    background:
-      radial-gradient(circle at center, rgba(6,19,15,.95) 0 42%, transparent 43%),
-      conic-gradient(
-        from -90deg,
-        rgba(212,175,55,.96) 0 33%,
-        rgba(34,197,94,.90) 33% 66%,
-        rgba(56,189,248,.88) 66% 100%
-      );
-    overflow:hidden;
-  }
-
-  #digiyExploreCamembert .digiyExploreCenter::before{
-    content:"";
-    position:absolute;
-    inset:13px;
-    border-radius:50%;
-    background:rgba(6,19,15,.97);
-    border:1px solid rgba(255,255,255,.10);
-  }
-
-  #digiyExploreCamembert .digiyExploreCenter span,
-  #digiyExploreCamembert .digiyExploreCenter strong{
-    position:relative;
-    z-index:2;
-    display:block;
-    text-align:center;
-  }
-
-  #digiyExploreCamembert .digiyExploreCenter span{
-    font-size:20px;
-    line-height:1;
-    margin-bottom:2px;
-  }
-
-  #digiyExploreCamembert .digiyExploreCenter strong{
-    font-size:11px;
-    font-weight:1000;
-  }
-
-  #digiyExploreCamembert.playing .digiyExploreCenter{
-    background:
-      radial-gradient(circle at center, rgba(6,19,15,.95) 0 42%, transparent 43%),
-      conic-gradient(
-        from -90deg,
-        rgba(248,113,113,.96) 0 50%,
-        rgba(212,175,55,.90) 50% 100%
-      );
-  }
-
-  #digiyExploreCamembert .digiyExploreMenu{
-    position:absolute;
-    left:94px;
-    bottom:4px;
-    width:228px;
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:8px;
-    padding:10px;
-    border-radius:22px;
-    border:1px solid rgba(255,255,255,.12);
-    background:rgba(6,19,15,.94);
-    box-shadow:0 18px 48px rgba(0,0,0,.32);
-    backdrop-filter:blur(14px);
-    -webkit-backdrop-filter:blur(14px);
-    opacity:0;
-    transform:translateX(-8px) scale(.96);
-    pointer-events:none;
-    transition:.18s ease;
-  }
-
-  #digiyExploreCamembert.open .digiyExploreMenu{
-    opacity:1;
-    transform:translateX(0) scale(1);
-    pointer-events:auto;
-  }
-
-  #digiyExploreCamembert .digiyExploreMenu button{
-    min-height:44px;
-    border:none;
-    border-radius:15px;
-    background:rgba(255,255,255,.07);
-    color:#f7fbf8;
-    padding:9px 10px;
-    font-size:12px;
-    font-weight:1000;
-    cursor:pointer;
-  }
-
-  #digiyExploreCamembert .digiyExploreMenu .gold{
-    background:linear-gradient(135deg,#d4af37,#f3d46b);
-    color:#13200d;
-  }
-
-  #digiyExploreCamembert .digiyExploreMenu .green{
-    background:rgba(34,197,94,.16);
-    color:#dffcea;
-    border:1px solid rgba(34,197,94,.25);
-  }
-
-  #digiyExploreCamembert .digiyExploreMenu .blue{
-    background:rgba(56,189,248,.14);
-    color:#d9f4ff;
-    border:1px solid rgba(56,189,248,.24);
-  }
-
-  @media (max-width:640px){
-    #digiyExploreCamembert{
-      left:10px;
-      bottom:10px;
-      width:76px;
-      height:76px;
-    }
-
-    #digiyExploreCamembert .digiyExploreCenter{
-      width:76px;
-      height:76px;
-    }
-
-    #digiyExploreCamembert .digiyExploreCenter::before{
-      inset:12px;
-    }
-
-    #digiyExploreCamembert .digiyExploreMenu{
-      left:0;
-      bottom:86px;
-      width:min(260px, calc(100vw - 20px));
-    }
-  }
-</style>
-
-<script>
-  (function(){
-    "use strict";
-
-    const root = document.getElementById("digiyExploreCamembert");
-    const center = document.getElementById("digiyExploreCenter");
-    const listen = document.getElementById("digiyExploreListen");
-    const close = document.getElementById("digiyExploreClose");
-    const places = document.getElementById("digiyExplorePlaces");
-    const add = document.getElementById("digiyExploreAdd");
-
-    const page = (location.pathname.split("/").pop() || "index.html").toLowerCase();
-
-    const TEXTS = {
-      "lieux.html":
-        "Bienvenue dans Mes lieux EXPLORE by DIGIY. Ici, tu ne dois pas te perdre dans les détails. Regarde d’abord les fiches déjà posées. Un lieu publié doit donner envie. Un brouillon attend ta main. Une fiche archivée reste rangée. Clique seulement sur ce qui mérite une action : voir, corriger, publier ou revenir à la fiche publique. L’écran montre les lieux. DIGIY t’aide à comprendre où agir.",
-
-      "submit.html":
-        "Bienvenue dans Ajouter un lieu EXPLORE by DIGIY. Ici, tu n’as pas besoin d’écrire un roman. Commence par le nom du lieu, la ville, la zone, une catégorie, une phrase courte et un contact utile. Le client doit comprendre vite pourquoi venir. Si tu n’as pas tout, garde en préparation. Si la fiche est prête, enregistre et publie. DIGIY prépare le chemin, toi tu valides avec la vérité du terrain.",
-
-      "cockpit.html":
-        "Bienvenue dans ta gestion EXPLORE by DIGIY. Ici, tu regardes la prochaine bonne action. Mes lieux te montre ce qui existe. Ajouter te permet de poser un nouveau lieu. Les notes servent à garder une trace rapide. Le cockpit ne doit pas devenir lourd. Il lit derrière et te montre devant seulement ce qui mérite ton attention.",
-
-      "index.html":
-        "Bienvenue dans EXPLORE by DIGIY. Ici, on regarde d’abord, on comprend vite, on clique ensuite. Ton lieu ne reste pas dans l’ombre. DIGIY t’aide à transformer un endroit réel en vitrine claire, avec un nom, une zone, une raison de venir et un contact utile."
-    };
-
-    const AUDIO_TEXT = TEXTS[page] || TEXTS["index.html"];
-    let playing = false;
-
-    function setOpen(open){
-      if(!root || !center) return;
-      root.classList.toggle("open", !!open);
-      center.setAttribute("aria-expanded", open ? "true" : "false");
-    }
-
-    function setPlaying(state){
-      playing = !!state;
-      if(!root || !center) return;
-      root.classList.toggle("playing", playing);
-      center.setAttribute("aria-pressed", playing ? "true" : "false");
-      center.innerHTML = playing
-        ? "<span>⏹</span><strong>Stop</strong>"
-        : "<span>🎧</span><strong>DIGIY</strong>";
-    }
-
-    function getVoice(){
-      const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
-      return voices.find(v => /^fr/i.test(v.lang || "")) || null;
-    }
-
-    function stop(){
-      try{ window.speechSynthesis && window.speechSynthesis.cancel(); }catch(_){}
-      setPlaying(false);
-    }
-
-    function speak(){
-      if(!("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)){
-        alert("Audio indisponible sur ce navigateur.");
-        return;
-      }
-
-      if(playing){
-        stop();
-        return;
-      }
-
-      stop();
-
-      const utter = new SpeechSynthesisUtterance(AUDIO_TEXT);
-      utter.lang = "fr-FR";
-      utter.rate = 0.86;
-      utter.pitch = 1.04;
-      utter.volume = 1;
-
-      const voice = getVoice();
-      if(voice) utter.voice = voice;
-
-      utter.onstart = () => setPlaying(true);
-      utter.onend = () => setTimeout(stop, 120);
-      utter.onerror = stop;
-
-      window.speechSynthesis.speak(utter);
-    }
-
-    center && center.addEventListener("click", function(){
-      setOpen(!root.classList.contains("open"));
-    });
-
-    listen && listen.addEventListener("click", speak);
-
-    close && close.addEventListener("click", function(){
-      stop();
-      setOpen(false);
-    });
-
-    places && places.addEventListener("click", function(){
-      location.href = "./lieux.html";
-    });
-
-    add && add.addEventListener("click", function(){
-      location.href = "./submit.html";
-    });
-
-    document.addEventListener("click", function(e){
-      if(root && !root.contains(e.target)){
-        setOpen(false);
-      }
-    });
-
-    if(window.speechSynthesis && typeof window.speechSynthesis.onvoiceschanged !== "undefined"){
-      window.speechSynthesis.onvoiceschanged = getVoice;
-    }
-
-    window.addEventListener("beforeunload", stop);
-    document.addEventListener("visibilitychange", function(){
-      if(document.hidden) stop();
-    });
-  })();
-</script>
-<script>
-(function(){
-  "use strict";
-
-  const PRO_EXPLORE_URL = "https://pro-explore.digiylyfe.com/";
-
-  function cleanProEntry(){
-    document.querySelectorAll('a[href="#proSection"], a[href*="#proSection"]').forEach(function(link){
-      link.href = PRO_EXPLORE_URL;
-      link.removeAttribute("target");
-      link.removeAttribute("rel");
-    });
-
-    document.querySelectorAll("[data-pro-entry], .js-pro-entry").forEach(function(node){
-      node.addEventListener("click", function(e){
-        e.preventDefault();
-        window.location.href = PRO_EXPLORE_URL;
-      });
-    });
-  }
-
-  if(document.readyState === "loading"){
-    document.addEventListener("DOMContentLoaded", cleanProEntry);
-  }else{
-    cleanProEntry();
-  }
-})();
-</script>
-  
-  
+  </main>
 </body>
 </html>
+"""
+
+path = Path("/mnt/data/index-pro-explore-final-route-cockpit.html")
+path.write_text(html, encoding="utf-8")
+
+print("✅ index PRO EXPLORE généré :", path.name)
+print("✅ Taille :", path.stat().st_size, "octets")
+print("✅ Route directe cockpit :", "./cockpit.html" in html)
+print("✅ Texte outil de travail :", "outil de travail" in html)
 
