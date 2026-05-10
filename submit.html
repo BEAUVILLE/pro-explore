@@ -1,267 +1,1815 @@
-DIGIYLYFE — PRO EXPLORE / submit.html
-Recouture additive : clics anticipés + camembert + SRC communication
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <meta name="theme-color" content="#06130f"/>
+  <meta name="description" content="Ajoute ou corrige un lieu EXPLORE avec une saisie simple, guidée et protégée."/>
+  <title>Je fais découvrir mon lieu — Ajouter</title>
 
-1) Dans le <head>, après guard.js, ajoute :
+  <script>
+    window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
+    window.DIGIY_SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
+    window.DIGIY_SUPABASE_ANON = window.DIGIY_SUPABASE_ANON_KEY;
+    window.DIGIY_MODULE = "EXPLORE";
+    window.DIGIY_LOGIN_URL = "./pin.html";
+    document.documentElement.style.visibility = "hidden";
+  </script>
 
-<script src="./claw-tools-explore.js?v=explore-claw"></script>
-<script src="./explore-alerts.js?v=explore-alerts"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 
-2) Dans le <style>, juste avant </style>, ajoute :
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./guard.js?v=explore-guard"></script>
+  <script src="./claw-tools-explore.js?v=explore-claw"></script>
+  <script src="./explore-alerts.js?v=explore-alerts"></script>
 
-/* DIGIY EXPLORE — moins d’écriture, plus de clics */
-.digiyQuickPanel{
-  border:1px solid rgba(212,175,55,.20);
-  background:linear-gradient(180deg, rgba(212,175,55,.075), rgba(255,255,255,.025));
-  border-radius:22px;
-  padding:14px;
-  display:grid;
-  gap:12px;
-}
-.digiyQuickHead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.digiyQuickHead strong{font-size:15px;font-weight:1000;color:#fff4bd}
-.digiyQuickHead span{display:block;margin-top:4px;color:var(--muted);font-size:12.5px;line-height:1.45;font-weight:800}
-.digiyQuickGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
-.digiyQuickBtn{
-  min-height:48px;border:1px solid rgba(255,255,255,.10);border-radius:16px;
-  background:rgba(255,255,255,.055);color:var(--ink);font-weight:950;
-  cursor:pointer;padding:10px 11px;text-align:left;line-height:1.2;
-}
-.digiyQuickBtn.active{border-color:rgba(212,175,55,.46);background:rgba(212,175,55,.13);color:#fff4bd;box-shadow:0 0 0 3px rgba(212,175,55,.08)}
-.digiyChipRow{display:flex;gap:8px;flex-wrap:wrap}
-.digiyChip{
-  min-height:38px;border:1px solid rgba(255,255,255,.10);border-radius:999px;
-  background:rgba(255,255,255,.05);color:var(--ink);padding:8px 11px;
-  font-size:12.5px;font-weight:950;cursor:pointer;
-}
-.digiyChip.active{border-color:rgba(56,189,248,.30);background:rgba(56,189,248,.12);color:#d9f4ff}
-.digiyMiniNote{color:var(--muted);font-size:12.5px;line-height:1.5;font-weight:800}
+  <style>
+    :root{
+      --bg:#06130f;
+      --bg2:#0a1f18;
+      --card:#0b241b;
+      --card2:#102b22;
+      --line:rgba(255,255,255,.08);
+      --ink:#f8fafc;
+      --muted:rgba(248,250,252,.72);
+      --soft:rgba(248,250,252,.52);
+      --gold:#d4af37;
+      --gold2:#f3d46b;
+      --blue:#38bdf8;
+      --ok:#22c55e;
+      --warn:#f59e0b;
+      --bad:#ef4444;
+      --radius:22px;
+      --shadow:0 24px 60px rgba(0,0,0,.28);
+      --focus:rgba(212,175,55,.32);
+    }
 
-/* Camembert audio discret DIGIY EXPLORE */
-#digiyExploreCamembert{position:fixed;left:14px;bottom:14px;width:84px;height:84px;z-index:99999;font-family:Outfit,Inter,system-ui,sans-serif}
-#digiyExploreCamembert .digiyExploreCenter{position:absolute;inset:0;width:84px;height:84px;border:none;border-radius:50%;cursor:pointer;color:#fff;box-shadow:0 18px 40px rgba(0,0,0,.34);background:radial-gradient(circle at center, rgba(6,19,15,.95) 0 42%, transparent 43%),conic-gradient(from -90deg, rgba(212,175,55,.96) 0 33%, rgba(34,197,94,.90) 33% 66%, rgba(56,189,248,.88) 66% 100%);overflow:hidden}
-#digiyExploreCamembert .digiyExploreCenter::before{content:"";position:absolute;inset:13px;border-radius:50%;background:rgba(6,19,15,.97);border:1px solid rgba(255,255,255,.10)}
-#digiyExploreCamembert .digiyExploreCenter span,#digiyExploreCamembert .digiyExploreCenter strong{position:relative;z-index:2;display:block;text-align:center}
-#digiyExploreCamembert .digiyExploreCenter span{font-size:20px;line-height:1;margin-bottom:2px}
-#digiyExploreCamembert .digiyExploreCenter strong{font-size:11px;font-weight:1000}
-#digiyExploreCamembert.playing .digiyExploreCenter{background:radial-gradient(circle at center, rgba(6,19,15,.95) 0 42%, transparent 43%),conic-gradient(from -90deg, rgba(248,113,113,.96) 0 50%, rgba(212,175,55,.90) 50% 100%)}
-#digiyExploreCamembert .digiyExploreMenu{position:absolute;left:94px;bottom:4px;width:228px;display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px;border-radius:22px;border:1px solid rgba(255,255,255,.12);background:rgba(6,19,15,.94);box-shadow:0 18px 48px rgba(0,0,0,.32);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);opacity:0;transform:translateX(-8px) scale(.96);pointer-events:none;transition:.18s ease}
-#digiyExploreCamembert.open .digiyExploreMenu{opacity:1;transform:translateX(0) scale(1);pointer-events:auto}
-#digiyExploreCamembert .digiyExploreMenu button{min-height:44px;border:none;border-radius:15px;background:rgba(255,255,255,.07);color:#f7fbf8;padding:9px 10px;font-size:12px;font-weight:1000;cursor:pointer}
-#digiyExploreCamembert .digiyExploreMenu .gold{background:linear-gradient(135deg,#d4af37,#f3d46b);color:#13200d}
-#digiyExploreCamembert .digiyExploreMenu .green{background:rgba(34,197,94,.16);color:#dffcea;border:1px solid rgba(34,197,94,.25)}
-#digiyExploreCamembert .digiyExploreMenu .blue{background:rgba(56,189,248,.14);color:#d9f4ff;border:1px solid rgba(56,189,248,.24)}
-@media(max-width:760px){.digiyQuickGrid{grid-template-columns:1fr 1fr}}
-@media(max-width:640px){#digiyExploreCamembert{left:10px;bottom:10px;width:76px;height:76px}#digiyExploreCamembert .digiyExploreCenter{width:76px;height:76px}#digiyExploreCamembert .digiyExploreCenter::before{inset:12px}#digiyExploreCamembert .digiyExploreMenu{left:0;bottom:86px;width:min(260px,calc(100vw - 20px))}}
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
 
-3) Dans le formulaire, juste après le bloc :
-<p class="sectionSub">...</p>
-ajoute :
+    body{
+      min-height:100vh;
+      color:var(--ink);
+      font-family:Outfit, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(212,175,55,.09), transparent 26%),
+        radial-gradient(circle at right bottom, rgba(56,189,248,.07), transparent 22%),
+        linear-gradient(180deg, #071510 0%, #06130f 48%, #04100c 100%);
+    }
 
-<section class="digiyQuickPanel" aria-label="Pré-remplissage rapide EXPLORE">
-  <div class="digiyQuickHead">
-    <div>
-      <strong>Choisis le type de lieu</strong>
-      <span>DIGIY prépare les mots. Tu ajustes seulement la vérité du terrain.</span>
+    a{color:inherit;text-decoration:none}
+    button,input,textarea,select{font:inherit}
+
+    .wrap{
+      width:min(100%, 1240px);
+      margin:0 auto;
+      padding:18px 14px calc(104px + env(safe-area-inset-bottom,0px));
+    }
+
+    .topbar{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:14px;
+      margin-bottom:16px;
+      flex-wrap:wrap;
+    }
+
+    .brand{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      min-width:0;
+    }
+
+    .logo{
+      width:58px;
+      height:58px;
+      border-radius:18px;
+      overflow:hidden;
+      background:#fff;
+      border:1px solid rgba(212,175,55,.22);
+      box-shadow:0 10px 28px rgba(0,0,0,.18);
+      flex:0 0 auto;
+    }
+
+    .logo img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    .brandText{min-width:0}
+
+    .kicker{
+      color:var(--gold2);
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+      margin-bottom:3px;
+      white-space:nowrap;
+    }
+
+    .title{
+      font-size:clamp(18px, 2vw, 28px);
+      font-weight:1000;
+      line-height:1.08;
+      letter-spacing:-.03em;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .sub{
+      margin-top:4px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.45;
+    }
+
+    .topActions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .btn{
+      min-height:44px;
+      border:none;
+      border-radius:14px;
+      padding:0 14px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      font-weight:900;
+      cursor:pointer;
+      transition:filter .18s ease, transform .04s ease, opacity .18s ease;
+      white-space:nowrap;
+    }
+
+    .btn:active{transform:translateY(1px)}
+    .btn[disabled]{opacity:.6;cursor:not-allowed;pointer-events:none}
+
+    .btn.primary{
+      background:linear-gradient(135deg, var(--gold), var(--gold2));
+      color:#13200d;
+      box-shadow:0 14px 30px rgba(212,175,55,.22);
+    }
+
+    .btn.secondary{
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+      color:var(--ink);
+    }
+
+    .btn.ghost{
+      background:transparent;
+      border:1px solid var(--line);
+      color:var(--ink);
+    }
+
+    .btn.info{
+      background:rgba(56,189,248,.10);
+      border:1px solid rgba(56,189,248,.22);
+      color:#d8f2ff;
+    }
+
+    .btn.warn{
+      background:rgba(245,158,11,.12);
+      border:1px solid rgba(245,158,11,.26);
+      color:#fde68a;
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:16px;
+      margin-bottom:16px;
+    }
+
+    .panel{
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .heroMain{
+      padding:22px;
+      background:
+        linear-gradient(180deg, rgba(212,175,55,.06), transparent 28%),
+        linear-gradient(180deg, var(--card), var(--card2));
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(212,175,55,.22);
+      background:rgba(212,175,55,.08);
+      color:var(--gold2);
+      font-size:12px;
+      font-weight:1000;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      margin-bottom:14px;
+    }
+
+    .heroTitle{
+      margin:0 0 10px;
+      font-size:clamp(26px, 4vw, 42px);
+      line-height:1.02;
+      letter-spacing:-.04em;
+    }
+
+    .heroLead{
+      margin:0;
+      color:var(--muted);
+      font-size:16px;
+      line-height:1.65;
+      max-width:62ch;
+    }
+
+    .heroSide{
+      padding:20px;
+      display:grid;
+      gap:12px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015)),
+        linear-gradient(180deg, #0a1c16, #0d241c);
+    }
+
+    .miniStat{
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      padding:14px;
+      background:rgba(255,255,255,.03);
+    }
+
+    .miniLabel{
+      color:var(--soft);
+      font-size:12px;
+      font-weight:900;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      margin-bottom:8px;
+    }
+
+    .miniValue{
+      font-size:20px;
+      font-weight:1000;
+      line-height:1.15;
+      letter-spacing:-.03em;
+      word-break:break-word;
+    }
+
+    .miniHint{
+      margin-top:6px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.45;
+    }
+
+    .nav{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-bottom:16px;
+    }
+
+    .nav a{
+      min-height:42px;
+      display:inline-flex;
+      align-items:center;
+      padding:0 14px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+      color:#eef4f1;
+      font-size:13px;
+      font-weight:900;
+    }
+
+    .nav a.active{
+      border-color:rgba(212,175,55,.28);
+      background:rgba(212,175,55,.08);
+      color:var(--gold2);
+    }
+
+    .msg{
+      margin-bottom:16px;
+      border-radius:18px;
+      padding:14px 16px;
+      font-size:14px;
+      line-height:1.5;
+      font-weight:800;
+      display:none;
+    }
+
+    .msg.show{display:block}
+    .msg.info{color:#dbeafe;border:1px solid rgba(96,165,250,.18);background:rgba(59,130,246,.08)}
+    .msg.bad{color:#fecaca;border:1px solid rgba(239,68,68,.18);background:rgba(239,68,68,.08)}
+    .msg.ok{color:#bbf7d0;border:1px solid rgba(34,197,94,.18);background:rgba(34,197,94,.08)}
+    .msg.warn{color:#fde68a;border:1px solid rgba(245,158,11,.18);background:rgba(245,158,11,.08)}
+
+    .layout{
+      display:grid;
+      grid-template-columns:1.2fr .8fr;
+      gap:16px;
+    }
+
+    .cardBody{padding:20px}
+
+    .sectionTitle{
+      margin:0 0 14px;
+      font-size:20px;
+      font-weight:1000;
+      letter-spacing:-.02em;
+    }
+
+    .sectionSub{
+      margin:-4px 0 14px;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.5;
+    }
+
+    .grid{display:grid;gap:14px}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+
+    .field{display:grid;gap:8px}
+    .label{font-size:13px;font-weight:1000;color:#eef6f2;letter-spacing:.02em}
+
+    .input,.textarea,.select{
+      width:100%;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.04);
+      color:var(--ink);
+      border-radius:16px;
+      outline:none;
+      transition:border-color .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+
+    .input,.select{min-height:52px;padding:0 14px}
+    .textarea{min-height:120px;padding:14px;resize:vertical}
+
+    .input:focus,.textarea:focus,.select:focus{
+      border-color:rgba(212,175,55,.42);
+      box-shadow:0 0 0 5px var(--focus);
+      background:rgba(255,255,255,.05);
+    }
+
+    .hint{color:var(--muted);font-size:12px;line-height:1.5;font-weight:750}
+
+    .checkRow{display:grid;gap:12px}
+    .check{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+      border-radius:16px;
+      padding:12px 14px;
+    }
+    .check input{margin-top:3px;transform:scale(1.05)}
+    .check strong{display:block;font-size:14px;margin-bottom:4px}
+    .check span{color:var(--muted);font-size:13px;line-height:1.45}
+
+    .helpDetails{
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+      border-radius:18px;
+      overflow:hidden;
+    }
+
+    .helpDetails summary{
+      min-height:52px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:0 14px;
+      cursor:pointer;
+      font-weight:1000;
+      color:var(--gold2);
+      list-style:none;
+    }
+    .helpDetails summary::-webkit-details-marker{display:none}
+    .helpDetails summary::after{content:"＋";font-weight:900;color:var(--muted)}
+    .helpDetails[open] summary::after{content:"−"}
+    .helpDetails .helpContent{border-top:1px solid rgba(255,255,255,.08);padding:14px;display:grid;gap:10px}
+
+    .sideBox{
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.03);
+      border-radius:18px;
+      padding:14px;
+      display:grid;
+      gap:8px;
+    }
+    .sideBox strong{font-size:14px}
+    .sideBox span{color:var(--muted);font-size:13px;line-height:1.5;word-break:break-word}
+
+    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+
+    .digiyQuickPanel{
+      border:1px solid rgba(212,175,55,.20);
+      background:linear-gradient(180deg, rgba(212,175,55,.075), rgba(255,255,255,.025));
+      border-radius:22px;
+      padding:14px;
+      display:grid;
+      gap:12px;
+      margin:0 0 2px;
+    }
+
+    .digiyQuickHead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .digiyQuickHead strong{font-size:15px;font-weight:1000;color:#fff4bd}
+    .digiyQuickHead span{display:block;margin-top:4px;color:var(--muted);font-size:12.5px;line-height:1.45;font-weight:800}
+    .digiyQuickGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+
+    .digiyQuickBtn{
+      min-height:48px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:16px;
+      background:rgba(255,255,255,.055);
+      color:var(--ink);
+      font-weight:950;
+      cursor:pointer;
+      padding:10px 11px;
+      text-align:left;
+      line-height:1.2;
+    }
+
+    .digiyQuickBtn.active{
+      border-color:rgba(212,175,55,.46);
+      background:rgba(212,175,55,.13);
+      color:#fff4bd;
+      box-shadow:0 0 0 3px rgba(212,175,55,.08);
+    }
+
+    .digiyChipRow{display:flex;gap:8px;flex-wrap:wrap}
+
+    .digiyChip{
+      min-height:38px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:999px;
+      background:rgba(255,255,255,.05);
+      color:var(--ink);
+      padding:8px 11px;
+      font-size:12.5px;
+      font-weight:950;
+      cursor:pointer;
+    }
+
+    .digiyChip.active{border-color:rgba(56,189,248,.30);background:rgba(56,189,248,.12);color:#d9f4ff}
+    .digiyMiniNote{color:var(--muted);font-size:12.5px;line-height:1.5;font-weight:800}
+
+    #placeForm,#publicName{scroll-margin-top:96px}
+
+    .bottomNav{
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:0;
+      z-index:99990;
+      padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));
+      background:rgba(6,19,15,.94);
+      border-top:1px solid rgba(255,255,255,.10);
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
+    }
+
+    .bottomNavInner{
+      width:min(100%,760px);
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:6px;
+    }
+
+    .bottomNav a{
+      min-height:58px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      align-content:center;
+      gap:3px;
+      color:rgba(248,250,252,.70);
+      font-size:11px;
+      font-weight:950;
+      text-align:center;
+      border:1px solid transparent;
+      text-decoration:none;
+    }
+
+    .bottomNav .ico{font-size:18px;line-height:1}
+    .bottomNav a.active{
+      color:#13200d;
+      background:linear-gradient(135deg,var(--gold),var(--gold2));
+      border-color:rgba(212,175,55,.30);
+      box-shadow:0 12px 26px rgba(212,175,55,.18);
+    }
+
+    .mobileFastRow{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .mobileFastRow a{
+      min-height:46px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.05);
+      color:var(--ink);
+      text-decoration:none;
+      font-weight:950;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:10px 12px;
+    }
+
+    .mobileFastRow a.primary{
+      background:linear-gradient(90deg,var(--gold),var(--gold2));
+      color:#13200d;
+      border:none;
+    }
+
+    .hidden{display:none !important}
+
+    .foot{
+      margin-top:18px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.6;
+      text-align:center;
+    }
+
+    #digiyExploreCamembert{
+      position:fixed;
+      left:14px;
+      bottom:calc(86px + env(safe-area-inset-bottom,0px));
+      width:84px;
+      height:84px;
+      z-index:99999;
+      font-family:Outfit,Inter,system-ui,sans-serif;
+    }
+
+    #digiyExploreCamembert .digiyExploreCenter{
+      position:absolute;
+      inset:0;
+      width:84px;
+      height:84px;
+      border:none;
+      border-radius:50%;
+      cursor:pointer;
+      color:#fff;
+      box-shadow:0 18px 40px rgba(0,0,0,.34);
+      background:
+        radial-gradient(circle at center, rgba(6,19,15,.95) 0 42%, transparent 43%),
+        conic-gradient(from -90deg, rgba(212,175,55,.96) 0 33%, rgba(34,197,94,.90) 33% 66%, rgba(56,189,248,.88) 66% 100%);
+      overflow:hidden;
+    }
+
+    #digiyExploreCamembert .digiyExploreCenter::before{
+      content:"";
+      position:absolute;
+      inset:13px;
+      border-radius:50%;
+      background:rgba(6,19,15,.97);
+      border:1px solid rgba(255,255,255,.10);
+    }
+
+    #digiyExploreCamembert .digiyExploreCenter span,
+    #digiyExploreCamembert .digiyExploreCenter strong{
+      position:relative;
+      z-index:2;
+      display:block;
+      text-align:center;
+    }
+
+    #digiyExploreCamembert .digiyExploreCenter span{font-size:20px;line-height:1;margin-bottom:2px}
+    #digiyExploreCamembert .digiyExploreCenter strong{font-size:11px;font-weight:1000}
+
+    #digiyExploreCamembert.playing .digiyExploreCenter{
+      background:
+        radial-gradient(circle at center, rgba(6,19,15,.95) 0 42%, transparent 43%),
+        conic-gradient(from -90deg, rgba(248,113,113,.96) 0 50%, rgba(212,175,55,.90) 50% 100%);
+    }
+
+    #digiyExploreCamembert .digiyExploreMenu{
+      position:absolute;
+      left:94px;
+      bottom:4px;
+      width:228px;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
+      padding:10px;
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(6,19,15,.94);
+      box-shadow:0 18px 48px rgba(0,0,0,.32);
+      backdrop-filter:blur(14px);
+      -webkit-backdrop-filter:blur(14px);
+      opacity:0;
+      transform:translateX(-8px) scale(.96);
+      pointer-events:none;
+      transition:.18s ease;
+    }
+
+    #digiyExploreCamembert.open .digiyExploreMenu{opacity:1;transform:translateX(0) scale(1);pointer-events:auto}
+
+    #digiyExploreCamembert .digiyExploreMenu button{
+      min-height:44px;
+      border:none;
+      border-radius:15px;
+      background:rgba(255,255,255,.07);
+      color:#f7fbf8;
+      padding:9px 10px;
+      font-size:12px;
+      font-weight:1000;
+      cursor:pointer;
+    }
+
+    #digiyExploreCamembert .digiyExploreMenu .gold{background:linear-gradient(135deg,#d4af37,#f3d46b);color:#13200d}
+    #digiyExploreCamembert .digiyExploreMenu .green{background:rgba(34,197,94,.16);color:#dffcea;border:1px solid rgba(34,197,94,.25)}
+    #digiyExploreCamembert .digiyExploreMenu .blue{background:rgba(56,189,248,.14);color:#d9f4ff;border:1px solid rgba(56,189,248,.24)}
+
+    @media (max-width:1080px){
+      .hero,.layout{grid-template-columns:1fr}
+      .grid3{grid-template-columns:1fr 1fr}
+    }
+
+    @media (max-width:760px){
+      .grid2,.grid3{grid-template-columns:1fr}
+      .digiyQuickGrid{grid-template-columns:1fr 1fr}
+    }
+
+    @media (max-width:640px){
+      .wrap{padding:14px 12px calc(104px + env(safe-area-inset-bottom,0px))}
+      .topbar{flex-direction:column}
+      .topActions{width:100%;justify-content:flex-start}
+      .heroMain,.heroSide,.cardBody{padding:18px}
+      .logo{width:52px;height:52px}
+      .actions .btn,.topActions .btn,.nav a{flex:1 1 auto}
+      .mobileFastRow{grid-template-columns:1fr 1fr}
+      .nav{display:none}
+      .topActions{display:none}
+
+      #digiyExploreCamembert{
+        left:10px;
+        bottom:calc(84px + env(safe-area-inset-bottom,0px));
+        width:76px;
+        height:76px;
+      }
+
+      #digiyExploreCamembert .digiyExploreCenter{width:76px;height:76px}
+      #digiyExploreCamembert .digiyExploreCenter::before{inset:12px}
+      #digiyExploreCamembert .digiyExploreMenu{left:0;bottom:86px;width:min(260px, calc(100vw - 20px))}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">
+          <img src="https://digiylyfe.net/wp-content/uploads/2026/03/digiylyfe_logo_qr.jpeg" alt="Logo DIGIYLYFE"/>
+        </div>
+        <div class="brandText">
+          <div class="kicker">DIGIYLYFE — EXPLORE</div>
+          <div class="title" id="pageTitle">Ajouter un lieu</div>
+          <div class="sub" id="subline">Nom, zone, contact, photos et publication.</div>
+        </div>
+      </div>
+
+      <div class="topActions">
+        <a class="btn ghost" href="https://digiylyfe.com/">Site</a>
+        <a class="btn secondary" href="https://digiy-hub.digiylyfe.com/">HUB</a>
+        <a class="btn secondary" href="https://tarifs.digiylyfe.com/" target="_blank" rel="noopener noreferrer">Tarifs</a>
+        <a class="btn ghost" id="publicHomeBtn" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener">Voir public</a>
+        <a class="btn secondary" id="backToClawBtn" href="./claw.html">Plus</a>
+        <a class="btn secondary" id="backToLieuxBtn" href="./lieux.html">Lieux</a>
+        <a class="btn secondary" id="backToCockpitBtn" href="./cockpit.html">Accueil</a>
+        <a class="btn warn hidden" id="rescuePinBtn" href="./pin.html">Accès</a>
+      </div>
+    </header>
+
+    <section class="hero">
+      <article class="panel heroMain">
+        <div class="badge">Ajouter un lieu</div>
+        <h1 class="heroTitle" id="heroTitle">Préparer un lieu clair, prêt à montrer.</h1>
+        <p class="heroLead">
+          Mets l’essentiel : nom, endroit, ce qu’on y trouve, contact et photo si tu as déjà un lien.
+          Une bonne fiche donne envie sans fatiguer le lecteur.
+        </p>
+
+        <div class="mobileFastRow">
+          <a id="fastHome" href="./cockpit.html">🏠 Accueil</a>
+          <a id="fastLieux" href="./lieux.html">📍 Lieux</a>
+          <a class="primary" id="fastSubmit" href="./submit.html">➕ Ajouter</a>
+          <a id="fastNotes" href="./cockpit.html#quickExploreNote">✍️ Notes</a>
+        </div>
+      </article>
+
+      <aside class="panel heroSide">
+        <div class="miniStat">
+          <div class="miniLabel">Session</div>
+          <div class="miniValue" id="heroPhone">Protégée</div>
+          <div class="miniHint">Le téléphone reste dans le coffre et n’est pas affiché dans l’adresse.</div>
+        </div>
+
+        <div class="miniStat">
+          <div class="miniLabel">Mode</div>
+          <div class="miniValue" id="heroMode">Chargement…</div>
+          <div class="miniHint" id="heroModeHint">Détection création / correction en cours.</div>
+        </div>
+
+        <div class="miniStat">
+          <div class="miniLabel">Fiche</div>
+          <div class="miniValue" id="heroSlug">Nouveau lieu</div>
+          <div class="miniHint">Le repère interne reste en session. La façade publique reste propre.</div>
+        </div>
+      </aside>
+    </section>
+
+    <nav class="nav">
+      <a id="navCockpit" href="./cockpit.html">Accueil</a>
+      <a id="navLieux" href="./lieux.html">Lieux</a>
+      <a id="navSubmit" class="active" href="./submit.html">Ajouter</a>
+      <a id="navClaw" href="./claw.html">Plus</a>
+      <a id="navPreview" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener">Voir public</a>
+      <a id="navPinRescue" class="hidden" href="./pin.html">Accès</a>
+    </nav>
+
+    <div id="msg" class="msg info"></div>
+
+    <div class="layout">
+      <section class="panel">
+        <div class="cardBody">
+          <h2 class="sectionTitle">Les infos du lieu</h2>
+          <p class="sectionSub">
+            Remplis ce qui aide vraiment le client : comprendre, situer, contacter, venir.
+          </p>
+
+          <form id="placeForm" class="grid" novalidate>
+            <section class="digiyQuickPanel" aria-label="Pré-remplissage rapide EXPLORE">
+              <div class="digiyQuickHead">
+                <div>
+                  <strong>Choisis le type de lieu</strong>
+                  <span>DIGIY prépare les mots. Tu ajustes seulement la vérité du terrain.</span>
+                </div>
+                <span class="digiyMiniNote">Moins d’écriture · plus de clics</span>
+              </div>
+
+              <div class="digiyQuickGrid" id="digiyPresetGrid">
+                <button class="digiyQuickBtn" type="button" data-preset="plage">🌊 Plage / sortie</button>
+                <button class="digiyQuickBtn" type="button" data-preset="resto">🍽️ Restaurant / terrasse</button>
+                <button class="digiyQuickBtn" type="button" data-preset="boutique">🛍️ Boutique / marché</button>
+                <button class="digiyQuickBtn" type="button" data-preset="logement">🏠 Logement / villa</button>
+                <button class="digiyQuickBtn" type="button" data-preset="balade">🎣 Activité / balade</button>
+                <button class="digiyQuickBtn" type="button" data-preset="adresse">📍 Adresse utile</button>
+              </div>
+
+              <div class="digiyChipRow" aria-label="Zones rapides">
+                <button class="digiyChip" type="button" data-city="Saly">📍 Saly</button>
+                <button class="digiyChip" type="button" data-city="Mbour">📍 Mbour</button>
+                <button class="digiyChip" type="button" data-city="Dakar">📍 Dakar</button>
+                <button class="digiyChip" type="button" data-zone="Centre">Centre</button>
+                <button class="digiyChip" type="button" data-zone="Bord de mer">Bord de mer</button>
+                <button class="digiyChip" type="button" data-zone="Petite Côte">Petite Côte</button>
+              </div>
+
+              <div class="digiyChipRow" aria-label="Phrases rapides">
+                <button class="digiyChip" type="button" data-phrase="calme">Un lieu calme</button>
+                <button class="digiyChip" type="button" data-phrase="vivant">Un lieu vivant</button>
+                <button class="digiyChip" type="button" data-phrase="famille">Adapté famille</button>
+                <button class="digiyChip" type="button" data-phrase="touristes">Simple pour visiteurs</button>
+              </div>
+            </section>
+
+            <div class="grid2">
+              <div class="field">
+                <label class="label" for="publicName">Nom du lieu</label>
+                <input id="publicName" class="input" type="text" placeholder="Ex: Plage calme de Saly"/>
+              </div>
+
+              <div class="field">
+                <label class="label" for="slug">Repère interne</label>
+                <input id="slug" class="input" type="text" placeholder="Laisse vide si nouveau lieu"/>
+                <div class="hint">Ce repère sert au coffre PRO. Il ne doit pas contenir de téléphone et ne doit pas sortir en façade publique.</div>
+              </div>
+            </div>
+
+            <div class="grid3">
+              <div class="field">
+                <label class="label" for="categoryCode">Catégorie</label>
+                <select id="categoryCode" class="select">
+                  <option value="">Choisir une catégorie</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label class="label" for="subcategory">Type précis</label>
+                <input id="subcategory" class="input" type="text" placeholder="ex: sortie, plage, famille, terrasse..."/>
+              </div>
+
+              <div class="field">
+                <label class="label" for="priceHint">Prix / entrée</label>
+                <input id="priceHint" class="input" type="text" placeholder="ex: Entrée libre / 5 000 F / Sur devis"/>
+              </div>
+            </div>
+
+            <div class="grid2">
+              <div class="field">
+                <label class="label" for="city">Ville</label>
+                <input id="city" class="input" type="text" placeholder="ex: Saly"/>
+              </div>
+
+              <div class="field">
+                <label class="label" for="zone">Zone / quartier</label>
+                <input id="zone" class="input" type="text" placeholder="ex: Centre"/>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="addressText">Adresse / repère</label>
+              <input id="addressText" class="input" type="text" placeholder="ex: Saly Centre, près du rond-point..."/>
+            </div>
+
+            <div class="grid2">
+              <div class="field">
+                <label class="label" for="latitude">Position carte nord-sud</label>
+                <input id="latitude" class="input" type="number" step="any" placeholder="14.444"/>
+              </div>
+
+              <div class="field">
+                <label class="label" for="longitude">Position carte est-ouest</label>
+                <input id="longitude" class="input" type="number" step="any" placeholder="-17.001"/>
+              </div>
+            </div>
+
+            <div class="grid2">
+              <div class="field">
+                <label class="label" for="phone">Téléphone contact</label>
+                <input id="phone" class="input" type="tel" placeholder="221771342889"/>
+              </div>
+
+              <div class="field">
+                <label class="label" for="whatsapp">WhatsApp</label>
+                <input id="whatsapp" class="input" type="tel" placeholder="221771342889"/>
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="coverUrl">Lien de la photo principale</label>
+              <input id="coverUrl" class="input" type="url" placeholder="https://..."/>
+              <div class="hint">Optionnel. Tu peux utiliser une photo déjà posée dans ta médiathèque DIGIYLYFE.NET ou un lien prêt.</div>
+            </div>
+
+            <div class="field">
+              <label class="label" for="photoUrls">Autres photos</label>
+              <textarea id="photoUrls" class="textarea" placeholder="Un lien photo par ligne si tu en as déjà."></textarea>
+            </div>
+
+            <div class="field">
+              <label class="label" for="tags">Mots pour retrouver le lieu</label>
+              <input id="tags" class="input" type="text" placeholder="ex: saly, plage, calme, famille"/>
+            </div>
+
+            <div class="field">
+              <label class="label" for="shortDescription">Phrase courte</label>
+              <textarea id="shortDescription" class="textarea" placeholder="Ex : Un endroit calme pour respirer, manger ou découvrir le coin."></textarea>
+            </div>
+
+            <div class="field">
+              <label class="label" for="fullDescription">Ce qu’il faut savoir</label>
+              <textarea id="fullDescription" class="textarea" placeholder="Décris l’ambiance, l’accès, le meilleur moment pour venir et ce qui donne envie."></textarea>
+            </div>
+
+            <div class="checkRow">
+              <label class="check">
+                <input id="isFeatured" type="checkbox"/>
+                <div>
+                  <strong>Faire ressortir ce lieu</strong>
+                  <span>À cocher pour donner plus de place à ce lieu dans certaines lectures.</span>
+                </div>
+              </label>
+
+              <label class="check">
+                <input id="isPublished" type="checkbox"/>
+                <div>
+                  <strong>Mettre en ligne après enregistrement</strong>
+                  <span>Sinon, il reste en préparation et tu pourras le publier plus tard.</span>
+                </div>
+              </label>
+            </div>
+
+            <div class="actions">
+              <button id="saveBtn" class="btn primary" type="submit">Enregistrer la fiche</button>
+              <button id="draftBtn" class="btn secondary" type="button">Garder en préparation</button>
+              <a id="previewBtn" class="btn ghost" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener">Voir public</a>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <aside class="panel">
+        <div class="cardBody">
+          <h2 class="sectionTitle">Aide rapide</h2>
+          <p class="sectionSub">Ouvre seulement si tu veux un rappel. Le formulaire suffit pour avancer.</p>
+
+          <details class="helpDetails">
+            <summary>Voir l’aide de remplissage</summary>
+            <div class="helpContent">
+              <div class="sideBox">
+                <strong>Nom du lieu</strong>
+                <span>Simple, reconnaissable, sans jargon. On doit sentir le lieu en une seconde.</span>
+              </div>
+
+              <div class="sideBox">
+                <strong>Catégorie</strong>
+                <span>Choisis la vraie famille du lieu. La lecture de l’ensemble dépend de ça.</span>
+              </div>
+
+              <div class="sideBox">
+                <strong>Ville et zone</strong>
+                <span>Très important pour la lecture du terrain. Une zone manquante affaiblit la clarté.</span>
+              </div>
+
+              <div class="sideBox">
+                <strong>Phrase courte</strong>
+                <span>Une phrase claire pour la carte, la liste et la lecture rapide sur téléphone.</span>
+              </div>
+
+              <div class="sideBox">
+                <strong>Mise en ligne</strong>
+                <span>Visible = le public peut voir la fiche. Préparation = tu gardes la main avant sortie.</span>
+              </div>
+
+              <div class="sideBox">
+                <strong>État actuel</strong>
+                <span id="stateBox">Chargement…</span>
+              </div>
+            </div>
+          </details>
+        </div>
+      </aside>
     </div>
-    <span class="digiyMiniNote">Moins d’écriture · plus de clics</span>
+
+    <div class="foot">
+      DIGIY EXPLORE • ajouter • lieux • notes • visibilité
+    </div>
   </div>
 
-  <div class="digiyQuickGrid" id="digiyPresetGrid">
-    <button class="digiyQuickBtn" type="button" data-preset="plage">🌊 Plage / sortie</button>
-    <button class="digiyQuickBtn" type="button" data-preset="resto">🍽️ Restaurant / terrasse</button>
-    <button class="digiyQuickBtn" type="button" data-preset="boutique">🛍️ Boutique / marché</button>
-    <button class="digiyQuickBtn" type="button" data-preset="logement">🏠 Logement / villa</button>
-    <button class="digiyQuickBtn" type="button" data-preset="balade">🎣 Activité / balade</button>
-    <button class="digiyQuickBtn" type="button" data-preset="adresse">📍 Adresse utile</button>
+  <nav class="bottomNav" aria-label="Navigation EXPLORE">
+    <div class="bottomNavInner">
+      <a id="bottomHome" href="./cockpit.html"><span class="ico">🏠</span><span>Accueil</span></a>
+      <a id="bottomLieux" href="./lieux.html"><span class="ico">📍</span><span>Lieux</span></a>
+      <a class="active" id="bottomSubmit" href="./submit.html"><span class="ico">➕</span><span>Ajouter</span></a>
+      <a id="bottomNotes" href="./cockpit.html#quickExploreNote"><span class="ico">✍️</span><span>Notes</span></a>
+      <a id="bottomMore" href="./claw.html"><span class="ico">⚙️</span><span>Plus</span></a>
+    </div>
+  </nav>
+
+  <div id="digiyExploreCamembert" aria-label="Guide vocal DIGIY EXPLORE">
+    <button class="digiyExploreCenter" id="digiyExploreCenter" type="button" aria-expanded="false" aria-pressed="false">
+      <span>🎧</span><strong>DIGIY</strong>
+    </button>
+    <div class="digiyExploreMenu" id="digiyExploreMenu">
+      <button class="gold" id="digiyExploreListen" type="button">Écouter</button>
+      <button id="digiyExploreClose" type="button">Fermer</button>
+      <button class="green" id="digiyExplorePlaces" type="button">Mes lieux</button>
+      <button class="blue" id="digiyExploreAdd" type="button">Ajouter</button>
+    </div>
   </div>
 
-  <div class="digiyChipRow" aria-label="Zones rapides">
-    <button class="digiyChip" type="button" data-city="Saly">📍 Saly</button>
-    <button class="digiyChip" type="button" data-city="Mbour">📍 Mbour</button>
-    <button class="digiyChip" type="button" data-city="Dakar">📍 Dakar</button>
-    <button class="digiyChip" type="button" data-zone="Centre">Centre</button>
-    <button class="digiyChip" type="button" data-zone="Bord de mer">Bord de mer</button>
-    <button class="digiyChip" type="button" data-zone="Petite Côte">Petite Côte</button>
-  </div>
+  <script>
+    (function(){
+      "use strict";
 
-  <div class="digiyChipRow" aria-label="Phrases rapides">
-    <button class="digiyChip" type="button" data-phrase="calme">Un lieu calme</button>
-    <button class="digiyChip" type="button" data-phrase="vivant">Un lieu vivant</button>
-    <button class="digiyChip" type="button" data-phrase="famille">Adapté famille</button>
-    <button class="digiyChip" type="button" data-phrase="touristes">Simple pour visiteurs</button>
-  </div>
-</section>
+      const PUBLIC_VITRINE_BASE = "https://explore.digiylyfe.com/";
+      const SESSION_KEY = "digiy_explore_session";
+      const MAX_AGE_MS = 8 * 60 * 60 * 1000;
 
-4) Juste avant </body>, ajoute :
+      const supabase =
+        window.DIGIY_SUPABASE_CLIENT ||
+        window.DIGIY_CLAW_EXPLORE_SB ||
+        window.supabase.createClient(
+          window.DIGIY_SUPABASE_URL,
+          window.DIGIY_SUPABASE_ANON_KEY || window.DIGIY_SUPABASE_ANON,
+          {
+            auth:{
+              persistSession:false,
+              autoRefreshToken:false,
+              detectSessionInUrl:false,
+              storageKey:"digiy-explore-submit-noauth",
+              storage:{
+                getItem:() => null,
+                setItem:() => {},
+                removeItem:() => {}
+              }
+            }
+          }
+        );
 
-<div id="digiyExploreCamembert" aria-label="Guide vocal DIGIY EXPLORE">
-  <button class="digiyExploreCenter" id="digiyExploreCenter" type="button" aria-expanded="false" aria-pressed="false">
-    <span>🎧</span><strong>DIGIY</strong>
-  </button>
-  <div class="digiyExploreMenu" id="digiyExploreMenu">
-    <button class="gold" id="digiyExploreListen" type="button">Écouter</button>
-    <button id="digiyExploreClose" type="button">Fermer</button>
-    <button class="green" id="digiyExplorePlaces" type="button">Mes lieux</button>
-    <button class="blue" id="digiyExploreAdd" type="button">Ajouter</button>
-  </div>
-</div>
+      window.DIGIY_SUPABASE_CLIENT = supabase;
+      window.DIGIY_SUBMIT_SB = supabase;
 
-<script>
-(function(){
-  "use strict";
+      const $ = (id) => document.getElementById(id);
 
-  const PRESETS = {
-    plage: {
-      name:"Plage calme de Saly",
-      subcategory:"plage, sortie, calme",
-      price:"Entrée libre ou prix à préciser",
-      tags:"saly, plage, calme, sortie, famille",
-      short:"Un lieu simple pour respirer, voir la mer et profiter du calme.",
-      full:"Un endroit agréable à faire découvrir aux visiteurs comme aux habitants. On y vient pour respirer, se poser, marcher, prendre des photos et profiter d’un moment simple sur le terrain."
-    },
-    resto: {
-      name:"Restaurant terrasse à découvrir",
-      subcategory:"restaurant, terrasse, cuisine locale",
-      price:"Prix à préciser",
-      tags:"restaurant, terrasse, local, famille, saly",
-      short:"Une adresse conviviale pour manger, se poser et découvrir l’ambiance locale.",
-      full:"Une adresse utile pour les clients qui veulent manger simplement, se retrouver, appeler facilement et comprendre vite où aller. La fiche doit montrer l’ambiance, le contact et le repère principal."
-    },
-    boutique: {
-      name:"Boutique locale à découvrir",
-      subcategory:"boutique, marché, commerce local",
-      price:"Prix selon produit",
-      tags:"boutique, marché, commerce, local",
-      short:"Une boutique locale pour trouver des produits utiles et contacter directement le vendeur.",
-      full:"Une adresse de terrain qui mérite d’être visible. Le client doit comprendre ce qu’on y trouve, où se situe la boutique et comment contacter rapidement la bonne personne."
-    },
-    logement: {
-      name:"Villa ou logement à découvrir",
-      subcategory:"logement, villa, hébergement",
-      price:"Tarif à préciser",
-      tags:"logement, villa, séjour, saly",
-      short:"Un lieu de séjour simple à présenter clairement aux visiteurs.",
-      full:"Un hébergement à présenter avec clarté : zone, ambiance, capacité, repères utiles et contact direct. Le client doit comprendre vite si le lieu correspond à son besoin."
-    },
-    balade: {
-      name:"Activité locale à découvrir",
-      subcategory:"activité, balade, expérience",
-      price:"Sur demande ou tarif à préciser",
-      tags:"activité, balade, expérience, découverte",
-      short:"Une expérience locale à vivre simplement avec un contact direct.",
-      full:"Une activité de terrain à rendre visible. La fiche doit expliquer ce qu’on vit, pour qui c’est adapté, le meilleur moment pour venir et comment contacter l’organisateur."
-    },
-    adresse: {
-      name:"Adresse utile à connaître",
-      subcategory:"adresse utile, service, repère",
-      price:"À préciser si besoin",
-      tags:"adresse utile, repère, service, local",
-      short:"Une adresse pratique pour aider les gens à trouver vite le bon endroit.",
-      full:"Un repère utile du terrain. La fiche doit être directe : nom, zone, raison d’y aller, contact et informations pratiques pour éviter que le client se perde."
-    }
-  };
+      const msg = $("msg");
+      const pageTitle = $("pageTitle");
+      const heroTitle = $("heroTitle");
+      const subline = $("subline");
+      const heroPhone = $("heroPhone");
+      const heroMode = $("heroMode");
+      const heroModeHint = $("heroModeHint");
+      const heroSlug = $("heroSlug");
+      const stateBox = $("stateBox");
 
-  const PHRASES = {
-    calme: "Un lieu calme pour respirer, se poser et profiter du moment.",
-    vivant: "Un lieu vivant où l’on sent l’ambiance du terrain et l’accueil local.",
-    famille: "Un endroit adapté aux familles, simple à comprendre et facile à contacter.",
-    touristes: "Une adresse claire pour les visiteurs qui veulent découvrir sans se perdre."
-  };
+      const publicHomeBtn = $("publicHomeBtn");
+      const backToClawBtn = $("backToClawBtn");
+      const backToLieuxBtn = $("backToLieuxBtn");
+      const backToCockpitBtn = $("backToCockpitBtn");
+      const rescuePinBtn = $("rescuePinBtn");
 
-  function el(id){ return document.getElementById(id); }
-  function setValue(id, value, force){
-    const node = el(id);
-    if(!node || !value) return;
-    if(force || !String(node.value || "").trim()) node.value = value;
-    node.dispatchEvent(new Event("input", {bubbles:true}));
-    node.dispatchEvent(new Event("change", {bubbles:true}));
-  }
-  function slugify(value){
-    return String(value || "").trim().toLowerCase()
-      .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-      .replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").replace(/-+/g,"-");
-  }
-  function markActive(button, groupSelector){
-    document.querySelectorAll(groupSelector).forEach(b => b.classList.remove("active"));
-    button.classList.add("active");
-  }
-  function applyPreset(key, button){
-    const p = PRESETS[key];
-    if(!p) return;
-    markActive(button, "#digiyPresetGrid .digiyQuickBtn");
-    setValue("publicName", p.name, false);
-    setValue("subcategory", p.subcategory, false);
-    setValue("priceHint", p.price, false);
-    setValue("tags", p.tags, false);
-    setValue("shortDescription", p.short, false);
-    setValue("fullDescription", p.full, false);
-    const slug = el("slug");
-    const name = el("publicName");
-    if(slug && !String(slug.value || "").trim() && name?.value){
-      setValue("slug", slugify(name.value), true);
-    }
-  }
+      const navCockpit = $("navCockpit");
+      const navLieux = $("navLieux");
+      const navSubmit = $("navSubmit");
+      const navClaw = $("navClaw");
+      const navPreview = $("navPreview");
+      const navPinRescue = $("navPinRescue");
 
-  document.addEventListener("click", function(e){
-    const presetBtn = e.target.closest("[data-preset]");
-    if(presetBtn){ applyPreset(presetBtn.dataset.preset, presetBtn); return; }
+      const previewBtn = $("previewBtn");
+      const form = $("placeForm");
+      const saveBtn = $("saveBtn");
+      const draftBtn = $("draftBtn");
 
-    const cityBtn = e.target.closest("[data-city]");
-    if(cityBtn){ cityBtn.classList.toggle("active"); setValue("city", cityBtn.dataset.city, true); return; }
+      const publicName = $("publicName");
+      const slug = $("slug");
+      const categoryCode = $("categoryCode");
+      const subcategory = $("subcategory");
+      const priceHint = $("priceHint");
+      const city = $("city");
+      const zone = $("zone");
+      const addressText = $("addressText");
+      const latitude = $("latitude");
+      const longitude = $("longitude");
+      const phone = $("phone");
+      const whatsapp = $("whatsapp");
+      const coverUrl = $("coverUrl");
+      const photoUrls = $("photoUrls");
+      const tags = $("tags");
+      const shortDescription = $("shortDescription");
+      const fullDescription = $("fullDescription");
+      const isFeatured = $("isFeatured");
+      const isPublished = $("isPublished");
 
-    const zoneBtn = e.target.closest("[data-zone]");
-    if(zoneBtn){ zoneBtn.classList.toggle("active"); setValue("zone", zoneBtn.dataset.zone, true); return; }
+      let CURRENT_PHONE = "";
+      let CURRENT_SLUG = "";
+      let IS_EDIT_MODE = false;
 
-    const phraseBtn = e.target.closest("[data-phrase]");
-    if(phraseBtn){
-      phraseBtn.classList.toggle("active");
-      const phrase = PHRASES[phraseBtn.dataset.phrase] || "";
-      const current = String(el("shortDescription")?.value || "").trim();
-      setValue("shortDescription", current ? current + " " + phrase : phrase, true);
-    }
-  });
+      const PRESETS = {
+        plage:{
+          name:"Plage calme de Saly",
+          subcategory:"plage, sortie, calme",
+          price:"Entrée libre ou prix à préciser",
+          tags:"saly, plage, calme, sortie, famille",
+          short:"Un lieu simple pour respirer, voir la mer et profiter du calme.",
+          full:"Un endroit agréable à faire découvrir aux visiteurs comme aux habitants. On y vient pour respirer, se poser, marcher, prendre des photos et profiter d’un moment simple sur le terrain."
+        },
+        resto:{
+          name:"Restaurant terrasse à découvrir",
+          subcategory:"restaurant, terrasse, cuisine locale",
+          price:"Prix à préciser",
+          tags:"restaurant, terrasse, local, famille, saly",
+          short:"Une adresse conviviale pour manger, se poser et découvrir l’ambiance locale.",
+          full:"Une adresse utile pour les clients qui veulent manger simplement, se retrouver, appeler facilement et comprendre vite où aller. La fiche doit montrer l’ambiance, le contact et le repère principal."
+        },
+        boutique:{
+          name:"Boutique locale à découvrir",
+          subcategory:"boutique, marché, commerce local",
+          price:"Prix selon produit",
+          tags:"boutique, marché, commerce, local",
+          short:"Une boutique locale pour trouver des produits utiles et contacter directement le vendeur.",
+          full:"Une adresse de terrain qui mérite d’être visible. Le client doit comprendre ce qu’on y trouve, où se situe la boutique et comment contacter rapidement la bonne personne."
+        },
+        logement:{
+          name:"Villa ou logement à découvrir",
+          subcategory:"logement, villa, hébergement",
+          price:"Tarif à préciser",
+          tags:"logement, villa, séjour, saly",
+          short:"Un lieu de séjour simple à présenter clairement aux visiteurs.",
+          full:"Un hébergement à présenter avec clarté : zone, ambiance, capacité, repères utiles et contact direct. Le client doit comprendre vite si le lieu correspond à son besoin."
+        },
+        balade:{
+          name:"Activité locale à découvrir",
+          subcategory:"activité, balade, expérience",
+          price:"Sur demande ou tarif à préciser",
+          tags:"activité, balade, expérience, découverte",
+          short:"Une expérience locale à vivre simplement avec un contact direct.",
+          full:"Une activité de terrain à rendre visible. La fiche doit expliquer ce qu’on vit, pour qui c’est adapté, le meilleur moment pour venir et comment contacter l’organisateur."
+        },
+        adresse:{
+          name:"Adresse utile à connaître",
+          subcategory:"adresse utile, service, repère",
+          price:"À préciser si besoin",
+          tags:"adresse utile, repère, service, local",
+          short:"Une adresse pratique pour aider les gens à trouver vite le bon endroit.",
+          full:"Un repère utile du terrain. La fiche doit être directe : nom, zone, raison d’y aller, contact et informations pratiques pour éviter que le client se perde."
+        }
+      };
 
-  const root = el("digiyExploreCamembert");
-  const center = el("digiyExploreCenter");
-  const listen = el("digiyExploreListen");
-  const close = el("digiyExploreClose");
-  const places = el("digiyExplorePlaces");
-  const add = el("digiyExploreAdd");
+      const PHRASES = {
+        calme:"Un lieu calme pour respirer, se poser et profiter du moment.",
+        vivant:"Un lieu vivant où l’on sent l’ambiance du terrain et l’accueil local.",
+        famille:"Un endroit adapté aux familles, simple à comprendre et facile à contacter.",
+        touristes:"Une adresse claire pour les visiteurs qui veulent découvrir sans se perdre."
+      };
 
-  const AUDIO_TEXT = "Bienvenue dans Ajouter un lieu EXPLORE by DIGIY. Ici, tu n’as pas besoin d’écrire un roman. Choisis d’abord le type de lieu. DIGIY prépare les mots. Tu ajustes ensuite le nom, la ville, la zone, le contact et la vérité du terrain. Une fiche claire doit donner envie, situer rapidement et permettre de contacter sans détour. Si tout n’est pas prêt, garde en préparation. Si c’est bon, enregistre et publie. Le pro clique plus qu’il n’écrit. DIGIY formule pour lui, le terrain valide avec sa vérité.";
-  let playing = false;
+      function setMsg(text, type){
+        if(!text){
+          msg.className = "msg";
+          msg.textContent = "";
+          return;
+        }
+        msg.className = "msg show " + (type || "info");
+        msg.textContent = text;
+      }
 
-  function setOpen(open){ if(!root || !center) return; root.classList.toggle("open", !!open); center.setAttribute("aria-expanded", open ? "true" : "false"); }
-  function setPlaying(state){
-    playing = !!state;
-    if(!root || !center) return;
-    root.classList.toggle("playing", playing);
-    center.setAttribute("aria-pressed", playing ? "true" : "false");
-    center.innerHTML = playing ? "<span>⏹</span><strong>Stop</strong>" : "<span>🎧</span><strong>DIGIY</strong>";
-  }
-  function stop(){ try{ window.speechSynthesis && window.speechSynthesis.cancel(); }catch(_){} setPlaying(false); }
-  function voice(){ const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : []; return voices.find(v => /^fr/i.test(v.lang || "")) || null; }
-  function speak(){
-    if(!("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)){ alert("Audio indisponible sur ce navigateur."); return; }
-    if(playing){ stop(); return; }
-    stop();
-    const u = new SpeechSynthesisUtterance(AUDIO_TEXT);
-    u.lang = "fr-FR"; u.rate = 0.86; u.pitch = 1.04; u.volume = 1;
-    const v = voice(); if(v) u.voice = v;
-    u.onstart = () => setPlaying(true); u.onend = () => setTimeout(stop, 120); u.onerror = stop;
-    window.speechSynthesis.speak(u);
-  }
+      function normalizePhone(v){
+        return String(v || "").replace(/[^\d]/g, "");
+      }
 
-  center && center.addEventListener("click", () => setOpen(!root.classList.contains("open")));
-  listen && listen.addEventListener("click", speak);
-  close && close.addEventListener("click", () => { stop(); setOpen(false); });
-  places && places.addEventListener("click", () => { location.href = "./lieux.html"; });
-  add && add.addEventListener("click", () => { location.href = "./submit.html"; });
-  document.addEventListener("click", e => { if(root && !root.contains(e.target)) setOpen(false); });
-  if(window.speechSynthesis && typeof window.speechSynthesis.onvoiceschanged !== "undefined") window.speechSynthesis.onvoiceschanged = voice;
-  window.addEventListener("beforeunload", stop);
-  document.addEventListener("visibilitychange", () => { if(document.hidden) stop(); });
-})();
-</script>
+      function normalizeSlug(value){
+        return String(value || "")
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .toLowerCase()
+          .replace(/\d{6,}/g, "")
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-+|-+$/g, "")
+          .replace(/-{2,}/g, "-");
+      }
+
+      function makeInternalSlug(value){
+        const base = normalizeSlug(value || "lieu") || "lieu";
+        const suffix = Math.random().toString(36).slice(2, 7);
+        return base + "-" + suffix;
+      }
+
+      function safeJsonParse(raw){
+        try{ return JSON.parse(raw); }catch(_){ return null; }
+      }
+
+      function storageGet(key){
+        try{ const v = sessionStorage.getItem(key); if(v) return v; }catch(_){}
+        try{ const v = localStorage.getItem(key); if(v) return v; }catch(_){}
+        return "";
+      }
+
+      function storageSet(key, value){
+        try{ sessionStorage.setItem(key, String(value || "")); }catch(_){}
+        try{ localStorage.setItem(key, String(value || "")); }catch(_){}
+      }
+
+      function readStoredSession(){
+        const keys = [
+          SESSION_KEY,
+          "digiy_explore_session",
+          "DIGIY_EXPLORE_SESSION",
+          "DIGIY_EXPLORE_ACCESS"
+        ];
+
+        for(const key of keys){
+          const raw = storageGet(key);
+          const parsed = safeJsonParse(raw);
+          if(parsed && typeof parsed === "object"){
+            return parsed;
+          }
+        }
+
+        return null;
+      }
+
+      function getSession(){
+        const fromGuard = window.DIGIY_GUARD?.getSession?.() || window.DIGIY_GUARD?.state || {};
+        const stored = readStoredSession() || {};
+
+        const ts = Number(stored.ts || Date.now());
+        const tooOld = stored.ts && (Date.now() - ts > MAX_AGE_MS);
+
+        if(tooOld) return {
+          phone:"",
+          slug:"",
+          module:"EXPLORE"
+        };
+
+        return {
+          phone: normalizePhone(fromGuard.phone || stored.phone || storageGet("digiy_explore_phone") || ""),
+          slug: normalizeSlug(fromGuard.slug || stored.slug || storageGet("digiy_explore_selected_place_slug") || storageGet("digiy_explore_slug") || ""),
+          module:"EXPLORE",
+          access_ok: fromGuard.access_ok === true || stored.access_ok === true
+        };
+      }
+
+      function saveSession(next){
+        const current = getSession() || {};
+        const payload = {
+          phone: normalizePhone(next?.phone || current.phone || ""),
+          slug: normalizeSlug(next?.slug || current.slug || ""),
+          module:"EXPLORE",
+          access_ok:true,
+          ts:Date.now()
+        };
+
+        const raw = JSON.stringify(payload);
+        try{ localStorage.setItem(SESSION_KEY, raw); }catch(_){}
+        try{ sessionStorage.setItem(SESSION_KEY, raw); }catch(_){}
+        try{ localStorage.setItem("digiy_explore_session", raw); }catch(_){}
+        try{ sessionStorage.setItem("digiy_explore_session", raw); }catch(_){}
+
+        if(payload.phone){
+          storageSet("digiy_explore_phone", payload.phone);
+        }
+
+        if(payload.slug){
+          storageSet("digiy_explore_selected_place_slug", payload.slug);
+          storageSet("digiy_explore_slug", payload.slug);
+        }
+
+        return payload;
+      }
+
+      function cleanVisibleUrl(){
+        try{
+          const url = new URL(window.location.href);
+          let changed = false;
+
+          ["slug","phone","tel","owner_phone","owner_id","business_code","access_note","keybox_code","keybox_location"].forEach(function(key){
+            if(url.searchParams.has(key)){
+              url.searchParams.delete(key);
+              changed = true;
+            }
+          });
+
+          if(changed){
+            history.replaceState({}, document.title, url.pathname + url.search + url.hash);
+          }
+        }catch(_){}
+      }
+
+      function linesToJsonArray(text){
+        return String(text || "")
+          .split("\n")
+          .map(x => x.trim())
+          .filter(Boolean);
+      }
+
+      function commaToJsonArray(text){
+        return String(text || "")
+          .split(",")
+          .map(x => x.trim())
+          .filter(Boolean);
+      }
+
+      function setBusy(busy){
+        saveBtn.disabled = !!busy;
+        draftBtn.disabled = !!busy;
+
+        form.querySelectorAll("input, textarea, select").forEach(function(el){
+          el.disabled = !!busy;
+        });
+
+        saveBtn.textContent = busy ? "Enregistrement…" : "Enregistrer la fiche";
+        draftBtn.textContent = busy ? "Patiente…" : "Garder en préparation";
+      }
+
+      function setFormDisabled(disabled){
+        form.querySelectorAll("input, textarea, select, button").forEach(function(el){
+          el.disabled = !!disabled;
+        });
+      }
+
+      function updateRescueVisibility(show){
+        rescuePinBtn.classList.toggle("hidden", !show);
+        navPinRescue.classList.toggle("hidden", !show);
+      }
+
+      function publicHome(){
+        return PUBLIC_VITRINE_BASE;
+      }
+
+      function publicPlaceUrlFromRow(row){
+        const publicSlug = normalizeSlug(row?.public_slug || row?.publicSlug || "");
+        if(!publicSlug) return PUBLIC_VITRINE_BASE;
+        const url = new URL(PUBLIC_VITRINE_BASE);
+        url.searchParams.set("slug", publicSlug);
+        return url.toString();
+      }
+
+      function updateNavLinks(){
+        navCockpit.href = "./cockpit.html";
+        backToCockpitBtn.href = "./cockpit.html";
+        navLieux.href = "./lieux.html";
+        backToLieuxBtn.href = "./lieux.html";
+        navSubmit.href = "./submit.html";
+        navClaw.href = "./claw.html";
+        backToClawBtn.href = "./claw.html";
+        rescuePinBtn.href = "./pin.html";
+        navPinRescue.href = "./pin.html";
+
+        publicHomeBtn.href = PUBLIC_VITRINE_BASE;
+        navPreview.href = PUBLIC_VITRINE_BASE;
+        previewBtn.href = PUBLIC_VITRINE_BASE;
+
+        const links = {
+          fastHome:"./cockpit.html",
+          fastLieux:"./lieux.html",
+          fastSubmit:"./submit.html",
+          fastNotes:"./cockpit.html#quickExploreNote",
+          bottomHome:"./cockpit.html",
+          bottomLieux:"./lieux.html",
+          bottomSubmit:"./submit.html",
+          bottomNotes:"./cockpit.html#quickExploreNote",
+          bottomMore:"./claw.html"
+        };
+
+        Object.entries(links).forEach(([id, href]) => {
+          const node = $(id);
+          if(node) node.href = href;
+        });
+      }
+
+      function updateModeUi(){
+        heroPhone.textContent = CURRENT_PHONE ? "Ouverte" : "À rouvrir";
+        heroSlug.textContent = IS_EDIT_MODE ? "Fiche en correction" : "Nouveau lieu";
+
+        if(IS_EDIT_MODE){
+          pageTitle.textContent = "Corriger un lieu";
+          heroTitle.textContent = "Corriger ce lieu sans te perdre.";
+          heroMode.textContent = "Correction";
+          heroModeHint.textContent = "Le formulaire recharge une fiche liée à ta session active.";
+          subline.textContent = "Tu corriges une fiche liée à ton espace EXPLORE.";
+          stateBox.textContent = "Mode correction actif. Tu peux ajuster, republier ou remettre en préparation.";
+        }else{
+          pageTitle.textContent = "Ajouter un lieu";
+          heroTitle.textContent = "Préparer un lieu clair, prêt à montrer.";
+          heroMode.textContent = "Création";
+          heroModeHint.textContent = "Nouveau lieu en préparation.";
+          subline.textContent = "Création d'une fiche liée à ta session protégée.";
+          stateBox.textContent = "Mode création actif. Le repère interne reste dans la session.";
+        }
+      }
+
+      function populateCategories(items){
+        categoryCode.innerHTML = '<option value="">Choisir une catégorie</option>';
+
+        const fallback = [
+          { code:"plage", label:"Plage / sortie", icon:"🌊" },
+          { code:"restaurant", label:"Restaurant / terrasse", icon:"🍽️" },
+          { code:"boutique", label:"Boutique / marché", icon:"🛍️" },
+          { code:"logement", label:"Logement / villa", icon:"🏠" },
+          { code:"activite", label:"Activité / balade", icon:"🎣" },
+          { code:"adresse", label:"Adresse utile", icon:"📍" }
+        ];
+
+        (items && items.length ? items : fallback).forEach(function(item){
+          const opt = document.createElement("option");
+          opt.value = item.code;
+          opt.textContent = (item.icon ? item.icon + " " : "") + item.label;
+          categoryCode.appendChild(opt);
+        });
+      }
+
+      async function loadCategories(){
+        try{
+          const { data, error } = await supabase
+            .from("digiy_explore_categories")
+            .select("code,label,icon,sort_order")
+            .eq("is_active", true)
+            .order("sort_order", { ascending:true });
+
+          if(error) throw error;
+          return Array.isArray(data) ? data : [];
+        }catch(_){
+          return [];
+        }
+      }
+
+      async function loadPlaceByPhoneAndSlug(phoneValue, slugValue){
+        const { data, error } = await supabase.rpc("digiy_explore_list_places_by_phone", {
+          p_owner_phone: phoneValue
+        });
+
+        if(error) throw error;
+
+        const items = Array.isArray(data) ? data : [];
+        const safeSlug = normalizeSlug(slugValue);
+
+        return items.find(item => normalizeSlug(item?.slug) === safeSlug) || null;
+      }
+
+      function fillFormFromPlace(place){
+        if(!place) return;
+
+        publicName.value = place.public_name || place.name || place.title || "";
+        slug.value = normalizeSlug(place.slug || "");
+        categoryCode.value = place.category_code || "";
+        subcategory.value = place.subcategory || place.category_label || "";
+        priceHint.value = place.price_hint || "";
+        city.value = place.city || "";
+        zone.value = place.zone || place.district || "";
+        addressText.value = place.address_text || place.address || "";
+        latitude.value = place.latitude ?? "";
+        longitude.value = place.longitude ?? "";
+        phone.value = normalizePhone(place.phone || place.contact_phone || "");
+        whatsapp.value = normalizePhone(place.whatsapp || place.whatsapp_phone || "");
+        coverUrl.value = place.cover_url || place.image_url || "";
+
+        const photos = Array.isArray(place.photo_urls)
+          ? place.photo_urls
+          : Array.isArray(place.photos)
+            ? place.photos
+            : [];
+        photoUrls.value = photos.join("\n");
+
+        const tagList = Array.isArray(place.tags) ? place.tags : [];
+        tags.value = tagList.join(", ");
+
+        shortDescription.value = place.short_description || place.description || "";
+        fullDescription.value = place.full_description || place.long_description || "";
+        isFeatured.checked = place.is_featured === true;
+        isPublished.checked = place.is_published === true || place.published === true || String(place.status || "") === "published";
+      }
+
+      function validateForm(){
+        if(!CURRENT_PHONE){
+          setMsg("Session absente. Repasse par le code PIN.", "bad");
+          return false;
+        }
+
+        if(!String(publicName.value || "").trim()){
+          setMsg("Ajoute le nom du lieu.", "warn");
+          publicName.focus();
+          return false;
+        }
+
+        if(!String(categoryCode.value || "").trim()){
+          setMsg("Choisis une catégorie.", "warn");
+          categoryCode.focus();
+          return false;
+        }
+
+        if(!String(city.value || "").trim()){
+          setMsg("Ajoute la ville.", "warn");
+          city.focus();
+          return false;
+        }
+
+        return true;
+      }
+
+      function buildPayload(forceDraft){
+        let finalSlug = normalizeSlug(slug.value || CURRENT_SLUG || "");
+        if(!finalSlug){
+          finalSlug = makeInternalSlug(publicName.value || "lieu");
+        }
+
+        const publishNow = forceDraft ? false : !!isPublished.checked;
+        const status = publishNow ? "published" : "draft";
+
+        return {
+          p_owner_phone: CURRENT_PHONE,
+          p_slug: finalSlug,
+          p_public_name: String(publicName.value || "").trim(),
+          p_category_code: String(categoryCode.value || "").trim(),
+          p_city: String(city.value || "").trim(),
+          p_zone: String(zone.value || "").trim() || null,
+          p_subcategory: String(subcategory.value || "").trim() || null,
+          p_short_description: String(shortDescription.value || "").trim() || null,
+          p_full_description: String(fullDescription.value || "").trim() || null,
+          p_address_text: String(addressText.value || "").trim() || null,
+          p_latitude: latitude.value === "" ? null : Number(latitude.value),
+          p_longitude: longitude.value === "" ? null : Number(longitude.value),
+          p_phone: normalizePhone(phone.value) || null,
+          p_whatsapp: normalizePhone(whatsapp.value) || null,
+          p_cover_url: String(coverUrl.value || "").trim() || null,
+          p_photo_urls: linesToJsonArray(photoUrls.value),
+          p_tags: commaToJsonArray(tags.value),
+          p_external_links: [],
+          p_opening_hours: [],
+          p_price_hint: String(priceHint.value || "").trim() || null,
+          p_is_featured: !!isFeatured.checked,
+          p_status: status,
+          p_is_published: publishNow
+        };
+      }
+
+      async function savePlace(forceDraft){
+        if(!validateForm()) return;
+
+        const payload = buildPayload(forceDraft);
+
+        setBusy(true);
+        setMsg(forceDraft ? "Sauvegarde du brouillon en cours…" : "Enregistrement de la fiche…", "info");
+
+        try{
+          const { data, error } = await supabase.rpc("digiy_explore_upsert_place", payload);
+          if(error) throw error;
+
+          if(!data || data.ok !== true){
+            throw new Error(data?.error || data?.reason || "UPSERT_INVALID_RESPONSE");
+          }
+
+          CURRENT_SLUG = normalizeSlug(data.slug || payload.p_slug);
+          slug.value = CURRENT_SLUG;
+
+          saveSession({
+            phone: CURRENT_PHONE,
+            slug: CURRENT_SLUG
+          });
+
+          IS_EDIT_MODE = true;
+          updateModeUi();
+          updateNavLinks();
+
+          const publicUrl = data.public_slug
+            ? publicPlaceUrlFromRow(data)
+            : PUBLIC_VITRINE_BASE;
+
+          previewBtn.href = publicUrl;
+          navPreview.href = publicUrl;
+          publicHomeBtn.href = publicUrl;
+
+          setMsg(
+            forceDraft
+              ? "Fiche gardée en préparation."
+              : (payload.p_is_published ? "Fiche enregistrée et mise en ligne." : "Fiche enregistrée."),
+            "ok"
+          );
+        }catch(err){
+          console.error("[DIGIY EXPLORE submit] save error:", err);
+          setMsg("L’enregistrement a échoué. Vérifie les champs puis réessaie.", "bad");
+        }finally{
+          setBusy(false);
+        }
+      }
+
+      function bindAutoSlug(){
+        publicName.addEventListener("input", function(){
+          if(IS_EDIT_MODE && CURRENT_SLUG){
+            return;
+          }
+
+          const typedSlug = String(slug.value || "").trim();
+          if(!typedSlug){
+            slug.value = normalizeSlug(publicName.value);
+          }
+        });
+
+        slug.addEventListener("blur", function(){
+          slug.value = normalizeSlug(slug.value);
+        });
+      }
+
+      function setValue(id, value, force){
+        const node = $(id);
+        if(!node || !value) return;
+        if(force || !String(node.value || "").trim()) node.value = value;
+        node.dispatchEvent(new Event("input", {bubbles:true}));
+        node.dispatchEvent(new Event("change", {bubbles:true}));
+      }
+
+      function markActive(button, selector){
+        document.querySelectorAll(selector).forEach(b => b.classList.remove("active"));
+        button.classList.add("active");
+      }
+
+      function applyPreset(key, button){
+        const p = PRESETS[key];
+        if(!p) return;
+        markActive(button, "#digiyPresetGrid .digiyQuickBtn");
+
+        setValue("publicName", p.name, false);
+        setValue("subcategory", p.subcategory, false);
+        setValue("priceHint", p.price, false);
+        setValue("tags", p.tags, false);
+        setValue("shortDescription", p.short, false);
+        setValue("fullDescription", p.full, false);
+
+        if(!String(categoryCode.value || "").trim()){
+          const lower = key === "resto" ? "restaurant" : key === "balade" ? "activite" : key;
+          const opt = Array.from(categoryCode.options).find(o => normalizeSlug(o.value) === normalizeSlug(lower) || normalizeSlug(o.textContent).includes(normalizeSlug(lower)));
+          if(opt) categoryCode.value = opt.value;
+        }
+
+        if(!String(slug.value || "").trim() && publicName.value){
+          slug.value = normalizeSlug(publicName.value);
+        }
+      }
+
+      function bindQuickClicks(){
+        document.addEventListener("click", function(e){
+          const presetBtn = e.target.closest("[data-preset]");
+          if(presetBtn){
+            applyPreset(presetBtn.dataset.preset, presetBtn);
+            return;
+          }
+
+          const cityBtn = e.target.closest("[data-city]");
+          if(cityBtn){
+            cityBtn.classList.toggle("active");
+            setValue("city", cityBtn.dataset.city, true);
+            return;
+          }
+
+          const zoneBtn = e.target.closest("[data-zone]");
+          if(zoneBtn){
+            zoneBtn.classList.toggle("active");
+            setValue("zone", zoneBtn.dataset.zone, true);
+            return;
+          }
+
+          const phraseBtn = e.target.closest("[data-phrase]");
+          if(phraseBtn){
+            phraseBtn.classList.toggle("active");
+            const phrase = PHRASES[phraseBtn.dataset.phrase] || "";
+            const current = String(shortDescription.value || "").trim();
+            setValue("shortDescription", current ? current + " " + phrase : phrase, true);
+          }
+        });
+      }
+
+      function bindCamembert(){
+        const root = $("digiyExploreCamembert");
+        const center = $("digiyExploreCenter");
+        const listen = $("digiyExploreListen");
+        const close = $("digiyExploreClose");
+        const places = $("digiyExplorePlaces");
+        const add = $("digiyExploreAdd");
+
+        const AUDIO_TEXT = "Bienvenue dans Ajouter un lieu EXPLORE by DIGIY. Ici, tu n’as pas besoin d’écrire un roman. Choisis d’abord le type de lieu. DIGIY prépare les mots. Tu ajustes ensuite le nom, la ville, la zone, le contact et la vérité du terrain. Une fiche claire doit donner envie, situer rapidement et permettre de contacter sans détour. Si tout n’est pas prêt, garde en préparation. Si c’est bon, enregistre et publie. Le pro clique plus qu’il n’écrit. DIGIY formule pour lui, le terrain valide avec sa vérité.";
+        let playing = false;
+
+        function setOpen(open){
+          if(!root || !center) return;
+          root.classList.toggle("open", !!open);
+          center.setAttribute("aria-expanded", open ? "true" : "false");
+        }
+
+        function setPlaying(state){
+          playing = !!state;
+          if(!root || !center) return;
+          root.classList.toggle("playing", playing);
+          center.setAttribute("aria-pressed", playing ? "true" : "false");
+          center.innerHTML = playing ? "<span>⏹</span><strong>Stop</strong>" : "<span>🎧</span><strong>DIGIY</strong>";
+        }
+
+        function stop(){
+          try{ window.speechSynthesis && window.speechSynthesis.cancel(); }catch(_){}
+          setPlaying(false);
+        }
+
+        function voice(){
+          const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+          return voices.find(v => /^fr/i.test(v.lang || "")) || null;
+        }
+
+        function speak(){
+          if(!("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)){
+            alert("Audio indisponible sur ce navigateur.");
+            return;
+          }
+
+          if(playing){
+            stop();
+            return;
+          }
+
+          stop();
+
+          const u = new SpeechSynthesisUtterance(AUDIO_TEXT);
+          u.lang = "fr-FR";
+          u.rate = 0.86;
+          u.pitch = 1.04;
+          u.volume = 1;
+
+          const v = voice();
+          if(v) u.voice = v;
+
+          u.onstart = () => setPlaying(true);
+          u.onend = () => setTimeout(stop, 120);
+          u.onerror = stop;
+
+          window.speechSynthesis.speak(u);
+        }
+
+        center && center.addEventListener("click", () => setOpen(!root.classList.contains("open")));
+        listen && listen.addEventListener("click", speak);
+        close && close.addEventListener("click", () => { stop(); setOpen(false); });
+        places && places.addEventListener("click", () => { location.href = "./lieux.html"; });
+        add && add.addEventListener("click", () => { location.href = "./submit.html"; });
+
+        document.addEventListener("click", e => {
+          if(root && !root.contains(e.target)) setOpen(false);
+        });
+
+        if(window.speechSynthesis && typeof window.speechSynthesis.onvoiceschanged !== "undefined"){
+          window.speechSynthesis.onvoiceschanged = voice;
+        }
+
+        window.addEventListener("beforeunload", stop);
+        document.addEventListener("visibilitychange", () => { if(document.hidden) stop(); });
+      }
+
+      async function boot(){
+        cleanVisibleUrl();
+
+        try{
+          if(window.DIGIY_GUARD?.ready && typeof window.DIGIY_GUARD.ready === "function"){
+            await window.DIGIY_GUARD.ready();
+          }
+        }catch(err){
+          console.warn("[DIGIY EXPLORE submit] guard warning:", err);
+        }
+
+        const session = getSession();
+        CURRENT_PHONE = normalizePhone(session.phone || "");
+        CURRENT_SLUG = normalizeSlug(session.slug || "");
+
+        updateNavLinks();
+
+        if(!CURRENT_PHONE){
+          updateRescueVisibility(true);
+          heroPhone.textContent = "À rouvrir";
+          heroMode.textContent = "Accès manquant";
+          heroModeHint.textContent = "Passe par l'accès pour rouvrir la session.";
+          stateBox.textContent = "Session absente. Le formulaire reste verrouillé tant que l'accès n'est pas rouvert.";
+          setFormDisabled(true);
+          setMsg("Session absente. Ouvre l’accès avant d’ajouter ou corriger un lieu.", "bad");
+          document.documentElement.style.visibility = "";
+          return;
+        }
+
+        updateRescueVisibility(false);
+        setFormDisabled(false);
+        phone.value = CURRENT_PHONE;
+        whatsapp.value = CURRENT_PHONE;
+
+        const categories = await loadCategories();
+        populateCategories(categories);
+
+        if(CURRENT_SLUG){
+          try{
+            const place = await loadPlaceByPhoneAndSlug(CURRENT_PHONE, CURRENT_SLUG);
+            if(place){
+              IS_EDIT_MODE = true;
+              fillFormFromPlace(place);
+            }
+          }catch(err){
+            console.warn("[DIGIY EXPLORE submit] load place warning:", err);
+          }
+        }
+
+        updateModeUi();
+        setMsg(IS_EDIT_MODE ? "Fiche chargée pour correction." : "Formulaire prêt.", "ok");
+        document.documentElement.style.visibility = "";
+      }
+
+      form.addEventListener("submit", function(e){
+        e.preventDefault();
+        savePlace(false);
+      });
+
+      draftBtn.addEventListener("click", function(){
+        savePlace(true);
+      });
+
+      bindAutoSlug();
+      bindQuickClicks();
+      bindCamembert();
+
+      boot();
+    })();
+  </script>
+</body>
+</html>
+
 
 
