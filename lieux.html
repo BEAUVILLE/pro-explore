@@ -218,47 +218,250 @@
     <button class="blue" id="digiyExploreAdd" type="button">Ajouter</button>
   </div>
 </div>
+<!-- DIGIY EXPLORE PRO — PATCH lieux.html V2 : camembert utile sur Mes lieux
+À coller juste avant </body> dans BEAUVILLE/pro-explore/lieux.html
+Remplace le patch précédent.
+
+Doctrine :
+- Sur Mes lieux, pas besoin d’un bouton "Mes lieux".
+- Camembert = Cockpit / Écouter / Ajouter / PIN
+- L'audio est déclenché par le camembert, mais le camembert ne devient pas lecteur lourd.
+-->
+
+<style>
+  #digiyExploreCamembert{
+    position:fixed;
+    left:14px;
+    bottom:calc(86px + env(safe-area-inset-bottom,0px));
+    width:84px;
+    height:84px;
+    z-index:99999;
+    font-family:Outfit, Inter, system-ui, sans-serif;
+  }
+
+  #digiyExploreCamembert .digiyExploreCenter{
+    position:absolute;
+    inset:0;
+    width:84px;
+    height:84px;
+    border:none;
+    border-radius:50%;
+    cursor:pointer;
+    color:#fff;
+    box-shadow:0 18px 40px rgba(0,0,0,.34);
+    background:
+      radial-gradient(circle at center, rgba(6,19,15,.95) 0 42%, transparent 43%),
+      conic-gradient(
+        from -90deg,
+        rgba(212,175,55,.96) 0 25%,
+        rgba(34,197,94,.90) 25% 50%,
+        rgba(56,189,248,.88) 50% 75%,
+        rgba(168,85,247,.82) 75% 100%
+      );
+    overflow:hidden;
+  }
+
+  #digiyExploreCamembert .digiyExploreCenter::before{
+    content:"";
+    position:absolute;
+    inset:13px;
+    border-radius:50%;
+    background:rgba(6,19,15,.97);
+    border:1px solid rgba(255,255,255,.10);
+  }
+
+  #digiyExploreCamembert .digiyExploreCenter span,
+  #digiyExploreCamembert .digiyExploreCenter strong{
+    position:relative;
+    z-index:2;
+    display:block;
+    text-align:center;
+  }
+
+  #digiyExploreCamembert .digiyExploreCenter span{
+    font-size:20px;
+    line-height:1;
+    margin-bottom:2px;
+  }
+
+  #digiyExploreCamembert .digiyExploreCenter strong{
+    font-size:10.5px;
+    font-weight:1000;
+    letter-spacing:.02em;
+  }
+
+  #digiyExploreCamembert.playing .digiyExploreCenter{
+    background:
+      radial-gradient(circle at center, rgba(6,19,15,.95) 0 42%, transparent 43%),
+      conic-gradient(from -90deg, rgba(248,113,113,.96) 0 50%, rgba(212,175,55,.90) 50% 100%);
+  }
+
+  #digiyExploreCamembert .digiyExploreMenu{
+    position:absolute;
+    left:94px;
+    bottom:4px;
+    width:238px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    padding:10px;
+    border-radius:22px;
+    border:1px solid rgba(255,255,255,.12);
+    background:rgba(6,19,15,.94);
+    box-shadow:0 18px 48px rgba(0,0,0,.32);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    opacity:0;
+    transform:translateX(-8px) scale(.96);
+    pointer-events:none;
+    transition:.18s ease;
+  }
+
+  #digiyExploreCamembert.open .digiyExploreMenu{
+    opacity:1;
+    transform:translateX(0) scale(1);
+    pointer-events:auto;
+  }
+
+  #digiyExploreCamembert .digiyExploreMenu a,
+  #digiyExploreCamembert .digiyExploreMenu button{
+    min-height:44px;
+    border:none;
+    border-radius:15px;
+    background:rgba(255,255,255,.07);
+    color:#f7fbf8;
+    padding:9px 10px;
+    font-size:12px;
+    font-weight:1000;
+    cursor:pointer;
+    text-decoration:none;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    font-family:inherit;
+  }
+
+  #digiyExploreCamembert .gold{
+    background:linear-gradient(135deg,#d4af37,#f3d46b) !important;
+    color:#13200d !important;
+  }
+
+  #digiyExploreCamembert .green{
+    background:rgba(34,197,94,.16) !important;
+    color:#dffcea !important;
+    border:1px solid rgba(34,197,94,.25) !important;
+  }
+
+  #digiyExploreCamembert .blue{
+    background:rgba(56,189,248,.14) !important;
+    color:#d9f4ff !important;
+    border:1px solid rgba(56,189,248,.24) !important;
+  }
+
+  #digiyExploreCamembert .violet{
+    background:rgba(168,85,247,.14) !important;
+    color:#eadcff !important;
+    border:1px solid rgba(168,85,247,.24) !important;
+  }
+
+  @media(max-width:640px){
+    #digiyExploreCamembert{
+      left:10px;
+      bottom:calc(84px + env(safe-area-inset-bottom,0px));
+      width:76px;
+      height:76px;
+    }
+
+    #digiyExploreCamembert .digiyExploreCenter{
+      width:76px;
+      height:76px;
+    }
+
+    #digiyExploreCamembert .digiyExploreCenter::before{
+      inset:12px;
+    }
+
+    #digiyExploreCamembert .digiyExploreMenu{
+      left:0;
+      bottom:86px;
+      width:min(255px, calc(100vw - 20px));
+    }
+  }
+</style>
 
 <script>
-  (function(){
-    "use strict";
+(function(){
+  "use strict";
 
-    const root = document.getElementById("digiyExploreCamembert");
+  const ROUTES = {
+    cockpit:"./cockpit.html",
+    submit:"./submit.html",
+    pin:"./pin.html"
+  };
+
+  const AUDIO_TEXT =
+    "Bienvenue dans Mes lieux EXPLORE by DIGIY. Ici, tu regardes d’abord les fiches existantes. Une fiche publiée doit donner envie. Un brouillon attend ta main. Une fiche archivée reste rangée. Ne cherche pas à tout écrire. Choisis la bonne action : ouvrir le cockpit, corriger, ajouter, ou revenir au PIN si la session doit être rouvert. Le pro clique plus qu’il n’écrit. DIGIY formule pour lui, le terrain valide avec sa vérité.";
+
+  function removeOldCamembert(){
+    document.querySelectorAll("#digiyExploreCamembert").forEach(function(node){
+      node.remove();
+    });
+  }
+
+  function installCamembert(){
+    const root = document.createElement("div");
+    root.id = "digiyExploreCamembert";
+    root.setAttribute("aria-label", "Actions EXPLORE PRO");
+
+    root.innerHTML = `
+      <button class="digiyExploreCenter" id="digiyExploreCenter" type="button" aria-expanded="false" aria-pressed="false">
+        <span>🧭</span>
+        <strong>PRO</strong>
+      </button>
+
+      <div class="digiyExploreMenu" id="digiyExploreMenu">
+        <a class="gold" href="${ROUTES.cockpit}">Cockpit</a>
+        <button class="green" id="digiyExploreListen" type="button">Écouter</button>
+        <a class="blue" href="${ROUTES.submit}">Ajouter</a>
+        <a class="violet" href="${ROUTES.pin}">PIN</a>
+      </div>
+    `;
+
+    document.body.appendChild(root);
+
     const center = document.getElementById("digiyExploreCenter");
     const listen = document.getElementById("digiyExploreListen");
-    const close = document.getElementById("digiyExploreClose");
-    const places = document.getElementById("digiyExplorePlaces");
-    const add = document.getElementById("digiyExploreAdd");
-
-    const AUDIO_TEXT =
-      "Bienvenue dans Mes lieux EXPLORE by DIGIY. Ici, tu ne dois pas te perdre dans les détails. Regarde d’abord les fiches déjà posées. Un lieu publié doit donner envie. Un brouillon attend ta main. Une fiche archivée reste rangée. Clique seulement sur ce qui mérite une action : voir, corriger, publier ou revenir à la fiche publique. L’écran montre les lieux. DIGIY t’aide à comprendre où agir.";
 
     let playing = false;
 
     function setOpen(open){
-      if(!root || !center) return;
       root.classList.toggle("open", !!open);
-      center.setAttribute("aria-expanded", open ? "true" : "false");
+      center && center.setAttribute("aria-expanded", open ? "true" : "false");
     }
 
     function setPlaying(state){
       playing = !!state;
-      if(!root || !center) return;
       root.classList.toggle("playing", playing);
-      center.setAttribute("aria-pressed", playing ? "true" : "false");
-      center.innerHTML = playing
-        ? "<span>⏹</span><strong>Stop</strong>"
-        : "<span>🎧</span><strong>DIGIY</strong>";
-    }
-
-    function getVoice(){
-      const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
-      return voices.find(v => /^fr/i.test(v.lang || "")) || null;
+      center && center.setAttribute("aria-pressed", playing ? "true" : "false");
+      if(center){
+        center.innerHTML = playing
+          ? "<span>⏹</span><strong>Stop</strong>"
+          : "<span>🧭</span><strong>PRO</strong>";
+      }
+      if(listen){
+        listen.textContent = playing ? "Stop" : "Écouter";
+      }
     }
 
     function stop(){
       try{ window.speechSynthesis && window.speechSynthesis.cancel(); }catch(_){}
       setPlaying(false);
+    }
+
+    function getVoice(){
+      const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+      return voices.find(v => /^fr/i.test(v.lang || "")) || null;
     }
 
     function speak(){
@@ -290,23 +493,20 @@
       window.speechSynthesis.speak(utter);
     }
 
-    center && center.addEventListener("click", function(){
+    center && center.addEventListener("click", function(e){
+      e.preventDefault();
+
+      if(playing){
+        stop();
+        return;
+      }
+
       setOpen(!root.classList.contains("open"));
     });
 
-    listen && listen.addEventListener("click", speak);
-
-    close && close.addEventListener("click", function(){
-      stop();
-      setOpen(false);
-    });
-
-    places && places.addEventListener("click", function(){
-      location.href = "./lieux.html";
-    });
-
-    add && add.addEventListener("click", function(){
-      location.href = "./submit.html";
+    listen && listen.addEventListener("click", function(e){
+      e.preventDefault();
+      speak();
     });
 
     document.addEventListener("click", function(e){
@@ -323,5 +523,32 @@
     document.addEventListener("visibilitychange", function(){
       if(document.hidden) stop();
     });
-  })();
+  }
+
+  function ensureCockpitLinks(){
+    document.querySelectorAll("a").forEach(function(a){
+      const txt = String(a.textContent || "").toLowerCase();
+
+      if(txt.includes("accueil") || txt.includes("ma gestion") || txt.includes("cockpit")){
+        a.setAttribute("href", ROUTES.cockpit);
+      }
+    });
+  }
+
+  function boot(){
+    removeOldCamembert();
+    installCamembert();
+    ensureCockpitLinks();
+    setTimeout(ensureCockpitLinks, 500);
+    setTimeout(ensureCockpitLinks, 1500);
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", boot);
+  }else{
+    boot();
+  }
+})();
 </script>
+
+
