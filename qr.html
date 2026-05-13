@@ -13,13 +13,8 @@
   <script>
     window.DIGIY_MODULE = "EXPLORE";
     window.DIGIY_LOGIN_URL = "./pin.html";
-    window.DIGIY_SUPABASE_URL = window.DIGIY_SUPABASE_URL || "https://wesqmwjjtsefyjnluosj.supabase.co";
-    window.DIGIY_SUPABASE_ANON_KEY = window.DIGIY_SUPABASE_ANON_KEY || "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
-    window.DIGIY_SUPABASE_ANON = window.DIGIY_SUPABASE_ANON || window.DIGIY_SUPABASE_ANON_KEY;
   </script>
-
-  <script defer src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
-  <script defer src="./guard.js?v=explore-qr-public-v1"></script>
+  <script defer src="./guard.js?v=explore-qr-no-lib-v2"></script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -28,12 +23,10 @@
   <style>
     :root{
       --bg:#06130f;
-      --bg2:#0a241b;
       --card:rgba(255,255,255,.045);
       --line:rgba(255,255,255,.14);
       --text:#f8fafc;
       --muted:rgba(248,250,252,.76);
-      --soft:rgba(248,250,252,.56);
       --gold:#d4af37;
       --gold2:#f3d46b;
       --green:#22c55e;
@@ -57,15 +50,16 @@
         radial-gradient(850px 520px at 100% 100%,rgba(34,197,94,.12),transparent 58%),
         linear-gradient(180deg,#03120d,var(--bg));
       padding:14px 14px calc(var(--bottom) + env(safe-area-inset-bottom,0px) + 18px);
+      -webkit-font-smoothing:antialiased;
+      text-rendering:optimizeLegibility;
     }
 
     a{color:inherit;text-decoration:none}
     button,input{font:inherit}
 
-    .wrap{max-width:900px;margin:0 auto}
+    .wrap{max-width:940px;margin:0 auto}
 
-    .hero,
-    .card{
+    .hero,.card{
       border:1px solid var(--line);
       border-radius:28px;
       background:var(--card);
@@ -104,19 +98,19 @@
 
     h1{
       margin:0;
-      font-size:clamp(31px,6vw,48px);
+      font-size:clamp(34px,7vw,54px);
       line-height:1.02;
       font-weight:1000;
-      letter-spacing:-.045em;
+      letter-spacing:-.05em;
       color:#fff7cc;
     }
 
     .sub{
       margin-top:8px;
       color:var(--muted);
-      font-size:18px;
+      font-size:19px;
       line-height:1.5;
-      font-weight:850;
+      font-weight:900;
       max-width:64ch;
     }
 
@@ -132,13 +126,13 @@
       align-items:center;
       justify-content:center;
       gap:8px;
-      min-height:42px;
+      min-height:44px;
       padding:9px 13px;
       border-radius:999px;
       border:1px solid rgba(148,163,184,.26);
       background:rgba(255,255,255,.04);
       color:var(--muted);
-      font-size:15px;
+      font-size:16px;
       font-weight:1000;
       white-space:nowrap;
     }
@@ -172,11 +166,11 @@
       appearance:none;
       border:1px solid rgba(148,163,184,.24);
       border-radius:18px;
-      min-height:58px;
-      padding:14px 16px;
+      min-height:62px;
+      padding:16px 18px;
       background:rgba(255,255,255,.045);
       color:var(--text);
-      font-size:17px;
+      font-size:18px;
       font-weight:1100;
       cursor:pointer;
       display:inline-flex;
@@ -210,7 +204,7 @@
 
     .qrBox{
       margin-top:14px;
-      min-height:330px;
+      min-height:340px;
       border-radius:24px;
       border:1px dashed rgba(212,175,55,.42);
       background:rgba(0,0,0,.14);
@@ -219,29 +213,58 @@
       padding:18px;
     }
 
+    .qrShell{
+      width:min(420px,100%);
+      border-radius:28px;
+      border:1px solid rgba(212,175,55,.32);
+      background:
+        radial-gradient(420px 200px at 50% 0%,rgba(212,175,55,.16),transparent 62%),
+        linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.035));
+      padding:18px;
+      display:grid;
+      gap:12px;
+      text-align:center;
+      box-shadow:0 18px 48px rgba(0,0,0,.34);
+    }
+
     .qrImg{
-      width:min(360px,100%);
+      width:min(320px,100%);
       height:auto;
-      border-radius:18px;
+      border-radius:22px;
       background:#fff;
       padding:12px;
-      border:1px solid rgba(148,163,184,.24);
+      border:1px solid rgba(212,175,55,.45);
       display:block;
+      margin:0 auto;
+    }
+
+    .qrTitle{
+      color:var(--gold2);
+      font-size:26px;
+      font-weight:1000;
+      line-height:1.12;
+    }
+
+    .qrText{
+      color:var(--muted);
+      font-size:17px;
+      line-height:1.45;
+      font-weight:900;
     }
 
     .sectionTitle{
-      font-size:24px;
+      font-size:28px;
       font-weight:1100;
       color:#fde68a;
       margin:0 0 8px;
-      letter-spacing:-.02em;
+      letter-spacing:-.03em;
     }
 
     .safeText{
       color:var(--muted);
-      font-size:17px;
+      font-size:18px;
       line-height:1.55;
-      font-weight:850;
+      font-weight:900;
     }
 
     .linkEditor{
@@ -255,19 +278,19 @@
     .linkLabel{
       color:#fde68a;
       font-weight:1100;
-      font-size:16px;
+      font-size:17px;
       margin-bottom:8px;
     }
 
     .urlInput{
       width:100%;
-      min-height:54px;
+      min-height:58px;
       border-radius:16px;
       border:1px solid rgba(148,163,184,.26);
       background:rgba(2,6,23,.50);
       color:#eafff1;
       padding:0 14px;
-      font-size:15px;
+      font-size:16px;
       font-weight:900;
     }
 
@@ -280,9 +303,9 @@
     .linkValue{
       margin-top:10px;
       color:#dbeafe;
-      font-size:15px;
+      font-size:16px;
       line-height:1.45;
-      font-weight:850;
+      font-weight:900;
       word-break:break-all;
     }
 
@@ -293,9 +316,9 @@
       background:rgba(34,197,94,.08);
       padding:14px;
       color:#bbf7d0;
-      font-size:17px;
+      font-size:18px;
       line-height:1.55;
-      font-weight:900;
+      font-weight:950;
     }
 
     .note{
@@ -306,7 +329,7 @@
       border:1px solid rgba(148,163,184,.25);
       background:rgba(255,255,255,.035);
       color:var(--muted);
-      font-size:16px;
+      font-size:17px;
       line-height:1.45;
       font-weight:950;
       white-space:pre-wrap;
@@ -384,37 +407,13 @@
     }
 
     @media(max-width:620px){
-      body{
-        padding-left:10px;
-        padding-right:10px;
-      }
-
-      .hero,
-      .card{
-        padding:15px;
-        border-radius:22px;
-      }
-
-      .actions{
-        grid-template-columns:1fr;
-      }
-
-      .sub{
-        font-size:17px;
-      }
-
-      .btn{
-        font-size:17px;
-        min-height:60px;
-      }
-
-      .qrBox{
-        min-height:280px;
-      }
-
-      .navItem{
-        font-size:12px;
-      }
+      body{padding-left:10px;padding-right:10px}
+      .hero,.card{padding:15px;border-radius:22px}
+      .actions{grid-template-columns:1fr}
+      .sub{font-size:18px}
+      .btn{font-size:18px;min-height:62px}
+      .qrBox{min-height:300px}
+      .navItem{font-size:12px}
     }
   </style>
 </head>
@@ -450,8 +449,8 @@
     <div class="actions">
       <button class="btn green" id="btnOpen" type="button">↗️ Ouvrir la fiche</button>
       <button class="btn gold" id="btnCopy" type="button">📋 Copier le lien</button>
-      <button class="btn blue" id="btnDownload" type="button">⬇️ Télécharger QR</button>
-      <button class="btn" id="btnSticker" type="button">🟩 Sticker XL</button>
+      <a class="btn blue" id="btnDownload" href="#" target="_blank" rel="noopener">⬇️ Ouvrir QR</a>
+      <a class="btn" id="btnSticker" href="#" target="_blank" rel="noopener">🟩 QR XL</a>
       <button class="btn" id="btnWhatsapp" type="button">📲 Partager WhatsApp</button>
       <button class="btn" id="btnReset" type="button">♻️ Retour vitrine EXPLORE</button>
     </div>
@@ -470,7 +469,11 @@
 
     <div class="qrBox">
       <a id="qrAnchor" href="#" target="_blank" rel="noopener" aria-label="Ouvrir la fiche publique EXPLORE">
-        <img id="qrImg" class="qrImg" alt="QR DIGIY EXPLORE"/>
+        <div class="qrShell">
+          <img id="qrImg" class="qrImg" alt="QR DIGIY EXPLORE"/>
+          <div class="qrTitle">Scanne pour découvrir ce lieu</div>
+          <div class="qrText">Ambiance, photos, repère utile, contact direct et itinéraire.</div>
+        </div>
       </a>
     </div>
 
@@ -509,32 +512,18 @@
 </nav>
 
 <script>
-(async function(){
+(function(){
   "use strict";
 
   const EXPLORE_PUBLIC_HOME = "https://explore.digiylyfe.com/";
   const EXPLORE_PUBLIC_FICHE = "https://explore.digiylyfe.com/fiche.html";
   const TARGET_STORAGE_KEY = "DIGIY_EXPLORE_QR_PUBLIC_TARGET";
+  const QR_API = "https://api.qrserver.com/v1/create-qr-code/";
 
   const CLEAN_KEYS = [
-    "phone",
-    "tel",
-    "owner_phone",
-    "p_phone",
-    "whatsapp",
-    "client_phone",
-    "token",
-    "session_token",
-    "pin",
-    "pin4",
-    "owner_id",
-    "business_code",
-    "keybox_code",
-    "keybox_location",
-    "access_note",
-    "return",
-    "from",
-    "module"
+    "phone","tel","owner_phone","p_phone","whatsapp","client_phone",
+    "token","session_token","pin","pin4","owner_id","business_code",
+    "keybox_code","keybox_location","access_note","return","from","module"
   ];
 
   const $ = (id)=>document.getElementById(id);
@@ -542,9 +531,8 @@
   const State = {
     slug:"",
     targetUrl:"",
-    qrNormal:"",
-    qrXL:"",
-    busy:false
+    qrUrl:"",
+    qrXLUrl:""
   };
 
   function storageGet(k){
@@ -640,14 +628,8 @@
       if(host.includes("pro-explore")) return true;
 
       return [
-        "pin.html",
-        "go-pin.html",
-        "cockpit.html",
-        "dashboard-pro.html",
-        "guard.js",
-        "submit.html",
-        "lieux.html",
-        "qr.html"
+        "pin.html","go-pin.html","cockpit.html","dashboard-pro.html",
+        "guard.js","submit.html","lieux.html","qr.html"
       ].some(x => path.includes(x));
     }catch(_){
       return true;
@@ -659,8 +641,7 @@
     if(!value) return "";
 
     try{
-      const u = new URL(value);
-
+      const u = new URL(value, location.href);
       CLEAN_KEYS.forEach(k=>u.searchParams.delete(k));
 
       const slug = cleanSlug(u.searchParams.get("slug") || "");
@@ -681,6 +662,7 @@
       readParam("slug") ||
       readParam("place") ||
       readParam("lieu") ||
+      storageGet("digiy_explore_selected_place_slug") ||
       storageGet("digiy_explore_slug") ||
       storageGet("digiy_explore_last_slug") ||
       storageGet("DIGIY_EXPLORE_SLUG") ||
@@ -713,8 +695,12 @@
   function buildTargetUrl(){
     const saved = readSavedTarget();
     if(saved) return saved;
-
     return buildTargetFromSlug(State.slug);
+  }
+
+  function qrImageUrl(text,size){
+    const s = Math.max(220, Number(size) || 620);
+    return QR_API + "?size=" + s + "x" + s + "&margin=16&data=" + encodeURIComponent(text);
   }
 
   function note(msg, cls="warn"){
@@ -722,24 +708,6 @@
     el.className = "note " + cls;
     el.textContent = msg || "";
     el.style.display = msg ? "block" : "none";
-  }
-
-  function setBusy(on){
-    State.busy = !!on;
-
-    [
-      "btnOpen",
-      "btnCopy",
-      "btnDownload",
-      "btnSticker",
-      "btnWhatsapp",
-      "btnReset",
-      "btnSaveTarget",
-      "btnUseSlug"
-    ].forEach(id=>{
-      const el = $(id);
-      if(el) el.disabled = !!on;
-    });
   }
 
   function syncUi(){
@@ -772,12 +740,15 @@
   }
 
   async function copyText(text){
+    const value = String(text || "").trim();
+    if(!value) throw new Error("copy_empty");
+
     if(navigator.clipboard?.writeText){
-      return navigator.clipboard.writeText(text);
+      return navigator.clipboard.writeText(value);
     }
 
     const ta = document.createElement("textarea");
-    ta.value = text;
+    ta.value = value;
     ta.setAttribute("readonly","");
     ta.style.position = "fixed";
     ta.style.left = "-9999px";
@@ -793,163 +764,31 @@
     }
   }
 
-  function loadImage(src){
-    return new Promise((resolve,reject)=>{
-      const img = new Image();
-      img.onload = ()=>resolve(img);
-      img.onerror = ()=>reject(new Error("image_load_failed"));
-      img.src = src;
-    });
-  }
-
-  function roundRect(ctx,x,y,w,h,r){
-    const rr = Math.min(r,w/2,h/2);
-
-    ctx.beginPath();
-    ctx.moveTo(x+rr,y);
-    ctx.arcTo(x+w,y,x+w,y+h,rr);
-    ctx.arcTo(x+w,y+h,x,y+h,rr);
-    ctx.arcTo(x,y+h,x,y,rr);
-    ctx.arcTo(x,y,x+w,y,rr);
-    ctx.closePath();
-  }
-
-  function qrOptions(size){
-    return {
-      width:size,
-      margin:1,
-      errorCorrectionLevel:"M",
-      color:{
-        dark:"#111827",
-        light:"#FFFFFF"
-      }
-    };
-  }
-
-  async function ensureQrLib(){
-    for(let i=0;i<35;i++){
-      if(window.QRCode?.toDataURL){
-        return true;
-      }
-
-      await new Promise(r=>setTimeout(r,120));
+  function renderQr(){
+    if(!State.targetUrl || isBadTarget(State.targetUrl)){
+      note("❌ Lien refusé : le QR ne doit jamais ouvrir une page PRO, PIN, cockpit ou gestion.", "bad");
+      syncUi();
+      return;
     }
 
-    return !!window.QRCode?.toDataURL;
-  }
+    State.qrUrl = qrImageUrl(State.targetUrl, 720);
+    State.qrXLUrl = qrImageUrl(State.targetUrl, 1200);
 
-  function makeQrDataUrl(text,size){
-    return new Promise((resolve,reject)=>{
-      if(!window.QRCode?.toDataURL){
-        reject(new Error("QRCode lib missing"));
-        return;
-      }
+    $("qrImg").src = State.qrUrl;
+    $("btnDownload").href = State.qrUrl;
+    $("btnSticker").href = State.qrXLUrl;
 
-      window.QRCode.toDataURL(text, qrOptions(size), (err,dataUrl)=>{
-        if(err){
-          reject(err);
-        }else{
-          resolve(dataUrl);
-        }
-      });
-    });
-  }
+    $("qrImg").onerror = function(){
+      note("⚠️ Le service image QR ne répond pas dans ce navigateur. Le lien public reste copiable et ouvrable.", "warn");
+    };
 
-  async function makeBranded(qrDataUrl,size){
-    const qr = await loadImage(qrDataUrl);
+    if(State.targetUrl === EXPLORE_PUBLIC_HOME){
+      note("⚠️ QR prêt vers la vitrine EXPLORE. Pour un lieu précis, ajoute un slug ou colle le lien de fiche publique.", "warn");
+    }else{
+      note("✅ QR prêt. Il ouvre une page publique EXPLORE, pas l’espace PRO.", "ok");
+    }
 
-    const W = size;
-    const H = Math.round(size * 1.34);
-    const pad = Math.round(size * .07);
-    const qrSize = Math.round(size * .70);
-
-    const canvas = document.createElement("canvas");
-    canvas.width = W;
-    canvas.height = H;
-
-    const ctx = canvas.getContext("2d");
-
-    const grad = ctx.createLinearGradient(0,0,W,H);
-    grad.addColorStop(0,"#020617");
-    grad.addColorStop(.45,"#052e16");
-    grad.addColorStop(.72,"#0f2b46");
-    grad.addColorStop(1,"#07140f");
-
-    ctx.fillStyle = grad;
-    ctx.fillRect(0,0,W,H);
-
-    ctx.fillStyle = "rgba(212,175,55,.13)";
-    ctx.beginPath();
-    ctx.arc(W*.18,H*.10,W*.30,0,Math.PI*2);
-    ctx.fill();
-
-    ctx.fillStyle = "rgba(56,189,248,.12)";
-    ctx.beginPath();
-    ctx.arc(W*.88,H*.18,W*.28,0,Math.PI*2);
-    ctx.fill();
-
-    ctx.fillStyle = "rgba(34,197,94,.12)";
-    ctx.beginPath();
-    ctx.arc(W*.94,H*.82,W*.36,0,Math.PI*2);
-    ctx.fill();
-
-    ctx.fillStyle = "rgba(255,255,255,.06)";
-    roundRect(ctx,pad,pad,W-pad*2,H-pad*2,Math.round(size*.05));
-    ctx.fill();
-
-    ctx.strokeStyle = "rgba(212,175,55,.42)";
-    ctx.lineWidth = Math.max(2,Math.round(size*.004));
-    roundRect(ctx,pad,pad,W-pad*2,H-pad*2,Math.round(size*.05));
-    ctx.stroke();
-
-    ctx.fillStyle = "#fff7cc";
-    ctx.textAlign = "center";
-    ctx.font = `900 ${Math.round(size*.058)}px Outfit, system-ui, Arial`;
-    ctx.fillText("DIGIYLYFE", W/2, pad + Math.round(size*.095));
-
-    ctx.fillStyle = "rgba(229,231,235,.88)";
-    ctx.font = `800 ${Math.round(size*.034)}px Outfit, system-ui, Arial`;
-    ctx.fillText("EXPLORE • fiche publique • lieu vivant", W/2, pad + Math.round(size*.145));
-
-    const qx = Math.round((W - qrSize) / 2);
-    const qy = pad + Math.round(size * .18);
-
-    ctx.fillStyle = "#fff";
-    roundRect(
-      ctx,
-      qx - Math.round(size*.025),
-      qy - Math.round(size*.025),
-      qrSize + Math.round(size*.05),
-      qrSize + Math.round(size*.05),
-      Math.round(size*.035)
-    );
-    ctx.fill();
-
-    ctx.drawImage(qr,qx,qy,qrSize,qrSize);
-
-    ctx.fillStyle = "#f3d46b";
-    ctx.font = `900 ${Math.round(size*.038)}px Outfit, system-ui, Arial`;
-    ctx.fillText(safeSpaceLabel(State.slug), W/2, qy + qrSize + Math.round(size*.075));
-
-    ctx.fillStyle = "rgba(229,231,235,.82)";
-    ctx.font = `800 ${Math.round(size*.030)}px Outfit, system-ui, Arial`;
-    ctx.fillText("Scanne pour découvrir le lieu", W/2, qy + qrSize + Math.round(size*.12));
-
-    ctx.fillStyle = "rgba(203,213,225,.78)";
-    ctx.font = `700 ${Math.round(size*.025)}px Outfit, system-ui, Arial`;
-    ctx.fillText("Powered by DIGIY EXPLORE", W/2, H - pad - Math.round(size*.030));
-
-    return canvas.toDataURL("image/png");
-  }
-
-  function download(dataUrl, filename){
-    const a = document.createElement("a");
-    a.href = dataUrl;
-    a.download = filename;
-
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
+    syncUi();
   }
 
   function shareWhatsapp(){
@@ -958,54 +797,14 @@
     window.open(wa, "_blank", "noopener");
   }
 
-  async function renderQr(){
-    if(!State.targetUrl || isBadTarget(State.targetUrl)){
-      note("❌ Lien refusé : le QR ne doit jamais ouvrir une page PRO, PIN, cockpit ou gestion.", "bad");
-      syncUi();
-      return;
-    }
-
-    note("⏳ Préparation du QR public EXPLORE…", "warn");
-    setBusy(true);
-
-    try{
-      const ok = await ensureQrLib();
-
-      if(!ok){
-        throw new Error("Librairie QR introuvable");
-      }
-
-      const rawNormal = await makeQrDataUrl(State.targetUrl, 560);
-      const rawXL = await makeQrDataUrl(State.targetUrl, 950);
-
-      State.qrNormal = await makeBranded(rawNormal, 900);
-      State.qrXL = await makeBranded(rawXL, 1400);
-
-      $("qrImg").src = State.qrNormal;
-
-      if(State.targetUrl === EXPLORE_PUBLIC_HOME){
-        note("⚠️ QR prêt vers la vitrine EXPLORE. Pour un lieu précis, ajoute un slug ou colle le lien de fiche publique.", "warn");
-      }else{
-        note("✅ QR prêt. Il ouvre une page publique EXPLORE, pas l’espace PRO.", "ok");
-      }
-    }catch(e){
-      console.error(e);
-      note("❌ Génération QR impossible : " + (e?.message || e), "bad");
-    }finally{
-      syncUi();
-      setBusy(false);
-    }
-  }
-
   async function bootGuardSoft(){
     try{
       if(window.DIGIY_GUARD?.ready){
-        const out = await window.DIGIY_GUARD.ready({
+        return await window.DIGIY_GUARD.ready({
           redirect:false,
           preserve_validation:true,
           allow_soft:true
         });
-        return out || null;
       }
     }catch(e){
       console.warn("[DIGIY EXPLORE QR] Guard soft warning", e);
@@ -1032,24 +831,6 @@
       }
     });
 
-    $("btnDownload").addEventListener("click", function(){
-      if(!State.qrNormal){
-        note("QR non prêt.", "bad");
-        return;
-      }
-      download(State.qrNormal, "DIGIY_EXPLORE_QR_LIEU.png");
-      note("⬇️ Téléchargement lancé.", "ok");
-    });
-
-    $("btnSticker").addEventListener("click", function(){
-      if(!State.qrXL){
-        note("Sticker XL non prêt.", "bad");
-        return;
-      }
-      download(State.qrXL, "DIGIY_EXPLORE_STICKER_XL_LIEU.png");
-      note("🟩 Sticker XL téléchargé.", "ok");
-    });
-
     $("btnWhatsapp").addEventListener("click", function(){
       if(!State.targetUrl || isBadTarget(State.targetUrl)){
         note("Lien public absent ou refusé.", "bad");
@@ -1058,14 +839,13 @@
       shareWhatsapp();
     });
 
-    $("btnReset").addEventListener("click", async function(){
+    $("btnReset").addEventListener("click", function(){
       State.targetUrl = EXPLORE_PUBLIC_HOME;
       storageSet(TARGET_STORAGE_KEY, State.targetUrl);
-      syncUi();
-      await renderQr();
+      renderQr();
     });
 
-    $("btnSaveTarget").addEventListener("click", async function(){
+    $("btnSaveTarget").addEventListener("click", function(){
       const cleaned = cleanPublicUrl($("targetInput").value);
 
       if(!cleaned){
@@ -1075,11 +855,10 @@
 
       State.targetUrl = cleaned;
       storageSet(TARGET_STORAGE_KEY, State.targetUrl);
-      syncUi();
-      await renderQr();
+      renderQr();
     });
 
-    $("btnUseSlug").addEventListener("click", async function(){
+    $("btnUseSlug").addEventListener("click", function(){
       const slug = getSlug();
 
       if(!canExposeSlug(slug)){
@@ -1091,11 +870,10 @@
         storageSet(TARGET_STORAGE_KEY, State.targetUrl);
       }
 
-      syncUi();
-      await renderQr();
+      renderQr();
     });
 
-    $("targetInput").addEventListener("keydown", async function(e){
+    $("targetInput").addEventListener("keydown", function(e){
       if(e.key === "Enter"){
         e.preventDefault();
         $("btnSaveTarget").click();
@@ -1112,8 +890,7 @@
 
     State.targetUrl = buildTargetUrl();
 
-    syncUi();
-    await renderQr();
+    renderQr();
   }
 
   if(document.readyState === "loading"){
