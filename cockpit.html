@@ -1142,7 +1142,78 @@
     width:min(260px, calc(100vw - 20px));
   }
 }
-  </style>
+  
+
+/* =========================================================
+   DOCTRINE DIGIY TERRAIN — ÉCRITURE PLUS GRANDE, PLUS GRASSE
+   Le pro lit vite sur téléphone : gros boutons, gros mots, zéro fatigue.
+   ========================================================= */
+html{font-size:17px;}
+body{font-size:17px;font-weight:850;}
+.kicker{font-size:14px;font-weight:1000;letter-spacing:.16em;}
+.title{font-size:clamp(24px,3.2vw,40px);font-weight:1000;line-height:1.02;}
+.sub{font-size:16px;font-weight:900;line-height:1.55;color:rgba(248,250,252,.82);}
+.btn{min-height:56px;padding:0 18px;border-radius:18px;font-size:16px;font-weight:1000;letter-spacing:-.01em;}
+.nav a{min-height:52px;padding:0 18px;font-size:16px;font-weight:1000;}
+.status{font-size:17px;font-weight:950;line-height:1.55;padding:17px 18px;border-radius:22px;}
+.heroBadge{font-size:14px;font-weight:1000;padding:10px 14px;}
+.heroTitle{font-size:clamp(34px,6vw,62px);font-weight:1000;line-height:1.01;}
+.heroLead{font-size:20px;font-weight:900;line-height:1.68;color:rgba(248,250,252,.82);}
+.pill{font-size:14px;font-weight:1000;padding:10px 14px;min-height:40px;}
+.heroMain,.heroSide,.cardBody,.clawCard{padding:24px;}
+.miniLabel,.statLabel{font-size:14px;font-weight:1000;color:rgba(248,250,252,.68);}
+.miniValue{font-size:25px;font-weight:1000;}
+.miniHint{font-size:16px;font-weight:850;line-height:1.52;color:rgba(248,250,252,.78);}
+.statValue{font-size:38px;font-weight:1000;}
+.sectionTitle{font-size:28px;font-weight:1000;line-height:1.1;}
+.sectionSub{font-size:17px;font-weight:900;line-height:1.55;color:rgba(248,250,252,.80);}
+.box{padding:18px;border-radius:22px;}
+.box strong{font-size:19px;font-weight:1000;}
+.box span{font-size:17px;font-weight:900;line-height:1.6;color:rgba(248,250,252,.80);}
+.placeCard{padding:18px;border-radius:22px;}
+.placeName{font-size:23px;font-weight:1000;line-height:1.12;}
+.placeDesc{font-size:17px;font-weight:900;line-height:1.64;color:rgba(248,250,252,.80);}
+.metaTag{font-size:13px;font-weight:1000;padding:8px 11px;}
+.empty{font-size:17px;font-weight:900;line-height:1.62;}
+.quickExploreHead h2{font-size:30px;font-weight:1000;}
+.quickExploreLead{font-size:17px;font-weight:900;line-height:1.62;color:rgba(248,250,252,.82);}
+.quickTag{font-size:14px;font-weight:1000;min-height:42px;padding:9px 13px;}
+.quickGuide strong{font-size:16px;font-weight:1000;}
+.quickGuide p{font-size:16px;font-weight:900;line-height:1.58;}
+.quickExamples button{font-size:15px;font-weight:1000;padding:10px 13px;}
+.textarea{min-height:108px;font-size:18px;font-weight:900;line-height:1.58;}
+.quickDraft{font-size:16px;font-weight:900;line-height:1.6;}
+.memoryTitle{font-size:16px;font-weight:1000;}
+.memoryHelp,.memoryItemMeta,.memoryEmpty{font-size:15px;font-weight:900;line-height:1.55;}
+.memoryItemTitle{font-size:16px;font-weight:1000;}
+.memoryItemAmount{font-size:15px;font-weight:1000;}
+.clawKicker{font-size:13px;font-weight:1000;}
+.clawTitle{font-size:26px;font-weight:1000;}
+.clawMode{font-size:14px;font-weight:1000;}
+.clawText{font-size:17px;font-weight:900;line-height:1.65;color:rgba(248,250,252,.80);}
+.clawPill{font-size:14px;font-weight:1000;}
+.clawItem strong{font-size:17px;font-weight:1000;}
+.clawItem span{font-size:16px;font-weight:900;line-height:1.58;color:rgba(248,250,252,.80);}
+.bottomNav a{min-height:66px;font-size:13px;font-weight:1000;}
+.bottomNav .ico{font-size:22px;}
+.mobileFastRow{grid-template-columns:repeat(5,minmax(0,1fr));}
+.mobileFastRow a{min-height:56px;font-size:16px;font-weight:1000;border-radius:18px;}
+.foot{font-size:15px;font-weight:900;color:rgba(248,250,252,.72);}
+@media(max-width:640px){
+  html{font-size:18px;}
+  .wrap{padding:14px 10px calc(112px + env(safe-area-inset-bottom,0px));}
+  .title{white-space:normal;font-size:clamp(25px,7vw,36px);}
+  .sub{font-size:17px;}
+  .btn{width:100%;min-height:62px;font-size:18px;border-radius:20px;}
+  .heroTitle{font-size:clamp(36px,11vw,54px);}
+  .heroLead{font-size:19px;}
+  .heroMain,.heroSide,.cardBody,.clawCard{padding:20px;}
+  .sectionTitle{font-size:29px;}
+  .sectionSub,.box span,.placeDesc,.quickExploreLead,.clawText{font-size:17px;}
+  .mobileFastRow{grid-template-columns:1fr 1fr;}
+  .bottomNav a{min-height:68px;font-size:12px;}
+}
+</style>
 </head>
 <body>
   <div class="wrap">
@@ -1152,7 +1223,7 @@
         <div class="brandText">
           <div class="kicker">DIGIYLYFE — Découverte locale</div>
           <div class="title">Je fais découvrir mon lieu • Accueil</div>
-          <div class="sub" id="subline">Lieux, ajout, notes, visibilité et prochaine action utile.</div>
+          <div class="sub" id="subline">Lieux, QR, ajout, notes, visibilité et prochaine action utile.</div>
         </div>
       </div>
 
@@ -1161,6 +1232,7 @@
         <a class="btn info" href="https://digiy-hub.digiylyfe.com/">HUB</a>
         <a class="btn secondary" href="https://tarifs.digiylyfe.com/" target="_blank" rel="noopener noreferrer">Tarifs</a>
         <a class="btn primary" id="btnAccessTop" href="./submit.html">Ajouter</a>
+        <a class="btn secondary" id="btnQrTop" href="./qr.html">QR</a>
         <a class="btn secondary hidden" id="btnLieuxTop" href="./lieux.html">Lieux</a>
         <a class="btn secondary hidden" id="btnSubmitTop" href="./submit.html">Ajouter</a>
         <a class="btn info hidden" id="btnClawTop" href="./claw.html">Plus</a>
@@ -1171,6 +1243,7 @@
     <nav class="nav" aria-label="Navigation EXPLORE">
       <a id="navCockpit" class="active" href="./cockpit.html">Accueil</a>
       <a id="navLieux" href="./lieux.html">Lieux</a>
+      <a id="navQr" href="./qr.html">QR</a>
       <a id="navSubmit" href="./submit.html">Ajouter</a>
       <a id="navClaw" href="./claw.html">Plus</a>
       <a id="navPinRescue" class="hidden" href="./pin.html">Accès</a>
@@ -1206,6 +1279,7 @@
         <div class="heroActions">
           <a class="btn primary" id="btnPrimaryAction" href="./submit.html">Ajouter un lieu</a>
           <a class="btn secondary" id="btnOpenLieux" href="./lieux.html">Lieux</a>
+          <a class="btn gold" id="btnOpenQr" href="./qr.html">QR du lieu</a>
           <a class="btn secondary hidden" id="btnOpenClaw" href="./claw.html">Ouvrir la lecture utile</a>
           <a class="btn warn hidden" id="btnOpenPin" href="./pin.html">Accès</a>
         </div>
@@ -1214,6 +1288,7 @@
           <a class="primary" id="fastHome" href="./cockpit.html">🏠 Accueil</a>
           <a id="fastLieux" href="./lieux.html">📍 Lieux</a>
           <a id="fastSubmit" href="./submit.html">➕ Ajouter</a>
+          <a id="fastQr" href="./qr.html">🔳 QR</a>
           <a id="fastNotes" href="#quickExploreNote">✍️ Notes</a>
         </div>
       </article>
@@ -1327,6 +1402,7 @@
           <div class="placeActions" style="margin-bottom:14px">
             <a class="btn secondary" id="btnEditCurrent" href="./submit.html">Éditer ce lieu</a>
             <a class="btn secondary" id="btnViewCurrent" href="./submit.html">Ouvrir ma fiche</a>
+            <a class="btn gold" id="btnQrCurrent" href="./qr.html">QR du lieu</a>
             <a class="btn info" id="btnClawCurrent" href="./claw.html">Ouvrir la lecture utile</a>
           </div>
 
@@ -1402,7 +1478,7 @@
     </section>
 
     <div class="foot">
-      DIGIY EXPLORE • accueil • lieux • notes • visibilité
+      DIGIY EXPLORE • accueil • lieux • QR • notes • visibilité
     </div>
   </div>
 
@@ -1413,7 +1489,7 @@
       <a id="bottomLieux" href="./lieux.html"><span class="ico">📍</span><span>Lieux</span></a>
       <a id="bottomSubmit" href="./submit.html"><span class="ico">➕</span><span>Ajouter</span></a>
       <a id="bottomNotes" href="#quickExploreNote"><span class="ico">✍️</span><span>Notes</span></a>
-      <a id="bottomMore" href="./claw.html"><span class="ico">⚙️</span><span>Plus</span></a>
+      <a id="bottomMore" href="./qr.html"><span class="ico">🔳</span><span>QR</span></a>
     </div>
   </nav>
 
@@ -1430,6 +1506,7 @@
         cockpit: "./cockpit.html",
         lieux: "./lieux.html",
         submit: "./submit.html",
+        qr: "./qr.html",
         pin: "./pin.html",
         claw: "./claw.html"
       };
@@ -1598,14 +1675,23 @@ const $ = (id) => document.getElementById(id);
           place?.public_slug ||
           place?.publicSlug ||
           place?.public_url_slug ||
+          place?.slug ||
           ""
         );
 
         if(!publicSlug || !isPublished(place)) return "";
 
-        const url = new URL(PUBLIC_EXPLORE_BASE);
+        const url = new URL("fiche.html", PUBLIC_EXPLORE_BASE);
         url.searchParams.set("slug", publicSlug);
         return url.toString();
+      }
+
+      function buildQrHref(place){
+        const publicHref = buildPublicPlaceHref(place);
+        if(publicHref){
+          return PATHS.qr + "?target=" + encodeURIComponent(publicHref);
+        }
+        return PATHS.qr;
       }
 
       function buildPinHref(){
@@ -1782,22 +1868,26 @@ const $ = (id) => document.getElementById(id);
         const cockpitHref = buildInternalHref(PATHS.cockpit);
         const lieuxHref = buildInternalHref(PATHS.lieux);
         const submitHref = buildInternalHref(PATHS.submit);
+        const qrHref = buildInternalHref(PATHS.qr);
         const clawHref = buildInternalHref(PATHS.claw);
         const pinHref = buildPinHref();
 
         $("navCockpit").href = cockpitHref;
         $("navLieux").href = lieuxHref;
         $("navSubmit").href = submitHref;
+        if($("navQr")) $("navQr").href = qrHref;
         $("navClaw").href = clawHref;
         $("navPinRescue").href = pinHref;
 
         $("btnAccessTop").href = submitHref;
         $("btnLieuxTop").href = lieuxHref;
         $("btnSubmitTop").href = submitHref;
+        if($("btnQrTop")) $("btnQrTop").href = qrHref;
         $("btnClawTop").href = clawHref;
         $("btnPinTop").href = pinHref;
 
         $("btnOpenLieux").href = lieuxHref;
+        if($("btnOpenQr")) $("btnOpenQr").href = qrHref;
         $("btnOpenClaw").href = clawHref;
         $("btnOpenPin").href = pinHref;
 
@@ -1805,10 +1895,11 @@ const $ = (id) => document.getElementById(id);
           fastHome: cockpitHref,
           fastLieux: lieuxHref,
           fastSubmit: submitHref,
+          fastQr: qrHref,
           bottomHome: cockpitHref,
           bottomLieux: lieuxHref,
           bottomSubmit: submitHref,
-          bottomMore: clawHref
+          bottomMore: qrHref
         };
 
         Object.entries(links).forEach(([id, href]) => {
@@ -1975,6 +2066,7 @@ const $ = (id) => document.getElementById(id);
 
           $("btnEditCurrent").href = $("navSubmit").href;
           $("btnViewCurrent").href = $("navSubmit").href;
+          if($("btnQrCurrent")) $("btnQrCurrent").href = PATHS.qr;
           $("btnClawCurrent").href = $("navClaw").href;
           $("linksText").textContent = "Ta gestion recoud tes lieux, l’édition et l’analyse sur le même contexte. Le PIN reste un secours seulement.";
           return;
@@ -2005,9 +2097,10 @@ const $ = (id) => document.getElementById(id);
           $("btnViewCurrent").removeAttribute("rel");
         }
 
+        if($("btnQrCurrent")) $("btnQrCurrent").href = buildQrHref(place);
         $("btnClawCurrent").href = buildInternalHref(PATHS.claw);
 
-        ["btnEditCurrent","btnViewCurrent","btnClawCurrent"].forEach((id) => {
+        ["btnEditCurrent","btnViewCurrent","btnQrCurrent","btnClawCurrent"].forEach((id) => {
           const node = $(id);
           if(node) node.onclick = function(){ rememberSelectedPlace(place.slug || CURRENT_SLUG); };
         });
@@ -2064,6 +2157,7 @@ const $ = (id) => document.getElementById(id);
                     ? `<a class="btn primary js-place-action" href="${escapeHtml(publicHref)}" target="_blank" rel="noopener noreferrer" data-place-slug="${escapeHtml(slug)}">Voir public</a>`
                     : `<a class="btn ghost js-place-action" href="${escapeHtml(editHref)}" data-place-slug="${escapeHtml(slug)}">Préparer publication</a>`
                 }
+                <a class="btn gold js-place-action" href="${escapeHtml(buildQrHref(place))}" data-place-slug="${escapeHtml(slug)}">QR</a>
               </div>
             </article>
           `;
@@ -2784,6 +2878,7 @@ Objectif :
     <button id="digiyExploreProClose" type="button">Fermer</button>
     <a class="green" href="https://pro-explore.digiylyfe.com/cockpit.html">Cockpit</a>
     <a class="blue" href="https://pro-explore.digiylyfe.com/lieux.html">Mes lieux</a>
+    <a class="gold" href="https://pro-explore.digiylyfe.com/qr.html">QR</a>
     <a class="blue" href="https://pro-explore.digiylyfe.com/submit.html">Ajouter</a>
     <a href="https://pro-explore.digiylyfe.com/pin.html">PIN</a>
   </div>
@@ -2987,3 +3082,4 @@ Objectif :
 
 </body>
 </html>
+
