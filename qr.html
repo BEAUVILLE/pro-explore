@@ -1,0 +1,1127 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <meta name="theme-color" content="#06130f"/>
+  <meta
+    name="description"
+    content="EXPLORE PRO — QR public d’un lieu, sans envoyer le client vers le cockpit ni le PIN."
+  />
+  <title>DIGIY EXPLORE — Mon QR lieu</title>
+
+  <script>
+    window.DIGIY_MODULE = "EXPLORE";
+    window.DIGIY_LOGIN_URL = "./pin.html";
+    window.DIGIY_SUPABASE_URL = window.DIGIY_SUPABASE_URL || "https://wesqmwjjtsefyjnluosj.supabase.co";
+    window.DIGIY_SUPABASE_ANON_KEY = window.DIGIY_SUPABASE_ANON_KEY || "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
+    window.DIGIY_SUPABASE_ANON = window.DIGIY_SUPABASE_ANON || window.DIGIY_SUPABASE_ANON_KEY;
+  </script>
+
+  <script defer src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+  <script defer src="./guard.js?v=explore-qr-public-v1"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root{
+      --bg:#06130f;
+      --bg2:#0a241b;
+      --card:rgba(255,255,255,.045);
+      --line:rgba(255,255,255,.14);
+      --text:#f8fafc;
+      --muted:rgba(248,250,252,.76);
+      --soft:rgba(248,250,252,.56);
+      --gold:#d4af37;
+      --gold2:#f3d46b;
+      --green:#22c55e;
+      --blue:#38bdf8;
+      --bad:#ef4444;
+      --shadow:0 20px 56px rgba(0,0,0,.38);
+      --bottom:88px;
+      --font:"Outfit",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+
+    body{
+      min-height:100vh;
+      font-family:var(--font);
+      color:var(--text);
+      background:
+        radial-gradient(850px 520px at 8% -10%,rgba(212,175,55,.15),transparent 58%),
+        radial-gradient(850px 520px at 94% 0%,rgba(56,189,248,.11),transparent 55%),
+        radial-gradient(850px 520px at 100% 100%,rgba(34,197,94,.12),transparent 58%),
+        linear-gradient(180deg,#03120d,var(--bg));
+      padding:14px 14px calc(var(--bottom) + env(safe-area-inset-bottom,0px) + 18px);
+    }
+
+    a{color:inherit;text-decoration:none}
+    button,input{font:inherit}
+
+    .wrap{max-width:900px;margin:0 auto}
+
+    .hero,
+    .card{
+      border:1px solid var(--line);
+      border-radius:28px;
+      background:var(--card);
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+
+    .card{margin-top:14px}
+
+    .top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:14px;
+      flex-wrap:wrap;
+    }
+
+    .brand{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      min-width:0;
+    }
+
+    .logo{
+      width:62px;
+      height:62px;
+      border-radius:22px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg,rgba(212,175,55,.34),rgba(34,197,94,.18),rgba(56,189,248,.16));
+      border:1px solid rgba(212,175,55,.34);
+      font-size:30px;
+      flex:0 0 auto;
+    }
+
+    h1{
+      margin:0;
+      font-size:clamp(31px,6vw,48px);
+      line-height:1.02;
+      font-weight:1000;
+      letter-spacing:-.045em;
+      color:#fff7cc;
+    }
+
+    .sub{
+      margin-top:8px;
+      color:var(--muted);
+      font-size:18px;
+      line-height:1.5;
+      font-weight:850;
+      max-width:64ch;
+    }
+
+    .pillRow{
+      display:flex;
+      gap:9px;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      min-height:42px;
+      padding:9px 13px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,.26);
+      background:rgba(255,255,255,.04);
+      color:var(--muted);
+      font-size:15px;
+      font-weight:1000;
+      white-space:nowrap;
+    }
+
+    .pill.ok{
+      border-color:rgba(34,197,94,.35);
+      background:rgba(34,197,94,.10);
+      color:#bbf7d0;
+    }
+
+    .pill.warn{
+      border-color:rgba(212,175,55,.38);
+      background:rgba(212,175,55,.10);
+      color:#fde68a;
+    }
+
+    .pill.bad{
+      border-color:rgba(239,68,68,.35);
+      background:rgba(239,68,68,.10);
+      color:#fecaca;
+    }
+
+    .actions{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px;
+      margin-top:16px;
+    }
+
+    .btn{
+      appearance:none;
+      border:1px solid rgba(148,163,184,.24);
+      border-radius:18px;
+      min-height:58px;
+      padding:14px 16px;
+      background:rgba(255,255,255,.045);
+      color:var(--text);
+      font-size:17px;
+      font-weight:1100;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      text-align:center;
+      touch-action:manipulation;
+    }
+
+    .btn:active{transform:translateY(1px) scale(.99)}
+    .btn:disabled{opacity:.55;cursor:not-allowed}
+
+    .btn.gold{
+      background:rgba(212,175,55,.15);
+      border-color:rgba(212,175,55,.40);
+      color:#fde68a;
+    }
+
+    .btn.green{
+      background:rgba(34,197,94,.12);
+      border-color:rgba(34,197,94,.36);
+      color:#bbf7d0;
+    }
+
+    .btn.blue{
+      background:rgba(56,189,248,.12);
+      border-color:rgba(56,189,248,.34);
+      color:#bae6fd;
+    }
+
+    .qrBox{
+      margin-top:14px;
+      min-height:330px;
+      border-radius:24px;
+      border:1px dashed rgba(212,175,55,.42);
+      background:rgba(0,0,0,.14);
+      display:grid;
+      place-items:center;
+      padding:18px;
+    }
+
+    .qrImg{
+      width:min(360px,100%);
+      height:auto;
+      border-radius:18px;
+      background:#fff;
+      padding:12px;
+      border:1px solid rgba(148,163,184,.24);
+      display:block;
+    }
+
+    .sectionTitle{
+      font-size:24px;
+      font-weight:1100;
+      color:#fde68a;
+      margin:0 0 8px;
+      letter-spacing:-.02em;
+    }
+
+    .safeText{
+      color:var(--muted);
+      font-size:17px;
+      line-height:1.55;
+      font-weight:850;
+    }
+
+    .linkEditor{
+      margin-top:14px;
+      padding:14px;
+      border-radius:18px;
+      border:1px solid rgba(148,163,184,.22);
+      background:rgba(0,0,0,.16);
+    }
+
+    .linkLabel{
+      color:#fde68a;
+      font-weight:1100;
+      font-size:16px;
+      margin-bottom:8px;
+    }
+
+    .urlInput{
+      width:100%;
+      min-height:54px;
+      border-radius:16px;
+      border:1px solid rgba(148,163,184,.26);
+      background:rgba(2,6,23,.50);
+      color:#eafff1;
+      padding:0 14px;
+      font-size:15px;
+      font-weight:900;
+    }
+
+    .urlInput:focus{
+      border-color:rgba(212,175,55,.55);
+      box-shadow:0 0 0 4px rgba(212,175,55,.10);
+      outline:none;
+    }
+
+    .linkValue{
+      margin-top:10px;
+      color:#dbeafe;
+      font-size:15px;
+      line-height:1.45;
+      font-weight:850;
+      word-break:break-all;
+    }
+
+    .doctrine{
+      margin-top:14px;
+      border:1px solid rgba(34,197,94,.28);
+      border-radius:22px;
+      background:rgba(34,197,94,.08);
+      padding:14px;
+      color:#bbf7d0;
+      font-size:17px;
+      line-height:1.55;
+      font-weight:900;
+    }
+
+    .note{
+      display:none;
+      margin-top:12px;
+      padding:13px 14px;
+      border-radius:18px;
+      border:1px solid rgba(148,163,184,.25);
+      background:rgba(255,255,255,.035);
+      color:var(--muted);
+      font-size:16px;
+      line-height:1.45;
+      font-weight:950;
+      white-space:pre-wrap;
+    }
+
+    .note.ok{
+      display:block;
+      border-color:rgba(34,197,94,.35);
+      background:rgba(34,197,94,.09);
+      color:#bbf7d0;
+    }
+
+    .note.warn{
+      display:block;
+      border-color:rgba(212,175,55,.35);
+      background:rgba(212,175,55,.09);
+      color:#fde68a;
+    }
+
+    .note.bad{
+      display:block;
+      border-color:rgba(239,68,68,.35);
+      background:rgba(239,68,68,.09);
+      color:#fecaca;
+    }
+
+    .bottomNav{
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:0;
+      z-index:70;
+      padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));
+      background:linear-gradient(180deg,rgba(6,19,15,0),rgba(6,19,15,.96) 28%);
+    }
+
+    .bottomInner{
+      max-width:980px;
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:6px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(6,19,15,.94);
+      backdrop-filter:blur(10px);
+      border-radius:22px;
+      padding:7px;
+      box-shadow:0 16px 44px rgba(0,0,0,.38);
+    }
+
+    .navItem{
+      min-height:60px;
+      border-radius:16px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:3px;
+      color:rgba(248,250,252,.76);
+      font-size:13px;
+      font-weight:1000;
+      border:1px solid transparent;
+      text-align:center;
+    }
+
+    .navItem strong{
+      font-size:21px;
+      line-height:1;
+    }
+
+    .navItem.active{
+      color:#13200d;
+      background:linear-gradient(135deg,var(--gold),var(--gold2));
+      border-color:rgba(212,175,55,.24);
+    }
+
+    @media(max-width:620px){
+      body{
+        padding-left:10px;
+        padding-right:10px;
+      }
+
+      .hero,
+      .card{
+        padding:15px;
+        border-radius:22px;
+      }
+
+      .actions{
+        grid-template-columns:1fr;
+      }
+
+      .sub{
+        font-size:17px;
+      }
+
+      .btn{
+        font-size:17px;
+        min-height:60px;
+      }
+
+      .qrBox{
+        min-height:280px;
+      }
+
+      .navItem{
+        font-size:12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+  <section class="hero">
+    <div class="top">
+      <div class="brand">
+        <div class="logo">🔳</div>
+        <div>
+          <h1>Mon QR EXPLORE</h1>
+          <div class="sub">
+            Un QR propre pour partager un lieu côté public.
+            Il ouvre la fiche EXPLORE, jamais le cockpit, jamais le PIN.
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="pill" id="pillSpace">Espace lieu sécurisé</div>
+        <div class="pill warn" id="pillState" style="margin-top:8px">préparation…</div>
+      </div>
+    </div>
+
+    <div class="pillRow">
+      <span class="pill ok">Lieu public</span>
+      <span class="pill">Contact direct</span>
+      <span class="pill">QR terrain</span>
+      <span class="pill">Sans PIN client</span>
+    </div>
+
+    <div class="actions">
+      <button class="btn green" id="btnOpen" type="button">↗️ Ouvrir la fiche</button>
+      <button class="btn gold" id="btnCopy" type="button">📋 Copier le lien</button>
+      <button class="btn blue" id="btnDownload" type="button">⬇️ Télécharger QR</button>
+      <button class="btn" id="btnSticker" type="button">🟩 Sticker XL</button>
+      <button class="btn" id="btnWhatsapp" type="button">📲 Partager WhatsApp</button>
+      <button class="btn" id="btnReset" type="button">♻️ Retour vitrine EXPLORE</button>
+    </div>
+
+    <div class="note" id="note"></div>
+  </section>
+
+  <section class="card">
+    <h2 class="sectionTitle">QR prêt à partager</h2>
+
+    <div class="safeText">
+      Teste le QR avec un téléphone avant impression.
+      Le client doit arriver sur une page publique EXPLORE : fiche lieu ou vitrine.
+      Il ne doit jamais tomber sur le cockpit, le dashboard, le PIN, ni une page PRO.
+    </div>
+
+    <div class="qrBox">
+      <a id="qrAnchor" href="#" target="_blank" rel="noopener" aria-label="Ouvrir la fiche publique EXPLORE">
+        <img id="qrImg" class="qrImg" alt="QR DIGIY EXPLORE"/>
+      </a>
+    </div>
+
+    <div class="linkEditor">
+      <div class="linkLabel">Lien ouvert par le QR</div>
+      <input
+        class="urlInput"
+        id="targetInput"
+        inputmode="url"
+        placeholder="https://explore.digiylyfe.com/fiche.html?slug=mon-lieu"
+        autocomplete="off"
+      />
+      <div class="linkValue" id="linkValue">Préparation…</div>
+
+      <div class="actions">
+        <button class="btn gold" id="btnSaveTarget" type="button">💾 Enregistrer ce lien</button>
+        <button class="btn" id="btnUseSlug" type="button">⚙️ Refaire depuis le slug</button>
+      </div>
+    </div>
+
+    <div class="doctrine">
+      Doctrine DIGIY EXPLORE : le QR ouvre le lieu public.
+      L’espace PRO reste protégé par PIN. Le client regarde d’abord, comprend vite, clique ensuite.
+    </div>
+  </section>
+</div>
+
+<nav class="bottomNav" aria-label="Navigation EXPLORE">
+  <div class="bottomInner">
+    <a class="navItem" id="navHome" href="./cockpit.html"><strong>🏠</strong><span>Accueil</span></a>
+    <a class="navItem" id="navPlaces" href="./lieux.html"><strong>📍</strong><span>Lieux</span></a>
+    <a class="navItem" id="navAdd" href="./submit.html"><strong>➕</strong><span>Ajouter</span></a>
+    <a class="navItem active" id="navQr" href="./qr.html"><strong>🔳</strong><span>QR</span></a>
+    <a class="navItem" id="navPin" href="./pin.html"><strong>🔐</strong><span>PIN</span></a>
+  </div>
+</nav>
+
+<script>
+(async function(){
+  "use strict";
+
+  const EXPLORE_PUBLIC_HOME = "https://explore.digiylyfe.com/";
+  const EXPLORE_PUBLIC_FICHE = "https://explore.digiylyfe.com/fiche.html";
+  const TARGET_STORAGE_KEY = "DIGIY_EXPLORE_QR_PUBLIC_TARGET";
+
+  const CLEAN_KEYS = [
+    "phone",
+    "tel",
+    "owner_phone",
+    "p_phone",
+    "whatsapp",
+    "client_phone",
+    "token",
+    "session_token",
+    "pin",
+    "pin4",
+    "owner_id",
+    "business_code",
+    "keybox_code",
+    "keybox_location",
+    "access_note",
+    "return",
+    "from",
+    "module"
+  ];
+
+  const $ = (id)=>document.getElementById(id);
+
+  const State = {
+    slug:"",
+    targetUrl:"",
+    qrNormal:"",
+    qrXL:"",
+    busy:false
+  };
+
+  function storageGet(k){
+    try{
+      const s = sessionStorage.getItem(k);
+      if(s) return s;
+    }catch(_){}
+
+    try{
+      const l = localStorage.getItem(k);
+      if(l) return l;
+    }catch(_){}
+
+    return "";
+  }
+
+  function storageSet(k,v){
+    try{ localStorage.setItem(k, String(v || "")); }catch(_){}
+  }
+
+  function readParam(name){
+    try{
+      return String(new URL(location.href).searchParams.get(name) || "").trim();
+    }catch(_){
+      return "";
+    }
+  }
+
+  function cleanSlug(v){
+    return String(v || "")
+      .trim()
+      .toLowerCase()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+      .replace(/[^a-z0-9\-_]/g,"")
+      .replace(/-+/g,"-")
+      .replace(/^[-_]+|[-_]+$/g,"");
+  }
+
+  function isSensitiveSlug(slug){
+    return /\d{7,}/.test(String(slug || ""));
+  }
+
+  function canExposeSlug(slug){
+    const s = cleanSlug(slug);
+    return !!s && !isSensitiveSlug(s);
+  }
+
+  function safeSpaceLabel(slug){
+    const s = cleanSlug(slug);
+
+    if(!s || isSensitiveSlug(s)){
+      return "Espace lieu sécurisé";
+    }
+
+    if(/^explore-/i.test(s)){
+      return "Lieu " + s.slice(-6).toUpperCase();
+    }
+
+    return "Lieu EXPLORE";
+  }
+
+  function cleanVisibleUrl(){
+    try{
+      const u = new URL(location.href);
+      let changed = false;
+
+      CLEAN_KEYS.forEach(k=>{
+        if(u.searchParams.has(k)){
+          u.searchParams.delete(k);
+          changed = true;
+        }
+      });
+
+      const slug = cleanSlug(u.searchParams.get("slug") || "");
+      if(slug && isSensitiveSlug(slug)){
+        u.searchParams.delete("slug");
+        changed = true;
+      }
+
+      if(changed){
+        history.replaceState({}, "", u.pathname + u.search + u.hash);
+      }
+    }catch(_){}
+  }
+
+  function isBadTarget(url){
+    try{
+      const u = new URL(url);
+      const host = u.hostname.toLowerCase();
+      const path = u.pathname.toLowerCase();
+
+      if(host.startsWith("pro-")) return true;
+      if(host.includes("pro-explore")) return true;
+
+      return [
+        "pin.html",
+        "go-pin.html",
+        "cockpit.html",
+        "dashboard-pro.html",
+        "guard.js",
+        "submit.html",
+        "lieux.html",
+        "qr.html"
+      ].some(x => path.includes(x));
+    }catch(_){
+      return true;
+    }
+  }
+
+  function cleanPublicUrl(raw){
+    const value = String(raw || "").trim();
+    if(!value) return "";
+
+    try{
+      const u = new URL(value);
+
+      CLEAN_KEYS.forEach(k=>u.searchParams.delete(k));
+
+      const slug = cleanSlug(u.searchParams.get("slug") || "");
+      if(slug && isSensitiveSlug(slug)){
+        u.searchParams.delete("slug");
+      }
+
+      if(isBadTarget(u.toString())) return "";
+
+      return u.toString();
+    }catch(_){
+      return "";
+    }
+  }
+
+  function getSlug(){
+    return cleanSlug(
+      readParam("slug") ||
+      readParam("place") ||
+      readParam("lieu") ||
+      storageGet("digiy_explore_slug") ||
+      storageGet("digiy_explore_last_slug") ||
+      storageGet("DIGIY_EXPLORE_SLUG") ||
+      storageGet("DIGIY_EXPLORE_LAST_SLUG") ||
+      storageGet("digiy_last_slug") ||
+      storageGet("DIGIY_SLUG")
+    );
+  }
+
+  function readSavedTarget(){
+    return cleanPublicUrl(
+      readParam("target") ||
+      readParam("url") ||
+      storageGet(TARGET_STORAGE_KEY) ||
+      storageGet("DIGIY_EXPLORE_PUBLIC_URL") ||
+      storageGet("digiy_explore_public_url")
+    );
+  }
+
+  function buildTargetFromSlug(slug){
+    if(canExposeSlug(slug)){
+      const u = new URL(EXPLORE_PUBLIC_FICHE);
+      u.searchParams.set("slug", cleanSlug(slug));
+      return u.toString();
+    }
+
+    return EXPLORE_PUBLIC_HOME;
+  }
+
+  function buildTargetUrl(){
+    const saved = readSavedTarget();
+    if(saved) return saved;
+
+    return buildTargetFromSlug(State.slug);
+  }
+
+  function note(msg, cls="warn"){
+    const el = $("note");
+    el.className = "note " + cls;
+    el.textContent = msg || "";
+    el.style.display = msg ? "block" : "none";
+  }
+
+  function setBusy(on){
+    State.busy = !!on;
+
+    [
+      "btnOpen",
+      "btnCopy",
+      "btnDownload",
+      "btnSticker",
+      "btnWhatsapp",
+      "btnReset",
+      "btnSaveTarget",
+      "btnUseSlug"
+    ].forEach(id=>{
+      const el = $(id);
+      if(el) el.disabled = !!on;
+    });
+  }
+
+  function syncUi(){
+    $("pillSpace").textContent = safeSpaceLabel(State.slug);
+
+    const pill = $("pillState");
+
+    if(State.targetUrl){
+      if(isBadTarget(State.targetUrl)){
+        pill.textContent = "lien refusé";
+        pill.className = "pill bad";
+      }else if(State.targetUrl === EXPLORE_PUBLIC_HOME){
+        pill.textContent = "vitrine publique";
+        pill.className = "pill warn";
+      }else{
+        pill.textContent = "QR public prêt";
+        pill.className = "pill ok";
+      }
+    }else{
+      pill.textContent = "à préparer";
+      pill.className = "pill warn";
+    }
+
+    $("linkValue").textContent = State.targetUrl || "Préparation…";
+    $("qrAnchor").href = State.targetUrl || "#";
+
+    if(document.activeElement !== $("targetInput")){
+      $("targetInput").value = State.targetUrl || "";
+    }
+  }
+
+  async function copyText(text){
+    if(navigator.clipboard?.writeText){
+      return navigator.clipboard.writeText(text);
+    }
+
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly","");
+    ta.style.position = "fixed";
+    ta.style.left = "-9999px";
+
+    document.body.appendChild(ta);
+    ta.select();
+
+    const ok = document.execCommand("copy");
+    ta.remove();
+
+    if(!ok){
+      throw new Error("copy_failed");
+    }
+  }
+
+  function loadImage(src){
+    return new Promise((resolve,reject)=>{
+      const img = new Image();
+      img.onload = ()=>resolve(img);
+      img.onerror = ()=>reject(new Error("image_load_failed"));
+      img.src = src;
+    });
+  }
+
+  function roundRect(ctx,x,y,w,h,r){
+    const rr = Math.min(r,w/2,h/2);
+
+    ctx.beginPath();
+    ctx.moveTo(x+rr,y);
+    ctx.arcTo(x+w,y,x+w,y+h,rr);
+    ctx.arcTo(x+w,y+h,x,y+h,rr);
+    ctx.arcTo(x,y+h,x,y,rr);
+    ctx.arcTo(x,y,x+w,y,rr);
+    ctx.closePath();
+  }
+
+  function qrOptions(size){
+    return {
+      width:size,
+      margin:1,
+      errorCorrectionLevel:"M",
+      color:{
+        dark:"#111827",
+        light:"#FFFFFF"
+      }
+    };
+  }
+
+  async function ensureQrLib(){
+    for(let i=0;i<35;i++){
+      if(window.QRCode?.toDataURL){
+        return true;
+      }
+
+      await new Promise(r=>setTimeout(r,120));
+    }
+
+    return !!window.QRCode?.toDataURL;
+  }
+
+  function makeQrDataUrl(text,size){
+    return new Promise((resolve,reject)=>{
+      if(!window.QRCode?.toDataURL){
+        reject(new Error("QRCode lib missing"));
+        return;
+      }
+
+      window.QRCode.toDataURL(text, qrOptions(size), (err,dataUrl)=>{
+        if(err){
+          reject(err);
+        }else{
+          resolve(dataUrl);
+        }
+      });
+    });
+  }
+
+  async function makeBranded(qrDataUrl,size){
+    const qr = await loadImage(qrDataUrl);
+
+    const W = size;
+    const H = Math.round(size * 1.34);
+    const pad = Math.round(size * .07);
+    const qrSize = Math.round(size * .70);
+
+    const canvas = document.createElement("canvas");
+    canvas.width = W;
+    canvas.height = H;
+
+    const ctx = canvas.getContext("2d");
+
+    const grad = ctx.createLinearGradient(0,0,W,H);
+    grad.addColorStop(0,"#020617");
+    grad.addColorStop(.45,"#052e16");
+    grad.addColorStop(.72,"#0f2b46");
+    grad.addColorStop(1,"#07140f");
+
+    ctx.fillStyle = grad;
+    ctx.fillRect(0,0,W,H);
+
+    ctx.fillStyle = "rgba(212,175,55,.13)";
+    ctx.beginPath();
+    ctx.arc(W*.18,H*.10,W*.30,0,Math.PI*2);
+    ctx.fill();
+
+    ctx.fillStyle = "rgba(56,189,248,.12)";
+    ctx.beginPath();
+    ctx.arc(W*.88,H*.18,W*.28,0,Math.PI*2);
+    ctx.fill();
+
+    ctx.fillStyle = "rgba(34,197,94,.12)";
+    ctx.beginPath();
+    ctx.arc(W*.94,H*.82,W*.36,0,Math.PI*2);
+    ctx.fill();
+
+    ctx.fillStyle = "rgba(255,255,255,.06)";
+    roundRect(ctx,pad,pad,W-pad*2,H-pad*2,Math.round(size*.05));
+    ctx.fill();
+
+    ctx.strokeStyle = "rgba(212,175,55,.42)";
+    ctx.lineWidth = Math.max(2,Math.round(size*.004));
+    roundRect(ctx,pad,pad,W-pad*2,H-pad*2,Math.round(size*.05));
+    ctx.stroke();
+
+    ctx.fillStyle = "#fff7cc";
+    ctx.textAlign = "center";
+    ctx.font = `900 ${Math.round(size*.058)}px Outfit, system-ui, Arial`;
+    ctx.fillText("DIGIYLYFE", W/2, pad + Math.round(size*.095));
+
+    ctx.fillStyle = "rgba(229,231,235,.88)";
+    ctx.font = `800 ${Math.round(size*.034)}px Outfit, system-ui, Arial`;
+    ctx.fillText("EXPLORE • fiche publique • lieu vivant", W/2, pad + Math.round(size*.145));
+
+    const qx = Math.round((W - qrSize) / 2);
+    const qy = pad + Math.round(size * .18);
+
+    ctx.fillStyle = "#fff";
+    roundRect(
+      ctx,
+      qx - Math.round(size*.025),
+      qy - Math.round(size*.025),
+      qrSize + Math.round(size*.05),
+      qrSize + Math.round(size*.05),
+      Math.round(size*.035)
+    );
+    ctx.fill();
+
+    ctx.drawImage(qr,qx,qy,qrSize,qrSize);
+
+    ctx.fillStyle = "#f3d46b";
+    ctx.font = `900 ${Math.round(size*.038)}px Outfit, system-ui, Arial`;
+    ctx.fillText(safeSpaceLabel(State.slug), W/2, qy + qrSize + Math.round(size*.075));
+
+    ctx.fillStyle = "rgba(229,231,235,.82)";
+    ctx.font = `800 ${Math.round(size*.030)}px Outfit, system-ui, Arial`;
+    ctx.fillText("Scanne pour découvrir le lieu", W/2, qy + qrSize + Math.round(size*.12));
+
+    ctx.fillStyle = "rgba(203,213,225,.78)";
+    ctx.font = `700 ${Math.round(size*.025)}px Outfit, system-ui, Arial`;
+    ctx.fillText("Powered by DIGIY EXPLORE", W/2, H - pad - Math.round(size*.030));
+
+    return canvas.toDataURL("image/png");
+  }
+
+  function download(dataUrl, filename){
+    const a = document.createElement("a");
+    a.href = dataUrl;
+    a.download = filename;
+
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+
+  function shareWhatsapp(){
+    const text = "Découvre ce lieu sur DIGIY EXPLORE : " + State.targetUrl;
+    const wa = "https://wa.me/?text=" + encodeURIComponent(text);
+    window.open(wa, "_blank", "noopener");
+  }
+
+  async function renderQr(){
+    if(!State.targetUrl || isBadTarget(State.targetUrl)){
+      note("❌ Lien refusé : le QR ne doit jamais ouvrir une page PRO, PIN, cockpit ou gestion.", "bad");
+      syncUi();
+      return;
+    }
+
+    note("⏳ Préparation du QR public EXPLORE…", "warn");
+    setBusy(true);
+
+    try{
+      const ok = await ensureQrLib();
+
+      if(!ok){
+        throw new Error("Librairie QR introuvable");
+      }
+
+      const rawNormal = await makeQrDataUrl(State.targetUrl, 560);
+      const rawXL = await makeQrDataUrl(State.targetUrl, 950);
+
+      State.qrNormal = await makeBranded(rawNormal, 900);
+      State.qrXL = await makeBranded(rawXL, 1400);
+
+      $("qrImg").src = State.qrNormal;
+
+      if(State.targetUrl === EXPLORE_PUBLIC_HOME){
+        note("⚠️ QR prêt vers la vitrine EXPLORE. Pour un lieu précis, ajoute un slug ou colle le lien de fiche publique.", "warn");
+      }else{
+        note("✅ QR prêt. Il ouvre une page publique EXPLORE, pas l’espace PRO.", "ok");
+      }
+    }catch(e){
+      console.error(e);
+      note("❌ Génération QR impossible : " + (e?.message || e), "bad");
+    }finally{
+      syncUi();
+      setBusy(false);
+    }
+  }
+
+  async function bootGuardSoft(){
+    try{
+      if(window.DIGIY_GUARD?.ready){
+        const out = await window.DIGIY_GUARD.ready({
+          redirect:false,
+          preserve_validation:true,
+          allow_soft:true
+        });
+        return out || null;
+      }
+    }catch(e){
+      console.warn("[DIGIY EXPLORE QR] Guard soft warning", e);
+    }
+    return null;
+  }
+
+  function bind(){
+    $("btnOpen").addEventListener("click", function(){
+      if(!State.targetUrl || isBadTarget(State.targetUrl)){
+        note("Lien public absent ou refusé.", "bad");
+        return;
+      }
+      window.open(State.targetUrl, "_blank", "noopener");
+    });
+
+    $("btnCopy").addEventListener("click", async function(){
+      try{
+        await copyText(State.targetUrl);
+        note("✅ Lien public copié.", "ok");
+      }catch(e){
+        console.error(e);
+        note("⚠️ Copie bloquée. Tu peux copier le lien affiché sous le QR.", "warn");
+      }
+    });
+
+    $("btnDownload").addEventListener("click", function(){
+      if(!State.qrNormal){
+        note("QR non prêt.", "bad");
+        return;
+      }
+      download(State.qrNormal, "DIGIY_EXPLORE_QR_LIEU.png");
+      note("⬇️ Téléchargement lancé.", "ok");
+    });
+
+    $("btnSticker").addEventListener("click", function(){
+      if(!State.qrXL){
+        note("Sticker XL non prêt.", "bad");
+        return;
+      }
+      download(State.qrXL, "DIGIY_EXPLORE_STICKER_XL_LIEU.png");
+      note("🟩 Sticker XL téléchargé.", "ok");
+    });
+
+    $("btnWhatsapp").addEventListener("click", function(){
+      if(!State.targetUrl || isBadTarget(State.targetUrl)){
+        note("Lien public absent ou refusé.", "bad");
+        return;
+      }
+      shareWhatsapp();
+    });
+
+    $("btnReset").addEventListener("click", async function(){
+      State.targetUrl = EXPLORE_PUBLIC_HOME;
+      storageSet(TARGET_STORAGE_KEY, State.targetUrl);
+      syncUi();
+      await renderQr();
+    });
+
+    $("btnSaveTarget").addEventListener("click", async function(){
+      const cleaned = cleanPublicUrl($("targetInput").value);
+
+      if(!cleaned){
+        note("❌ Lien refusé. Colle une fiche publique EXPLORE, pas une page PRO.", "bad");
+        return;
+      }
+
+      State.targetUrl = cleaned;
+      storageSet(TARGET_STORAGE_KEY, State.targetUrl);
+      syncUi();
+      await renderQr();
+    });
+
+    $("btnUseSlug").addEventListener("click", async function(){
+      const slug = getSlug();
+
+      if(!canExposeSlug(slug)){
+        State.targetUrl = EXPLORE_PUBLIC_HOME;
+        note("⚠️ Aucun slug public propre trouvé. QR préparé vers la vitrine EXPLORE.", "warn");
+      }else{
+        State.slug = slug;
+        State.targetUrl = buildTargetFromSlug(slug);
+        storageSet(TARGET_STORAGE_KEY, State.targetUrl);
+      }
+
+      syncUi();
+      await renderQr();
+    });
+
+    $("targetInput").addEventListener("keydown", async function(e){
+      if(e.key === "Enter"){
+        e.preventDefault();
+        $("btnSaveTarget").click();
+      }
+    });
+  }
+
+  async function init(){
+    cleanVisibleUrl();
+    bind();
+
+    State.slug = getSlug();
+    await bootGuardSoft();
+
+    State.targetUrl = buildTargetUrl();
+
+    syncUi();
+    await renderQr();
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", init);
+  }else{
+    init();
+  }
+})();
+</script>
+</body>
+</html>
