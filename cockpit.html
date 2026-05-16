@@ -617,6 +617,39 @@
     }
 
 
+    /* ── PAY upsell ─────────────────────────────────────────── */
+    .payUpsellCard{
+      margin:14px 0;padding:16px;border-radius:22px;
+      border:2px solid rgba(250,204,21,.42);
+      background:
+        radial-gradient(circle at right top,rgba(250,204,21,.12),transparent 34%),
+        linear-gradient(160deg,rgba(12,30,22,.97),rgba(6,20,15,.97));
+      box-shadow:0 0 0 1px rgba(250,204,21,.08),0 16px 40px rgba(0,0,0,.28);
+    }
+    .payUpsellBadge{
+      display:inline-flex;align-items:center;gap:6px;padding:5px 11px;
+      border-radius:999px;border:1px solid rgba(250,204,21,.40);
+      background:rgba(250,204,21,.10);color:#fef3c7;
+      font-size:11px;font-weight:1000;letter-spacing:.06em;text-transform:uppercase;
+      margin-bottom:9px;
+    }
+    .payUpsellTitle{font-size:17px;font-weight:1000;color:#fff8dc;margin-bottom:5px;line-height:1.25;}
+    .payUpsellLead{font-size:13px;color:rgba(184,207,196,.82);font-weight:900;line-height:1.5;margin-bottom:11px;}
+    .payUpsellPrice{
+      display:inline-flex;align-items:baseline;gap:5px;padding:7px 13px;
+      border-radius:999px;border:1px solid rgba(250,204,21,.30);
+      background:rgba(250,204,21,.07);color:#fef3c7;
+      font-size:13px;font-weight:1000;margin-bottom:13px;
+    }
+    .payUpsellPrice strong{font-size:18px;color:#facc15;}
+    .payUpsellBtn{
+      display:flex;align-items:center;justify-content:center;gap:8px;
+      min-height:52px;border-radius:18px;border:none;width:100%;
+      background:linear-gradient(135deg,#facc15,#f59e0b);
+      color:#1a1200;font-size:15px;font-weight:1000;cursor:pointer;
+      box-shadow:0 8px 20px rgba(250,204,21,.20);
+    }
+    .payUpsellBtn:hover{filter:brightness(1.06);}
     .btn.gold{
       background:rgba(212,175,55,.14);
       border:1px solid rgba(212,175,55,.28);
@@ -1475,6 +1508,19 @@ body{font-size:17px;font-weight:850;}
           </article>
         </section>
       </aside>
+    </section>
+
+    <section class="payUpsellCard" id="payUpsellSection" style="display:none;">
+      <div class="payUpsellBadge">✦ Nouveau · Mon Argent PAY</div>
+      <div class="payUpsellTitle">💰 Pilote ton lieu à la voix</div>
+      <div class="payUpsellLead">
+        Tu dictes "Circuit Wave 35 000" — DIGIY prépare, toi tu valides.
+        Réservations, encaissements, dépenses terrain, net du mois : tout lu proprement sans cahier.
+      </div>
+      <div class="payUpsellPrice">À partir de <strong>4 900 F</strong> · 9 € / mois</div>
+      <a class="payUpsellBtn" id="btnMonArgent" href="#">
+        💰 Activer Mon Argent — Starter
+      </a>
     </section>
 
     <div class="foot">
@@ -2470,6 +2516,45 @@ const $ = (id) => document.getElementById(id);
       }
 
 
+      // ── PAY upsell ────────────────────────────────────────────
+      const PAY_COCKPIT_URL = "https://pay.digiylyfe.com/cockpit.html";
+
+      function buildPayUpsellUrl(){
+        const u = new URL("https://commencer-a-payer.digiylyfe.com/");
+        u.searchParams.set("module","PAY");
+        u.searchParams.set("plan","9A");
+        u.searchParams.set("from","explore");
+        if(CURRENT_SLUG) u.searchParams.set("slug", CURRENT_SLUG);
+        u.searchParams.set("return", location.href.split("?")[0]);
+        return u.toString();
+      }
+
+      async function checkPayAccess(){
+        const S = supabase || window.DIGIY_SUPABASE_CLIENT;
+        if(!S || !CURRENT_PHONE) return false;
+        try{
+          const { data, error } = await S.rpc("digiy_check_module_access",{
+            p_phone: CURRENT_PHONE,
+            p_module: "PAY"
+          });
+          if(error) return false;
+          return data === true;
+        }catch(_){ return false; }
+      }
+
+      function applyPayAccess(hasPayAccess){
+        const card = document.getElementById("payUpsellSection");
+        const btn  = document.getElementById("btnMonArgent");
+        if(hasPayAccess){
+          if(card) card.style.display = "none";
+          const url = PAY_COCKPIT_URL + (CURRENT_SLUG ? "?slug=" + encodeURIComponent(CURRENT_SLUG) : "");
+          if(btn){ btn.href = url; btn.textContent = "💰 Ouvrir Mon Argent"; }
+        } else {
+          if(card) card.style.display = "";
+          if(btn) btn.href = buildPayUpsellUrl();
+        }
+      }
+
       async function boot(){
         setClawLoading();
         bindQuickExploreNote();
@@ -2547,6 +2632,9 @@ const $ = (id) => document.getElementById(id);
             );
             setClawLive(CURRENT_MAIN);
           }
+
+          // Vérif PAY async après session
+          if(CURRENT_PHONE) checkPayAccess().then(applyPayAccess);
         }catch(err){
           console.error("[EXPLORE cockpit] boot error:", err);
           setStatus("L’espace n’a pas pu charger le rail EXPLORE pour le moment.", "bad");
@@ -3082,4 +3170,6 @@ Objectif :
 
 </body>
 </html>
+
+
 
