@@ -1323,6 +1323,7 @@ body{font-size:17px;font-weight:850;}
           <a id="fastSubmit" href="./submit.html">➕ Ajouter</a>
           <a id="fastQr" href="./qr.html">🔳 QR</a>
           <a id="fastNotes" href="#quickExploreNote">✍️ Notes</a>
+          <a id="fastMoney" href="https://pro-pay.digiylyfe.com/admin.html">💰 Mon Argent</a>
         </div>
       </article>
 
@@ -2531,18 +2532,19 @@ const $ = (id) => document.getElementById(id);
 
       async function checkPayAccess(){
         const S = supabase || window.DIGIY_SUPABASE_CLIENT;
-        if(!S || !CURRENT_PHONE) return false;
+        if(!S || !CURRENT_PHONE) return null;
         try{
           const { data, error } = await S.rpc("digiy_check_module_access",{
             p_phone: CURRENT_PHONE,
             p_module: "PAY"
           });
-          if(error) return false;
+          if(error) return null;
           return data === true;
-        }catch(_){ return false; }
+        }catch(_){ return null; }
       }
 
       function applyPayAccess(hasPayAccess){
+        if(hasPayAccess === null || hasPayAccess === undefined) return;
         const card = document.getElementById("payUpsellSection");
         const btn  = document.getElementById("btnMonArgent");
         if(hasPayAccess){
@@ -2576,6 +2578,12 @@ const $ = (id) => document.getElementById(id);
             storageSet(`${MODULE_PREFIX}_phone`, CURRENT_PHONE);
             storageSet("digiy_last_phone", CURRENT_PHONE);
             storageSet("DIGIY_PHONE", CURRENT_PHONE);
+          }
+
+          // Câbler Mon Argent avec le slug
+          const _moneyEl = document.getElementById("fastMoney");
+          if(_moneyEl && CURRENT_SLUG){
+            _moneyEl.href = "https://pro-pay.digiylyfe.com/admin.html?slug=" + encodeURIComponent(CURRENT_SLUG);
           }
 
           if(CURRENT_SLUG || CURRENT_PHONE){
@@ -3170,6 +3178,9 @@ Objectif :
 
 </body>
 </html>
+
+
+
 
 
 
