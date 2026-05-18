@@ -1152,6 +1152,23 @@
   border:1px solid rgba(56,189,248,.24);
 }
 
+#digiyExploreCamembert .digiyExploreMenu .warn{
+  background:rgba(245,158,11,.14);
+  color:#fef3c7;
+  border:1px solid rgba(245,158,11,.24);
+  grid-column:1 / -1;
+}
+
+#digiyExploreCamembert .digiyExploreMenu .voice-status{
+  grid-column:1 / -1;
+  font-size:11px;
+  text-align:center;
+  color:rgba(248,250,252,.58);
+  font-weight:900;
+  padding:2px 4px;
+  line-height:1.4;
+}
+
 @media (max-width:640px){
   #digiyExploreCamembert{
     left:10px;
@@ -2619,6 +2636,11 @@ const $ = (id) => document.getElementById(id);
           renderMainPlace(CURRENT_MAIN);
           renderPlaces();
 
+          // ── Alertes vocales réactives EXPLORE (guide doux) ──
+          if(CURRENT_STATE?.access_ok){
+            window.DIGIY_EXPLORE_VOICE?.announceUsefulAlerts?.(CURRENT_PLACES);
+          }
+
           if(!CURRENT_STATE?.access_ok){
             setStatus(
               CURRENT_SLUG
@@ -2688,114 +2710,288 @@ const $ = (id) => document.getElementById(id);
     <button id="digiyExploreClose" type="button">Fermer</button>
     <button class="green" id="digiyExplorePlaces" type="button">Mes lieux</button>
     <button class="blue" id="digiyExploreAdd" type="button">Ajouter</button>
+    <button class="warn" id="digiyExploreVoiceToggle" type="button" aria-pressed="false">🔔 Alertes vocales</button>
+    <div class="voice-status" id="digiyExploreVoiceStatus">Voix non activée</div>
   </div>
 </div>
 
 <script>
-  (function(){
-    "use strict";
+(function(){
+  "use strict";
 
-    const root = document.getElementById("digiyExploreCamembert");
-    const center = document.getElementById("digiyExploreCenter");
-    const listen = document.getElementById("digiyExploreListen");
-    const close = document.getElementById("digiyExploreClose");
-    const places = document.getElementById("digiyExplorePlaces");
-    const add = document.getElementById("digiyExploreAdd");
+  // ── Références DOM ────────────────────────────────────────────
+  const root        = document.getElementById("digiyExploreCamembert");
+  const center      = document.getElementById("digiyExploreCenter");
+  const listenBtn   = document.getElementById("digiyExploreListen");
+  const closeBtn    = document.getElementById("digiyExploreClose");
+  const placesBtn   = document.getElementById("digiyExplorePlaces");
+  const addBtn      = document.getElementById("digiyExploreAdd");
+  const voiceToggle = document.getElementById("digiyExploreVoiceToggle");
+  const voiceStatusEl = document.getElementById("digiyExploreVoiceStatus");
 
-    const AUDIO_TEXT =
-      "Bienvenue dans ta gestion EXPLORE by DIGIY. Ici, tu ne dois pas tout lire ni tout porter dans ta tête. DIGIY regarde derrière et te montre seulement la prochaine action utile. Mes lieux te montre ce qui existe. Ajouter te permet de poser un nouveau lieu. Les notes gardent une trace rapide. Le cockpit reste simple : regarder, comprendre, cliquer. Le terrain garde son âme, toi tu gardes la main.";
+  // ── Constantes voix ───────────────────────────────────────────
+  const VOICE_ENABLED_KEY = "digiy_explore_voice_enabled";
+  const VOICE_SEEN_KEY    = "digiy_explore_voice_seen_keys";
 
-    let playing = false;
+  let voiceEnabled  = false;
+  let voiceUnlocked = false;
+  let lastExploreSnapshot = null;
 
-    function setOpen(open){
-      if(!root || !center) return;
-      root.classList.toggle("open", !!open);
-      center.setAttribute("aria-expanded", open ? "true" : "false");
+  // ── Guide statique (bouton Écouter) ──────────────────────────
+  const AUDIO_TEXT =
+    "Bienvenue dans ta gestion EXPLORE by DIGIY. Ici, tu ne dois pas tout lire ni tout porter dans ta tête. DIGIY regarde derrière et te montre seulement la prochaine action utile. Mes lieux te montre ce qui existe. Ajouter te permet de poser un nouveau lieu. Les notes gardent une trace rapide. Le cockpit reste simple : regarder, comprendre, cliquer. Le terrain garde son âme, toi tu gardes la main.";
+
+  let guidePlaying = false;
+
+  // ── Ouverture menu ────────────────────────────────────────────
+  function setOpen(open){
+    if(!root || !center) return;
+    root.classList.toggle("open", !!open);
+    center.setAttribute("aria-expanded", open ? "true" : "false");
+  }
+
+  // ── Voix partagée ─────────────────────────────────────────────
+  function pickVoice(){
+    if(!("speechSynthesis" in window)) return null;
+    const voices = speechSynthesis.getVoices() || [];
+    return (
+      voices.find(v => /fr[-_]?FR/i.test(v.lang) && /thomas|paul|daniel|homme|male/i.test(v.name)) ||
+      voices.find(v => /^fr/i.test(v.lang)) ||
+      voices[0] ||
+      null
+    );
+  }
+
+  function stopAll(){
+    try{ window.speechSynthesis && window.speechSynthesis.cancel(); }catch(_){}
+    setGuidePlaying(false);
+  }
+
+  // ── Lecture guide statique ────────────────────────────────────
+  function setGuidePlaying(state){
+    guidePlaying = !!state;
+    if(!root || !center) return;
+    root.classList.toggle("playing", guidePlaying);
+    center.setAttribute("aria-pressed", guidePlaying ? "true" : "false");
+    center.innerHTML = guidePlaying
+      ? "<span>⏹</span><strong>Stop</strong>"
+      : "<span>🎧</span><strong>DIGIY</strong>";
+  }
+
+  function speakGuide(){
+    if(!("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)){
+      alert("Audio indisponible sur ce navigateur.");
+      return;
+    }
+    if(guidePlaying){ stopAll(); return; }
+    stopAll();
+    const utter = new SpeechSynthesisUtterance(AUDIO_TEXT);
+    utter.lang   = "fr-FR";
+    utter.rate   = 0.86;
+    utter.pitch  = 1.04;
+    utter.volume = 1;
+    const voice = pickVoice();
+    if(voice) utter.voice = voice;
+    utter.onstart = () => setGuidePlaying(true);
+    utter.onend   = () => setTimeout(stopAll, 120);
+    utter.onerror = stopAll;
+    window.speechSynthesis.speak(utter);
+  }
+
+  // ── Alertes vocales réactives (modèle LOC) ────────────────────
+  function setVoiceStatus(text){
+    if(voiceStatusEl) voiceStatusEl.textContent = text || "";
+  }
+
+  function refreshVoiceButton(){
+    if(!voiceToggle) return;
+    if(voiceEnabled){
+      voiceToggle.textContent = "🔔 Alertes activées";
+      voiceToggle.setAttribute("aria-pressed", "true");
+      setVoiceStatus("Alertes actives cette session");
+    }else{
+      voiceToggle.textContent = "🔔 Alertes vocales";
+      voiceToggle.setAttribute("aria-pressed", "false");
+      setVoiceStatus("Voix non activée");
+    }
+  }
+
+  function speakDigiy(message){
+    if(!voiceEnabled || !voiceUnlocked) return;
+    if(!message || !("speechSynthesis" in window)) return;
+    try{
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(message);
+      const voice = pickVoice();
+      if(voice) u.voice = voice;
+      u.lang   = voice?.lang || "fr-FR";
+      u.rate   = 0.88;
+      u.pitch  = 1.02;
+      u.volume = 1;
+      u.onstart = () => setVoiceStatus("DIGIY parle…");
+      u.onend   = () => setVoiceStatus("Alertes activées");
+      u.onerror = () => setVoiceStatus("Voix interrompue");
+      speechSynthesis.speak(u);
+    }catch(err){ console.warn("[EXPLORE VOICE]", err); }
+  }
+
+  function unlockVoice(){
+    if(!("speechSynthesis" in window)){
+      setVoiceStatus("Voix non disponible sur ce navigateur");
+      return;
+    }
+    voiceEnabled = !voiceEnabled;
+    try{ localStorage.setItem(VOICE_ENABLED_KEY, voiceEnabled ? "1" : "0"); }catch{}
+    if(voiceEnabled){
+      voiceUnlocked = true;
+      refreshVoiceButton();
+      const u = new SpeechSynthesisUtterance("Alertes vocales DIGIY EXPLORE activées. Je parlerai seulement quand une action terrain arrive.");
+      const voice = pickVoice();
+      if(voice) u.voice = voice;
+      u.lang  = voice?.lang || "fr-FR";
+      u.rate  = 0.88;
+      u.pitch = 1.02;
+      speechSynthesis.cancel();
+      speechSynthesis.speak(u);
+    }else{
+      try{ speechSynthesis.cancel(); }catch{}
+      voiceUnlocked = false;
+      refreshVoiceButton();
+    }
+  }
+
+  // ── Fingerprint / snapshot EXPLORE ───────────────────────────
+  function placeVoiceKey(p){
+    return [
+      p?.slug || p?.id || p?.public_slug || "",
+      p?.is_published ? "pub" : "draft",
+      p?.updated_at || p?.created_at || ""
+    ].join("|").toLowerCase();
+  }
+
+  function isPublishedV(p){
+    return p?.is_published === true || p?.published === true || p?.status === "published";
+  }
+
+  function isFeaturedV(p){
+    return p?.is_featured === true;
+  }
+
+  function placeNameV(p){
+    return p?.public_name || p?.name || p?.title || "Lieu";
+  }
+
+  function buildExploreSnapshot(places){
+    const list = Array.isArray(places) ? places : [];
+    return {
+      total:     list.length,
+      published: list.filter(isPublishedV).length,
+      drafts:    list.filter(p => !isPublishedV(p)).length,
+      featured:  list.filter(isFeaturedV).length
+    };
+  }
+
+  function readSeenVoiceKeys(){
+    try{
+      const raw = localStorage.getItem(VOICE_SEEN_KEY) || "[]";
+      const arr = JSON.parse(raw);
+      return new Set(Array.isArray(arr) ? arr : []);
+    }catch{ return new Set(); }
+  }
+
+  function writeSeenVoiceKeys(set){
+    try{
+      localStorage.setItem(VOICE_SEEN_KEY, JSON.stringify(Array.from(set).slice(-60)));
+    }catch{}
+  }
+
+  // ── Annonce des alertes (guide doux, sans urgence LOC) ────────
+  function announceUsefulAlerts(places){
+    if(!voiceEnabled || !voiceUnlocked) return;
+
+    const list = Array.isArray(places) ? places : [];
+    const snapshot = buildExploreSnapshot(list);
+
+    // Premier passage : on mémorise l'état initial sans parler
+    if(!lastExploreSnapshot){
+      lastExploreSnapshot = snapshot;
+      const seen = readSeenVoiceKeys();
+      list.forEach(p => { const k = placeVoiceKey(p); if(k) seen.add(k); });
+      writeSeenVoiceKeys(seen);
+      return;
     }
 
-    function setPlaying(state){
-      playing = !!state;
-      if(!root || !center) return;
-      root.classList.toggle("playing", playing);
-      center.setAttribute("aria-pressed", playing ? "true" : "false");
-      center.innerHTML = playing
-        ? "<span>⏹</span><strong>Stop</strong>"
-        : "<span>🎧</span><strong>DIGIY</strong>";
-    }
+    const seen = readSeenVoiceKeys();
+    const newPlaces = list.filter(p => {
+      const k = placeVoiceKey(p);
+      return k && !seen.has(k);
+    });
+    list.forEach(p => { const k = placeVoiceKey(p); if(k) seen.add(k); });
+    writeSeenVoiceKeys(seen);
 
-    function getVoice(){
-      const voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
-      return voices.find(v => /^fr/i.test(v.lang || "")) || null;
-    }
+    let message = "";
 
-    function stop(){
-      try{ window.speechSynthesis && window.speechSynthesis.cancel(); }catch(_){}
-      setPlaying(false);
-    }
+    if(newPlaces.length > 0){
+      const hasDraft     = newPlaces.some(p => !isPublishedV(p));
+      const hasPublished = newPlaces.some(p =>  isPublishedV(p));
 
-    function speak(){
-      if(!("speechSynthesis" in window) || !("SpeechSynthesisUtterance" in window)){
-        alert("Audio indisponible sur ce navigateur.");
-        return;
+      if(hasDraft && hasPublished){
+        message = `${newPlaces.length} nouvelle${newPlaces.length > 1 ? "s" : ""} fiche${newPlaces.length > 1 ? "s" : ""} détectée${newPlaces.length > 1 ? "s" : ""}. Certaines sont en brouillon. Ouvre Lieux pour vérifier.`;
+      }else if(hasDraft){
+        const p = newPlaces.find(p => !isPublishedV(p));
+        message = "Nouvelle fiche à publier" + (p ? " : " + placeNameV(p) : "") + ". Vérifie avant de publier.";
+      }else if(hasPublished){
+        const p = newPlaces.find(p => isPublishedV(p));
+        message = "Nouveau lieu publié" + (p ? " : " + placeNameV(p) : "") + ". Il est maintenant visible dans la galerie.";
       }
-
-      if(playing){
-        stop();
-        return;
-      }
-
-      stop();
-
-      const utter = new SpeechSynthesisUtterance(AUDIO_TEXT);
-      utter.lang = "fr-FR";
-      utter.rate = 0.86;
-      utter.pitch = 1.04;
-      utter.volume = 1;
-
-      const voice = getVoice();
-      if(voice) utter.voice = voice;
-
-      utter.onstart = () => setPlaying(true);
-      utter.onend = () => setTimeout(stop, 120);
-      utter.onerror = stop;
-
-      window.speechSynthesis.speak(utter);
+    }else if(snapshot.drafts > lastExploreSnapshot.drafts){
+      message = `${snapshot.drafts} lieu${snapshot.drafts > 1 ? "x" : ""} en brouillon. Ouvre Lieux pour vérifier et publier.`;
+    }else if(snapshot.featured > lastExploreSnapshot.featured){
+      message = "Un lieu vient d'être mis en avant. Vérifie la fiche et le QR code.";
+    }else if(snapshot.published < lastExploreSnapshot.published){
+      message = "Un lieu vient d'être retiré de la publication. Vérifie dans Lieux.";
     }
 
-    center && center.addEventListener("click", function(){
-      setOpen(!root.classList.contains("open"));
-    });
+    lastExploreSnapshot = snapshot;
+    if(message) speakDigiy(message);
+  }
 
-    listen && listen.addEventListener("click", speak);
-
-    close && close.addEventListener("click", function(){
-      stop();
-      setOpen(false);
-    });
-
-    places && places.addEventListener("click", function(){
-      location.href = "./lieux.html";
-    });
-
-    add && add.addEventListener("click", function(){
-      location.href = "./submit.html";
-    });
-
-    document.addEventListener("click", function(e){
-      if(root && !root.contains(e.target)){
-        setOpen(false);
-      }
-    });
-
-    if(window.speechSynthesis && typeof window.speechSynthesis.onvoiceschanged !== "undefined"){
-      window.speechSynthesis.onvoiceschanged = getVoice;
+  function initVoiceAlerts(){
+    try{ voiceEnabled = localStorage.getItem(VOICE_ENABLED_KEY) === "1"; }catch{ voiceEnabled = false; }
+    // Mobile : la voix doit être déverrouillée par un geste humain dans la session.
+    voiceUnlocked = false;
+    refreshVoiceButton();
+    if(voiceToggle) voiceToggle.addEventListener("click", unlockVoice);
+    if("speechSynthesis" in window){
+      speechSynthesis.onvoiceschanged = () => pickVoice();
     }
+  }
 
-    window.addEventListener("beforeunload", stop);
-    document.addEventListener("visibilitychange", function(){
-      if(document.hidden) stop();
-    });
-  })();
+  // ── Exposition globale pour boot() du script principal ────────
+  window.DIGIY_EXPLORE_VOICE = { announceUsefulAlerts, speakDigiy };
+
+  // ── Bind événements camembert ─────────────────────────────────
+  center    && center.addEventListener("click", function(){ setOpen(!root.classList.contains("open")); });
+  listenBtn && listenBtn.addEventListener("click", speakGuide);
+  closeBtn  && closeBtn.addEventListener("click", function(){ stopAll(); setOpen(false); });
+  placesBtn && placesBtn.addEventListener("click", function(){ location.href = "./lieux.html"; });
+  addBtn    && addBtn.addEventListener("click", function(){ location.href = "./submit.html"; });
+
+  document.addEventListener("click", function(e){
+    if(root && !root.contains(e.target)) setOpen(false);
+  });
+
+  if(window.speechSynthesis && typeof window.speechSynthesis.onvoiceschanged !== "undefined"){
+    window.speechSynthesis.onvoiceschanged = pickVoice;
+  }
+
+  window.addEventListener("beforeunload", stopAll);
+  document.addEventListener("visibilitychange", function(){
+    if(document.hidden) stopAll();
+  });
+
+  initVoiceAlerts();
+})();
 </script>
   <!-- DIGIY EXPLORE — PATCH PUBLIC : lien Mon lieu → cockpit + camembert discret
 À coller juste avant </body> dans BEAUVILLE/digiy-explore/index.html
@@ -3178,6 +3374,12 @@ Objectif :
 
 </body>
 </html>
+
+
+
+
+
+
 
 
 
