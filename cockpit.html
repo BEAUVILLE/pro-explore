@@ -1263,6 +1263,119 @@ body{font-size:17px;font-weight:850;}
   .mobileFastRow{grid-template-columns:1fr 1fr;}
   .bottomNav a{min-height:68px;font-size:12px;}
 }
+
+/* =========================================================
+   DIGIY EXPLORE — ALERTES VOCALES VISIBLES
+   Le bouton voix ne reste pas caché dans le camembert.
+   ========================================================= */
+.digiyExploreVoicePanel{
+  margin:0 0 16px;
+  border:2px solid rgba(212,175,55,.30);
+  background:
+    radial-gradient(680px 240px at 100% 0%, rgba(212,175,55,.16), transparent 64%),
+    radial-gradient(520px 220px at 0% 100%, rgba(34,197,94,.10), transparent 62%),
+    linear-gradient(180deg, rgba(255,255,255,.065), rgba(255,255,255,.025));
+  border-radius:24px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+
+.digiyExploreVoiceInner{
+  padding:18px;
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:14px;
+  align-items:center;
+}
+
+.digiyExploreVoiceKicker{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  min-height:34px;
+  padding:7px 11px;
+  border-radius:999px;
+  border:1px solid rgba(212,175,55,.30);
+  background:rgba(212,175,55,.10);
+  color:var(--gold2);
+  font-size:13px;
+  font-weight:1000;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+.digiyExploreVoiceTitle{
+  margin:10px 0 6px;
+  color:var(--ink);
+  font-size:clamp(24px,4vw,34px);
+  line-height:1.08;
+  font-weight:1000;
+  letter-spacing:-.035em;
+}
+
+.digiyExploreVoiceText{
+  margin:0;
+  max-width:74ch;
+  color:rgba(248,250,252,.82);
+  font-size:17px;
+  line-height:1.58;
+  font-weight:900;
+}
+
+.digiyExploreVoiceActions{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:9px;
+  min-width:260px;
+}
+
+.digiyExploreVoiceActions .btn{
+  width:100%;
+  min-height:58px;
+}
+
+.digiyExploreVoiceState{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:38px;
+  padding:8px 12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(0,0,0,.14);
+  color:rgba(248,250,252,.78);
+  font-size:13px;
+  font-weight:1000;
+  text-align:center;
+}
+
+.digiyExploreVoiceTests{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
+
+.digiyExploreVoiceTests .btn{
+  min-height:50px;
+  font-size:14px;
+}
+
+@media(max-width:760px){
+  .digiyExploreVoiceInner{
+    grid-template-columns:1fr;
+    padding:16px;
+  }
+  .digiyExploreVoiceActions{
+    min-width:0;
+  }
+}
+
+@media(max-width:520px){
+  .digiyExploreVoiceTests{
+    grid-template-columns:1fr;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -1300,6 +1413,29 @@ body{font-size:17px;font-weight:850;}
     </nav>
 
     <div id="status" class="status info">Préparation de ton espace…</div>
+
+    <section class="digiyExploreVoicePanel" id="digiyExploreVoicePanel" aria-label="Alertes vocales DIGIY EXPLORE">
+      <div class="digiyExploreVoiceInner">
+        <div>
+          <div class="digiyExploreVoiceKicker">🔔 Alertes vocales EXPLORE</div>
+          <h2 class="digiyExploreVoiceTitle">DIGIY parle quand un lieu demande attention.</h2>
+          <p class="digiyExploreVoiceText">
+            Guide doux : lieu à vérifier, nouvelle fiche à publier, QR à partager, visibilité à contrôler. 
+            Pas de bruit inutile : on regarde d’abord, on comprend vite, puis on clique.
+          </p>
+        </div>
+
+        <div class="digiyExploreVoiceActions">
+          <button class="btn primary" id="digiyExploreVoiceMain" type="button">🔔 Activer les alertes</button>
+          <div class="digiyExploreVoiceTests">
+            <button class="btn gold" id="digiyExploreVoiceTestPlace" type="button">📍 Lieu</button>
+            <button class="btn info" id="digiyExploreVoiceTestPublish" type="button">📝 Fiche</button>
+          </div>
+          <div class="digiyExploreVoiceState" id="digiyExploreVoiceState">Voix non activée</div>
+        </div>
+      </div>
+    </section>
+
     <section class="panel exploreActionPanel" aria-label="Actions utiles EXPLORE">
   <div class="cardBody">
     <div class="exploreActionHead">
@@ -3372,8 +3508,128 @@ Objectif :
 })();
 </script>
 
+
+<script>
+(function(){
+  "use strict";
+
+  const mainBtn = document.getElementById("digiyExploreVoiceMain");
+  const testPlaceBtn = document.getElementById("digiyExploreVoiceTestPlace");
+  const testPublishBtn = document.getElementById("digiyExploreVoiceTestPublish");
+  const stateEl = document.getElementById("digiyExploreVoiceState");
+
+  function hiddenToggle(){
+    return document.getElementById("digiyExploreVoiceToggle");
+  }
+
+  function hiddenStatus(){
+    return document.getElementById("digiyExploreVoiceStatus");
+  }
+
+  function isEnabled(){
+    const hidden = hiddenToggle();
+    if(hidden && hidden.getAttribute("aria-pressed") === "true") return true;
+    try{ return localStorage.getItem("digiy_explore_voice_enabled") === "1"; }catch(_){ return false; }
+  }
+
+  function setState(text){
+    if(stateEl) stateEl.textContent = text || "";
+  }
+
+  function refreshVisible(){
+    const on = isEnabled();
+    if(mainBtn){
+      mainBtn.textContent = on ? "🔔 Alertes activées" : "🔔 Activer les alertes";
+      mainBtn.classList.toggle("primary", !on);
+      mainBtn.classList.toggle("ok", on);
+      mainBtn.setAttribute("aria-pressed", on ? "true" : "false");
+    }
+
+    const hs = hiddenStatus();
+    setState(on ? (hs?.textContent || "Alertes actives cette session") : "Voix non activée");
+  }
+
+  function clickHiddenToggle(){
+    const hidden = hiddenToggle();
+    if(hidden){
+      hidden.click();
+      setTimeout(refreshVisible, 160);
+      setTimeout(refreshVisible, 700);
+      return true;
+    }
+
+    // Secours si le camembert n'est pas encore initialisé.
+    try{ localStorage.setItem("digiy_explore_voice_enabled", "1"); }catch(_){}
+    refreshVisible();
+    return false;
+  }
+
+  function ensureActiveThenSpeak(message){
+    if(!isEnabled()){
+      clickHiddenToggle();
+    }
+    setTimeout(function(){
+      if(window.DIGIY_EXPLORE_VOICE && typeof window.DIGIY_EXPLORE_VOICE.speakDigiy === "function"){
+        window.DIGIY_EXPLORE_VOICE.speakDigiy(message);
+      }else if("speechSynthesis" in window && "SpeechSynthesisUtterance" in window){
+        try{
+          speechSynthesis.cancel();
+          const u = new SpeechSynthesisUtterance(message);
+          u.lang = "fr-FR";
+          u.rate = 0.88;
+          u.pitch = 1.02;
+          speechSynthesis.speak(u);
+        }catch(_){}
+      }
+      refreshVisible();
+    }, 520);
+  }
+
+  mainBtn?.addEventListener("click", function(){
+    clickHiddenToggle();
+  });
+
+  testPlaceBtn?.addEventListener("click", function(){
+    ensureActiveThenSpeak("Lieu à vérifier. Ouvre Lieux pour contrôler la fiche, la visibilité et le QR.");
+  });
+
+  testPublishBtn?.addEventListener("click", function(){
+    ensureActiveThenSpeak("Nouvelle fiche à publier. Vérifie le texte, la photo, la catégorie et la visibilité avant de partager.");
+  });
+
+  // Synchronise avec le bouton caché du camembert, même si le pro l'utilise.
+  document.addEventListener("click", function(e){
+    if(e.target && e.target.id === "digiyExploreVoiceToggle"){
+      setTimeout(refreshVisible, 160);
+      setTimeout(refreshVisible, 700);
+    }
+  }, true);
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", refreshVisible);
+  }else{
+    refreshVisible();
+  }
+
+  setTimeout(refreshVisible, 500);
+  setTimeout(refreshVisible, 1500);
+})();
+</script>
+
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
