@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#06130f"/>
   <meta name="description" content="DIGIY EXPLORE PRO — HUB mobile terrain en pavés : lieux, ajout, cockpit, QR, oreille, session et accès."/>
   <meta name="robots" content="noindex,nofollow"/>
-  <meta name="digiy-build" content="explore-bazooka-rail-clean-20260521"/>
+  <meta name="digiy-build" content="explore-doctrine-ecriture-20260521"/>
 
   <script>
     window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
@@ -93,6 +93,30 @@
     .bottomInner a{min-height:58px;border-radius:16px;display:grid;place-items:center;align-content:center;gap:3px;color:rgba(248,250,252,.62);font-size:11px;font-weight:1000;text-align:center;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.04)}
     .bottomInner a.active{color:#13200d;background:linear-gradient(135deg,var(--gold),var(--gold2));border-color:rgba(212,175,55,.32)}
     .bottomInner .bi{font-size:20px;line-height:1}
+
+    .doctrineWrite{
+      padding:14px 15px;
+      border-radius:20px;
+      border:1px solid rgba(212,175,55,.30);
+      background:
+        radial-gradient(520px 160px at 100% 0%,rgba(212,175,55,.13),transparent 62%),
+        rgba(255,255,255,.065);
+      box-shadow:0 14px 34px rgba(0,0,0,.18);
+      color:rgba(248,250,252,.92);
+      font-size:15px;
+      font-weight:1000;
+      line-height:1.42;
+    }
+    .doctrineWrite strong{color:var(--gold2)}
+    .doctrineWrite span{
+      display:block;
+      margin-top:5px;
+      color:var(--muted);
+      font-size:13px;
+      font-weight:950;
+      line-height:1.45;
+    }
+
     @media(max-width:860px){.tileGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
     @media(max-width:520px){
       body{padding:calc(var(--hdrH) + 12px) 10px calc(var(--barH) + env(safe-area-inset-bottom,0px) + 16px);font-size:19px}
@@ -117,6 +141,12 @@
       <h1>Toutes tes portes.</h1>
       <div class="hubSub" id="hubSub">On regarde d’abord, on comprend vite, on clique ensuite. EXPLORE range les lieux, les QR, les notes et la visibilité.</div>
       <div class="rule"><b>Index</b> = porte courte. <b>HUB</b> = navigation. <b>Accueil</b> = lecture terrain. <b>Oreille</b> = parole rangée dans le logiciel.</div>
+
+    <div class="doctrineWrite">
+      ✍️ <strong>Doctrine d’écriture EXPLORE</strong>
+      <span>Le pro clique plus qu’il n’écrit. DIGIY prépare les mots du lieu, le terrain valide avec sa vérité.</span>
+    </div>
+
     </section>
 
     <section class="group" aria-label="Action immédiate EXPLORE">
@@ -285,5 +315,6 @@
   </script>
 </body>
 </html>
+
 
 
