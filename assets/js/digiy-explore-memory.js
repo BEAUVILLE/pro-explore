@@ -205,8 +205,44 @@
     return true;
   }
 
+  function injectExploreGoPaves(){
+    try{
+      var path = String(location.pathname || "").toLowerCase();
+      if(path.indexOf("hub") === -1 && !/\/$/.test(path)) return;
+      var grid = document.querySelector(".grid");
+      if(!grid) return;
+
+      if(!document.getElementById("doorDigiyGoExplore")){
+        var go = document.createElement("a");
+        go.id = "doorDigiyGoExplore";
+        go.className = "tile voice";
+        go.href = "./action.html";
+        go.innerHTML = '<div class="tileTop"><div class="ico">🎙️</div><div class="tag">GO</div></div><div><b>DIGIY GO EXPLORE</b><span>Le pro parle. EXPLORE prépare le lieu.</span></div>';
+        grid.insertBefore(go, grid.firstElementChild);
+      }
+
+      if(!document.getElementById("doorExplorePayTransition")){
+        var pay = document.createElement("a");
+        pay.id = "doorExplorePayTransition";
+        pay.className = "tile pay";
+        pay.href = "./pay-transition.html";
+        pay.innerHTML = '<div class="tileTop"><div class="ico">💳</div><div class="tag">PAY</div></div><div><b>Boost vers PAY</b><span>Argent réel seulement. PAY valide.</span></div>';
+        var payDoor = document.querySelector('a[href*="pro-pay"], a[href*="pay"], a[href*="PAY"]');
+        if(payDoor && payDoor.parentNode) payDoor.parentNode.insertBefore(pay, payDoor);
+        else grid.appendChild(pay);
+      }
+    }catch(e){
+      console.warn("[DIGIY EXPLORE] pavés GO/PAY non injectés", e && e.message ? e.message : e);
+    }
+  }
+
+  function bootExploreGoPaves(){
+    injectExploreGoPaves();
+    setTimeout(injectExploreGoPaves, 500);
+  }
+
   window.DIGIY_EXPLORE_MEMORY = {
-    version: "explore-memory-v1-20260521",
+    version: "explore-memory-v1-20260528-go-pay",
     sessionHint,
     rememberSession,
     loadDraft,
@@ -217,6 +253,13 @@
     upsertPlace,
     notes,
     addNote,
-    clearLocal
+    clearLocal,
+    injectExploreGoPaves
   };
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", bootExploreGoPaves);
+  }else{
+    bootExploreGoPaves();
+  }
 })();
