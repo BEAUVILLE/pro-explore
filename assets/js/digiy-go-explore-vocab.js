@@ -1,30 +1,4 @@
-/* DIGIY GO EXPLORE — vocabulaire lieu / activité / visibilité FR WO AR */
+/* DIGIY GO EXPLORE — vocabulaire lieu / activité / visibilité FR WO AR + choix langue */
 (function(){"use strict";
-var vocab={
-  module:"EXPLORE",
-  label:"Je fais découvrir",
-  version:"explore-vocab-fr-wo-ar-20260528",
-  languages:["fr","wo","ar"],
-  doctrine:"EXPLORE prépare le lieu, l'activité, la zone et la visibilité en français, wolof ou arabe. Le pro valide. PAY garde seulement l'argent réel.",
-  intents:{
-    place:["lieu","endroit","spot","activité","activite","sortie","visite","balade","découverte","decouverte","barab","bërëb","doxantu","seeti","مكان","نشاط","زيارة","جولة"],
-    visibility:["boost","visibilité","visibilite","mettre en avant","fiche","lien","partage","wone","yégle","partase","إبراز","ظهور","رابط","مشاركة"],
-    zone:["zone","ville","quartier","plage","Saly","Mbour","Petite Côte","dëkk","goox","tefes","منطقة","مدينة","حي","شاطئ"],
-    contact:["contact","WhatsApp","appel","guide","organisateur","watsap","woote","gide","اتصال","واتساب","مكالمة","دليل"]
-  },
-  fields:{
-    place:["lieu","nom","endroit","barab","tur","bërëb","مكان","اسم"],
-    activity:["activité","activite","expérience","experience","sortie","balade","doxantu","seeti","نشاط","جولة","زيارة"],
-    zone:["zone","ville","quartier","dëkk","goox","منطقة","مدينة","حي"],
-    description:["description","détail","detail","ambiance","leeral","وصف","تفاصيل"],
-    price:["prix","tarif","boost","montant","njëg","fay","سعر","مبلغ"],
-    payment:["cash","wave","orange money","carte","xaalis","kesh","كاش","وايف","بطاقة"]
-  },
-  examples:["lieu plage de Saly activité balade coucher de soleil zone Saly centre boost visibilité 10000 Wave","Barab tefes Saly, doxantu coucher de soleil, boost 10000 Wave","مكان شاطئ سالي، نشاط جولة، ظهور 10000 وايف"],
-  payBridge:{allowed:true,phrasePrefix:"boost EXPLORE",onlyRealMoney:true},
-  safety:["aucune activité publiée automatiquement","aucun prix imposé","aucun boost validé sans paiement réel"]
-};
-window.DIGIY_GO_VOCABS=window.DIGIY_GO_VOCABS||{};
-window.DIGIY_GO_VOCABS.EXPLORE=vocab;
-window.DIGIY_GO_EXPLORE_VOCAB=vocab;
-})();
+var vocab={module:"EXPLORE",label:"Je fais découvrir",version:"explore-lang-ui-20260528",languages:["fr","wo","ar"],doctrine:"EXPLORE prépare le lieu, l'activité, la zone et la visibilité en français, wolof ou arabe. Le pro valide. PAY garde seulement l'argent réel.",intents:{place:["lieu","endroit","spot","activité","sortie","visite","balade","barab","bërëb","doxantu","مكان","نشاط","زيارة"],visibility:["boost","visibilité","fiche","lien","partage","wone","yégle","إبراز","ظهور","رابط"],zone:["zone","ville","quartier","plage","Saly","Mbour","dëkk","goox","tefes","منطقة","مدينة","حي"],contact:["contact","WhatsApp","appel","guide","watsap","woote","gide","اتصال","واتساب","دليل"]},fields:{place:["lieu","nom","endroit","barab","tur","مكان","اسم"],activity:["activité","expérience","sortie","balade","doxantu","seeti","نشاط","جولة"],zone:["zone","ville","quartier","dëkk","goox","منطقة","مدينة"],description:["description","détail","ambiance","leeral","وصف","تفاصيل"],price:["prix","tarif","boost","montant","njëg","fay","سعر","مبلغ"],payment:["cash","wave","orange money","carte","xaalis","كاش","وايف","بطاقة"]},examples:["lieu plage de Saly activité balade coucher de soleil zone Saly centre boost visibilité 10000 Wave","Barab tefes Saly, doxantu coucher de soleil, boost 10000 Wave","مكان شاطئ سالي، نشاط جولة، ظهور 10000 وايف"],payBridge:{allowed:true,phrasePrefix:"boost EXPLORE",onlyRealMoney:true},safety:["aucune activité publiée automatiquement","aucun prix imposé","aucun boost validé sans paiement réel"]};
+function ui(v){var L={fr:{r:"fr-FR",d:"ltr",h:"Parle ou écris en français."},wo:{r:"fr-FR",d:"ltr",h:"Wolof : parle si le téléphone comprend, sinon écris ou dicte au clavier."},ar:{r:"ar-SA",d:"auto",h:"Parle ou écris en arabe."}};var K="DIGIY_GO_LANG_"+v.module;function cur(){return localStorage.getItem(K)||"fr"}function apply(x){localStorage.setItem(K,x);window.DIGIY_GO_LANG=x;window.DIGIY_GO_SPEECH_LANG=L[x].r;document.querySelectorAll("textarea,input").forEach(function(el){el.dir=L[x].d});var h=document.getElementById("digiyGoLangHint");if(h)h.textContent=L[x].h;document.querySelectorAll("[data-digiy-lang]").forEach(function(b){b.style.opacity=b.dataset.digiyLang===x?"1":".55"})}function patch(){["SpeechRecognition","webkitSpeechRecognition"].forEach(function(n){var O=window[n];if(!O||O.__digiyPatched)return;function W(){var rec=new O(),start=rec.start;rec.start=function(){try{rec.lang=L[cur()].r}catch(e){}return start.apply(rec,arguments)};return rec}W.__digiyPatched=true;W.prototype=O.prototype;window[n]=W})}function mount(){if(document.getElementById("digiyGoLangBox"))return;var host=document.querySelector("textarea")||document.querySelector("main")||document.body;var box=document.createElement("div");box.id="digiyGoLangBox";box.style.cssText="margin:12px 0;padding:12px;border-radius:18px;border:1px solid rgba(250,204,21,.35);background:rgba(0,0,0,.18);font-weight:1000";box.innerHTML='<div style="color:#fde68a;font-size:12px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px">Langue de travail</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px"><button type="button" data-digiy-lang="fr">🇫🇷 Français</button><button type="button" data-digiy-lang="wo">🇸🇳 Wolof</button><button type="button" data-digiy-lang="ar">🇸🇦 العربية</button></div><div id="digiyGoLangHint" style="margin-top:8px;color:rgba(255,255,255,.78);font-size:13px"></div>';box.querySelectorAll("button").forEach(function(b){b.style.cssText="min-height:42px;border-radius:14px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.1);color:inherit;font:inherit;cursor:pointer";b.onclick=function(){apply(b.dataset.digiyLang)}});host.parentNode.insertBefore(box,host);apply(cur())}patch();if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",mount);else mount()}window.DIGIY_GO_VOCABS=window.DIGIY_GO_VOCABS||{};window.DIGIY_GO_VOCABS.EXPLORE=vocab;window.DIGIY_GO_EXPLORE_VOCAB=vocab;ui(vocab);})();
