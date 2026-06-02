@@ -3,48 +3,264 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-
-  <title>Je fais découvrir — Entrée</title>
-
-  <meta name="theme-color" content="#06130f"/>
-  <meta name="description" content="Entrée courte vers le HUB EXPLORE PRO."/>
   <meta name="robots" content="noindex,nofollow,noarchive,nosnippet"/>
+  <meta name="theme-color" content="#06130f"/>
+  <title>EXPLORE PRO — Accès sécurisé</title>
+  <meta name="description" content="Porte sécurisée EXPLORE PRO : session PIN valide vers HUB, sinon retour PIN."/>
 
   <script>
+    window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
+    window.DIGIY_SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
+    window.DIGIY_SUPABASE_ANON = window.DIGIY_SUPABASE_ANON_KEY;
+
     window.DIGIY_MODULE = "EXPLORE";
+    window.DIGIY_ABOS_MODULE = "EXPLORE_BOOST";
     window.DIGIY_LOGIN_URL = "./pin.html";
   </script>
-    window.DIGIY_MODULE = "EXPLORE";
-    window.DIGIY_LOGIN_URL = "./pin.html";
-    (function(){
-      "use strict";
-      const TARGET = "./hub.html";
-      try{
-        const url = new URL(window.location.href);
-        ["slug","phone","tel","owner_phone","owner_id","business_code","access_note","keybox_code","keybox_location","pin","token","session_token","return","from","redirect","url","v"].forEach(k => url.searchParams.delete(k));
-        history.replaceState({}, document.title, url.pathname + url.search + url.hash);
-      }catch(_){}
-      setTimeout(function(){ window.location.replace(TARGET); }, 650);
-    })();
-  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./guard.js?v=explore-index-secure-20260602"></script>
+
   <style>
-    body{margin:0;min-height:100vh;display:grid;place-items:center;background:#06130f;color:#f8fafc;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;padding:22px;text-align:center}
-    main{width:min(680px,100%);border:1px solid rgba(255,255,255,.12);border-radius:28px;background:rgba(255,255,255,.05);padding:24px;box-shadow:0 24px 60px rgba(0,0,0,.30)}
-    img{width:92px;height:92px;object-fit:contain;background:#fff;border-radius:24px;padding:8px}
-    h1{font-size:clamp(34px,8vw,58px);line-height:.96;margin:14px 0 10px}
-    p{color:rgba(248,250,252,.76);font-weight:850;line-height:1.55}
-    a{display:inline-flex;min-height:54px;align-items:center;justify-content:center;border-radius:18px;padding:0 16px;margin:5px;text-decoration:none;font-weight:1000;color:#13200d;background:linear-gradient(135deg,#d4af37,#f3d46b)}
-    a.secondary{color:#f8fafc;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      padding:20px;
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      color:#f8fafc;
+      font-weight:900;
+      background:
+        radial-gradient(620px 390px at 10% 0%,rgba(212,175,55,.16),transparent 58%),
+        linear-gradient(180deg,#06130f,#0a1f18);
+    }
+    .card{
+      width:min(520px,100%);
+      border:1px solid rgba(255,255,255,.16);
+      border-radius:28px;
+      padding:24px;
+      background:rgba(255,255,255,.08);
+      box-shadow:0 20px 50px rgba(0,0,0,.28);
+      text-align:center;
+    }
+    .k{
+      color:#f3d46b;
+      font-size:12px;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      font-weight:1000;
+    }
+    h1{
+      margin:10px 0 8px;
+      font-size:clamp(34px,9vw,56px);
+      line-height:.92;
+      letter-spacing:-.06em;
+    }
+    p{
+      margin:0;
+      color:rgba(248,250,252,.78);
+      line-height:1.45;
+      font-size:16px;
+    }
+    .actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:18px;
+    }
+    a{
+      min-height:56px;
+      border-radius:18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:10px;
+      text-decoration:none;
+      color:#f8fafc;
+      border:1px solid rgba(255,255,255,.16);
+      background:rgba(255,255,255,.09);
+      font-weight:1000;
+    }
+    a.primary{
+      background:linear-gradient(135deg,#d4af37,#f3d46b);
+      color:#13200d;
+      border:0;
+    }
+    .small{
+      margin-top:14px;
+      font-size:13px;
+      color:rgba(248,250,252,.58);
+      white-space:pre-wrap;
+    }
+    @media(max-width:520px){
+      .actions{grid-template-columns:1fr}
+    }
   </style>
 </head>
+
 <body>
-  <main>
-    <img src="https://digiylyfe.net/wp-content/uploads/2026/05/metier-pro-1.png" alt="DIGIYLYFE — Métiers pro"/>
-    <h1>Ouverture du HUB…</h1>
-    <p>EXPLORE ouvre maintenant par le HUB : lieux, ajout, QR, accueil, oreille et session.</p>
-    <a href="./hub.html">Ouvrir le HUB</a>
-    <a class="secondary" href="./pin.html">Entrer par PIN</a>
+  <main class="card">
+    <div class="k">DIGIYLYFE · EXPLORE sécurisé</div>
+    <h1>Vérification PIN…</h1>
+    <p>
+      Si la session est encore valide, EXPLORE ouvre le HUB.
+      Sinon, retour au PIN.
+    </p>
+
+    <div class="actions">
+      <a class="primary" href="./pin.html">🔐 Entrer par PIN</a>
+      <a href="./hub.html">🧭 HUB si session ouverte</a>
+    </div>
+
+    <div class="small" id="status">Contrôle de la session locale…</div>
   </main>
+
+  <script>
+    (function(){
+      "use strict";
+
+      const HUB = "./hub.html";
+      const PIN = "./pin.html";
+      const MAX_WAIT_MS = 1800;
+
+      function cleanUrl(){
+        try{
+          const url = new URL(window.location.href);
+          [
+            "slug",
+            "phone",
+            "tel",
+            "owner_phone",
+            "owner_id",
+            "business_code",
+            "access_note",
+            "keybox_code",
+            "keybox_location",
+            "pin",
+            "token",
+            "session_token",
+            "return",
+            "from",
+            "redirect",
+            "redirect_url",
+            "url",
+            "v"
+          ].forEach(function(key){
+            url.searchParams.delete(key);
+          });
+
+          history.replaceState({}, document.title, url.pathname + url.search + url.hash);
+        }catch(_){}
+      }
+
+      function setStatus(text){
+        const el = document.getElementById("status");
+        if(el) el.textContent = text;
+      }
+
+      function isOkState(state){
+        return !!(
+          state &&
+          (
+            state.access_ok === true ||
+            state.access === true ||
+            state.ok === true ||
+            state.pin_session_ok === true
+          ) &&
+          (
+            state.slug ||
+            state.phone ||
+            state.preview === false
+          )
+        );
+      }
+
+      function fallbackHasFreshSession(){
+        const keys = [
+          "DIGIY_EXPLORE_PIN_SESSION",
+          "DIGIY_EXPLORE_SESSION",
+          "DIGIY_SESSION_EXPLORE",
+          "DIGIY_EXPLORE_ACCESS",
+          "digiy_explore_session",
+          "DIGIY_ACCESS"
+        ];
+
+        for(const key of keys){
+          try{
+            const raw = sessionStorage.getItem(key) || localStorage.getItem(key);
+            if(!raw) continue;
+
+            const s = JSON.parse(raw);
+            const expires = Number(s.expires_at || s.expiresAt || 0);
+            const ok =
+              s.access === true ||
+              s.access_ok === true ||
+              s.ok === true ||
+              s.pin_session_ok === true;
+
+            if(ok && expires && expires > Date.now()){
+              return true;
+            }
+
+            const ts = Number(s.verified_at || s.validated_at_ms || s.ts || 0);
+            if(ok && ts && (Date.now() - ts) <= 8 * 60 * 60 * 1000){
+              return true;
+            }
+          }catch(_){}
+        }
+
+        return false;
+      }
+
+      function go(target){
+        window.location.replace(target);
+      }
+
+      async function boot(){
+        cleanUrl();
+
+        try{
+          if(window.DIGIY_GUARD && typeof window.DIGIY_GUARD.ready === "function"){
+            setStatus("Lecture du guard EXPLORE…");
+            const state = await window.DIGIY_GUARD.ready({redirect:false,preserve_validation:true});
+
+            if(isOkState(state)){
+              setStatus("Session valide. Ouverture du HUB…");
+              setTimeout(function(){ go(HUB); }, 350);
+              return;
+            }
+
+            setStatus("Session absente ou expirée. Retour PIN…");
+            setTimeout(function(){ go(PIN); }, 500);
+            return;
+          }
+        }catch(e){
+          setStatus("Guard fragile. Vérification locale de secours…");
+        }
+
+        if(fallbackHasFreshSession()){
+          setStatus("Session locale trouvée. Ouverture du HUB…");
+          setTimeout(function(){ go(HUB); }, 350);
+        }else{
+          setStatus("Session non validée. Retour PIN…");
+          setTimeout(function(){ go(PIN); }, 500);
+        }
+      }
+
+      setTimeout(function(){
+        const current = document.getElementById("status")?.textContent || "";
+        if(current.includes("Contrôle") && !window.DIGIY_GUARD){
+          if(fallbackHasFreshSession()) go(HUB);
+          else go(PIN);
+        }
+      }, MAX_WAIT_MS);
+
+      boot();
+    })();
+  </script>
 </body>
 </html>
 
