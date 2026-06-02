@@ -1,38 +1,314 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ACTION EXPLORE — Préparer lieu ou sortie</title>
+<meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+<meta name="theme-color" content="#06130f">
+<meta name="digiy-build" content="explore-action-memory-pay-20260602-v2">
 
-  <title>Je fais découvrir — Ma session</title>
+<script>
+window.DIGIY_MODULE       = "EXPLORE";
+window.DIGIY_ABOS_MODULE  = "EXPLORE_BOOST";
+window.DIGIY_MODULE_LABEL = "Je fais découvrir";
+window.DIGIY_LOGIN_URL    = "./pin.html";
+window.DIGIY_SUPABASE_URL      = window.DIGIY_SUPABASE_URL || "https://wesqmwjjtsefyjnluosj.supabase.co";
+window.DIGIY_SUPABASE_ANON_KEY = window.DIGIY_SUPABASE_ANON_KEY || "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
+window.DIGIY_SUPABASE_ANON     = window.DIGIY_SUPABASE_ANON_KEY;
+</script>
 
-  <meta name="theme-color" content="#06130f"/>
-  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet"/>
-  <meta name="description" content="Session EXPLORE PRO : état d’accès, porte Oreille, retour HUB, nettoyage local sans toucher aux lieux."/>
-  <meta name="digiy-build" content="explore-session-action-visible-20260602"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./guard.js?v=explore-guard-20260531"></script>
+<script src="./assets/js/digiy-go-explore-vocab.js?v=20260528"></script>
+<script src="./assets/js/digiy-explore-memory.js?v=explore-action-memory-20260602"></script>
 
-  <script>
-    window.DIGIY_MODULE = "EXPLORE";
-    window.DIGIY_LOGIN_URL = "./pin.html";
-  </script>
-
-  <style>
-    :root{--bg:#06130f;--bg2:#0a1f18;--gold:#d4af37;--gold2:#f3d46b;--green:#22c55e;--text:#f8fafc;--muted:rgba(248,250,252,.76);--line:rgba(255,255,255,.14);--bar:rgba(6,19,15,.96);--r:22px;--barH:78px;--hdrH:52px}
-    *{box-sizing:border-box}body{margin:0;min-height:100dvh;color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:radial-gradient(600px 360px at 14% 0%,rgba(212,175,55,.14),transparent 58%),linear-gradient(180deg,var(--bg),var(--bg2));font-size:19px;font-weight:950;padding:calc(var(--hdrH) + 14px) 12px calc(var(--barH) + 18px)}a{color:inherit;text-decoration:none}button{font:inherit;color:inherit}.topHeader{position:fixed;top:0;left:0;right:0;height:var(--hdrH);z-index:100;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 14px;background:var(--bar);border-bottom:1px solid rgba(212,175,55,.24);backdrop-filter:blur(18px)}.hdrBack,.hdrPill{font-size:13px;font-weight:1000;color:rgba(248,250,252,.74)}.hdrTitle{font-size:12px;font-weight:1000;letter-spacing:.16em;text-transform:uppercase;color:var(--gold2)}.wrap{width:min(900px,100%);margin:0 auto;display:grid;gap:16px}.hero,.card{border:1px solid var(--line);border-radius:var(--r);background:rgba(255,255,255,.06);box-shadow:0 18px 46px rgba(0,0,0,.28);padding:18px}.kicker{color:var(--gold2);font-size:12px;font-weight:1000;letter-spacing:.16em;text-transform:uppercase}h1{margin:6px 0 8px;font-size:clamp(34px,8vw,54px);line-height:.96;letter-spacing:-.05em}.lead{color:var(--muted);font-size:17px;font-weight:900;line-height:1.5}.status{padding:14px;border-radius:18px;border:1px solid rgba(212,175,55,.22);background:rgba(212,175,55,.08);font-size:16px;font-weight:1000;line-height:1.45;color:#fff8dc}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.btn{min-height:64px;border-radius:18px;border:1px solid var(--line);background:rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;text-align:center;padding:12px 14px;font-weight:1000;font-size:17px;cursor:pointer}.btn.primary{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#13200d;border:0}.btn.voice{background:linear-gradient(135deg,rgba(212,175,55,.22),rgba(56,189,248,.10));border-color:rgba(212,175,55,.45);color:#fff8dc}.btn.warn{background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.26);color:#fde68a}.btn.danger{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.26);color:#fecaca}.small{color:var(--muted);font-size:14px;line-height:1.5;font-weight:850}.log{white-space:pre-wrap;border:1px dashed var(--line);border-radius:18px;padding:13px;background:rgba(0,0,0,.14);color:var(--muted);font-size:13px;font-weight:850;line-height:1.45}.bottomBar{position:fixed;left:0;right:0;bottom:0;height:var(--barH);z-index:100;padding:8px 10px;background:rgba(6,19,15,.97);border-top:1px solid rgba(212,175,55,.18);backdrop-filter:blur(18px)}.bottomInner{width:min(760px,100%);margin:0 auto;height:100%;display:grid;grid-template-columns:repeat(5,1fr);gap:6px}.bottomInner a{min-height:58px;border-radius:16px;display:grid;place-items:center;align-content:center;gap:3px;color:rgba(248,250,252,.65);font-size:11px;font-weight:1000;background:rgba(255,255,255,.04)}.bottomInner a.active{color:#13200d;background:linear-gradient(135deg,var(--gold),var(--gold2))}@media(max-width:620px){.grid{grid-template-columns:1fr}.btn{font-size:18px}.hero,.card{padding:16px}}
-  </style>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  min-height:100vh;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  background:linear-gradient(180deg,#06130f,#0a1f18);color:#f8fafc;
+  padding:70px 12px 92px;font-weight:900;
+}
+a{color:inherit;text-decoration:none}
+button,textarea,input{font:inherit}
+.top{position:fixed;top:0;left:0;right:0;height:56px;background:#06130f;border-bottom:1px solid rgba(212,175,55,.28);display:flex;align-items:center;justify-content:space-between;padding:0 12px;z-index:20}
+.top a{color:#fff;text-decoration:none}
+.wrap{width:min(900px,100%);margin:auto;display:grid;gap:12px}
+.card{border-radius:26px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.08);padding:16px;box-shadow:0 18px 40px rgba(0,0,0,.22)}
+.k{color:#f3d46b;font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+h1{font-size:clamp(42px,13vw,76px);line-height:.88;margin:8px 0;letter-spacing:-.06em}
+.lead{font-size:17px;line-height:1.38;color:rgba(248,250,252,.82)}
+textarea{width:100%;min-height:132px;border-radius:20px;border:1px solid rgba(212,175,55,.38);background:#06130f;color:#fff;padding:14px;font:900 17px system-ui;margin-top:10px;resize:vertical}
+.actions{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-top:10px}
+.btn{min-height:58px;border-radius:18px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.1);color:#fff;font-weight:1000;display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;text-decoration:none;cursor:pointer}
+.go{background:linear-gradient(135deg,#d4af37,#f3d46b);color:#13200d}
+.gold{background:#f3d46b;color:#111}
+.dark{background:#06130f}
+.blue{background:rgba(56,189,248,.12);border-color:rgba(56,189,248,.25);color:#d9f4ff}
+.msg{white-space:pre-wrap;background:#06130f;border:1px solid rgba(212,175,55,.26);border-radius:20px;padding:13px;font-weight:900;line-height:1.42;margin-top:10px}
+.strip{display:flex;gap:10px;overflow-x:auto;padding:3px 2px 12px;margin-top:10px;scroll-snap-type:x mandatory}
+.quick{flex:0 0 232px;min-height:94px;border-radius:20px;border:1px solid rgba(255,255,255,.16);background:linear-gradient(160deg,rgba(255,255,255,.10),rgba(212,175,55,.13));color:#fff;text-align:left;padding:12px;font-weight:1000;scroll-snap-align:start}
+.quick small{display:block;color:#f3d46b;margin-top:7px;line-height:1.25}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.field{background:#06130f;border:1px solid rgba(212,175,55,.24);border-radius:18px;padding:11px}
+.field small{display:block;color:#f3d46b;font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+.field b{display:block;margin-top:4px;word-break:break-word}
+.proof{border-color:rgba(34,197,94,.34);background:rgba(34,197,94,.09)}
+.bar{position:fixed;bottom:0;left:0;right:0;height:72px;background:#06130f;border-top:1px solid rgba(212,175,55,.22);display:grid;grid-template-columns:repeat(5,1fr);gap:6px;padding:7px;z-index:20}
+.bar a{display:grid;place-items:center;text-align:center;border-radius:14px;background:rgba(255,255,255,.07);font-size:11px;color:rgba(248,250,252,.75);text-decoration:none;font-weight:1000}
+.bar .on{background:#d4af37;color:#06130f}
+.toast{position:fixed;left:50%;bottom:86px;transform:translateX(-50%);background:#06130f;border:1px solid #d4af37;border-radius:18px;padding:12px;display:none;z-index:50}
+@media(max-width:560px){.actions,.grid{grid-template-columns:1fr}.quick{flex-basis:210px}}
+</style>
 </head>
 <body>
-  <header class="topHeader"><a class="hdrBack" href="./hub.html">← HUB</a><div class="hdrTitle">SESSION EXPLORE</div><div class="hdrPill" id="sessionPill">session…</div></header>
-  <main class="wrap">
-    <section class="hero"><div class="kicker">🗺️ Je fais découvrir</div><h1>Ma session.</h1><div class="lead">Ici tu contrôles l’accès local. On nettoie la session si besoin, sans effacer tes lieux ni tes notes métier.</div><div class="status" id="sessionStatus">Lecture de l’accès local…</div></section>
-    <section class="card"><div class="grid"><a class="btn primary" href="./hub.html">🧭 Retour HUB</a><a class="btn voice" href="./action.html">🎙️ ACTION EXPLORE</a>
-        <a class="btn voice" href="./oreille.html">🎧 Oreille EXPLORE</a><a class="btn" href="./cockpit.html">🏠 Accueil EXPLORE</a><a class="btn" href="./lieux.html">📍 Mes lieux</a><a class="btn" href="./submit.html">➕ Ajouter un lieu</a><a class="btn" href="./qr.html">🔳 QR</a><a class="btn warn" href="./pin.html">🔐 Mon accès</a></div></section>
-    <section class="card"><h2 style="margin:0 0 8px;font-size:26px">Nettoyage local</h2><p class="small">Ce bouton retire les clés de session EXPLORE, les anciens accès et les traces sensibles d’URL. Il ne supprime pas les fiches lieux, ni les notes confirmées.</p><div class="grid" style="margin-top:12px"><button class="btn danger" id="clearBtn" type="button">🧹 Fermer / nettoyer la session</button><button class="btn" id="refreshBtn" type="button">🔄 Relire l’état</button></div><div class="log" id="logBox" style="margin-top:12px">—</div></section>
-  </main>
-  <nav class="bottomBar" aria-label="Navigation rapide EXPLORE"><div class="bottomInner"><a href="./hub.html"><span>🧭</span><span>HUB</span></a><a href="./cockpit.html"><span>🏠</span><span>Accueil</span></a><a href="./oreille.html"><span>🎙️</span><span>Oreille</span></a><a href="./lieux.html"><span>📍</span><span>Lieux</span></a><a class="active" href="./session.html"><span>🛡️</span><span>Session</span></a></div></nav>
-  <script>
-    (()=>{const SESSION_KEYS=['digiy_explore_session','DIGIY_EXPLORE_SESSION','digiy_explore_access','DIGIY_EXPLORE_ACCESS','digiy_explore_phone','digiy_explore_slug','digiy_explore_last_slug','digiy_last_slug','DIGIY_SLUG','DIGIY_EXPLORE_PHONE','digiy_explore_token'];const SAFE_KEEP_PREFIXES=['digiy_explore_memory','digiy_explore_notes','digiy_explore_places','quickExplore'];const $=id=>document.getElementById(id);function readState(){const found=[];SESSION_KEYS.forEach(k=>{try{if(sessionStorage.getItem(k))found.push('sessionStorage:'+k)}catch(_){}try{if(localStorage.getItem(k))found.push('localStorage:'+k)}catch(_){}});const ok=found.length>0;$('sessionPill').textContent=ok?'session trouvée':'à vérifier';$('sessionStatus').textContent=ok?'Une session EXPLORE ou un accès local existe sur ce téléphone.':'Aucune session EXPLORE claire détectée sur ce téléphone.';$('logBox').textContent=found.length?found.join('\n'):'Aucune clé de session détectée.'}function clearSession(){let removed=[];const clearStore=(store,label)=>{try{Object.keys(store).forEach(k=>{const low=k.toLowerCase();const keep=SAFE_KEEP_PREFIXES.some(p=>low.startsWith(p.toLowerCase()));const match=low.includes('explore')||low.includes('digiy_slug')||low.includes('digiy_access');if(match&&!keep){store.removeItem(k);removed.push(label+':'+k)}})}catch(_){}};clearStore(sessionStorage,'sessionStorage');clearStore(localStorage,'localStorage');$('logBox').textContent=removed.length?'Clés retirées :\n'+removed.join('\n'):'Rien à retirer.';readState()}try{const url=new URL(location.href);['slug','phone','tel','owner_phone','owner_id','pin','token','session_token','return','from','redirect','url','v'].forEach(k=>url.searchParams.delete(k));history.replaceState({},document.title,url.pathname+url.search+url.hash)}catch(_){}$('clearBtn').addEventListener('click',clearSession);$('refreshBtn').addEventListener('click',readState);readState();})();
-  </script>
+<header class="top">
+  <a href="./hub.html">← HUB</a>
+  <b>🎙️ ACTION EXPLORE</b>
+  <span>EXPLORE</span>
+</header>
+
+<main class="wrap">
+  <section class="card">
+    <div class="k">🗺️ Je fais découvrir · action métier</div>
+    <h1>Préparer le lieu.</h1>
+    <p class="lead" id="doctrine">
+      EXPLORE prépare une fiche, une sortie ou un boost. Le pro vérifie. Rien n’est publié ni encaissé automatiquement.
+    </p>
+
+    <div class="strip" aria-label="Exemples rapides">
+      <button class="quick" data-t="Lieu plage de Saly, activité balade coucher de soleil, zone Saly centre, boost visibilité 10000 Wave.">Plage de Saly<small>activité · zone · boost Wave</small></button>
+      <button class="quick" data-t="Lieu marché artisanal, visite guidée samedi matin, prix 5000 par personne, point de départ centre ville.">Marché artisanal<small>visite · prix · départ</small></button>
+      <button class="quick" data-t="Sortie lagune de Somone, guide Daouda, départ 9h, 4 personnes, acompte 15000 Wave.">Lagune Somone<small>guide · heure · acompte</small></button>
+      <button class="quick" data-t="Brouillon lieu restaurant vue mer, zone petite côte, photos à ajouter, contact WhatsApp à vérifier.">Brouillon lieu<small>photos · contact · à vérifier</small></button>
+    </div>
+
+    <textarea id="txt">Lieu plage de Saly, activité balade coucher de soleil, zone Saly centre, boost visibilité 10000 Wave.</textarea>
+
+    <div class="actions">
+      <button class="btn go" id="listen" type="button">🎙️ Écouter</button>
+      <button class="btn gold" id="prep" type="button">✨ Préparer la fiche</button>
+      <button class="btn" id="copy" type="button">📋 Copier message</button>
+      <button class="btn dark" id="pay" type="button">💳 Préparer boost PAY</button>
+      <a class="btn blue" href="./submit.html">➕ Ajouter / compléter</a>
+      <a class="btn blue" href="./lieux.html">📍 Voir mes lieux</a>
+    </div>
+
+    <p id="status">Prêt. Le pro garde la main.</p>
+  </section>
+
+  <section class="card">
+    <h2>📋 Fiche préparée</h2>
+    <div class="grid">
+      <div class="field"><small>Lieu</small><b id="fLieu">—</b></div>
+      <div class="field"><small>Activité</small><b id="fActivite">—</b></div>
+      <div class="field"><small>Zone</small><b id="fZone">—</b></div>
+      <div class="field"><small>Prix / boost</small><b id="fMontant">—</b></div>
+      <div class="field"><small>Canal</small><b id="fCanal">—</b></div>
+      <div class="field"><small>Statut</small><b id="fStatut">Brouillon</b></div>
+    </div>
+    <div class="msg" id="msg">Aucune fiche préparée.</div>
+  </section>
+
+  <section class="card proof">
+    <h2>✅ Preuve ACTION EXPLORE</h2>
+    <div class="msg" id="proof">Aucune preuve encore.</div>
+  </section>
+</main>
+
+<nav class="bar">
+  <a href="./hub.html">HUB</a>
+  <a class="on" href="./action.html">ACTION</a>
+  <a href="./lieux.html">Lieux</a>
+  <a href="./submit.html">Ajouter</a>
+  <a href="./session.html">Session</a>
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+
+function $(id){return document.getElementById(id)}
+function toast(message){var t=$("toast");t.textContent=message;t.style.display="block";setTimeout(function(){t.style.display="none"},2200)}
+function norm(v){return String(v||"").replace(/\s+/g," ").trim()}
+function low(v){return norm(v).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"")}
+function money(n){return Math.round(Number(n)||0).toLocaleString("fr-FR")+" F"}
+
+function readJSON(key,fallback){try{var r=JSON.parse(localStorage.getItem(key)||sessionStorage.getItem(key)||"");return r||fallback}catch(_){return fallback}}
+function phone(){
+  var keys=["digiy_explore_phone","DIGIY_EXPLORE_HUB_PHONE","digiy_phone"];
+  for(var i=0;i<keys.length;i++){
+    try{var v=sessionStorage.getItem(keys[i])||localStorage.getItem(keys[i]);if(v)return String(v).replace(/[^0-9]/g,"")}catch(_){}
+  }
+  var s=readJSON("digiy_explore_session",null)||readJSON("DIGIY_EXPLORE_SESSION",null)||readJSON("DIGIY_SESSION_EXPLORE",null);
+  return s&&s.phone?String(s.phone).replace(/[^0-9]/g,""):"";
+}
+function memoryKey(){return "digiy_explore_quick_note_memory_"+(phone()||"local")}
+function draftKey(){return "digiy_explore_quick_note_draft_"+(phone()||"local")}
+function pushMemory(draft){
+  try{
+    var rows=JSON.parse(localStorage.getItem(memoryKey())||"[]");
+    if(!Array.isArray(rows)) rows=[];
+    rows.unshift(draft);
+    localStorage.setItem(memoryKey(),JSON.stringify(rows.slice(0,120)));
+    localStorage.setItem("digiy_explore_quick_note_memory_local",JSON.stringify(rows.slice(0,120)));
+  }catch(_){}
+}
+function saveDraft(draft){
+  try{localStorage.setItem(draftKey(),JSON.stringify(draft));}catch(_){}
+  try{localStorage.setItem("DIGIY_EXPLORE_ACTION_DRAFT",JSON.stringify(draft));}catch(_){}
+  try{localStorage.setItem("DIGIY_EXPLORE_GO_LATEST",JSON.stringify(draft));}catch(_){}
+  try{
+    if(window.DIGIY_EXPLORE_MEMORY && typeof window.DIGIY_EXPLORE_MEMORY.saveDraft==="function"){
+      window.DIGIY_EXPLORE_MEMORY.saveDraft(draft);
+    }
+  }catch(_){}
+  pushMemory(draft);
+}
+
+function field(text, labels){
+  var clean=norm(text);
+  for(var i=0;i<labels.length;i++){
+    var label=labels[i];
+    var re=new RegExp("(?:^|[,;\\n]|\\s)"+label+"\\s*[:\\-]?\\s*([^,;\\n]+?)(?=\\s+(?:lieu|activité|activite|zone|ville|prix|tarif|montant|boost|acompte|canal|wave|cash|contact|whatsapp|guide|départ|depart|heure)\\b|[,;\\n]|$)","i");
+    var m=clean.match(re);
+    if(m&&m[1]) return norm(m[1]);
+  }
+  return "";
+}
+function parseLieu(text){
+  return field(text,["lieu","endroit","spot","site"]) ||
+    (norm(text).match(/\b(?:lieu|spot|site)\s+([A-Za-zÀ-ÿ0-9' -]{2,50})/i)||[])[1] ||
+    "Lieu EXPLORE";
+}
+function parseActivity(text){
+  return field(text,["activité","activite","sortie","visite","circuit"]) ||
+    (low(text).includes("balade")?"Balade":low(text).includes("visite")?"Visite":low(text).includes("circuit")?"Circuit":"À préciser");
+}
+function parseZone(text){
+  return field(text,["zone","ville","quartier","adresse"]) ||
+    (low(text).includes("saly")?"Saly":low(text).includes("somone")?"Somone":"À préciser");
+}
+function parseAmount(text){
+  var m=norm(text).match(/\b(?:boost|acompte|prix|tarif|montant)?\s*(\d[\d\s.,]*)\s*(?:fcfa|f\s*cfa|cfa|xof)?\s*(?:wave|cash|orange|om)?\b/i);
+  return m?Number(String(m[1]).replace(/[^0-9]/g,"")):0;
+}
+function parseChannel(text){
+  var t=low(text);
+  if(t.includes("wave")) return "Wave";
+  if(t.includes("cash")||t.includes("espece")||t.includes("espèce")) return "Cash";
+  if(t.includes("orange")||/\bom\b/.test(t)) return "Orange Money";
+  return "";
+}
+function build(){
+  var raw=$("txt").value.trim();
+  var amount=parseAmount(raw);
+  var channel=parseChannel(raw);
+  var title=parseLieu(raw);
+  var activity=parseActivity(raw);
+  var zone=parseZone(raw);
+  return {
+    id:"EXPLORE-ACTION-"+Date.now()+"-"+Math.random().toString(36).slice(2,8),
+    memory_id:"EXPLORE-ACTION-"+Date.now(),
+    module:"EXPLORE",
+    source:"ACTION_EXPLORE",
+    sentence:raw,
+    raw_text:raw,
+    title:title,
+    complement:activity+" · "+zone,
+    lieu:title,
+    activity:activity,
+    zone:zone,
+    amount_xof:amount,
+    amount:amount,
+    channel:channel || "other",
+    direction:amount>0?"in":"note",
+    kind:amount>0?"boost_or_acompte":"draft",
+    category:"EXPLORE",
+    status:"draft",
+    validation_required:true,
+    created_at:new Date().toISOString()
+  };
+}
+function display(d){
+  $("fLieu").textContent=d.lieu||"—";
+  $("fActivite").textContent=d.activity||"—";
+  $("fZone").textContent=d.zone||"—";
+  $("fMontant").textContent=d.amount_xof?money(d.amount_xof):"—";
+  $("fCanal").textContent=d.channel==="other"?"—":d.channel;
+  $("fStatut").textContent="Brouillon gardé";
+
+  var message=[
+    "EXPLORE — fiche préparée",
+    "Lieu : "+(d.lieu||"—"),
+    "Activité : "+(d.activity||"—"),
+    "Zone : "+(d.zone||"—"),
+    "Montant / boost : "+(d.amount_xof?money(d.amount_xof):"—"),
+    "Canal : "+(d.channel==="other"?"—":d.channel),
+    "",
+    "Texte terrain :",
+    d.sentence,
+    "",
+    "Message prêt :",
+    "Bonjour, voici la proposition EXPLORE : "+d.lieu+" · "+d.activity+" · "+d.zone+". Nous vérifions les détails avant confirmation."
+  ].join("\n");
+  $("msg").textContent=message;
+}
+function prepare(){
+  var d=build();
+  display(d);
+  saveDraft(d);
+  $("proof").textContent=[
+    "PREUVE ACTION EXPLORE — DIGIYLYFE",
+    "Statut : BROUILLON GARDÉ",
+    "Référence : "+d.id,
+    "Lieu : "+d.lieu,
+    "Activité : "+d.activity,
+    "Zone : "+d.zone,
+    "Montant / boost : "+(d.amount_xof?money(d.amount_xof):"—"),
+    "Canal : "+(d.channel==="other"?"—":d.channel),
+    "Validation humaine : oui",
+    "Publication automatique : non"
+  ].join("\n");
+  $("status").textContent="Fiche EXPLORE gardée. Ouvre Lieux ou Ajouter pour compléter.";
+  toast("ACTION EXPLORE prête");
+  return d;
+}
+function openPay(){
+  var d=prepare();
+  var phrase=d.amount_xof
+    ? ("boost EXPLORE "+d.amount_xof+" "+(d.channel==="other"?"Wave":d.channel)+" lieu "+d.lieu)
+    : ("brouillon EXPLORE sans paiement "+d.lieu);
+  try{navigator.clipboard&&navigator.clipboard.writeText(phrase)}catch(_){}
+  location.href="./pay-transition.html";
+}
+
+document.querySelectorAll("[data-t]").forEach(function(btn){
+  btn.addEventListener("click",function(){ $("txt").value=btn.dataset.t; prepare(); });
+});
+$("prep").onclick=prepare;
+$("copy").onclick=function(){prepare();try{navigator.clipboard&&navigator.clipboard.writeText($("msg").textContent);toast("Message copié")}catch(_){prompt("Copie le message :", $("msg").textContent)}};
+$("pay").onclick=openPay;
+$("listen").onclick=function(){
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){toast("Micro non disponible");return}
+  var r=new SR();r.lang="fr-FR";r.interimResults=false;
+  r.onresult=function(e){$("txt").value=e.results[0][0].transcript;prepare()};
+  r.onerror=function(){toast("Micro fragile")};
+  r.start();toast("Micro ouvert");
+};
+
+try{
+  var v=(window.DIGIY_GO_VOCABS&&window.DIGIY_GO_VOCABS.EXPLORE)||window.DIGIY_GO_EXPLORE_VOCAB||{};
+  if(v.doctrine) $("doctrine").textContent=v.doctrine;
+  if(v.examples&&v.examples[0]) $("txt").value=v.examples[0];
+}catch(_){}
+})();
+</script>
 </body>
 </html>
 
