@@ -6,9 +6,46 @@
   <meta name="robots" content="noindex,nofollow,noarchive,nosnippet"/>
   <meta name="theme-color" content="#06130f"/>
   <title>EXPLORE PRO — Accès sécurisé</title>
-  <meta name="description" content="Porte sécurisée EXPLORE PRO : session PIN valide vers HUB, sinon retour PIN."/>
+  <meta name="description" content="Porte sécurisée EXPLORE PRO : session PIN valide vers HUB, sinon retour PIN. Aucun téléphone visible dans l’adresse."/>
 
   <script>
+    /*
+      Nettoyage immédiat AVANT guard.js.
+      Si un ancien lien arrive avec téléphone / slug / token, on enlève tout de la barre visible.
+      Le téléphone ne doit jamais rester apparent.
+    */
+    (function(){
+      "use strict";
+      try{
+        const url = new URL(window.location.href);
+        [
+          "slug",
+          "phone",
+          "tel",
+          "owner_phone",
+          "owner_id",
+          "business_code",
+          "access_note",
+          "keybox_code",
+          "keybox_location",
+          "pin",
+          "code",
+          "token",
+          "session",
+          "session_token",
+          "return",
+          "from",
+          "redirect",
+          "redirect_url",
+          "url",
+          "v"
+        ].forEach(function(key){
+          url.searchParams.delete(key);
+        });
+        history.replaceState({}, document.title, url.pathname + url.search + url.hash);
+      }catch(_){}
+    })();
+
     window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
     window.DIGIY_SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
     window.DIGIY_SUPABASE_ANON = window.DIGIY_SUPABASE_ANON_KEY;
@@ -19,7 +56,7 @@
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="./guard.js?v=explore-index-secure-20260602"></script>
+  <script src="./guard.js?v=explore-index-secure-no-phone-20260602"></script>
 
   <style>
     *{box-sizing:border-box}
@@ -66,7 +103,7 @@
     }
     .actions{
       display:grid;
-      grid-template-columns:1fr 1fr;
+      grid-template-columns:1fr;
       gap:10px;
       margin-top:18px;
     }
@@ -79,24 +116,16 @@
       text-align:center;
       padding:10px;
       text-decoration:none;
-      color:#f8fafc;
-      border:1px solid rgba(255,255,255,.16);
-      background:rgba(255,255,255,.09);
-      font-weight:1000;
-    }
-    a.primary{
-      background:linear-gradient(135deg,#d4af37,#f3d46b);
       color:#13200d;
       border:0;
+      background:linear-gradient(135deg,#d4af37,#f3d46b);
+      font-weight:1000;
     }
     .small{
       margin-top:14px;
       font-size:13px;
       color:rgba(248,250,252,.58);
       white-space:pre-wrap;
-    }
-    @media(max-width:520px){
-      .actions{grid-template-columns:1fr}
     }
   </style>
 </head>
@@ -106,13 +135,12 @@
     <div class="k">DIGIYLYFE · EXPLORE sécurisé</div>
     <h1>Vérification PIN…</h1>
     <p>
-      Si la session est encore valide, EXPLORE ouvre le HUB.
-      Sinon, retour au PIN.
+      Si la session PIN est valide, EXPLORE ouvre le HUB.
+      Sinon, retour au PIN. Aucun téléphone ne reste visible.
     </p>
 
     <div class="actions">
-      <a class="primary" href="./pin.html">🔐 Entrer par PIN</a>
-      <a href="./hub.html">🧭 HUB si session ouverte</a>
+      <a href="./pin.html">🔐 Entrer par PIN</a>
     </div>
 
     <div class="small" id="status">Contrôle de la session locale…</div>
@@ -125,36 +153,6 @@
       const HUB = "./hub.html";
       const PIN = "./pin.html";
       const MAX_WAIT_MS = 1800;
-
-      function cleanUrl(){
-        try{
-          const url = new URL(window.location.href);
-          [
-            "slug",
-            "phone",
-            "tel",
-            "owner_phone",
-            "owner_id",
-            "business_code",
-            "access_note",
-            "keybox_code",
-            "keybox_location",
-            "pin",
-            "token",
-            "session_token",
-            "return",
-            "from",
-            "redirect",
-            "redirect_url",
-            "url",
-            "v"
-          ].forEach(function(key){
-            url.searchParams.delete(key);
-          });
-
-          history.replaceState({}, document.title, url.pathname + url.search + url.hash);
-        }catch(_){}
-      }
 
       function setStatus(text){
         const el = document.getElementById("status");
@@ -170,11 +168,7 @@
             state.ok === true ||
             state.pin_session_ok === true
           ) &&
-          (
-            state.slug ||
-            state.phone ||
-            state.preview === false
-          )
+          state.preview !== true
         );
       }
 
@@ -194,21 +188,25 @@
             if(!raw) continue;
 
             const s = JSON.parse(raw);
-            const expires = Number(s.expires_at || s.expiresAt || 0);
             const ok =
               s.access === true ||
               s.access_ok === true ||
               s.ok === true ||
-              s.pin_session_ok === true;
+              s.pin_session_ok === true ||
+              s.preview === false;
 
-            if(ok && expires && expires > Date.now()){
-              return true;
-            }
+            const sameModule =
+              !s.module ||
+              String(s.module).toUpperCase() === "EXPLORE" ||
+              String(s.module).toUpperCase() === "EXPLORE_BOOST";
+
+            if(!ok || !sameModule) continue;
+
+            const expires = Number(s.expires_at || s.expiresAt || 0);
+            if(expires && expires > Date.now()) return true;
 
             const ts = Number(s.verified_at || s.validated_at_ms || s.ts || 0);
-            if(ok && ts && (Date.now() - ts) <= 8 * 60 * 60 * 1000){
-              return true;
-            }
+            if(ts && (Date.now() - ts) <= 8 * 60 * 60 * 1000) return true;
           }catch(_){}
         }
 
@@ -220,8 +218,6 @@
       }
 
       async function boot(){
-        cleanUrl();
-
         try{
           if(window.DIGIY_GUARD && typeof window.DIGIY_GUARD.ready === "function"){
             setStatus("Lecture du guard EXPLORE…");
@@ -242,7 +238,7 @@
         }
 
         if(fallbackHasFreshSession()){
-          setStatus("Session locale trouvée. Ouverture du HUB…");
+          setStatus("Session locale valide. Ouverture du HUB…");
           setTimeout(function(){ go(HUB); }, 350);
         }else{
           setStatus("Session non validée. Retour PIN…");
@@ -263,5 +259,6 @@
   </script>
 </body>
 </html>
+
 
 
