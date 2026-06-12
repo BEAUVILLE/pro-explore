@@ -3,13 +3,11 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-
-  <title>Je fais découvrir — HUB EXPLORE</title>
-
+  <title>Je fais découvrir — EXPLORE</title>
   <meta name="theme-color" content="#06130f"/>
   <meta name="robots" content="noindex,nofollow,noarchive,nosnippet"/>
-  <meta name="description" content="DIGIY EXPLORE PRO — HUB mobile terrain : ACTION, lieux, ajout, QR, session."/>
-  <meta name="digiy-build" content="explore-hub-action-visible-20260602"/>
+  <meta name="description" content="DIGIY EXPLORE PRO — menu compact terrain : lieux, oreille, fiche, QR, PAY et session."/>
+  <meta name="digiy-build" content="explore-menu-compact-plus-pay-ok-20260612"/>
 
   <script>
     window.DIGIY_SUPABASE_URL="https://wesqmwjjtsefyjnluosj.supabase.co";
@@ -26,233 +24,109 @@
   <script src="./guard.js?v=explore-boost-hub-oreille-absolute-20260524"></script>
   <script src="./assets/js/digiy-module-bridge.js?v=explore-boost-hub-oreille-absolute-20260524"></script>
   <script src="./assets/js/digiy-explore-memory.js?v=explore-boost-hub-oreille-absolute-20260524"></script>
-  <style>
-    :root{--bg:#06130f;--bg2:#0a1f18;--bar:#06130f;--gold:#d4af37;--gold2:#f3d46b;--blue:#38bdf8;--text:#f8fafc;--muted:rgba(248,250,252,.78);--line:rgba(255,255,255,.16);--hdr:52px;--nav:78px}
-    *{box-sizing:border-box}html{-webkit-text-size-adjust:100%;text-size-adjust:100%}body{margin:0;min-height:100dvh;color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-weight:950;background:radial-gradient(620px 390px at 10% 0%,rgba(212,175,55,.14),transparent 58%),linear-gradient(180deg,var(--bg),var(--bg2));padding:calc(var(--hdr) + 14px) 12px calc(var(--nav) + 18px)}a{color:inherit;text-decoration:none}.top{position:fixed;top:0;left:0;right:0;height:var(--hdr);z-index:50;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 14px;background:rgba(6,19,15,.96);border-bottom:1px solid rgba(212,175,55,.24);backdrop-filter:blur(16px)}.top a{font-size:14px;color:rgba(248,250,252,.72);font-weight:1000}.title{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold2);font-weight:1000}.pill{padding:6px 10px;border-radius:999px;border:1px solid rgba(212,175,55,.38);background:rgba(212,175,55,.12);color:#fff0a8;font-size:12px;font-weight:1000}.wrap{width:min(980px,100%);margin:0 auto;display:grid;gap:16px}.eyebrow{color:var(--gold2);font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:1000}h1{margin:6px 0 8px;font-size:clamp(36px,8.5vw,58px);line-height:.94;letter-spacing:-.05em}.sub{color:var(--muted);font-size:18px;font-weight:1000;line-height:1.38;max-width:780px}.rule{margin-top:10px;padding:13px 15px;border-radius:20px;border:1px dashed rgba(255,255,255,.22);background:rgba(255,255,255,.06);font-size:15px;font-weight:1000;line-height:1.38}.rule b{color:var(--gold2)}.label{font-size:12px;font-weight:1000;letter-spacing:.14em;text-transform:uppercase;color:rgba(248,250,252,.56);margin-bottom:9px}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.tile{min-height:148px;display:flex;flex-direction:column;justify-content:space-between;gap:12px;padding:16px;border-radius:20px;border:1px solid var(--line);background:rgba(255,255,255,.09);box-shadow:0 18px 48px rgba(0,0,0,.26)}.tileTop{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}.ico{width:54px;height:54px;border-radius:17px;display:grid;place-items:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);font-size:28px}.tag{min-height:30px;display:inline-flex;align-items:center;justify-content:center;padding:5px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);color:var(--gold2);font-size:11px;font-weight:1000;letter-spacing:.08em;text-transform:uppercase}.tile b{display:block;font-size:22px;line-height:1.04;color:#fff;font-weight:1000}.tile span{display:block;margin-top:6px;color:var(--muted);font-size:15px;font-weight:1000;line-height:1.26}.primary{border-color:rgba(34,197,94,.40);background:rgba(34,197,94,.14)}.voice{border-color:rgba(212,175,55,.62);background:linear-gradient(135deg,rgba(212,175,55,.24),rgba(56,189,248,.10))}.gold{border-color:rgba(212,175,55,.46);background:rgba(212,175,55,.13)}.blue{border-color:rgba(56,189,248,.34);background:rgba(56,189,248,.11)}.pay{border-color:rgba(212,175,55,.50);background:linear-gradient(180deg,rgba(212,175,55,.18),rgba(255,255,255,.08))}.bottom{position:fixed;left:0;right:0;bottom:0;height:var(--nav);z-index:50;padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));background:rgba(6,19,15,.97);border-top:1px solid rgba(212,175,55,.18);backdrop-filter:blur(16px)}.bottomInner{width:min(760px,100%);height:100%;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:6px}.bottom a{min-height:58px;border-radius:16px;display:grid;place-items:center;align-content:center;gap:3px;color:rgba(248,250,252,.62);font-size:11px;font-weight:1000;text-align:center;background:rgba(255,255,255,.04)}.bottom a.active{color:#13200d;background:linear-gradient(135deg,var(--gold),var(--gold2))}.bi{font-size:20px}@media(max-width:860px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:520px){body{padding-left:10px;padding-right:10px}.tile{min-height:140px;padding:14px}.tile b{font-size:21px}.tile span{font-size:14px}.tag{font-size:10px}h1{font-size:36px}.sub{font-size:16px}}
-  
-    /* ══ LECTEUR DIGIY — EXPLORE ══ */
-    .digiyReader{
-      display:grid;
-      gap:12px;
-      padding:16px;
-      border-radius:24px;
-      border:1px solid rgba(212,175,55,.36);
-      background:
-        radial-gradient(520px 190px at 100% 0%,rgba(212,175,55,.18),transparent 70%),
-        linear-gradient(135deg,rgba(56,189,248,.12),rgba(212,175,55,.12));
-      box-shadow:0 18px 48px rgba(0,0,0,.26);
-    }
-    .digiyReaderTop{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:12px;
-      flex-wrap:wrap;
-    }
-    .digiyReaderKicker{
-      color:var(--gold2);
-      font-size:11px;
-      font-weight:1000;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      margin-bottom:6px;
-    }
-    .digiyReader h2{
-      margin:0;
-      color:#fff;
-      font-size:clamp(25px,6vw,38px);
-      line-height:.98;
-      letter-spacing:-.045em;
-      font-weight:1000;
-    }
-    .digiyReaderText{
-      color:rgba(248,250,252,.84);
-      font-size:15px;
-      font-weight:950;
-      line-height:1.45;
-      max-width:780px;
-    }
-    .digiyReaderActions{
-      display:flex;
-      gap:9px;
-      flex-wrap:wrap;
-    }
-    .digiyReaderActions button{
-      min-height:52px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.16);
-      background:rgba(255,255,255,.08);
-      color:#f8fafc;
-      padding:0 15px;
-      font:inherit;
-      font-size:14px;
-      font-weight:1000;
-      cursor:pointer;
-    }
-    .digiyReaderActions .main{
-      background:linear-gradient(135deg,var(--gold),var(--gold2));
-      color:#13200d;
-      border-color:rgba(212,175,55,.36);
-      box-shadow:0 12px 28px rgba(0,0,0,.18);
-    }
-    .digiyReaderActions .stop{
-      background:rgba(251,113,133,.12);
-      color:#fecaca;
-      border-color:rgba(251,113,133,.32);
-    }
-    .digiyReaderStatus{
-      min-height:20px;
-      color:var(--gold2);
-      font-size:13px;
-      font-weight:1000;
-    }
-    @media(max-width:520px){
-      .digiyReaderActions{display:grid;grid-template-columns:1fr 1fr}
-      .digiyReaderActions button{width:100%}
-    }
 
+  <style>
+    :root{
+      --bg:#06130f;--bg2:#0a1f18;--bar:rgba(6,19,15,.96);--gold:#d4af37;--gold2:#f3d46b;--blue:#38bdf8;--green:#22c55e;--text:#f8fafc;--muted:rgba(248,250,252,.78);--line:rgba(255,255,255,.16);--hdr:52px;--nav:78px;--r:20px;--max:980px;
+    }
+    *{box-sizing:border-box}
+    html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-behavior:smooth}
+    body{margin:0;min-height:100dvh;color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:19px;font-weight:950;background:radial-gradient(620px 390px at 10% 0%,rgba(212,175,55,.14),transparent 58%),radial-gradient(520px 320px at 92% 10%,rgba(56,189,248,.10),transparent 58%),linear-gradient(180deg,var(--bg),var(--bg2));padding:calc(var(--hdr) + 12px) 12px calc(var(--nav) + env(safe-area-inset-bottom,0px) + 16px)}
+    a{color:inherit;text-decoration:none}button{font:inherit;color:inherit;cursor:pointer}
+    .top{position:fixed;top:0;left:0;right:0;height:var(--hdr);z-index:80;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 12px;background:var(--bar);border-bottom:1px solid rgba(212,175,55,.24);backdrop-filter:blur(16px)}
+    .top a{font-size:13px;color:rgba(248,250,252,.72);font-weight:1000;white-space:nowrap}.title{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold2);font-weight:1000}.pill{padding:6px 10px;border-radius:999px;border:1px solid rgba(212,175,55,.38);background:rgba(212,175,55,.12);color:#fff0a8;font-size:12px;font-weight:1000;white-space:nowrap}
+    .wrap{width:min(var(--max),100%);margin:0 auto;display:grid;gap:12px}
+    .hero{display:grid;gap:8px;padding:2px 2px 4px}.eyebrow{color:var(--gold2);font-size:12px;letter-spacing:.15em;text-transform:uppercase;font-weight:1000}h1{margin:0;font-size:clamp(34px,8.5vw,56px);line-height:.92;letter-spacing:-.06em}.sub{color:var(--muted);font-size:16px;font-weight:1000;line-height:1.32;max-width:760px}
+    .quick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+    .quick a{min-height:96px;border-radius:20px;padding:13px;border:1px solid var(--line);background:rgba(255,255,255,.09);box-shadow:0 14px 34px rgba(0,0,0,.20);display:flex;flex-direction:column;justify-content:space-between}
+    .quick .main{background:linear-gradient(135deg,rgba(212,175,55,.28),rgba(56,189,248,.12));border-color:rgba(212,175,55,.52)}.quick .green{background:rgba(34,197,94,.14);border-color:rgba(34,197,94,.34)}.quick b{font-size:21px;line-height:1.02}.quick span{font-size:13px;color:var(--muted);line-height:1.2;margin-top:5px}
+    .label{font-size:11px;font-weight:1000;letter-spacing:.14em;text-transform:uppercase;color:rgba(248,250,252,.56);padding:0 2px}
+    .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+    .tile{min-height:116px;border-radius:20px;padding:13px;border:1px solid var(--line);background:rgba(255,255,255,.09);display:flex;flex-direction:column;justify-content:space-between;gap:10px;box-shadow:0 14px 34px rgba(0,0,0,.20)}
+    .topline{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.ico{width:44px;height:44px;border-radius:15px;display:grid;place-items:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);font-size:23px}.tag{display:inline-flex;align-items:center;justify-content:center;min-height:26px;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);font-size:9px;font-weight:1000;letter-spacing:.08em;text-transform:uppercase;color:var(--gold2);white-space:nowrap}
+    .tile b{display:block;color:#fff;font-size:18px;line-height:1.05}.tile span{display:block;margin-top:5px;color:var(--muted);font-size:13px;line-height:1.22}
+    .gold{border-color:rgba(212,175,55,.44);background:rgba(212,175,55,.13)}.blue{border-color:rgba(56,189,248,.34);background:rgba(56,189,248,.10)}.pay{border-color:rgba(212,175,55,.50);background:linear-gradient(180deg,rgba(212,175,55,.18),rgba(255,255,255,.08))}
+    .morePanel{display:none;position:fixed;left:10px;right:10px;bottom:calc(var(--nav) + env(safe-area-inset-bottom,0px) + 10px);z-index:90;width:min(760px,calc(100% - 20px));margin:0 auto;border-radius:24px;border:1px solid rgba(212,175,55,.32);background:linear-gradient(180deg,rgba(6,19,15,.98),rgba(10,31,24,.98));box-shadow:0 24px 70px rgba(0,0,0,.42);padding:14px}
+    .morePanel.open{display:grid;gap:10px}.moreHead{display:flex;justify-content:space-between;align-items:center;gap:10px}.moreHead b{color:var(--gold2);font-size:20px}.x{width:40px;height:40px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14)}.reader{padding:12px;border-radius:18px;border:1px solid rgba(212,175,55,.26);background:rgba(255,255,255,.06);display:grid;gap:8px}.reader p{margin:0;color:var(--muted);font-size:14px;line-height:1.35}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.actions button,.moreLinks a{min-height:48px;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);display:grid;place-items:center;text-align:center;font-size:14px;font-weight:1000}.actions .listen{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#13200d}.moreLinks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    .bottom{position:fixed;left:0;right:0;bottom:0;height:var(--nav);z-index:80;padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));background:rgba(6,19,15,.97);border-top:1px solid rgba(212,175,55,.18);backdrop-filter:blur(16px)}.bottomInner{width:min(760px,100%);height:100%;margin:0 auto;display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.bottom a,.bottom button{min-height:58px;border-radius:17px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);color:rgba(248,250,252,.72);display:grid;place-items:center;align-content:center;gap:3px;font-size:12px;font-weight:1000;text-align:center}.bottom .active{color:#13200d;background:linear-gradient(135deg,var(--gold),var(--gold2))}.bi{font-size:20px}
+    @media(max-width:760px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:520px){body{padding-left:10px;padding-right:10px}.quick{grid-template-columns:1fr 1fr 1fr}.quick a{min-height:88px;padding:11px}.quick b{font-size:17px}.quick span{font-size:12px}.tile{min-height:108px;padding:12px}.tile b{font-size:17px}.grid{gap:8px}h1{font-size:34px}.sub{font-size:15px}}
   </style>
 </head>
 <body>
-  <header class="top"><a href="./cockpit.html">← Accueil</a><div class="title">HUB EXPLORE</div><div class="pill">BOOST</div></header>
-  <main class="wrap">
-    <section><div class="eyebrow">🗺️ EXPLORE BOOST</div><h1>Toutes tes portes.</h1><div class="sub">On regarde d’abord, on comprend vite, on clique ensuite. EXPLORE range les lieux, QR, notes et visibilité.</div><div class="rule"><b>EXPLORE_BOOST</b> = rail abonnement. <b>EXPLORE</b> = nom visible du métier. <b>Oreille</b> = vraie page de travail vocal.</div></section>
+  <header class="top"><a href="./cockpit.html">← Accueil</a><div class="title">EXPLORE</div><div class="pill" id="sessionPill">session…</div></header>
 
-    <section class="digiyReader" aria-label="Lecteur DIGIY EXPLORE">
-      <div class="digiyReaderTop">
-        <div>
-          <div class="digiyReaderKicker">🎧 Lecteur DIGIY · EXPLORE</div>
-          <h2>Comprendre le module.</h2>
-        </div>
-        <div class="digiyReaderActions">
-          <button class="main" id="digiyExploreAudioPlay" type="button">▶ Écouter</button>
-          <button class="stop" id="digiyExploreAudioStop" type="button">⏹ Stop</button>
-        </div>
-      </div>
-      <div class="digiyReaderText" id="digiyExploreAudioText">
-        EXPLORE aide le pro à rendre visibles ses lieux, activités et expériences : fiche, QR, ajout de lieu,
-        lecture utile, Oreille EXPLORE et traces vers PAY. On regarde d’abord, on comprend vite, puis le pro valide.
-      </div>
-      <div class="digiyReaderStatus" id="digiyExploreAudioStatus">Prêt à lire · indications courtes</div>
+  <main class="wrap">
+    <section class="hero">
+      <div class="eyebrow">🗺️ Je fais découvrir</div>
+      <h1>Choisis ton geste.</h1>
+      <div class="sub">Un lieu, une fiche, un QR, une note ou une trace argent. EXPLORE prépare, le pro valide.</div>
     </section>
 
-    <section><div class="label">Action immédiate</div><div class="grid"><a class="tile primary" href="./cockpit.html"><div class="tileTop"><div class="ico">🏠</div><div class="tag">Accueil</div></div><div><b>Accueil EXPLORE</b><span>Lecture terrain et actions utiles.</span></div></a><a class="tile voice" href="./action.html">
-        <div class="tileTop"><div class="ico">🎙️</div><div class="tag">ACTION</div></div>
-        <div><b>ACTION EXPLORE</b><span>Préparer un lieu, une sortie ou un boost.</span></div>
-      </a>
+    <section class="quick" aria-label="Départ rapide EXPLORE">
+      <a class="main" href="./cockpit.html"><b>🏠 Accueil</b><span>Lire et piloter.</span></a>
+      <a class="green" href="./oreille.html?mode=lieu"><b>🎙️ Parler</b><span>Décrire un lieu.</span></a>
+      <a href="./submit.html"><b>➕ Ajouter</b><span>Créer une fiche lieu.</span></a>
+    </section>
 
-      <a class="tile voice" href="https://pro-explore.digiylyfe.com/oreille.html"><div class="tileTop"><div class="ico">🎙️</div><div class="tag">Oreille</div></div><div><b>Oreille EXPLORE</b><span>Parler, formuler, valider.</span></div></a><a class="tile gold" href="./lieux.html"><div class="tileTop"><div class="ico">📍</div><div class="tag">Lieux</div></div><div><b>Mes lieux</b><span>Voir les lieux rattachés.</span></div></a><a class="tile blue" href="./submit.html"><div class="tileTop"><div class="ico">➕</div><div class="tag">Ajouter</div></div><div><b>Ajouter un lieu</b><span>Créer ou compléter une fiche.</span></div></a></div></section>
-    <section><div class="label">Visibilité · terrain</div><div class="grid"><a class="tile" href="./qr.html"><div class="tileTop"><div class="ico">🔳</div><div class="tag">QR</div></div><div><b>Mon QR</b><span>Partager la bonne porte.</span></div></a><a class="tile gold" href="./fiche.html"><div class="tileTop"><div class="ico">🪪</div><div class="tag">Fiche</div></div><div><b>Ma fiche lieu</b><span>Nom, zone, photo, contact, Maps.</span></div></a><a class="tile" href="./claw.html"><div class="tileTop"><div class="ico">🧠</div><div class="tag">Lecture</div></div><div><b>Lecture utile</b><span>Messages prêts et aide terrain.</span></div></a><a class="tile pay" href="https://pro-pay.digiylyfe.com/admin.html"><div class="tileTop"><div class="ico">💰</div><div class="tag">PAY</div></div><div><b>Mon argent</b><span>Visites, avances, dépenses, traces.</span></div></a></div></section>
-    <section><div class="label">Accès · session</div><div class="grid"><a class="tile blue" href="./session.html"><div class="tileTop"><div class="ico">🛡️</div><div class="tag">Session</div></div><div><b>Ma session</b><span>État d’accès, nettoyage local.</span></div></a><a class="tile" href="./pin.html"><div class="tileTop"><div class="ico">🔐</div><div class="tag">PIN</div></div><div><b>Mon accès</b><span>Ouvrir ou renouveler l’accès.</span></div></a><a class="tile" href="https://digiylyfe.com/"><div class="tileTop"><div class="ico">🌍</div><div class="tag">Site</div></div><div><b>Site DIGIY</b><span>Maison publique DIGIYLYFE.</span></div></a><a class="tile gold" href="https://digiy-hub.digiylyfe.com/"><div class="tileTop"><div class="ico">🧭</div><div class="tag">HUB</div></div><div><b>HUB général</b><span>Retour aux portes DIGIY.</span></div></a></div></section>
+    <section class="wrap" aria-label="Portes EXPLORE">
+      <div class="label">Portes utiles</div>
+      <div class="grid">
+        <a class="tile gold" href="./lieux.html"><div class="topline"><div class="ico">📍</div><div class="tag">Lieux</div></div><div><b>Mes lieux</b><span>Voir les lieux rattachés.</span></div></a>
+        <a class="tile gold" href="./fiche.html"><div class="topline"><div class="ico">🪪</div><div class="tag">Fiche</div></div><div><b>Ma fiche lieu</b><span>Nom, zone, photo, contact, Maps.</span></div></a>
+        <a class="tile" href="./qr.html"><div class="topline"><div class="ico">🔳</div><div class="tag">QR</div></div><div><b>Mon QR</b><span>Partager la bonne porte.</span></div></a>
+        <a class="tile pay" href="https://pay.digiylyfe.com/"><div class="topline"><div class="ico">💰</div><div class="tag">Argent</div></div><div><b>Mon argent</b><span>Ouvrir PAY pour les traces réelles.</span></div></a>
+        <a class="tile blue" href="./action.html"><div class="topline"><div class="ico">⚡</div><div class="tag">Action</div></div><div><b>ACTION EXPLORE</b><span>Préparer un boost ou une sortie.</span></div></a>
+        <a class="tile" href="./claw.html"><div class="topline"><div class="ico">🧠</div><div class="tag">Lecture</div></div><div><b>Lecture utile</b><span>Messages prêts et aide terrain.</span></div></a>
+      </div>
+    </section>
   </main>
-  <nav class="bottom"><div class="bottomInner"><a class="active" href="./hub.html"><span class="bi">🧭</span><span>HUB</span></a><a href="./cockpit.html"><span class="bi">🏠</span><span>Accueil</span></a><a href="./action.html"><span class="bi">🎙️</span><span>ACTION</span></a><a href="./lieux.html"><span class="bi">📍</span><span>Lieux</span></a><a href="./session.html"><span class="bi">🛡️</span><span>Session</span></a></div></nav>
+
+  <section class="morePanel" id="morePanel" aria-label="Plus EXPLORE">
+    <div class="moreHead"><b>Plus EXPLORE</b><button class="x" type="button" id="closeMore">×</button></div>
+    <div class="reader">
+      <p><b>Comprendre le module.</b><br/>EXPLORE aide le pro à rendre visibles ses lieux, activités et expériences : fiche, QR, ajout de lieu, lecture utile, Oreille EXPLORE et traces vers PAY.</p>
+      <div class="actions"><button class="listen" id="playVoice" type="button">🎧 Écouter</button><button id="stopVoice" type="button">⏹ Stop</button></div>
+    </div>
+    <div class="moreLinks">
+      <a href="./session.html">🛡️ Session</a>
+      <a href="./pin.html">🔐 PIN</a>
+      <a href="https://digiy-hub.digiylyfe.com/">🧭 HUB général</a>
+      <a href="https://digiylyfe.com/">🌍 Site DIGIY</a>
+    </div>
+  </section>
+
+  <nav class="bottom" aria-label="Navigation compacte EXPLORE">
+    <div class="bottomInner">
+      <a class="active" href="./hub.html"><span class="bi">🧭</span><span>Menu</span></a>
+      <button type="button" id="openMore"><span class="bi">⋯</span><span>Plus</span></button>
+    </div>
+  </nav>
 
 <script>
-/* ══ DIGIY VOICE — EXPLORE ══ */
 (function(){
   "use strict";
+  var panel=document.getElementById("morePanel"), open=document.getElementById("openMore"), close=document.getElementById("closeMore");
+  function openMore(){ if(panel) panel.classList.add("open"); }
+  function closeMore(){ if(panel) panel.classList.remove("open"); stopSpeech(); }
+  if(open) open.addEventListener("click",openMore);
+  if(close) close.addEventListener("click",closeMore);
 
-  var SPEAK =
-    "Bienvenue dans EXPLORE, le module Je fais découvrir de Di-ji-laïf. " +
-    "Ici, le pro rend visibles ses lieux, ses activités, ses expériences et ses portes terrain. " +
-    "EXPLORE ne se lit pas d’abord : on regarde, on comprend vite, puis on clique. " +
-    "Accueil EXPLORE donne la lecture du terrain. Mes lieux permet de voir les lieux rattachés. Ajouter un lieu sert à créer ou compléter une fiche. " +
-    "Oreille EXPLORE permet de parler ou d’écrire peu : DIGIY prépare une description claire, mais le pro corrige, confirme et garde la vérité du lieu. " +
-    "La fiche lieu, le QR et les liens utiles donnent une porte propre au public. PAY reste le cerveau argent : visite, avance, dépense ou trace utile doivent être rangées avec vérité. " +
-    "Règle importante : EXPLORE ne promet pas une disponibilité, un prix, une visite ou une activité à la place du pro. Le logiciel prépare. Le terrain valide.";
+  var SPEAK="Bienvenue dans EXPLORE. Ici, le pro rend visibles ses lieux, ses activités et ses expériences. Accueil sert à lire et piloter. Parler ouvre Oreille EXPLORE. Ajouter crée une fiche lieu. Le QR partage la porte. PAY garde l'argent réel. EXPLORE prépare, mais le pro corrige et valide toujours.";
+  function canSpeak(){return "speechSynthesis" in window;}
+  function stopSpeech(){if(canSpeak()) window.speechSynthesis.cancel();}
+  function pickVoice(){var vs=canSpeak()?window.speechSynthesis.getVoices():[];return vs.find(v=>/^fr/i.test(v.lang||""))||vs[0]||null;}
+  function speak(){if(!canSpeak()) return; stopSpeech(); var u=new SpeechSynthesisUtterance(SPEAK);u.lang="fr-FR";u.rate=.86;u.pitch=1.02;var v=pickVoice();if(v)u.voice=v;window.speechSynthesis.speak(u);}
+  document.getElementById("playVoice")?.addEventListener("click",speak);
+  document.getElementById("stopVoice")?.addEventListener("click",stopSpeech);
+  window.addEventListener("pagehide",stopSpeech);
 
-  var play = document.getElementById("digiyExploreAudioPlay");
-  var stop = document.getElementById("digiyExploreAudioStop");
-  var status = document.getElementById("digiyExploreAudioStatus");
-
-  function digiySpeakText(text){
-    return String(text || "")
-      .replace(/\bWave\b/g, "Wéïv")
-      .replace(/\bWhatsApp\b/g, "Ouatsap")
-      .replace(/\bDIGIYLYFE\b/g, "Di-ji-laïf");
-  }
-
-  function setStatus(message){
-    if(status) status.textContent = message;
-  }
-
-  function canSpeak(){
-    return "speechSynthesis" in window;
-  }
-
-  function pickVoice(){
-    if(!canSpeak()) return null;
-    var voices = window.speechSynthesis.getVoices() || [];
-    return voices.find(function(v){ return /^fr/i.test(v.lang || "") && /FR/i.test(v.lang || ""); })
-        || voices.find(function(v){ return /^fr/i.test(v.lang || ""); })
-        || voices[0]
-        || null;
-  }
-
-  function stopSpeech(){
-    if(canSpeak()) window.speechSynthesis.cancel();
-    if(play) play.textContent = "▶ Écouter";
-    setStatus("Lecture arrêtée");
-  }
-
-  function speak(){
-    if(!canSpeak()){
-      setStatus("Lecture vocale non disponible ici");
-      return;
-    }
-
-    if(window.speechSynthesis.paused){
-      window.speechSynthesis.resume();
-      if(play) play.textContent = "⏸ Pause";
-      setStatus("▶ Reprise…");
-      return;
-    }
-
-    if(window.speechSynthesis.speaking){
-      window.speechSynthesis.pause();
-      if(play) play.textContent = "▶ Reprendre";
-      setStatus("⏸ En pause");
-      return;
-    }
-
-    stopSpeech();
-
-    var u = new SpeechSynthesisUtterance(digiySpeakText(SPEAK));
-    u.lang = "fr-FR";
-    u.rate = 0.86;
-    u.pitch = 1.02;
-    u.volume = 1;
-
-    var voice = pickVoice();
-    if(voice) u.voice = voice;
-
-    u.onstart = function(){
-      if(play) play.textContent = "⏸ Pause";
-      setStatus("▶ DIGIY explique EXPLORE…");
-    };
-    u.onend = function(){
-      if(play) play.textContent = "▶ Écouter";
-      setStatus("✓ Lecture terminée");
-    };
-    u.onerror = function(){
-      if(play) play.textContent = "▶ Écouter";
-      setStatus("Lecture interrompue");
-    };
-
-    window.speechSynthesis.speak(u);
-  }
-
-  if(play) play.addEventListener("click", speak);
-  if(stop) stop.addEventListener("click", stopSpeech);
-
-  if(canSpeak()){
-    window.speechSynthesis.onvoiceschanged = pickVoice;
-  }
-
-  window.addEventListener("pagehide", stopSpeech);
+  async function waitGuard(){try{var g=window.DIGIY_GUARD;if(!g)return{};if(typeof g.ready==="function"){var out=g.ready({redirect:false,preserve_validation:true});if(out&&typeof out.then==="function")await out;}else if(g.ready&&typeof g.ready.then==="function")await g.ready;return typeof g.getSession==="function"?(g.getSession()||g.state||{}):(g.state||{});}catch(e){return{};}}
+  waitGuard().then(function(s){var el=document.getElementById("sessionPill");if(!el)return;var ok=!!(s&&(s.access_ok||s.access||s.pin_session_ok));el.textContent=ok?"session ouverte":"accès à vérifier";});
 })();
 </script>
 <script src="./assets/js/action-digiy-pro-orient.js?v=action-digiy-pro-orient-20260606" defer></script>
 </body>
 </html>
+
 
