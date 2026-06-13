@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-  <title>Je fais découvrir — EXPLORE</title>
+  <title>DIGIY EXPLORE PRO — Cockpit direct</title>
   <meta name="theme-color" content="#06130f"/>
   <meta name="robots" content="noindex,nofollow,noarchive,nosnippet"/>
-  <meta name="description" content="DIGIY EXPLORE PRO — menu compact terrain : lieux, oreille, fiche, QR, PAY et session."/>
-  <meta name="digiy-build" content="explore-menu-compact-plus-pay-ok-20260612"/>
+  <meta name="description" content="DIGIY EXPLORE PRO V2 — cockpit direct : Oreille EXPLORE, ajouter lieu, lieux, PAY, fiche, QR et Plus."/>
+  <meta name="digiy-build" content="explore-pro-v2-cockpit-direct-oreille-pay-plus-20260613"/>
 
   <script>
     window.DIGIY_SUPABASE_URL="https://wesqmwjjtsefyjnluosj.supabase.co";
@@ -17,117 +17,597 @@
     window.DIGIY_MODULE="EXPLORE";
     window.DIGIY_ABOS_MODULE="EXPLORE_BOOST";
     window.DIGIY_LOGIN_URL="./pin.html";
+    window.DIGIY_PAY_URL="https://pay.digiylyfe.com/";
   </script>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="./assets/js/digiy-abos-access.js?v=abos-20260522"></script>
-  <script src="./guard.js?v=explore-boost-hub-oreille-absolute-20260524"></script>
-  <script src="./assets/js/digiy-module-bridge.js?v=explore-boost-hub-oreille-absolute-20260524"></script>
-  <script src="./assets/js/digiy-explore-memory.js?v=explore-boost-hub-oreille-absolute-20260524"></script>
+  <script src="./guard.js?v=explore-pro-v2-20260613"></script>
+  <script src="./assets/js/digiy-module-bridge.js?v=explore-pro-v2-20260613" defer></script>
+  <script src="./assets/js/digiy-explore-memory.js?v=explore-pro-v2-20260613" defer></script>
 
   <style>
     :root{
-      --bg:#06130f;--bg2:#0a1f18;--bar:rgba(6,19,15,.96);--gold:#d4af37;--gold2:#f3d46b;--blue:#38bdf8;--green:#22c55e;--text:#f8fafc;--muted:rgba(248,250,252,.78);--line:rgba(255,255,255,.16);--hdr:52px;--nav:78px;--r:20px;--max:980px;
+      --bg:#06130f;
+      --bg2:#0a1f18;
+      --paper:rgba(255,255,255,.09);
+      --paper2:rgba(255,255,255,.13);
+      --bar:rgba(6,19,15,.96);
+      --gold:#d4af37;
+      --gold2:#f3d46b;
+      --blue:#38bdf8;
+      --green:#22c55e;
+      --danger:#fb7185;
+      --text:#f8fafc;
+      --muted:rgba(248,250,252,.78);
+      --soft:rgba(248,250,252,.58);
+      --line:rgba(255,255,255,.16);
+      --shadow:0 18px 48px rgba(0,0,0,.26);
+      --hdr:64px;
+      --nav:88px;
+      --max:1080px;
+      --r:26px;
     }
     *{box-sizing:border-box}
     html{-webkit-text-size-adjust:100%;text-size-adjust:100%;scroll-behavior:smooth}
-    body{margin:0;min-height:100dvh;color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:19px;font-weight:950;background:radial-gradient(620px 390px at 10% 0%,rgba(212,175,55,.14),transparent 58%),radial-gradient(520px 320px at 92% 10%,rgba(56,189,248,.10),transparent 58%),linear-gradient(180deg,var(--bg),var(--bg2));padding:calc(var(--hdr) + 12px) 12px calc(var(--nav) + env(safe-area-inset-bottom,0px) + 16px)}
-    a{color:inherit;text-decoration:none}button{font:inherit;color:inherit;cursor:pointer}
-    .top{position:fixed;top:0;left:0;right:0;height:var(--hdr);z-index:80;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 12px;background:var(--bar);border-bottom:1px solid rgba(212,175,55,.24);backdrop-filter:blur(16px)}
-    .top a{font-size:13px;color:rgba(248,250,252,.72);font-weight:1000;white-space:nowrap}.title{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold2);font-weight:1000}.pill{padding:6px 10px;border-radius:999px;border:1px solid rgba(212,175,55,.38);background:rgba(212,175,55,.12);color:#fff0a8;font-size:12px;font-weight:1000;white-space:nowrap}
-    .wrap{width:min(var(--max),100%);margin:0 auto;display:grid;gap:12px}
-    .hero{display:grid;gap:8px;padding:2px 2px 4px}.eyebrow{color:var(--gold2);font-size:12px;letter-spacing:.15em;text-transform:uppercase;font-weight:1000}h1{margin:0;font-size:clamp(34px,8.5vw,56px);line-height:.92;letter-spacing:-.06em}.sub{color:var(--muted);font-size:16px;font-weight:1000;line-height:1.32;max-width:760px}
-    .quick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
-    .quick a{min-height:96px;border-radius:20px;padding:13px;border:1px solid var(--line);background:rgba(255,255,255,.09);box-shadow:0 14px 34px rgba(0,0,0,.20);display:flex;flex-direction:column;justify-content:space-between}
-    .quick .main{background:linear-gradient(135deg,rgba(212,175,55,.28),rgba(56,189,248,.12));border-color:rgba(212,175,55,.52)}.quick .green{background:rgba(34,197,94,.14);border-color:rgba(34,197,94,.34)}.quick b{font-size:21px;line-height:1.02}.quick span{font-size:13px;color:var(--muted);line-height:1.2;margin-top:5px}
-    .label{font-size:11px;font-weight:1000;letter-spacing:.14em;text-transform:uppercase;color:rgba(248,250,252,.56);padding:0 2px}
-    .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
-    .tile{min-height:116px;border-radius:20px;padding:13px;border:1px solid var(--line);background:rgba(255,255,255,.09);display:flex;flex-direction:column;justify-content:space-between;gap:10px;box-shadow:0 14px 34px rgba(0,0,0,.20)}
-    .topline{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.ico{width:44px;height:44px;border-radius:15px;display:grid;place-items:center;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);font-size:23px}.tag{display:inline-flex;align-items:center;justify-content:center;min-height:26px;padding:4px 8px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);font-size:9px;font-weight:1000;letter-spacing:.08em;text-transform:uppercase;color:var(--gold2);white-space:nowrap}
-    .tile b{display:block;color:#fff;font-size:18px;line-height:1.05}.tile span{display:block;margin-top:5px;color:var(--muted);font-size:13px;line-height:1.22}
-    .gold{border-color:rgba(212,175,55,.44);background:rgba(212,175,55,.13)}.blue{border-color:rgba(56,189,248,.34);background:rgba(56,189,248,.10)}.pay{border-color:rgba(212,175,55,.50);background:linear-gradient(180deg,rgba(212,175,55,.18),rgba(255,255,255,.08))}
-    .morePanel{display:none;position:fixed;left:10px;right:10px;bottom:calc(var(--nav) + env(safe-area-inset-bottom,0px) + 10px);z-index:90;width:min(760px,calc(100% - 20px));margin:0 auto;border-radius:24px;border:1px solid rgba(212,175,55,.32);background:linear-gradient(180deg,rgba(6,19,15,.98),rgba(10,31,24,.98));box-shadow:0 24px 70px rgba(0,0,0,.42);padding:14px}
-    .morePanel.open{display:grid;gap:10px}.moreHead{display:flex;justify-content:space-between;align-items:center;gap:10px}.moreHead b{color:var(--gold2);font-size:20px}.x{width:40px;height:40px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14)}.reader{padding:12px;border-radius:18px;border:1px solid rgba(212,175,55,.26);background:rgba(255,255,255,.06);display:grid;gap:8px}.reader p{margin:0;color:var(--muted);font-size:14px;line-height:1.35}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.actions button,.moreLinks a{min-height:48px;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);display:grid;place-items:center;text-align:center;font-size:14px;font-weight:1000}.actions .listen{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#13200d}.moreLinks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-    .bottom{position:fixed;left:0;right:0;bottom:0;height:var(--nav);z-index:80;padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));background:rgba(6,19,15,.97);border-top:1px solid rgba(212,175,55,.18);backdrop-filter:blur(16px)}.bottomInner{width:min(760px,100%);height:100%;margin:0 auto;display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.bottom a,.bottom button{min-height:58px;border-radius:17px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);color:rgba(248,250,252,.72);display:grid;place-items:center;align-content:center;gap:3px;font-size:12px;font-weight:1000;text-align:center}.bottom .active{color:#13200d;background:linear-gradient(135deg,var(--gold),var(--gold2))}.bi{font-size:20px}
-    @media(max-width:760px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-    @media(max-width:520px){body{padding-left:10px;padding-right:10px}.quick{grid-template-columns:1fr 1fr 1fr}.quick a{min-height:88px;padding:11px}.quick b{font-size:17px}.quick span{font-size:12px}.tile{min-height:108px;padding:12px}.tile b{font-size:17px}.grid{gap:8px}h1{font-size:34px}.sub{font-size:15px}}
+    body{
+      margin:0;
+      min-height:100dvh;
+      color:var(--text);
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      font-size:18px;
+      font-weight:900;
+      background:
+        radial-gradient(780px 460px at 6% -6%,rgba(212,175,55,.20),transparent 58%),
+        radial-gradient(680px 420px at 98% 0%,rgba(56,189,248,.14),transparent 55%),
+        linear-gradient(180deg,var(--bg),var(--bg2));
+      padding:calc(var(--hdr) + 14px) 12px calc(var(--nav) + env(safe-area-inset-bottom,0px) + 18px);
+    }
+    a{color:inherit;text-decoration:none}
+    button,input,textarea,select{font:inherit}
+    button{cursor:pointer}
+    .top{
+      position:fixed;top:0;left:0;right:0;height:var(--hdr);z-index:90;
+      display:flex;align-items:center;justify-content:space-between;gap:10px;
+      padding:0 12px;
+      background:var(--bar);
+      border-bottom:1px solid rgba(212,175,55,.24);
+      backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+    }
+    .top a{font-size:13px;color:rgba(248,250,252,.72);font-weight:1000;white-space:nowrap}
+    .title{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold2);font-weight:1000;text-align:center}
+    .pill{display:inline-flex;align-items:center;justify-content:center;min-height:32px;padding:0 10px;border-radius:999px;border:1px solid rgba(212,175,55,.38);background:rgba(212,175,55,.12);color:#fff0a8;font-size:12px;font-weight:1000;white-space:nowrap;max-width:34vw;overflow:hidden;text-overflow:ellipsis}
+    .pill.ok{color:#bbf7d0;border-color:rgba(34,197,94,.40);background:rgba(34,197,94,.12)}
+    .wrap{width:min(var(--max),100%);margin:0 auto;display:grid;gap:14px}
+    .hero{
+      display:grid;grid-template-columns:1.05fr .95fr;gap:14px;align-items:stretch;
+    }
+    .heroCard{
+      border-radius:34px;
+      padding:22px;
+      background:
+        radial-gradient(560px 230px at 100% 0%,rgba(212,175,55,.24),transparent 66%),
+        linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.065));
+      border:1px solid rgba(255,255,255,.15);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .eyebrow{color:var(--gold2);font-size:12px;letter-spacing:.15em;text-transform:uppercase;font-weight:1000}
+    h1{margin:10px 0 8px;font-size:clamp(2.25rem,7vw,4.9rem);line-height:.9;letter-spacing:-.065em;font-weight:1000}
+    .sub{color:var(--muted);font-size:15.5px;font-weight:900;line-height:1.45;max-width:760px;margin:0}
+    .stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+    .stat{border-radius:22px;padding:15px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.14);box-shadow:0 10px 28px rgba(0,0,0,.18)}
+    .stat b{display:block;font-size:1.65rem;color:var(--gold2);line-height:1;font-weight:1000}
+    .stat span{display:block;margin-top:5px;color:var(--muted);font-size:.82rem;font-weight:950;line-height:1.25}
+
+    .oreille{
+      border-radius:30px;padding:16px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.15);box-shadow:var(--shadow)
+    }
+    .oreilleHead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
+    .oreilleTitle{font-size:1.25rem;color:var(--gold2);font-weight:1000;line-height:1.05}
+    .oreilleSub{margin-top:4px;color:var(--muted);font-size:.86rem;font-weight:900;line-height:1.35}
+    .command{display:grid;grid-template-columns:1fr auto auto;gap:9px}
+    .field,.commandInput,textarea.field,select.field{
+      width:100%;min-height:54px;border-radius:20px;border:1px solid rgba(255,255,255,.16);
+      background:rgba(255,255,255,.10);color:var(--text);outline:none;padding:0 14px;font-weight:950;
+      box-shadow:0 10px 24px rgba(0,0,0,.12);
+    }
+    textarea.field{min-height:104px;padding:14px;resize:vertical;line-height:1.4}
+    .commandInput::placeholder,.field::placeholder{color:rgba(248,250,252,.46)}
+    .btn{
+      min-height:52px;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.10);
+      color:var(--text);font-weight:1000;padding:0 15px;text-align:center;
+    }
+    .btnMain{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#13200d;border:0}
+    .btnGreen{background:linear-gradient(135deg,var(--green),var(--gold));color:#13200d;border:0}
+    .btnSoft{background:rgba(255,255,255,.08)}
+    .btnDanger{background:rgba(251,113,133,.13);color:#fecdd3}
+    .result{display:none;margin-top:12px;border-radius:18px;padding:12px 13px;border:1px solid rgba(212,175,55,.22);background:rgba(212,175,55,.10);color:#fff3cf;font-size:.9rem;font-weight:950;line-height:1.4}
+    .result.show{display:block}
+
+    .tabs{position:sticky;top:var(--hdr);z-index:80;margin:0 -12px;padding:8px 12px;background:rgba(6,19,15,.88);border-top:1px solid rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.08);backdrop-filter:blur(14px)}
+    .tabsInner{width:min(760px,100%);margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+    .tab{min-height:58px;border-radius:18px;border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.07);color:rgba(248,250,252,.72);font-size:.76rem;font-weight:1000;display:grid;place-items:center;gap:2px;padding:6px;text-align:center}
+    .tab strong{font-size:1.2rem;line-height:1}
+    .tab.active{color:#13200d;background:linear-gradient(135deg,var(--gold),var(--gold2));border:0}
+
+    .section{display:none}
+    .section.active{display:block}
+    .panel{border-radius:32px;padding:18px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.14);box-shadow:var(--shadow)}
+    .sectionHead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:15px}
+    .sectionHead h2{margin:5px 0 0;font-size:clamp(1.75rem,4.6vw,3rem);line-height:.96;letter-spacing:-.055em;font-weight:1000;color:#fff}
+    .sectionHead p{margin:7px 0 0;color:var(--muted);font-size:.92rem;font-weight:900;line-height:1.45;max-width:720px}
+    .miniPill{display:inline-flex;align-items:center;min-height:30px;border-radius:999px;padding:0 11px;background:rgba(212,175,55,.12);border:1px solid rgba(212,175,55,.25);color:#fff0a8;font-size:.74rem;font-weight:1000;letter-spacing:.06em;text-transform:uppercase}
+
+    .formGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .wide{grid-column:1/-1}
+    .label{display:grid;gap:6px;color:#fff3cf;font-size:.84rem;font-weight:1000}
+    .placesGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+    .placeCard{border-radius:26px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.14);box-shadow:0 12px 30px rgba(0,0,0,.18);overflow:hidden}
+    .placeTop{min-height:112px;display:grid;place-items:center;background:radial-gradient(circle at 78% 0%,rgba(212,175,55,.26),transparent 42%),linear-gradient(135deg,#062218,#0d5b43);font-size:42px}
+    .placeBody{padding:14px}
+    .placeBody h3{margin:0;font-size:1.25rem;line-height:1.05;font-weight:1000;color:#fff}
+    .placeBody p{margin:8px 0 0;color:var(--muted);font-size:.88rem;line-height:1.38}
+    .metaRow{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+    .meta{display:inline-flex;align-items:center;min-height:28px;padding:0 9px;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.10);color:#e7fff3;font-size:.73rem;font-weight:1000}
+    .cardActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.cardActions .btn{min-height:42px;padding:0 9px;font-size:.82rem}
+
+    .payGrid{display:grid;grid-template-columns:.96fr 1.04fr;gap:12px}
+    .payTemp{border-radius:24px;padding:15px;border:1px solid rgba(212,175,55,.24);background:linear-gradient(135deg,rgba(212,175,55,.14),rgba(56,189,248,.08));color:#fff3cf;font-weight:950;line-height:1.45}
+    .movementList{display:grid;gap:9px}
+    .move{border-radius:18px;padding:12px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.12);display:flex;justify-content:space-between;gap:10px}
+    .move b{color:#fff}.move.in b{color:#bbf7d0}.move.out b{color:#fecdd3}.move small{display:block;color:var(--soft);margin-top:3px;font-weight:900}
+
+    .linkBox{border-radius:24px;padding:15px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.13);word-break:break-word;color:#e7fff3;line-height:1.5;font-weight:930}
+    .moreGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .miniCard{border-radius:24px;padding:15px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.13)}
+    .miniCard h3{margin:0 0 7px;color:#fff;font-size:1.08rem;line-height:1.1}
+    .miniCard p{margin:0;color:var(--muted);font-size:.88rem;line-height:1.4}
+    .miniCard .btn{margin-top:12px;width:100%}
+
+    .bottom{position:fixed;left:0;right:0;bottom:0;height:var(--nav);z-index:100;padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));background:rgba(6,19,15,.97);border-top:1px solid rgba(212,175,55,.18);backdrop-filter:blur(16px)}
+    .bottomInner{width:min(760px,100%);height:100%;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+    .bottom button{min-height:60px;border-radius:17px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.05);color:rgba(248,250,252,.72);display:grid;place-items:center;align-content:center;gap:2px;font-size:11px;font-weight:1000;text-align:center}
+    .bottom button.active{color:#13200d;background:linear-gradient(135deg,var(--gold),var(--gold2));border:0}.bi{font-size:19px}
+
+    .toast{position:fixed;left:50%;bottom:calc(var(--nav) + 16px);transform:translateX(-50%) translateY(12px);z-index:130;opacity:0;pointer-events:none;background:#fff3cf;color:#13200d;border-radius:999px;padding:11px 15px;font-size:.9rem;font-weight:1000;box-shadow:0 16px 40px rgba(0,0,0,.28);transition:.18s ease}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    @media(max-width:860px){.hero{grid-template-columns:1fr}.placesGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.payGrid{grid-template-columns:1fr}}
+    @media(max-width:560px){
+      body{font-size:17px}
+      .command{grid-template-columns:1fr}
+      .command .btn{width:100%}
+      .formGrid,.moreGrid{grid-template-columns:1fr}
+      .placesGrid{grid-template-columns:1fr}
+      .heroCard{padding:18px;border-radius:28px}
+      .tabsInner .tab{font-size:.68rem;min-height:54px}
+    }
   </style>
 </head>
 <body>
-  <header class="top"><a href="./cockpit.html">← Accueil</a><div class="title">EXPLORE</div><div class="pill" id="sessionPill">session…</div></header>
+  <header class="top">
+    <a href="https://digiy-hub.digiylyfe.com/">← HUB</a>
+    <div class="title">EXPLORE PRO V2</div>
+    <div class="pill" id="sessionPill">session…</div>
+  </header>
 
   <main class="wrap">
-    <section class="hero">
-      <div class="eyebrow">🗺️ Je fais découvrir</div>
-      <h1>Choisis ton geste.</h1>
-      <div class="sub">Un lieu, une fiche, un QR, une note ou une trace argent. EXPLORE prépare, le pro valide.</div>
+    <section class="hero" id="haut">
+      <div class="heroCard">
+        <div class="eyebrow">🗺️ Je fais découvrir</div>
+        <h1>Fais voir le lieu. Sans te perdre.</h1>
+        <p class="sub">Oreille EXPLORE capte le besoin, prépare une fiche lieu, une note, un partage ou une trace PAY. Le pro corrige et valide.</p>
+      </div>
+      <div class="heroCard">
+        <div class="eyebrow">Température EXPLORE</div>
+        <div class="stats">
+          <div class="stat"><b id="statPlaces">0</b><span>Lieux préparés</span></div>
+          <div class="stat"><b id="statNotes">0</b><span>Notes terrain</span></div>
+          <div class="stat"><b id="statIn">0</b><span>Entrées FCFA</span></div>
+          <div class="stat"><b id="statOut">0</b><span>Sorties FCFA</span></div>
+        </div>
+      </div>
     </section>
 
-    <section class="quick" aria-label="Départ rapide EXPLORE">
-      <a class="main" href="./cockpit.html"><b>🏠 Accueil</b><span>Lire et piloter.</span></a>
-      <a class="green" href="./oreille.html?mode=lieu"><b>🎙️ Parler</b><span>Décrire un lieu.</span></a>
-      <a href="./submit.html"><b>➕ Ajouter</b><span>Créer une fiche lieu.</span></a>
+    <section class="oreille" id="oreille">
+      <div class="oreilleHead">
+        <div>
+          <div class="oreilleTitle">👂 Oreille EXPLORE V2</div>
+          <div class="oreilleSub">Parle ou écris : “ajoute plage de Saly”, “note visite client”, “dépense boost 10000”, “prépare QR”.</div>
+        </div>
+        <span class="miniPill">Le pro valide</span>
+      </div>
+      <div class="command">
+        <input class="commandInput" id="voiceText" placeholder="Ex : ajoute lieu plage de Saly avec contact 77..."/>
+        <button class="btn btnMain" id="btnPrepare" type="button">Préparer</button>
+        <button class="btn btnSoft" id="btnListen" type="button">🎙️ Parler</button>
+      </div>
+      <div class="result" id="intentResult">Action prête.</div>
     </section>
 
-    <section class="wrap" aria-label="Portes EXPLORE">
-      <div class="label">Portes utiles</div>
-      <div class="grid">
-        <a class="tile gold" href="./lieux.html"><div class="topline"><div class="ico">📍</div><div class="tag">Lieux</div></div><div><b>Mes lieux</b><span>Voir les lieux rattachés.</span></div></a>
-        <a class="tile gold" href="./fiche.html"><div class="topline"><div class="ico">🪪</div><div class="tag">Fiche</div></div><div><b>Ma fiche lieu</b><span>Nom, zone, photo, contact, Maps.</span></div></a>
-        <a class="tile" href="./qr.html"><div class="topline"><div class="ico">🔳</div><div class="tag">QR</div></div><div><b>Mon QR</b><span>Partager la bonne porte.</span></div></a>
-        <a class="tile pay" href="https://pay.digiylyfe.com/"><div class="topline"><div class="ico">💰</div><div class="tag">Argent</div></div><div><b>Mon argent</b><span>Ouvrir PAY pour les traces réelles.</span></div></a>
-        <a class="tile blue" href="./action.html"><div class="topline"><div class="ico">⚡</div><div class="tag">Action</div></div><div><b>ACTION EXPLORE</b><span>Préparer un boost ou une sortie.</span></div></a>
-        <a class="tile" href="./claw.html"><div class="topline"><div class="ico">🧠</div><div class="tag">Lecture</div></div><div><b>Lecture utile</b><span>Messages prêts et aide terrain.</span></div></a>
+    <nav class="tabs" aria-label="Gestes EXPLORE">
+      <div class="tabsInner">
+        <button class="tab active" data-tab="add" type="button"><strong>➕</strong>Ajouter</button>
+        <button class="tab" data-tab="places" type="button"><strong>📍</strong>Lieux</button>
+        <button class="tab" data-tab="pay" type="button"><strong>💳</strong>PAY</button>
+        <button class="tab" data-tab="share" type="button"><strong>🔗</strong>Fiche QR</button>
+        <button class="tab" data-tab="more" type="button"><strong>⋯</strong>Plus</button>
+      </div>
+    </nav>
+
+    <section class="section active" id="tab-add">
+      <div class="panel">
+        <div class="sectionHead">
+          <div><span class="miniPill">Lieu / expérience</span><h2>Ajouter un lieu.</h2><p>Une fiche courte pour préparer la visibilité : nom, zone, type, contact, note, lien Maps si disponible.</p></div>
+          <button class="btn btnSoft" id="btnSeed" type="button">Exemple</button>
+        </div>
+        <form id="placeForm" class="formGrid">
+          <label class="label">Nom du lieu<input class="field" id="pName" placeholder="Plage de Saly"/></label>
+          <label class="label">Zone<input class="field" id="pZone" placeholder="Saly, Mbour, Dakar..."/></label>
+          <label class="label">Type<input class="field" id="pType" placeholder="Plage, resto, sortie, expérience..."/></label>
+          <label class="label">Contact<input class="field" id="pContact" inputmode="tel" placeholder="22177..."/></label>
+          <label class="label wide">Description<textarea class="field" id="pDesc" placeholder="Ce qu’on doit comprendre vite, sans grand discours."></textarea></label>
+          <label class="label wide">Lien Maps / repère<textarea class="field" id="pMap" placeholder="Lien Google Maps ou repère simple."></textarea></label>
+          <div class="wide" style="display:flex;gap:9px;flex-wrap:wrap">
+            <button class="btn btnGreen" type="submit">Enregistrer le lieu</button>
+            <button class="btn btnSoft" id="btnClearPlace" type="button">Effacer</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section class="section" id="tab-places">
+      <div class="panel">
+        <div class="sectionHead">
+          <div><span class="miniPill">Visibilité</span><h2>Mes lieux.</h2><p>Les lieux préparés ici restent locaux dans cette V2. Ensuite, on branche la base officielle si besoin.</p></div>
+          <button class="btn btnMain" data-tab="add" type="button">Ajouter</button>
+        </div>
+        <div class="placesGrid" id="placesGrid"></div>
+      </div>
+    </section>
+
+    <section class="section" id="tab-pay">
+      <div class="panel">
+        <div class="sectionHead">
+          <div><span class="miniPill">PAY prépare</span><h2>Argent terrain.</h2><p>Une trace simple : boost, déplacement, entrée visite, sortie communication. PAY profond reste dans son module.</p></div>
+          <a class="btn btnMain" href="https://pay.digiylyfe.com/">Ouvrir PAY</a>
+        </div>
+        <div class="payGrid">
+          <div>
+            <div class="formGrid">
+              <label class="label">Type<select class="field" id="mType"><option value="in">Entrée</option><option value="out">Sortie</option></select></label>
+              <label class="label">Montant FCFA<input class="field" id="mAmount" inputmode="numeric" placeholder="10000"/></label>
+              <label class="label wide">Note<input class="field" id="mNote" placeholder="Boost lieu / visite client / entrée guide"/></label>
+            </div>
+            <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:12px">
+              <button class="btn btnMain" id="btnPreparePay" type="button">Préparer PAY</button>
+              <button class="btn btnGreen" id="btnConfirmPay" type="button" disabled>Valider</button>
+            </div>
+            <div class="payTemp" id="payPreview" style="margin-top:12px">PAY attend une action préparée.</div>
+          </div>
+          <div class="movementList" id="movementList"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="tab-share">
+      <div class="panel">
+        <div class="sectionHead">
+          <div><span class="miniPill">Carte publique</span><h2>Fiche & QR.</h2><p>La fiche habille le lieu. Le QR partage la porte. Le pro garde le contact direct.</p></div>
+        </div>
+        <div class="moreGrid">
+          <div class="miniCard"><h3>🪪 Ma fiche lieu</h3><p>Nom, zone, photo, contact, Maps et présentation publique.</p><a class="btn btnMain" href="./fiche.html">Ouvrir fiche</a></div>
+          <div class="miniCard"><h3>🔳 Mon QR</h3><p>Partager la bonne porte depuis WhatsApp, affiche ou carte.</p><a class="btn btnMain" href="./qr.html">Ouvrir QR</a></div>
+          <div class="miniCard"><h3>🌍 Vitrine EXPLORE</h3><p>Ce que le public voit : lieux et expériences.</p><a class="btn btnSoft" href="https://explore.digiylyfe.com/">Voir public</a></div>
+          <div class="miniCard"><h3>⚡ Action EXPLORE</h3><p>Préparer boost, sortie ou mise en avant.</p><a class="btn btnSoft" href="./action.html">Ouvrir action</a></div>
+        </div>
+        <div class="linkBox" style="margin-top:12px" id="shareBox">Lien public : https://explore.digiylyfe.com/</div>
+      </div>
+    </section>
+
+    <section class="section" id="tab-more">
+      <div class="panel">
+        <div class="sectionHead">
+          <div><span class="miniPill">Rangement</span><h2>Plus EXPLORE.</h2><p>Le bruit reste ici. Le travail quotidien reste devant.</p></div>
+        </div>
+        <div class="moreGrid">
+          <div class="miniCard"><h3>📍 Mes lieux</h3><p>Chemin historique vers les lieux rattachés.</p><a class="btn btnSoft" href="./lieux.html">Ouvrir</a></div>
+          <div class="miniCard"><h3>🧠 Lecture utile</h3><p>Messages prêts et aide terrain.</p><a class="btn btnSoft" href="./claw.html">Ouvrir</a></div>
+          <div class="miniCard"><h3>🛡️ Session</h3><p>Accès local, sécurité et nettoyage.</p><a class="btn btnSoft" href="./session.html">Ouvrir</a></div>
+          <div class="miniCard"><h3>🔐 PIN</h3><p>Entrée protégée EXPLORE.</p><a class="btn btnSoft" href="./pin.html">Ouvrir</a></div>
+          <div class="miniCard"><h3>📤 Export</h3><p>Sauvegarde locale du cockpit en JSON.</p><button class="btn btnSoft" id="btnExport" type="button">Exporter</button></div>
+          <div class="miniCard"><h3>📥 Import</h3><p>Restaurer un export EXPLORE PRO.</p><input class="field" id="importFile" type="file" accept="application/json" style="margin-top:12px"/></div>
+          <div class="miniCard"><h3>🧭 HUB général</h3><p>Retour au rond-point DIGIY.</p><a class="btn btnSoft" href="https://digiy-hub.digiylyfe.com/">Ouvrir</a></div>
+          <div class="miniCard"><h3>🦅 Site DIGIY</h3><p>Retour à la vitrine centrale.</p><a class="btn btnSoft" href="https://digiylyfe.com/">Ouvrir</a></div>
+        </div>
       </div>
     </section>
   </main>
 
-  <section class="morePanel" id="morePanel" aria-label="Plus EXPLORE">
-    <div class="moreHead"><b>Plus EXPLORE</b><button class="x" type="button" id="closeMore">×</button></div>
-    <div class="reader">
-      <p><b>Comprendre le module.</b><br/>EXPLORE aide le pro à rendre visibles ses lieux, activités et expériences : fiche, QR, ajout de lieu, lecture utile, Oreille EXPLORE et traces vers PAY.</p>
-      <div class="actions"><button class="listen" id="playVoice" type="button">🎧 Écouter</button><button id="stopVoice" type="button">⏹ Stop</button></div>
-    </div>
-    <div class="moreLinks">
-      <a href="./session.html">🛡️ Session</a>
-      <a href="./pin.html">🔐 PIN</a>
-      <a href="https://digiy-hub.digiylyfe.com/">🧭 HUB général</a>
-      <a href="https://digiylyfe.com/">🌍 Site DIGIY</a>
-    </div>
-  </section>
-
-  <nav class="bottom" aria-label="Navigation compacte EXPLORE">
+  <nav class="bottom" aria-label="Navigation basse EXPLORE PRO">
     <div class="bottomInner">
-      <a class="active" href="./hub.html"><span class="bi">🧭</span><span>Menu</span></a>
-      <button type="button" id="openMore"><span class="bi">⋯</span><span>Plus</span></button>
+      <button class="active" data-tab="add" type="button"><span class="bi">➕</span><span>Ajouter</span></button>
+      <button data-tab="places" type="button"><span class="bi">📍</span><span>Lieux</span></button>
+      <button data-tab="pay" type="button"><span class="bi">💳</span><span>PAY</span></button>
+      <button data-tab="share" type="button"><span class="bi">🔗</span><span>Fiche QR</span></button>
+      <button data-tab="more" type="button"><span class="bi">⋯</span><span>Plus</span></button>
     </div>
   </nav>
+
+  <div class="toast" id="toast">Action prête</div>
 
 <script>
 (function(){
   "use strict";
-  var panel=document.getElementById("morePanel"), open=document.getElementById("openMore"), close=document.getElementById("closeMore");
-  function openMore(){ if(panel) panel.classList.add("open"); }
-  function closeMore(){ if(panel) panel.classList.remove("open"); stopSpeech(); }
-  if(open) open.addEventListener("click",openMore);
-  if(close) close.addEventListener("click",closeMore);
 
-  var SPEAK="Bienvenue dans EXPLORE. Ici, le pro rend visibles ses lieux, ses activités et ses expériences. Accueil sert à lire et piloter. Parler ouvre Oreille EXPLORE. Ajouter crée une fiche lieu. Le QR partage la porte. PAY garde l'argent réel. EXPLORE prépare, mais le pro corrige et valide toujours.";
-  function canSpeak(){return "speechSynthesis" in window;}
-  function stopSpeech(){if(canSpeak()) window.speechSynthesis.cancel();}
-  function pickVoice(){var vs=canSpeak()?window.speechSynthesis.getVoices():[];return vs.find(v=>/^fr/i.test(v.lang||""))||vs[0]||null;}
-  function speak(){if(!canSpeak()) return; stopSpeech(); var u=new SpeechSynthesisUtterance(SPEAK);u.lang="fr-FR";u.rate=.86;u.pitch=1.02;var v=pickVoice();if(v)u.voice=v;window.speechSynthesis.speak(u);}
-  document.getElementById("playVoice")?.addEventListener("click",speak);
-  document.getElementById("stopVoice")?.addEventListener("click",stopSpeech);
-  window.addEventListener("pagehide",stopSpeech);
+  const STORE="digiy_explore_pro_v2";
+  const PUBLIC_ORIGIN="https://explore.digiylyfe.com";
+  const $=(id)=>document.getElementById(id);
+  const clean=(v)=>String(v||"").trim();
+  const digits=(v)=>String(v||"").replace(/[^\d]/g,"");
+  const money=(n)=>Number(n||0).toLocaleString("fr-FR");
+  let pendingPay=null;
+  let state=load();
 
-  async function waitGuard(){try{var g=window.DIGIY_GUARD;if(!g)return{};if(typeof g.ready==="function"){var out=g.ready({redirect:false,preserve_validation:true});if(out&&typeof out.then==="function")await out;}else if(g.ready&&typeof g.ready.then==="function")await g.ready;return typeof g.getSession==="function"?(g.getSession()||g.state||{}):(g.state||{});}catch(e){return{};}}
-  waitGuard().then(function(s){var el=document.getElementById("sessionPill");if(!el)return;var ok=!!(s&&(s.access_ok||s.access||s.pin_session_ok));el.textContent=ok?"session ouverte":"accès à vérifier";});
+  function load(){
+    try{return JSON.parse(localStorage.getItem(STORE)||"{}")}catch(_){return {}}
+  }
+  function ensure(){
+    state.places=Array.isArray(state.places)?state.places:[];
+    state.notes=Array.isArray(state.notes)?state.notes:[];
+    state.moves=Array.isArray(state.moves)?state.moves:[];
+  }
+  function save(){ensure();localStorage.setItem(STORE,JSON.stringify(state));renderAll()}
+  function uuid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+  function escapeHtml(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
+  function toast(t){const el=$("toast");el.textContent=t||"Action prête";el.classList.add("show");clearTimeout(toast._t);toast._t=setTimeout(()=>el.classList.remove("show"),2200)}
+
+  function setTab(name){
+    document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+    const sec=$("tab-"+name);
+    if(sec) sec.classList.add("active");
+    document.querySelectorAll("[data-tab]").forEach(b=>b.classList.toggle("active",b.dataset.tab===name));
+    if(sec) window.scrollTo({top:Math.max(0,sec.offsetTop-138),behavior:"smooth"});
+  }
+
+  function fillPlace(p={}){
+    $("pName").value=p.name||"";
+    $("pZone").value=p.zone||"";
+    $("pType").value=p.type||"";
+    $("pContact").value=p.contact||"";
+    $("pDesc").value=p.description||"";
+    $("pMap").value=p.map||"";
+    setTab("add");
+  }
+  function addPlace(){
+    const name=clean($("pName").value);
+    if(!name){toast("Nom du lieu nécessaire");return}
+    state.places.unshift({
+      id:uuid(),
+      name,
+      zone:clean($("pZone").value)||"Zone à préciser",
+      type:clean($("pType").value)||"Lieu",
+      contact:digits($("pContact").value),
+      description:clean($("pDesc").value),
+      map:clean($("pMap").value),
+      created_at:new Date().toISOString()
+    });
+    $("placeForm").reset();
+    save();
+    toast("Lieu enregistré");
+    setTab("places");
+  }
+  function deletePlace(id){
+    state.places=state.places.filter(p=>p.id!==id);
+    save();
+    toast("Lieu retiré");
+  }
+  function sharePlace(id){
+    const p=state.places.find(x=>x.id===id);
+    if(!p)return;
+    const text=`${p.name} · ${p.zone}. ${p.description||"Lieu à découvrir avec DIGIY EXPLORE."}${p.contact?" Contact : "+p.contact:""}${p.map?" Repère : "+p.map:""}`;
+    navigator.clipboard?.writeText(text).then(()=>toast("Texte lieu copié")).catch(()=>toast(text));
+  }
+  function placeToPay(id){
+    const p=state.places.find(x=>x.id===id);
+    if(!p)return;
+    $("mType").value="out";
+    $("mAmount").value="";
+    $("mNote").value="Boost / visibilité · "+p.name;
+    setTab("pay");
+    toast("PAY préparé pour "+p.name);
+  }
+
+  function preparePay(){
+    const type=$("mType").value;
+    const amount=Number(digits($("mAmount").value)||0);
+    const note=clean($("mNote").value);
+    if(!amount){toast("Montant nécessaire");return}
+    pendingPay={id:uuid(),type,amount,note:note||"Mouvement EXPLORE",created_at:new Date().toISOString()};
+    $("payPreview").textContent=(type==="in"?"Entrée":"Sortie")+" préparée : "+money(amount)+" FCFA · "+pendingPay.note;
+    $("btnConfirmPay").disabled=false;
+    toast("PAY préparé · validation requise");
+  }
+  function confirmPay(){
+    if(!pendingPay){toast("Prépare d’abord PAY");return}
+    state.moves.unshift(pendingPay);
+    pendingPay=null;
+    $("btnConfirmPay").disabled=true;
+    $("payPreview").textContent="Mouvement validé localement.";
+    $("mAmount").value="";
+    $("mNote").value="";
+    save();
+    toast("PAY validé");
+  }
+
+  function prepareIntent(){
+    const raw=clean($("voiceText").value);
+    if(!raw){toast("Écris ou parle une demande");return}
+    const txt=raw.toLowerCase();
+    const amount=Number((txt.match(/(\d[\d\s\.]*)/)||[])[1]?.replace(/[^\d]/g,"")||0);
+    let msg="";
+    if(/ajoute|ajouter|lieu|spot|plage|restaurant|resto|sortie|activité|activite|visite|experience|expérience/.test(txt)){
+      const name=raw
+        .replace(/\b(ajoute|ajouter|lieu|spot|plage|restaurant|resto|sortie|activité|activite|visite|experience|expérience|fcfa|francs?)\b/gi,"")
+        .replace(/\d[\d\s\.]*/g,"")
+        .trim() || "Lieu EXPLORE";
+      fillPlace({name, type:/plage/.test(txt)?"Plage":(/resto|restaurant/.test(txt)?"Restaurant":"Lieu"), description:raw});
+      msg="Lieu préparé : "+name+". Vérifie puis enregistre.";
+    }else if(/dépense|depense|sortie|boost|communication|pub|payer|achat/.test(txt)){
+      $("mType").value="out";
+      $("mAmount").value=amount||"";
+      $("mNote").value=raw;
+      setTab("pay");
+      if(amount) preparePay();
+      msg="Sortie PAY préparée. Le pro valide au deuxième clic.";
+    }else if(/entrée|entree|recette|client|visite payée|visite paye|guide|cash|wave|payé|paye/.test(txt)){
+      $("mType").value="in";
+      $("mAmount").value=amount||"";
+      $("mNote").value=raw;
+      setTab("pay");
+      if(amount) preparePay();
+      msg="Entrée PAY préparée. Le pro valide au deuxième clic.";
+    }else if(/qr|fiche|partage|partager|vitrine|public/.test(txt)){
+      setTab("share");
+      msg="Fiche / QR ouvert. Vérifie la présentation publique avant partage.";
+    }else if(/note|rappel|mémo|memo/.test(txt)){
+      state.notes.unshift({id:uuid(),text:raw,created_at:new Date().toISOString()});
+      save();
+      msg="Note EXPLORE enregistrée localement.";
+    }else{
+      msg="Intention entendue mais pas assez claire. Dis : ajoute lieu, dépense, entrée, fiche ou QR.";
+    }
+    $("intentResult").textContent=msg;
+    $("intentResult").classList.add("show");
+  }
+
+  function listen(){
+    const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+    if(!SR){toast("Reconnaissance vocale non disponible ici");return}
+    const rec=new SR();
+    rec.lang="fr-FR";
+    rec.interimResults=false;
+    rec.maxAlternatives=1;
+    $("btnListen").disabled=true;
+    $("btnListen").textContent="🎧 Écoute…";
+    rec.onresult=(e)=>{$("voiceText").value=e.results[0][0].transcript;prepareIntent()};
+    rec.onerror=()=>toast("Écoute interrompue");
+    rec.onend=()=>{$("btnListen").disabled=false;$("btnListen").textContent="🎙️ Parler"};
+    rec.start();
+  }
+
+  function renderStats(){
+    ensure();
+    const places=state.places;
+    const moves=state.moves;
+    $("statPlaces").textContent=String(places.length);
+    $("statNotes").textContent=String((state.notes||[]).length);
+    $("statIn").textContent=money(moves.filter(m=>m.type==="in").reduce((a,m)=>a+Number(m.amount||0),0));
+    $("statOut").textContent=money(moves.filter(m=>m.type==="out").reduce((a,m)=>a+Number(m.amount||0),0));
+  }
+  function renderPlaces(){
+    const grid=$("placesGrid");
+    const places=state.places||[];
+    if(!places.length){
+      grid.innerHTML='<div class="linkBox" style="grid-column:1/-1">Aucun lieu pour le moment. Ajoute un lieu ou utilise Oreille EXPLORE.</div>';
+      return;
+    }
+    grid.innerHTML=places.map(p=>`<article class="placeCard">
+      <div class="placeTop">📍</div>
+      <div class="placeBody">
+        <h3>${escapeHtml(p.name)}</h3>
+        <p>${escapeHtml(p.description||"Lieu EXPLORE prêt à présenter au public.")}</p>
+        <div class="metaRow"><span class="meta">${escapeHtml(p.zone)}</span><span class="meta">${escapeHtml(p.type)}</span>${p.contact?`<span class="meta">${escapeHtml(p.contact)}</span>`:""}</div>
+        <div class="cardActions"><button class="btn btnMain" data-share="${p.id}">Partager</button><button class="btn btnSoft" data-pay="${p.id}">PAY</button><button class="btn btnDanger" data-del="${p.id}">Retirer</button></div>
+      </div>
+    </article>`).join("");
+  }
+  function renderMoves(){
+    const list=$("movementList");
+    const moves=state.moves||[];
+    if(!moves.length){list.innerHTML='<div class="linkBox">Aucun mouvement PAY validé.</div>';return}
+    list.innerHTML=moves.slice(0,10).map(m=>`<div class="move ${m.type==="in"?"in":"out"}"><div><b>${m.type==="in"?"Entrée":"Sortie"} · ${money(m.amount)} FCFA</b><small>${escapeHtml(m.note||"Mouvement EXPLORE")}</small></div><small>${new Date(m.created_at).toLocaleDateString("fr-FR")}</small></div>`).join("");
+  }
+  function renderShare(){
+    $("shareBox").innerHTML="<strong>Lien public :</strong><br>"+PUBLIC_ORIGIN+"<br><br><strong>Doctrine :</strong> la fiche fait voir. Le QR partage. Le pro garde son contact et sa décision.";
+  }
+  function renderAll(){ensure();renderStats();renderPlaces();renderMoves();renderShare()}
+
+  function exportData(){
+    const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(blob);
+    a.download="digiy-explore-pro-export.json";
+    a.click();
+    URL.revokeObjectURL(a.href);
+    toast("Export préparé");
+  }
+  function importData(file){
+    if(!file)return;
+    const r=new FileReader();
+    r.onload=()=>{try{state=JSON.parse(r.result);save();toast("Import restauré")}catch(_){toast("Fichier invalide")}};
+    r.readAsText(file);
+  }
+  function seed(){
+    state.places.unshift({id:uuid(),name:"Plage de Saly",zone:"Saly",type:"Plage",contact:"",description:"Exemple EXPLORE : lieu prêt à présenter, partager et relier au terrain.",map:"",created_at:new Date().toISOString()});
+    save();
+    toast("Exemple ajouté");
+    setTab("places");
+  }
+
+  document.addEventListener("click",(e)=>{
+    const tab=e.target.closest("[data-tab]");
+    if(tab){setTab(tab.dataset.tab);return}
+    const del=e.target.closest("[data-del]");
+    if(del){deletePlace(del.dataset.del);return}
+    const share=e.target.closest("[data-share]");
+    if(share){sharePlace(share.dataset.share);return}
+    const pay=e.target.closest("[data-pay]");
+    if(pay){placeToPay(pay.dataset.pay);return}
+  });
+
+  $("placeForm").addEventListener("submit",(e)=>{e.preventDefault();addPlace()});
+  $("btnClearPlace").onclick=()=>$("placeForm").reset();
+  $("btnPrepare").onclick=prepareIntent;
+  $("btnListen").onclick=listen;
+  $("btnPreparePay").onclick=preparePay;
+  $("btnConfirmPay").onclick=confirmPay;
+  $("btnSeed").onclick=seed;
+  $("btnExport").onclick=exportData;
+  $("importFile").addEventListener("change",(e)=>importData(e.target.files&&e.target.files[0]));
+
+  async function bootGuard(){
+    try{
+      if(window.DIGIY_MODULE_BRIDGE && typeof window.DIGIY_MODULE_BRIDGE.cleanVisibleUrl==="function"){
+        window.DIGIY_MODULE_BRIDGE.cleanVisibleUrl();
+      }
+    }catch(_){}
+    let st={};
+    try{
+      const g=window.DIGIY_GUARD;
+      if(g && typeof g.ready==="function"){
+        const out=g.ready({redirect:false,preserve_validation:true,allow_soft_session:true});
+        if(out&&typeof out.then==="function") await out;
+      }
+      st=(window.DIGIY_GUARD && (window.DIGIY_GUARD.getSession?.() || window.DIGIY_GUARD.state)) || {};
+    }catch(_){}
+    const el=$("sessionPill");
+    if(el){
+      const ok=!!(st&&(st.access_ok||st.access||st.ok||st.has_access||st.pin_session_ok));
+      el.textContent=ok?"session ouverte":"accès à vérifier";
+      el.className="pill "+(ok?"ok":"");
+    }
+  }
+
+  renderAll();
+  bootGuard();
 })();
 </script>
 <script src="./assets/js/action-digiy-pro-orient.js?v=action-digiy-pro-orient-20260606" defer></script>
 </body>
 </html>
+
 
 
 
