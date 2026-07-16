@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr">
+<html lang="fr" style="visibility:hidden">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -7,9 +7,15 @@
 <meta name="theme-color" content="#06130f">
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
 <meta name="description" content="DIGIY EXPLORE PRO — QR public du lieu avec retour vers la fiche QR intégrée.">
-<meta name="digiy-build" content="explore-qr-carre-fiche-qr-20260619">
+<meta name="digiy-build" content="explore-qr-protege-20260716">
+<script>
+window.DIGIY_MODULE="EXPLORE";
+window.DIGIY_ABOS_MODULE="EXPLORE_BOOST";
+window.DIGIY_LOGIN_URL="./pin.html";
+</script>
+<script src="./guard.js?v=explore-guard-restored-20260716" onerror="location.replace('./pin.html')"></script>
 <style>
-body{margin:0;min-height:100vh;padding:16px;background:#06130f;color:#f8fafc;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-weight:900;text-align:center}.card{max-width:560px;margin:0 auto;border:1px solid rgba(255,255,255,.14);border-radius:28px;background:rgba(255,255,255,.06);padding:20px}h1{font-size:44px;line-height:.95;margin:8px 0 10px}.top{color:#f3d46b;font-size:12px;letter-spacing:.12em;text-transform:uppercase}.qr{background:white;color:#06130f;border-radius:24px;padding:18px;margin:16px auto}.qr img{width:100%;max-width:340px;border-radius:16px}.btn{min-height:54px;border-radius:18px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:#fff;text-decoration:none;margin:10px 0}.gold{background:linear-gradient(135deg,#d4af37,#f3d46b);color:#211904;border:0}.green{background:linear-gradient(135deg,#22c55e,#bbf7d0);color:#052215;border:0}.small{color:rgba(248,250,252,.72);word-break:break-all;font-size:13px}@media print{body{background:#fff;color:#000}.btn,.small,.top,p{display:none}.card{border:0}.qr img{max-width:440px}}
+body{margin:0;min-height:100vh;padding:16px;background:#06130f;color:#f8fafc;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-weight:900;text-align:center}.card{max-width:560px;margin:0 auto;border:1px solid rgba(255,255,255,.14);border-radius:28px;background:rgba(255,255,255,.06);padding:20px}h1{font-size:44px;line-height:.95;margin:8px 0 10px}.top{color:#f3d46b;font-size:12px;letter-spacing:.12em;text-transform:uppercase}p{color:rgba(248,250,252,.72);line-height:1.5}.qr{background:white;color:#06130f;border-radius:24px;padding:18px;margin:16px auto}.qr img{width:100%;max-width:340px;border-radius:16px}.btn{min-height:54px;border-radius:18px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:#fff;text-decoration:none;margin:10px 0}.gold{background:linear-gradient(135deg,#d4af37,#f3d46b);color:#211904;border:0}.green{background:linear-gradient(135deg,#22c55e,#bbf7d0);color:#052215;border:0}.small{color:rgba(248,250,252,.72);word-break:break-all;font-size:13px}@media print{body{background:#fff;color:#000}.btn,.small,.top,p{display:none}.card{border:0}.qr img{max-width:440px}}
 </style>
 </head>
 <body>
@@ -24,5 +30,15 @@ body{margin:0;min-height:100vh;padding:16px;background:#06130f;color:#f8fafc;fon
 <a class="btn gold" href="javascript:window.print()">🖨️ Imprimer QR</a>
 <a class="btn" href="./index.html">← Retour EXPLORE</a>
 </main>
+<script>
+window.addEventListener("load",()=>{
+  const guard=window.DIGIY_GUARD;
+  if(!guard||typeof guard.ready!=="function"){
+    location.replace("./pin.html");
+    return;
+  }
+  guard.ready().catch(()=>location.replace("./pin.html"));
+});
+</script>
 </body>
 </html>
