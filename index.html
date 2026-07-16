@@ -1,23 +1,267 @@
 <!doctype html>
 <html lang="fr">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>DIGIY EXPLORE PRO — Index carré</title>
-<meta name="theme-color" content="#06130f">
-<meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="description" content="DIGIY EXPLORE PRO — index stable avec fiche lieu QR intégrée, QR seul, lieux, option PRO CARNET et données.">
-<meta name="digiy-build" content="explore-pro-liens-pro-carnet-corriges-20260712">
-<style>
-body{margin:0;min-height:100vh;background:linear-gradient(180deg,#0a1f18,#06130f);color:#f8fafc;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-weight:900;padding-bottom:88px}a{color:inherit;text-decoration:none}.wrap{width:min(1080px,calc(100% - 24px));margin:0 auto}.top{position:sticky;top:0;background:rgba(6,19,15,.96);border-bottom:1px solid rgba(255,255,255,.12);z-index:10}.topin{min-height:70px;display:flex;align-items:center;justify-content:space-between;gap:12px}.brand b{display:block;color:#f3d46b;font-size:17px}.brand span{display:block;color:rgba(248,250,252,.72);font-size:12px}.toplinks{display:flex;gap:8px;flex-wrap:wrap}.pill{min-height:40px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;padding:0 12px;font-size:12px}.gold{background:linear-gradient(135deg,#d4af37,#f3d46b)!important;color:#211904!important;border:0!important}.hero{padding:16px 0}.card{border:1px solid rgba(255,255,255,.14);border-radius:30px;background:rgba(255,255,255,.07);box-shadow:0 18px 42px rgba(0,0,0,.26);padding:18px}.kicker{display:inline-flex;padding:8px 12px;border-radius:999px;background:rgba(212,175,55,.12);color:#f3d46b;font-size:12px;letter-spacing:.08em;text-transform:uppercase}h1{margin:14px 0 8px;font-size:clamp(38px,8vw,72px);line-height:.92;letter-spacing:-.06em}p{color:rgba(248,250,252,.78);line-height:1.5}.doors{display:grid;grid-template-columns:repeat(8,1fr);gap:9px;margin-top:16px}.door{min-height:92px;border-radius:20px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:10px}.door strong{font-size:26px}.door b{font-size:13px}.door small{font-size:11px;color:rgba(248,250,252,.72)}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.panel{border:1px solid rgba(255,255,255,.14);border-radius:24px;background:rgba(255,255,255,.07);padding:15px;margin-bottom:12px}.panel h2{margin:0 0 10px;color:#f3d46b;font-size:26px}.btns{display:flex;gap:8px;flex-wrap:wrap}.btn{min-height:50px;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;padding:0 14px;font-weight:1000}.green{background:linear-gradient(135deg,#22c55e,#bbf7d0)!important;color:#052215!important;border:0!important}.bottom{position:fixed;left:0;right:0;bottom:0;background:rgba(6,19,15,.97);border-top:1px solid rgba(255,255,255,.14);padding:8px 10px}.bottomin{width:min(820px,100%);margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:7px}.bottom a{min-height:56px;border-radius:15px;display:grid;place-items:center;text-align:center;font-size:11px;color:rgba(248,250,252,.72)}.bottom .active{background:linear-gradient(135deg,#22c55e,#f3d46b);color:#052215}@media(max-width:900px){.doors{grid-template-columns:repeat(4,1fr)}.grid{grid-template-columns:1fr}}@media(max-width:560px){.toplinks{display:none}.doors{grid-template-columns:repeat(2,1fr)}}
-</style>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <title>DIGIY EXPLORE PRO — Accueil lieu</title>
+  <meta name="description" content="Accueil simple DIGIY EXPLORE PRO : lieu, fiche, QR et partage WhatsApp."/>
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet"/>
+  <meta name="theme-color" content="#06130f"/>
+  <meta name="digiy-explore" content="explore-simple-hub-v1-20260716"/>
+
+  <script>
+    window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
+    window.DIGIY_SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
+    window.DIGIY_SUPABASE_ANON = window.DIGIY_SUPABASE_ANON_KEY;
+    window.DIGIY_SUPABASE_KEY = window.DIGIY_SUPABASE_ANON_KEY;
+    window.DIGIY_MODULE = "EXPLORE";
+    window.DIGIY_ABOS_MODULE = "EXPLORE_BOOST";
+    window.DIGIY_LOGIN_URL = "./pin.html";
+  </script>
+
+  <style>
+    :root{
+      color-scheme:dark;
+      --bg:#06130f;
+      --bg2:#0a1f18;
+      --card:rgba(255,255,255,.075);
+      --line:rgba(255,255,255,.15);
+      --text:#f8fafc;
+      --muted:rgba(248,250,252,.70);
+      --gold:#d4af37;
+      --gold2:#f3d46b;
+      --green:#22c55e;
+      --shadow:0 26px 76px rgba(0,0,0,.42);
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%}
+    body{
+      min-height:100dvh;
+      display:grid;
+      place-items:center;
+      padding:22px;
+      color:var(--text);
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(760px 440px at 8% -10%,rgba(212,175,55,.19),transparent 60%),
+        radial-gradient(720px 430px at 108% 5%,rgba(34,197,94,.15),transparent 56%),
+        linear-gradient(180deg,var(--bg2),var(--bg));
+    }
+
+    main{
+      width:min(480px,100%);
+      padding:24px;
+      border:1px solid var(--line);
+      border-radius:28px;
+      background:var(--card);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(18px);
+      -webkit-backdrop-filter:blur(18px);
+    }
+
+    h1{
+      margin:0 0 22px;
+      color:var(--gold2);
+      font-size:clamp(2rem,9vw,3rem);
+      line-height:1.02;
+      letter-spacing:-.045em;
+    }
+
+    nav{display:grid;gap:12px}
+
+    a,button{
+      width:100%;
+      min-height:62px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:14px 18px;
+      border:1px solid var(--line);
+      border-radius:18px;
+      color:var(--text);
+      background:rgba(255,255,255,.08);
+      font:inherit;
+      font-size:1rem;
+      font-weight:950;
+      text-align:center;
+      text-decoration:none;
+      cursor:pointer;
+      transition:transform .14s ease,background .14s ease,border-color .14s ease;
+    }
+
+    a:first-child{
+      color:#052215;
+      border-color:transparent;
+      background:linear-gradient(135deg,var(--green),#bbf7d0);
+    }
+
+    a:nth-child(3){
+      color:#211904;
+      border-color:transparent;
+      background:linear-gradient(135deg,var(--gold),var(--gold2));
+    }
+
+    a:hover,button:hover{
+      transform:translateY(-1px);
+      border-color:rgba(243,212,107,.42);
+      background:rgba(255,255,255,.13);
+    }
+
+    a:active,button:active{transform:none}
+
+    #status{
+      margin:14px 0 0;
+      padding:11px 12px;
+      border:1px solid rgba(212,175,55,.32);
+      border-radius:14px;
+      color:#fff0a8;
+      background:rgba(212,175,55,.12);
+      font-size:.88rem;
+      font-weight:850;
+      line-height:1.4;
+    }
+
+    #status[hidden]{display:none}
+
+    @media(max-width:420px){
+      body{padding:14px}
+      main{padding:19px;border-radius:23px}
+      h1{margin-bottom:18px}
+      a,button{min-height:58px}
+    }
+  </style>
 </head>
 <body>
-<header class="top"><div class="wrap topin"><a class="brand" href="#top"><b>DIGIY EXPLORE PRO</b><span>Fiche lieu · QR intégré</span></a><div class="toplinks"><a class="pill gold" href="./fiche.html">🪪 Fiche QR</a><a class="pill gold" href="./qr.html">🔳 QR seul</a><a class="pill" href="https://digiy-carnet-pro.digiylyfe.com/inscription-pay.html" target="_blank" rel="noopener noreferrer">📒 PRO CARNET</a></div></div></header>
-<main class="wrap" id="top">
-<section class="hero"><div class="card"><span class="kicker">EXPLORE V2 · index carré</span><h1>Je fais découvrir. Je rends visible.</h1><p>Chaque lieu EXPLORE peut avoir sa fiche : zone, catégorie, horaires, tarif, WhatsApp public, slug client et QR intégré. Le QR seul sert à l’impression rapide.</p><nav class="doors"><a class="door gold" href="./fiche.html"><strong>🪪</strong><b>Fiche QR</b><small>QR intégré</small></a><a class="door gold" href="./qr.html"><strong>🔳</strong><b>QR seul</b><small>impression</small></a><a class="door" href="#lieux"><strong>🧭</strong><b>Lieux</b><small>liste</small></a><a class="door" href="#admin"><strong>🏝️</strong><b>Admin</b><small>lieu</small></a><a class="door" href="#carnet"><strong>📒</strong><b>PRO CARNET</b><small>option séparée</small></a><a class="door" href="#data"><strong>🛡️</strong><b>Données</b><small>export</small></a><a class="door" href="https://explore.digiylyfe.com/"><strong>🌍</strong><b>Public</b><small>voir</small></a><a class="door" href="https://digiylyfe.com/"><strong>🦅</strong><b>DIGIY</b><small>retour</small></a></nav></div></section>
-<section class="grid"><div class="panel" id="lieux"><h2>🧭 Lieux</h2><p>Ajoute ou gère tes lieux depuis la fiche. Cette page sert de porte stable.</p><div class="btns"><a class="btn gold" href="./fiche.html">🪪 Ouvrir fiche lieu avec QR</a><a class="btn" href="./qr.html">🔳 Ouvrir QR seul</a></div></div><div class="panel" id="admin"><h2>🏝️ Admin lieu</h2><p>Nom du lieu, zone, catégorie, horaires, photo, lien public et WhatsApp sont dans la fiche QR.</p><div class="btns"><a class="btn green" href="./fiche.html">Préparer ma fiche</a></div></div><div class="panel" id="carnet"><h2>📒 PRO CARNET · abonnement séparé</h2><p>EXPLORE PRO garde la fiche lieu, la visibilité et le QR. PRO CARNET n’est pas inclus automatiquement dans l’abonnement EXPLORE.</p><div class="btns"><a class="btn gold" href="https://digiy-carnet-pro.digiylyfe.com/inscription-pay.html" target="_blank" rel="noopener noreferrer">📒 S’inscrire à PRO CARNET</a></div></div><div class="panel" id="data"><h2>🛡️ Données</h2><p>La fiche garde les informations localement sur l’appareil du pro. Le lien public reste propre.</p></div></section>
-</main>
-<nav class="bottom"><div class="bottomin"><a class="active" href="#top">🏠<br>Index</a><a href="./fiche.html">🪪<br>Fiche QR</a><a href="./qr.html">🔳<br>QR seul</a><a href="#carnet">📒<br>Carnet</a><a href="https://digiylyfe.com/">🦅<br>DIGIY</a></div></nav>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./assets/js/digiy-abos-access.js?v=abos-20260522"></script>
+  <script src="./guard.js?v=explore-simple-hub-20260716"></script>
+
+  <main>
+    <h1>Bonjour.</h1>
+
+    <nav aria-label="Actions EXPLORE PRO">
+      <a href="./atelier.html">Mon lieu</a>
+      <a href="./fiche.html">Ma fiche lieu</a>
+      <a href="./qr.html">Mon QR</a>
+      <button id="shareWhatsApp" type="button">Partager sur WhatsApp</button>
+    </nav>
+
+    <p id="status" role="status" aria-live="polite" hidden></p>
+  </main>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const shareButton=document.getElementById("shareWhatsApp");
+      const statusBox=document.getElementById("status");
+      const PUBLIC_BASE="https://explore.digiylyfe.com/";
+
+      const SESSION_KEYS=[
+        "digiy_explore_session",
+        "digiy_explore_guard_session",
+        "digiy_guard_explore_session",
+        "DIGIY_EXPLORE_SESSION",
+        "DIGIY_EXPLORE_ACCESS"
+      ];
+
+      const SLUG_KEYS=[
+        "digiy_explore_last_slug",
+        "digiy_explore_slug",
+        "digiy_last_slug",
+        "DIGIY_SLUG",
+        "digiy_slug"
+      ];
+
+      function setStatus(message){
+        statusBox.textContent=message||"";
+        statusBox.hidden=!message;
+      }
+
+      function get(storage,key){
+        try{return storage.getItem(key)||""}catch(_){return ""}
+      }
+
+      function json(raw){
+        try{return JSON.parse(raw||"null")}catch(_){return null}
+      }
+
+      function slug(value){
+        return String(value||"")
+          .trim()
+          .toLowerCase()
+          .replace(/\s+/g,"-")
+          .replace(/[^a-z0-9-]/g,"")
+          .replace(/-+/g,"-")
+          .replace(/^-|-$/g,"");
+      }
+
+      function cleanUrl(value){
+        const raw=String(value||"").trim();
+        if(!raw)return "";
+        try{
+          const url=new URL(raw);
+          return url.protocol==="https:" ? url.toString() : "";
+        }catch(_){return ""}
+      }
+
+      function internalSlug(){
+        for(const storage of [localStorage,sessionStorage]){
+          for(const key of SESSION_KEYS){
+            const session=json(get(storage,key));
+            const value=slug(session?.slug||session?.pro_slug||session?.explore_slug||"");
+            if(value)return value;
+          }
+          for(const key of SLUG_KEYS){
+            const value=slug(get(storage,key));
+            if(value)return value;
+          }
+        }
+        return "";
+      }
+
+      function savedFiche(){
+        const proSlug=internalSlug();
+        if(!proSlug)return null;
+        try{return json(localStorage.getItem("DIGIY_EXPLORE_FICHE_V2_"+proSlug))}catch(_){return null}
+      }
+
+      function resolvePublicUrl(){
+        const direct=cleanUrl(get(localStorage,"digiy_explore_public_url"));
+        if(direct)return direct;
+
+        const fiche=savedFiche()||{};
+        const ficheUrl=cleanUrl(fiche.publicUrl||fiche.public_url||"");
+        if(ficheUrl)return ficheUrl;
+
+        const publicSlug=slug(
+          get(localStorage,"digiy_explore_public_slug") ||
+          fiche.publicSlug ||
+          fiche.public_slug ||
+          ""
+        );
+
+        if(publicSlug){
+          const url=new URL(PUBLIC_BASE);
+          url.searchParams.set("slug",publicSlug);
+          return url.toString();
+        }
+
+        return "";
+      }
+
+      shareButton.addEventListener("click",()=>{
+        const publicUrl=resolvePublicUrl();
+        if(!publicUrl){
+          setStatus("Prépare d’abord ta fiche lieu et son slug public.");
+          return;
+        }
+        const message="Bonjour, voici mon lieu sur DIGIY EXPLORE : "+publicUrl;
+        setStatus("Ouverture de WhatsApp…");
+        location.href="https://wa.me/?text="+encodeURIComponent(message);
+      });
+    })();
+  </script>
 </body>
 </html>
