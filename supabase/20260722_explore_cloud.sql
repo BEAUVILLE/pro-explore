@@ -48,6 +48,19 @@ alter table public.digiy_explore_places
   add column if not exists created_at timestamptz not null default now(),
   add column if not exists updated_at timestamptz not null default now();
 
+-- Nettoyage des anciens enregistrements vides issus du prototype local.
+delete from public.digiy_explore_places
+where nullif(btrim(owner_slug), '') is null
+  and nullif(btrim(owner_phone), '') is null
+  and nullif(btrim(place_name), '') is null
+  and nullif(btrim(public_slug), '') is null
+  and nullif(btrim(public_url), '') is null;
+
+-- Toute nouvelle fiche cloud doit appartenir à un compte EXPLORE identifié.
+alter table public.digiy_explore_places
+  alter column owner_slug set not null,
+  alter column owner_phone set not null;
+
 create unique index if not exists digiy_explore_places_owner_slug_uq
   on public.digiy_explore_places (owner_slug);
 
