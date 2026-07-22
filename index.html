@@ -1,267 +1,89 @@
 <!doctype html>
-<html lang="fr">
+<html lang="fr" style="visibility:hidden">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
   <title>DIGIY EXPLORE PRO — Accueil lieu</title>
-  <meta name="description" content="Accueil simple DIGIY EXPLORE PRO : lieu, fiche, QR et partage WhatsApp."/>
+  <meta name="description" content="Accueil sécurisé DIGIY EXPLORE PRO : lieu, fiche publique, QR individuel et partage."/>
   <meta name="robots" content="noindex,nofollow,noarchive,nosnippet"/>
   <meta name="theme-color" content="#06130f"/>
-  <meta name="digiy-explore" content="explore-simple-hub-v1-20260716"/>
-
+  <meta name="digiy-explore" content="explore-cloud-hub-v2-20260722"/>
   <script>
-    window.DIGIY_SUPABASE_URL = "https://wesqmwjjtsefyjnluosj.supabase.co";
-    window.DIGIY_SUPABASE_ANON_KEY = "sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
-    window.DIGIY_SUPABASE_ANON = window.DIGIY_SUPABASE_ANON_KEY;
-    window.DIGIY_SUPABASE_KEY = window.DIGIY_SUPABASE_ANON_KEY;
-    window.DIGIY_MODULE = "EXPLORE";
-    window.DIGIY_ABOS_MODULE = "EXPLORE_BOOST";
-    window.DIGIY_LOGIN_URL = "./pin.html";
+    window.DIGIY_SUPABASE_URL="https://wesqmwjjtsefyjnluosj.supabase.co";
+    window.DIGIY_SUPABASE_ANON_KEY="sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
+    window.DIGIY_SUPABASE_ANON=window.DIGIY_SUPABASE_ANON_KEY;
+    window.DIGIY_MODULE="EXPLORE";
+    window.DIGIY_ABOS_MODULE="EXPLORE_BOOST";
+    window.DIGIY_LOGIN_URL="./pin.html";
   </script>
-
   <style>
-    :root{
-      color-scheme:dark;
-      --bg:#06130f;
-      --bg2:#0a1f18;
-      --card:rgba(255,255,255,.075);
-      --line:rgba(255,255,255,.15);
-      --text:#f8fafc;
-      --muted:rgba(248,250,252,.70);
-      --gold:#d4af37;
-      --gold2:#f3d46b;
-      --green:#22c55e;
-      --shadow:0 26px 76px rgba(0,0,0,.42);
-    }
-
-    *{box-sizing:border-box}
-    html,body{margin:0;min-height:100%}
-    body{
-      min-height:100dvh;
-      display:grid;
-      place-items:center;
-      padding:22px;
-      color:var(--text);
-      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
-      background:
-        radial-gradient(760px 440px at 8% -10%,rgba(212,175,55,.19),transparent 60%),
-        radial-gradient(720px 430px at 108% 5%,rgba(34,197,94,.15),transparent 56%),
-        linear-gradient(180deg,var(--bg2),var(--bg));
-    }
-
-    main{
-      width:min(480px,100%);
-      padding:24px;
-      border:1px solid var(--line);
-      border-radius:28px;
-      background:var(--card);
-      box-shadow:var(--shadow);
-      backdrop-filter:blur(18px);
-      -webkit-backdrop-filter:blur(18px);
-    }
-
-    h1{
-      margin:0 0 22px;
-      color:var(--gold2);
-      font-size:clamp(2rem,9vw,3rem);
-      line-height:1.02;
-      letter-spacing:-.045em;
-    }
-
+    :root{color-scheme:dark;--bg:#06130f;--bg2:#0a1f18;--card:rgba(255,255,255,.075);--line:rgba(255,255,255,.15);--text:#f8fafc;--muted:rgba(248,250,252,.70);--gold:#d4af37;--gold2:#f3d46b;--green:#22c55e}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%}
+    body{min-height:100dvh;display:grid;place-items:center;padding:18px;color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:radial-gradient(760px 440px at 8% -10%,rgba(212,175,55,.19),transparent 60%),radial-gradient(720px 430px at 108% 5%,rgba(34,197,94,.15),transparent 56%),linear-gradient(180deg,var(--bg2),var(--bg))}
+    main{width:min(500px,100%);padding:24px;border:1px solid var(--line);border-radius:28px;background:var(--card);box-shadow:0 26px 76px rgba(0,0,0,.42)}
+    .eyebrow{color:var(--gold2);font-size:12px;font-weight:1000;letter-spacing:.12em;text-transform:uppercase}
+    h1{margin:8px 0 6px;color:var(--gold2);font-size:clamp(2rem,9vw,3rem);line-height:1.02;letter-spacing:-.045em}
+    .sub{margin:0 0 20px;color:var(--muted);font-weight:850;line-height:1.45}
     nav{display:grid;gap:12px}
-
-    a,button{
-      width:100%;
-      min-height:62px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:14px 18px;
-      border:1px solid var(--line);
-      border-radius:18px;
-      color:var(--text);
-      background:rgba(255,255,255,.08);
-      font:inherit;
-      font-size:1rem;
-      font-weight:950;
-      text-align:center;
-      text-decoration:none;
-      cursor:pointer;
-      transition:transform .14s ease,background .14s ease,border-color .14s ease;
-    }
-
-    a:first-child{
-      color:#052215;
-      border-color:transparent;
-      background:linear-gradient(135deg,var(--green),#bbf7d0);
-    }
-
-    a:nth-child(3){
-      color:#211904;
-      border-color:transparent;
-      background:linear-gradient(135deg,var(--gold),var(--gold2));
-    }
-
-    a:hover,button:hover{
-      transform:translateY(-1px);
-      border-color:rgba(243,212,107,.42);
-      background:rgba(255,255,255,.13);
-    }
-
-    a:active,button:active{transform:none}
-
-    #status{
-      margin:14px 0 0;
-      padding:11px 12px;
-      border:1px solid rgba(212,175,55,.32);
-      border-radius:14px;
-      color:#fff0a8;
-      background:rgba(212,175,55,.12);
-      font-size:.88rem;
-      font-weight:850;
-      line-height:1.4;
-    }
-
+    a,button{width:100%;min-height:60px;display:flex;align-items:center;justify-content:center;padding:14px 18px;border:1px solid var(--line);border-radius:18px;color:var(--text);background:rgba(255,255,255,.08);font:inherit;font-weight:950;text-align:center;text-decoration:none;cursor:pointer}
+    a:first-child{color:#052215;border-color:transparent;background:linear-gradient(135deg,var(--green),#bbf7d0)}
+    a:nth-child(3){color:#211904;border-color:transparent;background:linear-gradient(135deg,var(--gold),var(--gold2))}
+    #status{margin:14px 0 0;padding:11px 12px;border:1px solid rgba(212,175,55,.32);border-radius:14px;color:#fff0a8;background:rgba(212,175,55,.12);font-size:.88rem;font-weight:850;line-height:1.4}
     #status[hidden]{display:none}
-
-    @media(max-width:420px){
-      body{padding:14px}
-      main{padding:19px;border-radius:23px}
-      h1{margin-bottom:18px}
-      a,button{min-height:58px}
-    }
+    .foot{margin-top:14px;color:rgba(248,250,252,.52);font-size:12px;font-weight:850;text-align:center}
   </style>
 </head>
 <body>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="./assets/js/digiy-abos-access.js?v=abos-20260522"></script>
-  <script src="./guard.js?v=explore-simple-hub-20260716"></script>
-
+  <script src="./guard.js?v=explore-cloud-hub-v2-20260722"></script>
   <main>
-    <h1>Bonjour.</h1>
-
+    <div class="eyebrow">EXPLORE PRO · espace sécurisé</div>
+    <h1 id="title">Bonjour.</h1>
+    <p class="sub" id="subtitle">Ta fiche lieu est synchronisée avec Supabase et reste disponible sur tes appareils.</p>
     <nav aria-label="Actions EXPLORE PRO">
-      <a href="./atelier.html">Mon lieu</a>
+      <a href="./fiche.html">Mon lieu</a>
       <a href="./fiche.html">Ma fiche lieu</a>
       <a href="./qr.html">Mon QR</a>
       <button id="shareWhatsApp" type="button">Partager sur WhatsApp</button>
     </nav>
-
     <p id="status" role="status" aria-live="polite" hidden></p>
+    <div class="foot">0% commission · relation directe · données publiques séparées du PIN</div>
   </main>
-
   <script>
-    (() => {
-      "use strict";
-
-      const shareButton=document.getElementById("shareWhatsApp");
-      const statusBox=document.getElementById("status");
-      const PUBLIC_BASE="https://explore.digiylyfe.com/";
-
-      const SESSION_KEYS=[
-        "digiy_explore_session",
-        "digiy_explore_guard_session",
-        "digiy_guard_explore_session",
-        "DIGIY_EXPLORE_SESSION",
-        "DIGIY_EXPLORE_ACCESS"
-      ];
-
-      const SLUG_KEYS=[
-        "digiy_explore_last_slug",
-        "digiy_explore_slug",
-        "digiy_last_slug",
-        "DIGIY_SLUG",
-        "digiy_slug"
-      ];
-
-      function setStatus(message){
-        statusBox.textContent=message||"";
-        statusBox.hidden=!message;
+  (()=>{"use strict";
+    const $=id=>document.getElementById(id);
+    let ownerSlug="",ownerPhone="",place=null;
+    function status(message){$("status").textContent=message||"";$("status").hidden=!message}
+    function cleanPhone(v){const d=String(v||"").replace(/\D/g,"");return d.length===9?"221"+d:d}
+    async function boot(){
+      const guard=window.DIGIY_GUARD;
+      if(!guard||typeof guard.ready!=="function"){location.replace("./pin.html");return}
+      try{await guard.ready()}catch(_){location.replace("./pin.html");return}
+      const session=typeof guard.getSession==="function"?guard.getSession():(guard.state||{});
+      ownerSlug=String(session?.slug||guard.state?.slug||"").trim().toLowerCase();
+      ownerPhone=cleanPhone(session?.phone||guard.state?.phone||"");
+      if(!ownerSlug||!ownerPhone){location.replace("./pin.html");return}
+      const sb=window.supabase.createClient(window.DIGIY_SUPABASE_URL,window.DIGIY_SUPABASE_ANON_KEY,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
+      const {data,error}=await sb.rpc("digiy_explore_get_place_by_owner",{p_owner_slug:ownerSlug,p_phone:ownerPhone});
+      if(error){status("La migration Supabase EXPLORE doit être exécutée avant la synchronisation.");return}
+      if(data?.ok===true&&data.place){
+        place=data.place;
+        $("title").textContent="Bonjour, "+(place.place_name||"professionnel")+".";
+        $("subtitle").textContent=place.is_published?"Ton lieu est publié et son QR individuel est prêt.":"Ton lieu est enregistré. Active « Publier » dans Ma fiche lieu pour ouvrir la fiche client.";
+      }else{
+        status("Aucune fiche cloud pour ce compte. Ouvre Mon lieu pour la créer.");
       }
-
-      function get(storage,key){
-        try{return storage.getItem(key)||""}catch(_){return ""}
-      }
-
-      function json(raw){
-        try{return JSON.parse(raw||"null")}catch(_){return null}
-      }
-
-      function slug(value){
-        return String(value||"")
-          .trim()
-          .toLowerCase()
-          .replace(/\s+/g,"-")
-          .replace(/[^a-z0-9-]/g,"")
-          .replace(/-+/g,"-")
-          .replace(/^-|-$/g,"");
-      }
-
-      function cleanUrl(value){
-        const raw=String(value||"").trim();
-        if(!raw)return "";
-        try{
-          const url=new URL(raw);
-          return url.protocol==="https:" ? url.toString() : "";
-        }catch(_){return ""}
-      }
-
-      function internalSlug(){
-        for(const storage of [localStorage,sessionStorage]){
-          for(const key of SESSION_KEYS){
-            const session=json(get(storage,key));
-            const value=slug(session?.slug||session?.pro_slug||session?.explore_slug||"");
-            if(value)return value;
-          }
-          for(const key of SLUG_KEYS){
-            const value=slug(get(storage,key));
-            if(value)return value;
-          }
-        }
-        return "";
-      }
-
-      function savedFiche(){
-        const proSlug=internalSlug();
-        if(!proSlug)return null;
-        try{return json(localStorage.getItem("DIGIY_EXPLORE_FICHE_V2_"+proSlug))}catch(_){return null}
-      }
-
-      function resolvePublicUrl(){
-        const direct=cleanUrl(get(localStorage,"digiy_explore_public_url"));
-        if(direct)return direct;
-
-        const fiche=savedFiche()||{};
-        const ficheUrl=cleanUrl(fiche.publicUrl||fiche.public_url||"");
-        if(ficheUrl)return ficheUrl;
-
-        const publicSlug=slug(
-          get(localStorage,"digiy_explore_public_slug") ||
-          fiche.publicSlug ||
-          fiche.public_slug ||
-          ""
-        );
-
-        if(publicSlug){
-          const url=new URL(PUBLIC_BASE);
-          url.searchParams.set("slug",publicSlug);
-          return url.toString();
-        }
-
-        return "";
-      }
-
-      shareButton.addEventListener("click",()=>{
-        const publicUrl=resolvePublicUrl();
-        if(!publicUrl){
-          setStatus("Prépare d’abord ta fiche lieu et son slug public.");
-          return;
-        }
-        const message="Bonjour, voici mon lieu sur DIGIY EXPLORE : "+publicUrl;
-        setStatus("Ouverture de WhatsApp…");
-        location.href="https://wa.me/?text="+encodeURIComponent(message);
-      });
-    })();
+    }
+    $("shareWhatsApp").addEventListener("click",()=>{
+      const url=String(place?.public_url||"").trim();
+      if(!url){status("Prépare et enregistre d’abord ta fiche lieu.");return}
+      if(place?.is_published!==true){status("Publie d’abord la fiche avant de la partager.");return}
+      const label=place?.place_name||"mon lieu";
+      location.href="https://wa.me/?text="+encodeURIComponent("Bonjour, voici "+label+" sur DIGIY EXPLORE : "+url);
+    });
+    boot();
+  })();
   </script>
 </body>
 </html>
