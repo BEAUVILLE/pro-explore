@@ -1,44 +1,78 @@
 <!doctype html>
 <html lang="fr" style="visibility:hidden">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>DIGIY EXPLORE — QR lieu</title>
-<meta name="theme-color" content="#06130f">
-<meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="description" content="DIGIY EXPLORE PRO — QR public du lieu avec retour vers la fiche QR intégrée.">
-<meta name="digiy-build" content="explore-qr-protege-20260716">
-<script>
-window.DIGIY_MODULE="EXPLORE";
-window.DIGIY_ABOS_MODULE="EXPLORE_BOOST";
-window.DIGIY_LOGIN_URL="./pin.html";
-</script>
-<script src="./guard.js?v=explore-guard-restored-20260716" onerror="location.replace('./pin.html')"></script>
-<style>
-body{margin:0;min-height:100vh;padding:16px;background:#06130f;color:#f8fafc;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-weight:900;text-align:center}.card{max-width:560px;margin:0 auto;border:1px solid rgba(255,255,255,.14);border-radius:28px;background:rgba(255,255,255,.06);padding:20px}h1{font-size:44px;line-height:.95;margin:8px 0 10px}.top{color:#f3d46b;font-size:12px;letter-spacing:.12em;text-transform:uppercase}p{color:rgba(248,250,252,.72);line-height:1.5}.qr{background:white;color:#06130f;border-radius:24px;padding:18px;margin:16px auto}.qr img{width:100%;max-width:340px;border-radius:16px}.btn{min-height:54px;border-radius:18px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:#fff;text-decoration:none;margin:10px 0}.gold{background:linear-gradient(135deg,#d4af37,#f3d46b);color:#211904;border:0}.green{background:linear-gradient(135deg,#22c55e,#bbf7d0);color:#052215;border:0}.small{color:rgba(248,250,252,.72);word-break:break-all;font-size:13px}@media print{body{background:#fff;color:#000}.btn,.small,.top,p{display:none}.card{border:0}.qr img{max-width:440px}}
-</style>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <title>DIGIY EXPLORE PRO — QR individuel</title>
+  <meta name="description" content="QR individuel du lieu EXPLORE connecté."/>
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet"/>
+  <meta name="theme-color" content="#06130f"/>
+  <meta name="digiy-build" content="explore-qr-cloud-v3-20260722"/>
+  <script>
+    window.DIGIY_SUPABASE_URL="https://wesqmwjjtsefyjnluosj.supabase.co";
+    window.DIGIY_SUPABASE_ANON_KEY="sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
+    window.DIGIY_SUPABASE_ANON=window.DIGIY_SUPABASE_ANON_KEY;
+    window.DIGIY_MODULE="EXPLORE";
+    window.DIGIY_ABOS_MODULE="EXPLORE_BOOST";
+    window.DIGIY_LOGIN_URL="./pin.html";
+  </script>
+  <style>
+    :root{color-scheme:dark;--bg:#06130f;--gold:#d4af37;--gold2:#f3d46b;--green:#22c55e;--line:rgba(255,255,255,.14);--muted:rgba(248,250,252,.72)}
+    *{box-sizing:border-box}body{margin:0;min-height:100dvh;padding:16px;background:radial-gradient(700px 400px at 10% 0%,rgba(212,175,55,.16),transparent 60%),var(--bg);color:#f8fafc;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-weight:900;text-align:center}
+    .card{max-width:590px;margin:0 auto;border:1px solid var(--line);border-radius:28px;background:rgba(255,255,255,.06);padding:22px;box-shadow:0 24px 70px rgba(0,0,0,.38)}.top{color:var(--gold2);font-size:12px;letter-spacing:.12em;text-transform:uppercase}h1{font-size:44px;line-height:.98;margin:8px 0}.muted{color:var(--muted);line-height:1.5}.qr{background:#fff;border-radius:24px;padding:18px;margin:18px auto;display:grid;place-items:center}.qr canvas,.qr img{width:min(100%,420px);height:auto;aspect-ratio:1;background:#fff}.btn{min-height:54px;border-radius:18px;border:1px solid var(--line);background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:#fff;text-decoration:none;margin:10px 0;padding:0 14px}.gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#211904;border:0}.green{background:linear-gradient(135deg,var(--green),#bbf7d0);color:#052215;border:0}.url{color:var(--muted);word-break:break-all;font-size:13px;line-height:1.4}.msg{padding:12px;border-radius:16px;border:1px solid rgba(245,158,11,.30);background:rgba(245,158,11,.10);color:#fde68a;line-height:1.45}.msg.ok{border-color:rgba(34,197,94,.30);background:rgba(34,197,94,.10);color:#bbf7d0}
+    @media print{body{background:#fff;color:#000}.btn,.url,.top,.muted,.msg{display:none}.card{border:0;box-shadow:none}.qr{padding:0}.qr canvas,.qr img{width:520px;max-width:100%}}
+  </style>
 </head>
 <body>
-<main class="card">
-<div class="top">DIGIY EXPLORE · QR terrain</div>
-<h1>QR lieu</h1>
-<p>QR seul pour impression rapide. La fiche complète garde le QR intégré.</p>
-<div class="qr"><img alt="QR DIGIY EXPLORE" src="https://api.qrserver.com/v1/create-qr-code/?size=520x520&margin=18&data=https%3A%2F%2Fexplore.digiylyfe.com%2F"><br><strong>Mon lieu</strong><br><small>BY DIGIYLYFE</small></div>
-<div class="small">https://explore.digiylyfe.com/</div>
-<a class="btn green" href="https://explore.digiylyfe.com/" target="_blank" rel="noopener noreferrer">🧭 Ouvrir lien public</a>
-<a class="btn gold" href="./fiche.html">🪪 Fiche QR intégrée</a>
-<a class="btn gold" href="javascript:window.print()">🖨️ Imprimer QR</a>
-<a class="btn" href="./index.html">← Retour EXPLORE</a>
-</main>
-<script>
-window.addEventListener("load",()=>{
-  const guard=window.DIGIY_GUARD;
-  if(!guard||typeof guard.ready!=="function"){
-    location.replace("./pin.html");
-    return;
-  }
-  guard.ready().catch(()=>location.replace("./pin.html"));
-});
-</script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+  <script src="./guard.js?v=explore-qr-cloud-v3-20260722" onerror="location.replace('./pin.html')"></script>
+  <main class="card">
+    <div class="top">DIGIY EXPLORE · QR terrain individuel</div>
+    <h1 id="placeName">Mon QR</h1>
+    <p class="muted">Ce QR est construit uniquement à partir de la fiche Supabase du compte connecté.</p>
+    <div class="msg" id="msg">Chargement de la fiche…</div>
+    <div class="qr" id="qrBox" hidden>
+      <canvas id="qrCanvas" width="520" height="520"></canvas>
+      <img id="qrFallback" alt="QR DIGIY EXPLORE" hidden/>
+    </div>
+    <div class="url" id="publicUrl"></div>
+    <a class="btn green" id="openPublic" href="#" target="_blank" rel="noopener">🧭 Ouvrir la fiche publique</a>
+    <button class="btn gold" id="printQr" type="button">🖨️ Imprimer le QR</button>
+    <a class="btn gold" href="./fiche.html">🪪 Modifier ma fiche</a>
+    <a class="btn" href="./index.html">← Retour EXPLORE</a>
+  </main>
+  <script>
+  (()=>{"use strict";
+    const $=id=>document.getElementById(id);
+    const cleanPhone=v=>{const d=String(v||"").replace(/\D/g,"");return d.length===9?"221"+d:d};
+    function fallback(target){$("qrCanvas").hidden=true;const img=$("qrFallback");img.hidden=false;img.src="https://api.qrserver.com/v1/create-qr-code/?size=620x620&margin=16&data="+encodeURIComponent(target)}
+    function draw(target){$("qrBox").hidden=false;if(window.QRCode?.toCanvas){window.QRCode.toCanvas($("qrCanvas"),target,{width:520,margin:2,errorCorrectionLevel:"M"},err=>{if(err)fallback(target)})}else fallback(target)}
+    async function boot(){
+      const guard=window.DIGIY_GUARD;
+      if(!guard||typeof guard.ready!=="function"){location.replace("./pin.html");return}
+      try{await guard.ready()}catch(_){location.replace("./pin.html");return}
+      const session=typeof guard.getSession==="function"?guard.getSession():(guard.state||{});
+      const ownerSlug=String(session?.slug||guard.state?.slug||"").trim().toLowerCase();
+      const ownerPhone=cleanPhone(session?.phone||guard.state?.phone||"");
+      if(!ownerSlug||!ownerPhone){location.replace("./pin.html");return}
+      const sb=window.supabase.createClient(window.DIGIY_SUPABASE_URL,window.DIGIY_SUPABASE_ANON_KEY,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
+      const {data,error}=await sb.rpc("digiy_explore_get_place_by_owner",{p_owner_slug:ownerSlug,p_phone:ownerPhone});
+      if(error){$("msg").textContent="Migration Supabase EXPLORE absente ou RPC indisponible.";return}
+      const place=data?.place;
+      if(data?.ok!==true||!place){$("msg").textContent="Aucune fiche lieu n’est encore enregistrée pour ce compte.";return}
+      if(place.is_published!==true){$("msg").textContent="La fiche existe mais elle n’est pas publiée. Active Publier dans Ma fiche lieu.";return}
+      const target=String(place.public_url||"").trim();
+      if(!target){$("msg").textContent="Aucun lien public n’est encore attribué à ce lieu.";return}
+      $("placeName").textContent=place.place_name||"Mon QR lieu";
+      $("publicUrl").textContent=target;
+      $("openPublic").href=target;
+      $("msg").className="msg ok";$("msg").textContent="✅ QR public prêt pour ce lieu.";
+      draw(target);
+    }
+    $("printQr").addEventListener("click",()=>window.print());
+    boot();
+  })();
+  </script>
 </body>
 </html>
