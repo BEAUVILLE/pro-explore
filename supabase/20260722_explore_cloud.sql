@@ -55,9 +55,9 @@ create unique index if not exists digiy_explore_places_public_slug_uq
   on public.digiy_explore_places (public_slug)
   where public_slug is not null and btrim(public_slug) <> '';
 
--- Le paramètre conserve le nom historique "s" pour rester compatible
--- avec une éventuelle version déjà présente dans Supabase.
-create or replace function public.digiy_explore_slugify(s text)
+-- Paramètre volontairement anonyme : compatible avec toute ancienne version
+-- quel que soit le nom historique du paramètre.
+create or replace function public.digiy_explore_slugify(text)
 returns text
 language sql
 immutable
@@ -68,7 +68,7 @@ as $$
       both '-'
       from regexp_replace(
         regexp_replace(
-          lower(unaccent(coalesce(s, ''))),
+          lower(unaccent(coalesce($1, ''))),
           '[^a-z0-9]+',
           '-',
           'g'
