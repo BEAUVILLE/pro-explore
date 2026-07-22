@@ -134,6 +134,8 @@ as $$
 declare
   v_phone text := regexp_replace(coalesce(p_phone, ''), '[^0-9]', '', 'g');
   v_result jsonb;
+  v_module text;
+  v_exists boolean := false;
 begin
   if length(v_phone) = 9 then
     v_phone := '221' || v_phone;
@@ -143,25 +145,60 @@ begin
     return false;
   end if;
 
+  -- Même couverture que guard.js : ABOS puis ancien rail,
+  -- avec les variantes EXPLORE / EXPLORE_BOOST.
+  foreach v_module in array array[
+    'EXPLORE_BOOST',
+    'EXPLORE',
+    'explore_boost',
+    'explore'
+  ]
+  loop
+    begin
+      execute 'select to_jsonb(public.digiy_has_module_access_from_abos($1,$2))'
+        into v_result
+        using v_phone, v_module;
+
+      if public.digiy_explore_json_is_true(v_result) then
+        return true;
+      end if;
+    exception when others then
+      null;
+    end;
+
+    begin
+      execute 'select to_jsonb(public.digiy_has_access($1,$2))'
+        into v_result
+        using v_phone, v_module;
+
+      if public.digiy_explore_json_is_true(v_result) then
+        return true;
+      end if;
+    exception when others then
+      null;
+    end;
+  end loop;
+
+  -- Secours cohérent avec le guard : cette vue publique ne contient
+  -- que les abonnements exposés au module. Elle permet de reconnaître
+  -- les comptes dont le PIN fonctionne mais dont l'ancien RPC renvoie faux.
   begin
-    execute 'select to_jsonb(public.digiy_has_module_access_from_abos($1,$2))'
-      into v_result
-      using v_phone, 'EXPLORE_BOOST';
+    if to_regclass('public.digiy_subscriptions_public') is not null then
+      execute $sql$
+        select exists (
+          select 1
+          from public.digiy_subscriptions_public s
+          where regexp_replace(coalesce(s.phone::text, ''), '[^0-9]', '', 'g') = $1
+            and upper(replace(coalesce(s.module::text, ''), '-', '_'))
+                in ('EXPLORE', 'EXPLORE_BOOST')
+        )
+      $sql$
+      into v_exists
+      using v_phone;
 
-    if public.digiy_explore_json_is_true(v_result) then
-      return true;
-    end if;
-  exception when others then
-    null;
-  end;
-
-  begin
-    execute 'select to_jsonb(public.digiy_has_access($1,$2))'
-      into v_result
-      using v_phone, 'EXPLORE';
-
-    if public.digiy_explore_json_is_true(v_result) then
-      return true;
+      if v_exists then
+        return true;
+      end if;
     end if;
   exception when others then
     null;
@@ -446,32 +483,36 @@ as $$
         and p.is_published is true
       limit 1
     ),
-    jsonb_build_object(
-      'ok', false,
-      'reason', 'place_not_found'
-    )
+    jsonb_build_object('ok', false, 'reason', 'not_found')
   );
 $$;
 
-alter table public.digiy_explore_places enable row level security;
-
 revoke all on table public.digiy_explore_places from anon, authenticated;
-revoke all on function public.digiy_explore_get_place_by_owner(text,text) from public;
-revoke all on function public.digiy_explore_save_place(text,text,jsonb) from public;
-revoke all on function public.digiy_explore_public_place_by_slug(text) from public;
 
-grant execute on function public.digiy_explore_get_place_by_owner(text,text)
-  to anon, authenticated;
-grant execute on function public.digiy_explore_save_place(text,text,jsonb)
-  to anon, authenticated;
+revoke all on function public.digiy_explore_get_place_by_owner(text, text)
+from public;
+revoke all on function public.digiy_explore_save_place(text, text, jsonb)
+from public;
+revoke all on function public.digiy_explore_public_place_by_slug(text)
+from public;
+
+grant execute on function public.digiy_explore_get_place_by_owner(text, text)
+to anon, authenticated;
+grant execute on function public.digiy_explore_save_place(text, text, jsonb)
+to anon, authenticated;
 grant execute on function public.digiy_explore_public_place_by_slug(text)
-  to anon, authenticated;
+to anon, authenticated;
+
+grant execute on function public.digiy_explore_has_access(text)
+to anon, authenticated;
+
+grant execute on function public.digiy_explore_slugify(text)
+to anon, authenticated;
 
 notify pgrst, 'reload schema';
 
 commit;
 
--- Contrôle après exécution
 select
   owner_slug,
   place_name,
