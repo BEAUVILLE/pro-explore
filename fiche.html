@@ -1,36 +1,221 @@
 <!doctype html>
-<html lang="fr">
+<html lang="fr" style="visibility:hidden">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Je fais découvrir — Ma fiche lieu</title>
-<meta name="theme-color" content="#06130f">
-<meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-<meta name="description" content="DIGIY EXPLORE PRO — fiche lieu avec QR intégré.">
-<meta name="digiy-build" content="explore-fiche-pro-qr-integre-20260619">
-<script>
-window.DIGIY_MODULE="EXPLORE";
-window.DIGIY_ABOS_MODULE="EXPLORE";
-window.DIGIY_MODULE_LABEL="Je fais découvrir";
-window.DIGIY_LOGIN_URL="./pin.html";
-window.DIGIY_PUBLIC_BASE_URL=window.DIGIY_PUBLIC_BASE_URL||"https://explore.digiylyfe.com/";
-</script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./guard.js?v=explore-guard-20260619"></script>
-<style>
-:root{--bg:#06130f;--bg2:#0a1f18;--gold:#d4af37;--gold2:#f3d46b;--green:#22c55e;--blue:#38bdf8;--text:#f8fafc;--muted:rgba(248,250,252,.76);--line:rgba(255,255,255,.15);--card:rgba(255,255,255,.075);--shadow:0 18px 48px rgba(0,0,0,.30);--max:1040px;--top:56px;--bottom:82px;--font:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100svh;color:var(--text);font-family:var(--font);font-weight:900;background:radial-gradient(700px 430px at 12% -8%,rgba(212,175,55,.18),transparent 60%),radial-gradient(640px 380px at 95% 0%,rgba(56,189,248,.13),transparent 58%),linear-gradient(180deg,var(--bg2),var(--bg));padding:calc(var(--top) + 14px) 12px calc(var(--bottom) + env(safe-area-inset-bottom,0px) + 18px)}a{color:inherit;text-decoration:none}button,input,select,textarea{font:inherit}button{cursor:pointer;color:inherit}.top{position:fixed;top:0;left:0;right:0;height:var(--top);z-index:60;background:rgba(6,19,15,.96);border-bottom:1px solid rgba(212,175,55,.22);backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 12px}.top a,.pill{min-height:36px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.07);display:inline-flex;align-items:center;justify-content:center;padding:0 11px;font-size:12px;font-weight:1000;color:var(--muted)}.top b{color:var(--gold2);font-size:12px;letter-spacing:.14em;text-transform:uppercase}.wrap{width:min(var(--max),100%);margin:0 auto;display:grid;gap:14px}.kicker{color:var(--gold2);font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:1000;margin-bottom:8px}h1{margin:0 0 8px;font-size:clamp(34px,8vw,58px);line-height:.94;letter-spacing:-.055em;font-weight:1000}.sub{color:var(--muted);font-size:16px;line-height:1.45;max-width:860px}.rule{margin-top:10px;border:1px dashed rgba(255,255,255,.22);border-radius:18px;background:rgba(0,0,0,.16);padding:12px;color:rgba(248,250,252,.9);font-size:14px;line-height:1.4}.rule b{color:var(--gold2)}.grid{display:grid;grid-template-columns:1fr .9fr;gap:14px}.card{border:1px solid var(--line);background:var(--card);border-radius:26px;box-shadow:var(--shadow);overflow:hidden}.head{padding:15px;border-bottom:1px solid rgba(255,255,255,.13);background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.035));display:flex;justify-content:space-between;gap:12px}.title{font-size:22px;color:#fff;font-weight:1000;line-height:1.05}.desc{margin-top:5px;color:var(--muted);font-size:14px;line-height:1.35}.tag{min-height:30px;border-radius:999px;border:1px solid rgba(212,175,55,.35);background:rgba(212,175,55,.12);color:var(--gold2);display:inline-flex;align-items:center;padding:0 9px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;font-weight:1000;white-space:nowrap}.form{padding:15px;display:grid;gap:12px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{display:grid;gap:7px}.field label{font-size:13px;color:#fff;font-weight:1000}.input,.select,.area{width:100%;min-height:52px;border-radius:17px;border:1px solid rgba(255,255,255,.17);background:rgba(0,0,0,.18);color:var(--text);padding:12px 13px;outline:none;font-weight:900}.area{min-height:106px;resize:vertical;line-height:1.45}.hint{color:rgba(248,250,252,.62);font-size:12px;line-height:1.35}.actions{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.btn{min-height:54px;border-radius:18px;border:1px solid var(--line);background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;gap:8px;text-align:center;font-weight:1000}.btn.gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#211904;border:0}.btn.green{background:linear-gradient(135deg,var(--green),#bbf7d0);color:#052215;border:0}.btn.blue{background:rgba(56,189,248,.13);border-color:rgba(56,189,248,.32)}.btn.red{border-color:rgba(251,113,133,.34);background:rgba(251,113,133,.10);color:#fecaca}.preview{padding:15px;display:grid;gap:12px}.photo{min-height:245px;border-radius:24px;overflow:hidden;border:1px solid var(--line);background:radial-gradient(360px 180px at 30% 0%,rgba(212,175,55,.20),transparent 60%),linear-gradient(135deg,rgba(56,189,248,.18),rgba(0,0,0,.2));position:relative;display:grid;place-items:center;text-align:center;color:var(--muted);font-size:18px;padding:18px}.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.badges{position:absolute;left:12px;right:12px;bottom:12px;display:flex;gap:7px;flex-wrap:wrap;z-index:2}.badge{border-radius:999px;border:1px solid rgba(255,255,255,.16);background:rgba(6,19,15,.72);padding:7px 10px;color:#fff;font-size:12px;font-weight:1000}.public{border-radius:24px;border:1px solid var(--line);background:rgba(0,0,0,.18);padding:15px;display:grid;gap:9px}.name{font-size:30px;line-height:1;letter-spacing:-.04em;font-weight:1000;color:#fff}.meta,.bio{color:var(--muted);font-size:15px;line-height:1.45;white-space:pre-wrap}.links{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.plink{min-height:48px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.07);display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;font-size:14px;font-weight:1000}.qrBox{border-radius:24px;border:1px solid rgba(212,175,55,.32);background:rgba(212,175,55,.10);padding:15px;display:grid;grid-template-columns:132px 1fr;gap:14px;align-items:center}.qrImg{width:132px;height:132px;border-radius:18px;background:#fff;padding:8px;object-fit:contain}.qrTitle{font-size:20px;font-weight:1000;color:#fff}.qrUrl{margin-top:6px;color:var(--muted);font-size:13px;line-height:1.35;word-break:break-word}.note{display:none;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.08);padding:12px;color:var(--muted);font-size:14px;line-height:1.45;white-space:pre-wrap}.note.show{display:block}.note.ok{border-color:rgba(34,197,94,.32);background:rgba(34,197,94,.11);color:#bbf7d0}.note.warn{border-color:rgba(245,158,11,.32);background:rgba(245,158,11,.11);color:#fde68a}.bottom{position:fixed;left:0;right:0;bottom:0;height:var(--bottom);z-index:70;background:rgba(6,19,15,.97);border-top:1px solid rgba(212,175,55,.18);padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));backdrop-filter:blur(14px)}.bottomin{width:min(760px,100%);height:100%;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:6px}.bottom a{border-radius:16px;display:grid;place-items:center;align-content:center;gap:3px;color:rgba(248,250,252,.62);font-size:11px;font-weight:1000;text-align:center}.bottom a.active{background:linear-gradient(135deg,var(--green),var(--gold2));color:#052215}.bi{font-size:19px}@media(max-width:900px){.grid{grid-template-columns:1fr}}@media(max-width:620px){.row,.actions,.links{grid-template-columns:1fr}.qrBox{grid-template-columns:1fr;text-align:center}.qrImg{margin:0 auto}.top b{font-size:11px}.pill{max-width:38vw;overflow:hidden;text-overflow:ellipsis}.card{border-radius:22px}}
-</style>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <title>DIGIY EXPLORE PRO — Ma fiche lieu</title>
+  <meta name="description" content="Fiche lieu EXPLORE synchronisée avec Supabase, lien public et QR individuel."/>
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet"/>
+  <meta name="theme-color" content="#06130f"/>
+  <meta name="digiy-build" content="explore-fiche-cloud-v3-20260722"/>
+  <script>
+    window.DIGIY_SUPABASE_URL="https://wesqmwjjtsefyjnluosj.supabase.co";
+    window.DIGIY_SUPABASE_ANON_KEY="sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
+    window.DIGIY_SUPABASE_ANON=window.DIGIY_SUPABASE_ANON_KEY;
+    window.DIGIY_MODULE="EXPLORE";
+    window.DIGIY_ABOS_MODULE="EXPLORE_BOOST";
+    window.DIGIY_LOGIN_URL="./pin.html";
+  </script>
+  <style>
+    :root{color-scheme:dark;--bg:#06130f;--bg2:#0a1f18;--gold:#d4af37;--gold2:#f3d46b;--green:#22c55e;--blue:#38bdf8;--red:#fb7185;--text:#f8fafc;--muted:rgba(248,250,252,.72);--line:rgba(255,255,255,.15);--card:rgba(255,255,255,.07)}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%}body{color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:radial-gradient(760px 440px at 8% -10%,rgba(212,175,55,.18),transparent 60%),radial-gradient(720px 430px at 108% 5%,rgba(56,189,248,.13),transparent 56%),linear-gradient(180deg,var(--bg2),var(--bg));padding:14px 14px 90px}
+    a{color:inherit;text-decoration:none}.wrap{width:min(1080px,100%);margin:auto;display:grid;gap:14px}.top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.pill,.btn{min-height:48px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.08);color:var(--text);display:inline-flex;align-items:center;justify-content:center;padding:0 14px;font:inherit;font-weight:950;text-decoration:none;cursor:pointer}.gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#211904;border:0}.green{background:linear-gradient(135deg,var(--green),#bbf7d0);color:#052215;border:0}.blue{background:rgba(56,189,248,.14);border-color:rgba(56,189,248,.30)}
+    .hero,.card{border:1px solid var(--line);border-radius:26px;background:var(--card);box-shadow:0 20px 52px rgba(0,0,0,.28)}.hero{padding:20px}.kicker{color:var(--gold2);font-size:12px;font-weight:1000;letter-spacing:.12em;text-transform:uppercase}h1{margin:8px 0 6px;font-size:clamp(34px,7vw,58px);line-height:.98;letter-spacing:-.05em}.sub{color:var(--muted);line-height:1.5;font-weight:850}
+    .grid{display:grid;grid-template-columns:1.08fr .92fr;gap:14px}.card{overflow:hidden}.head{padding:16px;border-bottom:1px solid var(--line);font-size:22px;font-weight:1000}.form,.preview{padding:16px;display:grid;gap:12px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.field{display:grid;gap:7px}.field label{font-size:13px;font-weight:1000}.input,.select,.area{width:100%;min-height:52px;border:1px solid rgba(255,255,255,.17);border-radius:16px;background:rgba(0,0,0,.18);color:var(--text);padding:12px;font:inherit;font-weight:850;outline:none}.area{min-height:118px;resize:vertical}.input[readonly]{opacity:.78}.hint{color:var(--muted);font-size:12px;line-height:1.4}.switch{display:flex;align-items:center;gap:10px;padding:12px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.045)}.switch input{width:22px;height:22px}
+    .actions{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.actions .btn{width:100%}.notice{display:none;padding:12px;border-radius:16px;border:1px solid var(--line);font-weight:850;line-height:1.45}.notice.show{display:block}.notice.ok{color:#bbf7d0;background:rgba(34,197,94,.10);border-color:rgba(34,197,94,.28)}.notice.warn{color:#fde68a;background:rgba(245,158,11,.10);border-color:rgba(245,158,11,.28)}.notice.bad{color:#fecaca;background:rgba(239,68,68,.10);border-color:rgba(239,68,68,.28)}
+    .photo{min-height:250px;border-radius:22px;border:1px solid var(--line);overflow:hidden;background:linear-gradient(135deg,rgba(56,189,248,.15),rgba(212,175,55,.13));display:grid;place-items:center;color:var(--muted);position:relative}.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.name{font-size:32px;font-weight:1000;letter-spacing:-.04em}.meta,.bio,.url{color:var(--muted);line-height:1.45;word-break:break-word}.qr{display:grid;grid-template-columns:160px 1fr;gap:14px;align-items:center;padding:14px;border:1px solid rgba(212,175,55,.32);border-radius:22px;background:rgba(212,175,55,.09)}.qr canvas,.qr img{width:160px;height:160px;background:#fff;padding:8px;border-radius:16px}.qr img{object-fit:contain}.links{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    @media(max-width:860px){.grid{grid-template-columns:1fr}}@media(max-width:620px){.row,.actions,.links,.qr{grid-template-columns:1fr}.qr{text-align:center}.qr canvas,.qr img{margin:auto}}
+  </style>
 </head>
 <body>
-<header class="top"><a href="./index.html">← EXPLORE</a><b>EXPLORE · Fiche QR</b><div class="pill" id="sessionPill">session…</div></header>
-<main class="wrap">
-<section><div class="kicker">🧭 JE FAIS DÉCOUVRIR</div><h1>Ma fiche lieu.</h1><div class="sub">Le professionnel prépare ici sa fiche EXPLORE : lieu, catégorie, zone, horaires, tarif, WhatsApp public, slug client et QR intégré.</div><div class="rule"><b>Côté PRO :</b> données protégées derrière PIN. <b>Côté client :</b> seul le lien public propre part dans le QR.</div></section>
-<section class="grid"><section class="card"><div class="head"><div><div class="title">📝 Renseignements lieu</div><div class="desc">Fiche neutre : lieu, activité, visite, expérience, guide, découverte, plage, pêche, atelier.</div></div><span class="tag" id="proSlugTag">EXPLORE</span></div><div class="form"><div class="row"><div class="field"><label>Nom visible</label><input class="input" id="placeName" placeholder="Nom du lieu"></div><div class="field"><label>Catégorie</label><select class="select" id="category"><option>Lieu à découvrir</option><option>Restaurant / spot</option><option>Plage / nature</option><option>Pêche / sortie</option><option>Visite guidée</option><option>Atelier / artisanat</option><option>Culture / histoire</option><option>Activité famille</option><option>Autre découverte</option></select></div></div><div class="row"><div class="field"><label>Ville / zone</label><input class="input" id="zone" placeholder="Petite Côte, Saly, Mbour..."></div><div class="field"><label>Tarif indicatif</label><input class="input" id="price" placeholder="Gratuit, 5 000 FCFA..."></div></div><div class="row"><div class="field"><label>Horaires</label><input class="input" id="hours" placeholder="Jours et heures utiles"></div><div class="field"><label>Contact WhatsApp</label><input class="input" id="whatsapp" inputmode="tel" placeholder="Indicatif + numéro public"><div class="hint">Le téléphone ne part jamais dans l’URL QR.</div></div></div><div class="field"><label>Adresse / repère</label><input class="input" id="address" placeholder="Repère simple pour trouver le lieu"></div><div class="field"><label>Slug public client</label><input class="input" id="publicSlug" placeholder="ex : peche-petite-cote"><div class="hint">Pas de téléphone, pas de PIN.</div></div><div class="row"><div class="field"><label>Lien public lieu</label><input class="input" id="publicUrl" inputmode="url" placeholder="https://explore.digiylyfe.com/?slug=..."></div><div class="field"><label>Photo URL</label><input class="input" id="photoUrl" inputmode="url" placeholder="https://..."></div></div><div class="field"><label>Présentation courte</label><textarea class="area" id="summary" placeholder="Présente le lieu en deux phrases simples."></textarea></div><div class="actions"><button class="btn green" id="btnSave">💾 Enregistrer local</button><button class="btn gold" id="btnCopy">📋 Copier résumé</button><button class="btn blue" id="btnOpenPublic">🌍 Ouvrir public</button><button class="btn" id="btnOpenQr">🔳 QR seul</button><button class="btn red" id="btnReset">🧹 Vider local</button></div><div class="note" id="notice"></div></div></section>
-<aside class="card"><div class="head"><div><div class="title">👁️ Aperçu client</div><div class="desc">La fiche lieu et le QR intégré.</div></div><span class="tag">QR intégré</span></div><div class="preview"><div class="photo" id="photoBox"><span>🧭 Photo lieu / expérience</span><div class="badges"><span class="badge" id="pvZone">Zone</span><span class="badge" id="pvCat">Catégorie</span></div></div><div class="public"><div class="name" id="pvName">Mon lieu</div><div class="meta" id="pvMeta">Zone · catégorie · horaires</div><div class="bio" id="pvBio">Présentation courte du lieu.</div><div class="links" id="linksBox"></div></div><div class="qrBox"><img class="qrImg" id="qrImg" alt="QR lieu EXPLORE"><div><div class="qrTitle">QR lieu</div><div class="qrUrl" id="qrUrl">Lien en préparation.</div><button class="btn gold" id="btnCopyUrl" style="margin-top:10px">🔗 Copier lien QR</button></div></div></div></aside></section>
-</main>
-<nav class="bottom"><div class="bottomin"><a href="./index.html"><span class="bi">🏠</span><span>Index</span></a><a href="./lieux.html"><span class="bi">🧭</span><span>Lieux</span></a><a href="./qr.html"><span class="bi">🔳</span><span>QR</span></a><a class="active" href="./fiche.html"><span class="bi">🪪</span><span>Fiche</span></a><a href="./session.html"><span class="bi">🛡️</span><span>Session</span></a></div></nav>
-<script>
-(()=>{"use strict";const PUBLIC_BASE=String(window.DIGIY_PUBLIC_BASE_URL||"https://explore.digiylyfe.com/"),LOGIN_URL=String(window.DIGIY_LOGIN_URL||"./pin.html");const F=["placeName","category","zone","price","hours","whatsapp","address","publicSlug","publicUrl","photoUrl","summary"];const $=id=>document.getElementById(id);let proSlug="";function safe(v){return String(v||"").trim()}function slug(v){return String(v||"").trim().toLowerCase().replace(/\s+/g,"-").replace(/[^a-z0-9-]/g,"").replace(/-+/g,"-").replace(/^-|-$/g,"")}function bad(s){s=safe(s);return !s||/\d{7,}/.test(s)||/pin|token|phone|tel|whatsapp|session/i.test(s)}function https(v){v=safe(v);return /^https:\/\//i.test(v)?v:""}function phone(v){return String(v||"").replace(/[^\d+]/g,"").trim()}function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}function makeUrl(s){const x=slug(s);if(!x||bad(x))return"";const u=new URL(PUBLIC_BASE);u.searchParams.set("slug",x);return u.toString()}function qr(v){return"https://api.qrserver.com/v1/create-qr-code/?size=360x360&margin=12&data="+encodeURIComponent(v||PUBLIC_BASE)}function key(){return"DIGIY_EXPLORE_FICHE_V2_"+(proSlug||"NO_SLUG")}function show(m,t){const e=$("notice");e.className="note show "+(t||"warn");e.textContent=m||""}async function waitGuard(){try{const g=window.DIGIY_GUARD;if(!g)return{};if(typeof g.ready==="function"){const o=g.ready({redirect:false,preserve_validation:true});if(o&&typeof o.then==="function")await o}if(typeof g.getSession==="function")return g.getSession()||g.state||{};return g.state||{}}catch(_){return{}}}function localSlug(){try{return slug(localStorage.getItem("digiy_explore_slug")||localStorage.getItem("digiy_explore_last_slug")||localStorage.getItem("explore_slug")||localStorage.getItem("digiy_abos_slug")||"")}catch(_){return""}}function resolve(st){st=st||{};for(const c of [st.slug,st.explore_slug,st.internal_slug,st.pro_slug,st.public_slug,st.payload&&st.payload.slug,localSlug()]){const s=slug(c);if(s)return s}return""}function setPill(){const e=$("sessionPill");if(proSlug){e.textContent="slug : "+proSlug;$("proSlugTag").textContent=proSlug}else e.textContent="PIN requis"}function get(){const d={};F.forEach(id=>d[id]=safe($(id)?.value));d.whatsapp=phone(d.whatsapp);d.publicSlug=slug(d.publicSlug);d.photoUrl=https(d.photoUrl);d.publicUrl=https(d.publicUrl)||(!bad(d.publicSlug)?makeUrl(d.publicSlug):"");return d}function setForm(d){d=d||{};$("placeName").value=d.placeName||d.name||d.businessName||"";$("category").value=d.category||d.type||"Lieu à découvrir";$("zone").value=d.zone||d.city||"";$("price").value=d.price||d.tarif||"";$("hours").value=d.hours||"";$("whatsapp").value=d.whatsapp||d.phone||"";$("address").value=d.address||"";$("publicSlug").value=slug(d.publicSlug||d.public_slug||d.slug||"");$("publicUrl").value=d.publicUrl||d.public_url||"";$("photoUrl").value=d.photoUrl||d.photo_url||"";$("summary").value=d.summary||d.description||""}function link(l,u,i){return u?`<a class="plink" href="${esc(u)}" target="_blank" rel="noopener">${esc(i)} ${esc(l)}</a>`:""}function render(){const d=get();$("pvName").textContent=d.placeName||"Mon lieu";$("pvMeta").textContent=[d.zone||"Zone",d.category||"Catégorie",d.hours||"Horaires",d.price||"Tarif à confirmer"].filter(Boolean).join(" · ");$("pvBio").textContent=d.summary||"Présentation courte du lieu.";$("pvZone").textContent=d.zone||"Zone";$("pvCat").textContent=d.category||"Explore";const box=$("photoBox"),old=box.querySelector("img");if(old)old.remove();if(d.photoUrl){const img=document.createElement("img");img.src=d.photoUrl;img.alt=d.placeName||"Lieu";img.onerror=()=>img.remove();box.prepend(img)}const wa=d.whatsapp?"https://wa.me/"+encodeURIComponent(d.whatsapp.replace(/^\+/,"")):"";$("linksBox").innerHTML=[link("WhatsApp",wa,"💬"),link("Voir lieu",d.publicUrl,"🧭")].filter(Boolean).join("")||'<div class="meta">Ajoute WhatsApp ou slug public pour activer les boutons client.</div>';if(d.publicSlug&&!bad(d.publicSlug)&&!https($("publicUrl").value))$("publicUrl").value=makeUrl(d.publicSlug);const target=get().publicUrl||"";$("qrUrl").textContent=target||"Renseigne un slug public propre pour préparer le QR.";$("qrImg").src=qr(target||PUBLIC_BASE)}function loadLocal(){try{const raw=localStorage.getItem(key());if(!raw)return false;setForm(JSON.parse(raw));show("✅ Fiche EXPLORE retrouvée.","ok");return true}catch(_){return false}}function saveLocal(){const d=get();if(!d.placeName){show("Ajoute le nom visible du lieu.","warn");return}if(!d.publicSlug||bad(d.publicSlug)){show("Ajoute un slug public propre. Pas de téléphone dans le slug.","warn");return}try{localStorage.setItem(key(),JSON.stringify(d));localStorage.setItem("digiy_explore_slug",proSlug);localStorage.setItem("digiy_explore_last_slug",proSlug);localStorage.setItem("digiy_explore_public_slug",d.publicSlug);localStorage.setItem("digiy_explore_public_url",d.publicUrl)}catch(_){}show("✅ Fiche EXPLORE gardée. QR prêt.","ok");render()}async function copyText(t){try{if(navigator.clipboard?.writeText)return navigator.clipboard.writeText(t)}catch(_){}const ta=document.createElement("textarea");ta.value=t;ta.style.position="fixed";ta.style.left="-9999px";document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove()}function summary(){const d=get();return ["FICHE EXPLORE","Slug PRO : "+(proSlug||"—"),"Slug public : "+(d.publicSlug||"—"),"Lieu : "+(d.placeName||"—"),"Catégorie : "+(d.category||"—"),"Zone : "+(d.zone||"—"),"Horaires : "+(d.hours||"—"),"Tarif : "+(d.price||"—"),"Lien : "+(d.publicUrl||"—"),"","Présentation :",d.summary||"—"].join("\n")}async function boot(){const st=await waitGuard();proSlug=resolve(st);setPill();if(!proSlug){location.replace(LOGIN_URL);return}F.forEach(id=>{$(id)?.addEventListener("input",render);$(id)?.addEventListener("change",render)});$("btnSave").onclick=saveLocal;$("btnOpenQr").onclick=()=>location.href="./qr.html";$("btnOpenPublic").onclick=()=>{const u=get().publicUrl;if(!u){show("Renseigne un slug public propre.","warn");return}window.open(u,"_blank","noopener,noreferrer")};$("btnCopy").onclick=async()=>{await copyText(summary());show("✅ Résumé copié.","ok")};$("btnCopyUrl").onclick=async()=>{const u=get().publicUrl;if(!u){show("Renseigne un slug public propre.","warn");return}await copyText(u);show("✅ Lien QR copié.","ok")};$("btnReset").onclick=()=>{localStorage.removeItem(key());F.forEach(id=>{if($(id))$(id).value=""});render();show("Fiche locale vidée.","warn")};loadLocal();render()}boot();})();
-</script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
+  <script src="./guard.js?v=explore-fiche-cloud-v3-20260722"></script>
+  <main class="wrap">
+    <div class="top">
+      <a class="pill" href="./index.html">← Accueil EXPLORE</a>
+      <span class="pill" id="sessionPill">Session protégée</span>
+    </div>
+    <section class="hero">
+      <div class="kicker">JE FAIS DÉCOUVRIR · CLOUD</div>
+      <h1>Ma fiche lieu.</h1>
+      <div class="sub">La fiche est enregistrée dans Supabase. Elle reste disponible sur plusieurs appareils et son QR ouvre uniquement le lien public du lieu.</div>
+    </section>
+    <section class="grid">
+      <section class="card">
+        <div class="head">📝 Informations publiques du lieu</div>
+        <div class="form">
+          <div class="row">
+            <div class="field"><label>Nom visible</label><input class="input" id="placeName" placeholder="Nom du lieu"/></div>
+            <div class="field"><label>Catégorie</label><select class="select" id="category"><option>Lieu à découvrir</option><option>Restaurant / spot</option><option>Plage / nature</option><option>Pêche / sortie</option><option>Visite guidée</option><option>Atelier / artisanat</option><option>Culture / histoire</option><option>Activité famille</option><option>Autre découverte</option></select></div>
+          </div>
+          <div class="row">
+            <div class="field"><label>Ville / zone</label><input class="input" id="zone" placeholder="Saly, Mbour, Petite Côte..."/></div>
+            <div class="field"><label>Tarif indicatif</label><input class="input" id="priceText" placeholder="Gratuit, 5 000 FCFA..."/></div>
+          </div>
+          <div class="row">
+            <div class="field"><label>Horaires</label><input class="input" id="hours" placeholder="Jours et heures utiles"/></div>
+            <div class="field"><label>WhatsApp public</label><input class="input" id="whatsapp" inputmode="tel" placeholder="22177..."/><div class="hint">Le téléphone sert au contact public mais n’entre jamais dans l’adresse QR.</div></div>
+          </div>
+          <div class="field"><label>Adresse / repère</label><input class="input" id="address" placeholder="Repère simple pour trouver le lieu"/></div>
+          <div class="row">
+            <div class="field"><label>Slug public</label><input class="input" id="publicSlug" placeholder="Créé automatiquement depuis le nom"/><div class="hint">Laisse vide à la première création pour une attribution automatique.</div></div>
+            <div class="field"><label>Lien public généré</label><input class="input" id="publicUrl" readonly placeholder="Créé après enregistrement"/></div>
+          </div>
+          <div class="row">
+            <div class="field"><label>Photo URL HTTPS</label><input class="input" id="photoUrl" inputmode="url" placeholder="https://..."/></div>
+            <div class="field"><label>Site officiel optionnel</label><input class="input" id="websiteUrl" inputmode="url" placeholder="https://..."/></div>
+          </div>
+          <div class="field"><label>Présentation</label><textarea class="area" id="summary" placeholder="Présente le lieu en quelques phrases simples."></textarea></div>
+          <label class="switch"><input id="isPublished" type="checkbox"/><span>Publier la fiche pour les visiteurs et activer le QR</span></label>
+          <div class="actions">
+            <button class="btn green" id="btnSave" type="button">💾 Enregistrer dans Supabase</button>
+            <a class="btn gold" id="btnOpenPublic" href="#" target="_blank" rel="noopener">🌍 Ouvrir la fiche publique</a>
+            <a class="btn blue" href="./qr.html">🔳 Ouvrir mon QR</a>
+            <button class="btn" id="btnCopyUrl" type="button">🔗 Copier le lien</button>
+          </div>
+          <div class="notice" id="notice" role="status" aria-live="polite"></div>
+        </div>
+      </section>
+      <aside class="card">
+        <div class="head">👁️ Aperçu client</div>
+        <div class="preview">
+          <div class="photo" id="photoBox"><span>🧭 Photo du lieu</span></div>
+          <div class="name" id="pvName">Mon lieu</div>
+          <div class="meta" id="pvMeta">Zone · catégorie · horaires</div>
+          <div class="bio" id="pvBio">Présentation du lieu.</div>
+          <div class="links">
+            <a class="btn" id="pvWhatsapp" href="#" target="_blank" rel="noopener">💬 WhatsApp</a>
+            <a class="btn" id="pvWebsite" href="#" target="_blank" rel="noopener">🌐 Site officiel</a>
+          </div>
+          <div class="qr">
+            <canvas id="qrCanvas" width="260" height="260"></canvas>
+            <img id="qrFallback" alt="QR du lieu" hidden/>
+            <div>
+              <strong>QR individuel du lieu</strong>
+              <div class="url" id="qrUrl">Enregistre la fiche pour générer son adresse.</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </section>
+  </main>
+  <script>
+  (()=>{"use strict";
+    const $=id=>document.getElementById(id);
+    const fields=["placeName","category","zone","priceText","hours","whatsapp","address","publicSlug","publicUrl","photoUrl","websiteUrl","summary"];
+    let sb=null,ownerSlug="",ownerPhone="",current=null,slugTouched=false;
+    const cacheKey=()=>`DIGIY_EXPLORE_CLOUD_CACHE_${ownerSlug||"pending"}`;
+    const cleanPhone=v=>{const d=String(v||"").replace(/\D/g,"");return d.length===9?"221"+d:d};
+    const cleanHttps=v=>{const s=String(v||"").trim();return /^https:\/\/[^\s]+$/i.test(s)?s:""};
+    const slug=v=>String(v||"").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/-+/g,"-").replace(/^-|-$/g,"");
+    function notice(message,type="warn"){const e=$("notice");e.textContent=message||"";e.className="notice show "+type}
+    function value(id){return String($(id)?.value||"").trim()}
+    function formData(){
+      return {
+        place_name:value("placeName"),category:value("category"),zone:value("zone"),
+        price_text:value("priceText"),hours:value("hours"),whatsapp:cleanPhone(value("whatsapp")),
+        address:value("address"),public_slug:slug(value("publicSlug")),
+        photo_url:cleanHttps(value("photoUrl")),website_url:cleanHttps(value("websiteUrl")),
+        summary:value("summary"),is_published:$("isPublished").checked
+      };
+    }
+    function fill(p){
+      if(!p)return;
+      current=p;
+      $("placeName").value=p.place_name||"";
+      $("category").value=p.category||"Lieu à découvrir";
+      $("zone").value=p.zone||"";
+      $("priceText").value=p.price_text||"";
+      $("hours").value=p.hours||"";
+      $("whatsapp").value=p.whatsapp||"";
+      $("address").value=p.address||"";
+      $("publicSlug").value=p.public_slug||"";
+      $("publicUrl").value=p.public_url||"";
+      $("photoUrl").value=p.photo_url||"";
+      $("websiteUrl").value=p.website_url||"";
+      $("summary").value=p.summary||"";
+      $("isPublished").checked=p.is_published===true;
+      slugTouched=Boolean(p.public_slug);
+      try{localStorage.setItem(cacheKey(),JSON.stringify(p))}catch(_){}
+      render();
+    }
+    function render(){
+      const d=formData();
+      const target=value("publicUrl")||current?.public_url||"";
+      $("pvName").textContent=d.place_name||"Mon lieu";
+      $("pvMeta").textContent=[d.zone||"Zone",d.category||"Catégorie",d.hours||"Horaires",d.price_text||"Tarif à demander"].join(" · ");
+      $("pvBio").textContent=d.summary||"Présentation du lieu.";
+      const old=$("photoBox").querySelector("img");if(old)old.remove();
+      if(d.photo_url){const img=document.createElement("img");img.src=d.photo_url;img.alt=d.place_name||"Lieu";img.onerror=()=>img.remove();$("photoBox").prepend(img)}
+      const wa=d.whatsapp?"https://wa.me/"+d.whatsapp:"#";$("pvWhatsapp").href=wa;$("pvWhatsapp").style.opacity=d.whatsapp?"1":".45";
+      $("pvWebsite").href=d.website_url||"#";$("pvWebsite").style.opacity=d.website_url?"1":".45";
+      $("btnOpenPublic").href=target||"#";$("btnOpenPublic").style.opacity=target?"1":".45";
+      $("qrUrl").textContent=target||(d.is_published?"Enregistre la fiche pour obtenir le lien.":"Le QR sera actif après enregistrement et publication.");
+      drawQr(target);
+    }
+    function drawQr(target){
+      const canvas=$("qrCanvas"),fallback=$("qrFallback");
+      fallback.hidden=true;canvas.hidden=false;
+      const ctx=canvas.getContext("2d");ctx.clearRect(0,0,canvas.width,canvas.height);ctx.fillStyle="#fff";ctx.fillRect(0,0,canvas.width,canvas.height);
+      if(!target)return;
+      if(window.QRCode?.toCanvas){
+        window.QRCode.toCanvas(canvas,target,{width:260,margin:2,errorCorrectionLevel:"M"},err=>{if(err)fallbackQr(target)});
+      }else fallbackQr(target);
+    }
+    function fallbackQr(target){
+      $("qrCanvas").hidden=true;
+      const img=$("qrFallback");img.hidden=false;img.src="https://api.qrserver.com/v1/create-qr-code/?size=520x520&margin=16&data="+encodeURIComponent(target);
+    }
+    async function copyText(text){
+      if(navigator.clipboard?.writeText)return navigator.clipboard.writeText(text);
+      const ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";ta.style.left="-9999px";document.body.appendChild(ta);ta.select();document.execCommand("copy");ta.remove();
+    }
+    async function load(){
+      const {data,error}=await sb.rpc("digiy_explore_get_place_by_owner",{p_owner_slug:ownerSlug,p_phone:ownerPhone});
+      if(error){
+        try{const cached=JSON.parse(localStorage.getItem(cacheKey())||"null");if(cached)fill(cached)}catch(_){}
+        notice("Migration Supabase EXPLORE absente ou RPC indisponible. Exécute le fichier SQL livré avec la correction.","bad");
+        return;
+      }
+      if(data?.ok!==true){notice("Accès cloud refusé pour ce compte EXPLORE.","bad");return}
+      if(data.place){fill(data.place);notice("✅ Fiche chargée depuis Supabase.","ok")}
+      else{notice("Aucune fiche cloud. Remplis le formulaire puis enregistre.","warn");render()}
+    }
+    async function save(){
+      const payload=formData();
+      if(!payload.place_name){notice("Ajoute le nom visible du lieu.","warn");return}
+      if(value("photoUrl")&&!payload.photo_url){notice("La photo doit utiliser une adresse HTTPS valide.","warn");return}
+      if(value("websiteUrl")&&!payload.website_url){notice("Le site officiel doit utiliser une adresse HTTPS valide.","warn");return}
+      $("btnSave").disabled=true;notice("Enregistrement dans Supabase…","warn");
+      try{
+        const {data,error}=await sb.rpc("digiy_explore_save_place",{p_owner_slug:ownerSlug,p_phone:ownerPhone,p_payload:payload});
+        if(error)throw error;
+        if(data?.ok!==true)throw new Error(data?.reason||"save_failed");
+        fill(data.place);
+        notice(data.place?.is_published?"✅ Fiche enregistrée et publiée. QR individuel prêt.":"✅ Fiche enregistrée dans Supabase. Active Publier pour ouvrir le QR aux visiteurs.","ok");
+      }catch(err){notice("❌ Enregistrement impossible : "+(err?.message||"erreur Supabase"),"bad")}
+      finally{$("btnSave").disabled=false}
+    }
+    async function boot(){
+      const guard=window.DIGIY_GUARD;
+      if(!guard||typeof guard.ready!=="function"){location.replace("./pin.html");return}
+      try{await guard.ready()}catch(_){location.replace("./pin.html");return}
+      const session=typeof guard.getSession==="function"?guard.getSession():(guard.state||{});
+      ownerSlug=String(session?.slug||guard.state?.slug||"").trim().toLowerCase();
+      ownerPhone=cleanPhone(session?.phone||guard.state?.phone||"");
+      if(!ownerSlug||!ownerPhone){location.replace("./pin.html");return}
+      $("sessionPill").textContent="Compte : "+ownerSlug;
+      sb=window.supabase.createClient(window.DIGIY_SUPABASE_URL,window.DIGIY_SUPABASE_ANON_KEY,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
+      fields.forEach(id=>{$(id)?.addEventListener("input",()=>{if(id==="publicSlug")slugTouched=true;render()});$(id)?.addEventListener("change",render)});
+      $("placeName").addEventListener("input",()=>{if(!slugTouched&&!value("publicSlug"))$("publicSlug").placeholder=slug(value("placeName"))||"Créé automatiquement depuis le nom"});
+      $("isPublished").addEventListener("change",render);
+      $("btnSave").addEventListener("click",save);
+      $("btnCopyUrl").addEventListener("click",async()=>{const u=value("publicUrl");if(!u){notice("Enregistre d’abord la fiche.","warn");return}await copyText(u);notice("✅ Lien public copié.","ok")});
+      await load();
+    }
+    boot();
+  })();
+  </script>
 </body>
 </html>
