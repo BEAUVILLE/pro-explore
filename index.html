@@ -7,7 +7,7 @@
   <meta name="description" content="Accueil sécurisé DIGIY EXPLORE PRO : lieu, fiche publique, QR individuel et partage."/>
   <meta name="robots" content="noindex,nofollow,noarchive,nosnippet"/>
   <meta name="theme-color" content="#06130f"/>
-  <meta name="digiy-explore" content="explore-cloud-hub-v2-20260722"/>
+  <meta name="digiy-explore" content="explore-pro-7lang-world-20260801"/>
   <script>
     window.DIGIY_SUPABASE_URL="https://wesqmwjjtsefyjnluosj.supabase.co";
     window.DIGIY_SUPABASE_ANON_KEY="sb_publishable_tGHItRgeWDmGjnd0CK1DVQ_BIep4Ug3";
@@ -20,17 +20,19 @@
     :root{color-scheme:dark;--bg:#06130f;--bg2:#0a1f18;--card:rgba(255,255,255,.075);--line:rgba(255,255,255,.15);--text:#f8fafc;--muted:rgba(248,250,252,.70);--gold:#d4af37;--gold2:#f3d46b;--green:#22c55e}
     *{box-sizing:border-box}html,body{margin:0;min-height:100%}
     body{min-height:100dvh;display:grid;place-items:center;padding:18px;color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:radial-gradient(760px 440px at 8% -10%,rgba(212,175,55,.19),transparent 60%),radial-gradient(720px 430px at 108% 5%,rgba(34,197,94,.15),transparent 56%),linear-gradient(180deg,var(--bg2),var(--bg))}
-    main{width:min(500px,100%);padding:24px;border:1px solid var(--line);border-radius:28px;background:var(--card);box-shadow:0 26px 76px rgba(0,0,0,.42)}
+    main{width:min(520px,100%);padding:24px;border:1px solid var(--line);border-radius:28px;background:var(--card);box-shadow:0 26px 76px rgba(0,0,0,.42)}
+    .langs{display:flex;gap:5px;overflow-x:auto;padding-bottom:12px;scrollbar-width:none}.langs::-webkit-scrollbar{display:none}.langs button{flex:0 0 auto;min-width:51px;min-height:36px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.07);color:#fff;padding:0 9px;font:inherit;font-size:11px;font-weight:1000;cursor:pointer}.langs button.active{color:#13200d;border-color:transparent;background:linear-gradient(135deg,var(--gold),var(--green))}
     .eyebrow{color:var(--gold2);font-size:12px;font-weight:1000;letter-spacing:.12em;text-transform:uppercase}
     h1{margin:8px 0 6px;color:var(--gold2);font-size:clamp(2rem,9vw,3rem);line-height:1.02;letter-spacing:-.045em}
     .sub{margin:0 0 20px;color:var(--muted);font-weight:850;line-height:1.45}
-    nav{display:grid;gap:12px}
-    a,button{width:100%;min-height:60px;display:flex;align-items:center;justify-content:center;padding:14px 18px;border:1px solid var(--line);border-radius:18px;color:var(--text);background:rgba(255,255,255,.08);font:inherit;font-weight:950;text-align:center;text-decoration:none;cursor:pointer}
-    a:first-child{color:#052215;border-color:transparent;background:linear-gradient(135deg,var(--green),#bbf7d0)}
-    a:nth-child(3){color:#211904;border-color:transparent;background:linear-gradient(135deg,var(--gold),var(--gold2))}
+    nav.actions{display:grid;gap:12px}
+    a,button.action{width:100%;min-height:60px;display:flex;align-items:center;justify-content:center;padding:14px 18px;border:1px solid var(--line);border-radius:18px;color:var(--text);background:rgba(255,255,255,.08);font:inherit;font-weight:950;text-align:center;text-decoration:none;cursor:pointer}
+    a.primary{color:#052215;border-color:transparent;background:linear-gradient(135deg,var(--green),#bbf7d0)}
+    a.gold{color:#211904;border-color:transparent;background:linear-gradient(135deg,var(--gold),var(--gold2))}
     #status{margin:14px 0 0;padding:11px 12px;border:1px solid rgba(212,175,55,.32);border-radius:14px;color:#fff0a8;background:rgba(212,175,55,.12);font-size:.88rem;font-weight:850;line-height:1.4}
     #status[hidden]{display:none}
     .foot{margin-top:14px;color:rgba(248,250,252,.52);font-size:12px;font-weight:850;text-align:center}
+    html[dir="rtl"] body{text-align:right}html[dir="rtl"] .langs{direction:rtl}
   </style>
 </head>
 <body>
@@ -38,25 +40,56 @@
   <script src="./assets/js/digiy-abos-access.js?v=abos-20260522"></script>
   <script src="./guard.js?v=explore-cloud-hub-v2-20260722"></script>
   <main>
-    <div class="eyebrow">EXPLORE PRO · espace sécurisé</div>
+    <div class="langs" aria-label="Choisir la langue">
+      <button type="button" data-lang="fr">🇫🇷 FR</button>
+      <button type="button" data-lang="en">🇬🇧 EN</button>
+      <button type="button" data-lang="es">🇪🇸 ES</button>
+      <button type="button" data-lang="de">🇩🇪 DE</button>
+      <button type="button" data-lang="it">🇮🇹 IT</button>
+      <button type="button" data-lang="nl">🇳🇱 NL</button>
+      <button type="button" data-lang="ar">🌙 AR</button>
+    </div>
+    <div class="eyebrow" id="eyebrow">EXPLORE PRO · espace sécurisé</div>
     <h1 id="title">Bonjour.</h1>
     <p class="sub" id="subtitle">Ta fiche lieu est synchronisée avec Supabase et reste disponible sur tes appareils.</p>
-    <nav aria-label="Actions EXPLORE PRO">
-      <a href="./fiche.html">Mon lieu</a>
-      <a href="./fiche.html">Ma fiche lieu</a>
-      <a href="./qr.html">Mon QR</a>
-      <button id="shareWhatsApp" type="button">Partager sur WhatsApp</button>
+    <nav class="actions" aria-label="Actions EXPLORE PRO">
+      <a class="primary" id="ficheLink" href="./fiche.html">Ma fiche lieu</a>
+      <a id="qrLink" href="./qr.html">Mon QR</a>
+      <a class="gold" id="publicLink" href="https://explore.digiylyfe.com/">Voir EXPLORE public</a>
+      <button class="action" id="shareWhatsApp" type="button">Partager sur WhatsApp</button>
+      <a id="hubLink" href="https://digiy-hub.digiylyfe.com/">Retour au HUB</a>
     </nav>
     <p id="status" role="status" aria-live="polite" hidden></p>
-    <div class="foot">0% commission · relation directe · données publiques séparées du PIN</div>
+    <div class="foot" id="foot">0% commission · relation directe · données publiques séparées du PIN</div>
   </main>
   <script>
   (()=>{"use strict";
     const $=id=>document.getElementById(id);
-    let ownerSlug="",ownerPhone="",place=null;
+    const STORE="digiy_explore_lang_7";
+    const COPY={
+      fr:{eyebrow:"EXPLORE PRO · espace sécurisé",hello:"Bonjour.",welcome:"Bonjour, {name}.",sub:"Ta fiche lieu est synchronisée avec Supabase et reste disponible sur tes appareils.",published:"Ton lieu est publié et son QR individuel est prêt.",draft:"Ton lieu est enregistré. Active « Publier » dans Ma fiche lieu pour ouvrir la fiche client.",fiche:"Ma fiche lieu",qr:"Mon QR",pub:"Voir EXPLORE public",share:"Partager sur WhatsApp",hub:"Retour au HUB",foot:"0% commission · relation directe · données publiques séparées du PIN",migration:"La migration Supabase EXPLORE doit être exécutée avant la synchronisation.",empty:"Aucune fiche cloud pour ce compte. Ouvre Ma fiche lieu pour la créer.",prepare:"Prépare et enregistre d’abord ta fiche lieu.",publish:"Publie d’abord la fiche avant de la partager.",message:"Bonjour, voici {name} sur DIGIY EXPLORE : {url}",professional:"professionnel"},
+      en:{eyebrow:"EXPLORE PRO · secure space",hello:"Hello.",welcome:"Hello, {name}.",sub:"Your place profile is synchronized with Supabase and remains available on your devices.",published:"Your place is published and its individual QR is ready.",draft:"Your place is saved. Enable “Publish” in My place profile to open the visitor page.",fiche:"My place profile",qr:"My QR",pub:"View public EXPLORE",share:"Share on WhatsApp",hub:"Back to HUB",foot:"0% commission · direct relationship · public data separated from the PIN",migration:"The EXPLORE Supabase migration must be completed before synchronization.",empty:"No cloud profile exists for this account. Open My place profile to create it.",prepare:"Prepare and save your place profile first.",publish:"Publish the profile before sharing it.",message:"Hello, here is {name} on DIGIY EXPLORE: {url}",professional:"professional"},
+      es:{eyebrow:"EXPLORE PRO · espacio seguro",hello:"Hola.",welcome:"Hola, {name}.",sub:"La ficha de tu lugar está sincronizada con Supabase y disponible en tus dispositivos.",published:"Tu lugar está publicado y su QR individual está listo.",draft:"Tu lugar está guardado. Activa «Publicar» en Mi ficha del lugar para abrir la página visitante.",fiche:"Mi ficha del lugar",qr:"Mi QR",pub:"Ver EXPLORE público",share:"Compartir por WhatsApp",hub:"Volver al HUB",foot:"0% comisión · relación directa · datos públicos separados del PIN",migration:"La migración Supabase EXPLORE debe ejecutarse antes de sincronizar.",empty:"No existe ficha cloud para esta cuenta. Abre Mi ficha del lugar para crearla.",prepare:"Prepara y guarda primero la ficha del lugar.",publish:"Publica la ficha antes de compartirla.",message:"Hola, aquí está {name} en DIGIY EXPLORE: {url}",professional:"profesional"},
+      de:{eyebrow:"EXPLORE PRO · geschützter Bereich",hello:"Hallo.",welcome:"Hallo, {name}.",sub:"Dein Ortsprofil ist mit Supabase synchronisiert und auf deinen Geräten verfügbar.",published:"Dein Ort ist veröffentlicht und sein individueller QR ist bereit.",draft:"Dein Ort ist gespeichert. Aktiviere „Veröffentlichen“ im Ortsprofil, um die Besucherseite zu öffnen.",fiche:"Mein Ortsprofil",qr:"Mein QR",pub:"Öffentliches EXPLORE ansehen",share:"Über WhatsApp teilen",hub:"Zurück zum HUB",foot:"0% Provision · direkter Kontakt · öffentliche Daten vom PIN getrennt",migration:"Die EXPLORE-Supabase-Migration muss vor der Synchronisierung ausgeführt werden.",empty:"Für dieses Konto gibt es kein Cloud-Profil. Öffne Mein Ortsprofil, um es zu erstellen.",prepare:"Bereite zuerst dein Ortsprofil vor und speichere es.",publish:"Veröffentliche das Profil vor dem Teilen.",message:"Hallo, hier ist {name} auf DIGIY EXPLORE: {url}",professional:"Profi"},
+      it:{eyebrow:"EXPLORE PRO · spazio protetto",hello:"Ciao.",welcome:"Ciao, {name}.",sub:"La scheda del tuo luogo è sincronizzata con Supabase e disponibile sui tuoi dispositivi.",published:"Il tuo luogo è pubblicato e il suo QR individuale è pronto.",draft:"Il luogo è salvato. Attiva «Pubblica» nella scheda per aprire la pagina visitatore.",fiche:"La mia scheda luogo",qr:"Il mio QR",pub:"Vedi EXPLORE pubblico",share:"Condividi su WhatsApp",hub:"Torna all’HUB",foot:"0% commissione · relazione diretta · dati pubblici separati dal PIN",migration:"La migrazione Supabase EXPLORE deve essere eseguita prima della sincronizzazione.",empty:"Nessuna scheda cloud per questo account. Apri La mia scheda luogo per crearla.",prepare:"Prepara e salva prima la scheda del luogo.",publish:"Pubblica la scheda prima di condividerla.",message:"Ciao, ecco {name} su DIGIY EXPLORE: {url}",professional:"professionista"},
+      nl:{eyebrow:"EXPLORE PRO · beveiligde ruimte",hello:"Hallo.",welcome:"Hallo, {name}.",sub:"Je plekprofiel is gesynchroniseerd met Supabase en blijft beschikbaar op je apparaten.",published:"Je plek is gepubliceerd en de persoonlijke QR is klaar.",draft:"Je plek is opgeslagen. Activeer ‘Publiceren’ in Mijn plekprofiel om de bezoekerspagina te openen.",fiche:"Mijn plekprofiel",qr:"Mijn QR",pub:"Openbaar EXPLORE bekijken",share:"Delen via WhatsApp",hub:"Terug naar HUB",foot:"0% commissie · direct contact · openbare gegevens gescheiden van de PIN",migration:"De EXPLORE Supabase-migratie moet vóór synchronisatie worden uitgevoerd.",empty:"Geen cloudprofiel voor dit account. Open Mijn plekprofiel om het te maken.",prepare:"Maak en bewaar eerst je plekprofiel.",publish:"Publiceer het profiel voordat je het deelt.",message:"Hallo, hier is {name} op DIGIY EXPLORE: {url}",professional:"professional"},
+      ar:{eyebrow:"EXPLORE PRO · مساحة آمنة",hello:"مرحبًا.",welcome:"مرحبًا، {name}.",sub:"ملف مكانك متزامن مع Supabase ويبقى متاحًا على أجهزتك.",published:"تم نشر مكانك ورمز QR الفردي جاهز.",draft:"تم حفظ مكانك. فعّل «نشر» في ملف المكان لفتح صفحة الزوار.",fiche:"ملف مكاني",qr:"رمز QR الخاص بي",pub:"عرض EXPLORE العام",share:"المشاركة عبر واتساب",hub:"العودة إلى HUB",foot:"0% عمولة · علاقة مباشرة · البيانات العامة منفصلة عن رمز PIN",migration:"يجب تنفيذ ترحيل Supabase الخاص بـ EXPLORE قبل المزامنة.",empty:"لا يوجد ملف سحابي لهذا الحساب. افتح ملف مكاني لإنشائه.",prepare:"جهّز ملف المكان واحفظه أولاً.",publish:"انشر الملف قبل مشاركته.",message:"مرحبًا، هذا {name} على DIGIY EXPLORE: {url}",professional:"مهني"}
+    };
+    let lang="fr",ownerSlug="",ownerPhone="",place=null;
+    function t(key){return (COPY[lang]||COPY.fr)[key]||COPY.fr[key]||key}
+    function fill(text,vars){return String(text||"").replace(/\{(\w+)\}/g,(_,key)=>String(vars?.[key]??""))}
     function status(message){$("status").textContent=message||"";$("status").hidden=!message}
     function cleanPhone(v){const d=String(v||"").replace(/\D/g,"");return d.length===9?"221"+d:d}
+    function render(){
+      document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr";
+      document.querySelectorAll("[data-lang]").forEach(b=>b.classList.toggle("active",b.dataset.lang===lang));
+      $("eyebrow").textContent=t("eyebrow");$("ficheLink").textContent=t("fiche");$("qrLink").textContent=t("qr");$("publicLink").textContent=t("pub");$("shareWhatsApp").textContent=t("share");$("hubLink").textContent=t("hub");$("foot").textContent=t("foot");
+      if(place){$("title").textContent=fill(t("welcome"),{name:place.place_name||t("professional")});$("subtitle").textContent=place.is_published?t("published"):t("draft")}
+      else{$("title").textContent=t("hello");$("subtitle").textContent=t("sub")}
+      try{localStorage.setItem(STORE,lang)}catch(_){}
+    }
     async function boot(){
+      try{lang=(localStorage.getItem(STORE)||"fr").slice(0,2)}catch(_){lang="fr"}if(!COPY[lang])lang="fr";render();
       const guard=window.DIGIY_GUARD;
       if(!guard||typeof guard.ready!=="function"){location.replace("./pin.html");return}
       try{await guard.ready()}catch(_){location.replace("./pin.html");return}
@@ -66,21 +99,16 @@
       if(!ownerSlug||!ownerPhone){location.replace("./pin.html");return}
       const sb=window.supabase.createClient(window.DIGIY_SUPABASE_URL,window.DIGIY_SUPABASE_ANON_KEY,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
       const {data,error}=await sb.rpc("digiy_explore_get_place_by_owner",{p_owner_slug:ownerSlug,p_phone:ownerPhone});
-      if(error){status("La migration Supabase EXPLORE doit être exécutée avant la synchronisation.");return}
-      if(data?.ok===true&&data.place){
-        place=data.place;
-        $("title").textContent="Bonjour, "+(place.place_name||"professionnel")+".";
-        $("subtitle").textContent=place.is_published?"Ton lieu est publié et son QR individuel est prêt.":"Ton lieu est enregistré. Active « Publier » dans Ma fiche lieu pour ouvrir la fiche client.";
-      }else{
-        status("Aucune fiche cloud pour ce compte. Ouvre Mon lieu pour la créer.");
-      }
+      if(error){status(t("migration"));return}
+      if(data?.ok===true&&data.place){place=data.place;render()}else status(t("empty"));
     }
+    document.querySelectorAll("[data-lang]").forEach(button=>button.addEventListener("click",()=>{lang=button.dataset.lang;status("");render()}));
     $("shareWhatsApp").addEventListener("click",()=>{
       const url=String(place?.public_url||"").trim();
-      if(!url){status("Prépare et enregistre d’abord ta fiche lieu.");return}
-      if(place?.is_published!==true){status("Publie d’abord la fiche avant de la partager.");return}
-      const label=place?.place_name||"mon lieu";
-      location.href="https://wa.me/?text="+encodeURIComponent("Bonjour, voici "+label+" sur DIGIY EXPLORE : "+url);
+      if(!url){status(t("prepare"));return}
+      if(place?.is_published!==true){status(t("publish"));return}
+      const label=place?.place_name||t("professional");
+      location.href="https://wa.me/?text="+encodeURIComponent(fill(t("message"),{name:label,url}));
     });
     boot();
   })();
