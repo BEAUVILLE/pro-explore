@@ -1,43 +1,15 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
-  <meta name="theme-color" content="#1e293b">
-  <meta name="digiy-build" content="explore-pin-moule-sans-telephone-20260716">
-  <title>Accès EXPLORE · DIGIY</title>
-  <style>
-    body{margin:0;min-height:100dvh;display:grid;place-items:center;padding:20px;background:linear-gradient(180deg,#334155,#1e293b);color:#f9fafb;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;text-align:center}
-    main{width:min(420px,100%);padding:26px 22px;border:1px solid rgba(148,163,184,.22);border-radius:28px;background:rgba(255,255,255,.04);box-shadow:0 28px 70px rgba(0,0,0,.42)}
-    .ico{font-size:42px}h1{margin:9px 0 6px;font-size:29px}p{margin:0;color:#cbd5e1;font-weight:800;line-height:1.5}a{display:inline-flex;margin-top:18px;min-height:50px;align-items:center;justify-content:center;padding:0 18px;border-radius:16px;background:linear-gradient(135deg,#facc15,#22c55e);color:#102016;text-decoration:none;font-weight:1000}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+<meta http-equiv="refresh" content="0;url=https://explore.digiylyfe.com/">
+<link rel="canonical" href="https://explore.digiylyfe.com/">
+<title>DIGIY EXPLORE — archive</title>
 </head>
 <body>
-  <main>
-    <div class="ico">🗺️</div>
-    <h1>Je fais découvrir mon lieu</h1>
-    <p>Ouverture de la porte PRO sans téléphone prérempli.</p>
-    <a href="./pin-core.html">Entrer avec mon téléphone et mon PIN</a>
-  </main>
-  <script>
-  (()=>{
-    "use strict";
-    const keys=[
-      "digiy_explore_phone","digiy_explore_last_phone","DIGIY_EXPLORE_PHONE",
-      "DIGIY_EXPLORE_BOOST_PHONE","DIGIY_EXPLORE_HUB_PHONE","DIGIY_LAST_PHONE",
-      "DIGIY_SESSION_PHONE","digiy_phone","digiy_last_phone","DIGIY_PHONE"
-    ];
-    for(const storage of [localStorage,sessionStorage]){
-      for(const key of keys){try{storage.removeItem(key)}catch(_){}}
-    }
-    try{
-      const clean=new URL("./pin-core.html",location.href);
-      clean.search="";
-      history.replaceState({},document.title,location.pathname);
-      location.replace(clean.toString());
-    }catch(_){location.replace("./pin-core.html")}
-  })();
-  </script>
+<p>Redirection vers <a href="https://explore.digiylyfe.com/">DIGIY EXPLORE</a>…</p>
+<script>location.replace("https://explore.digiylyfe.com/");</script>
 </body>
 </html>
